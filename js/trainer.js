@@ -191,14 +191,14 @@ function waehleFach(fach) {
     }
   }
 
-async function ladeFrageAusFach(fach, thema) {
+async function ladeFrageAusFach(fach, thema, currentId = "") {
     const eigenerToken = ++ladeToken;
 
     try {
       setzeAppBeschaeftigt(true);
       setzeStatus("Frage wird geladen...");
 
-      const result = await apiGet("nextQuestion", { fach, thema });
+      const result = await apiGet("nextQuestion", { fach, thema, currentId });
 
       if (eigenerToken !== ladeToken) return;
 
@@ -324,7 +324,8 @@ function starteThema() {
     }
 
     aktuellesThema = thema;
-    ladeFrageAusFach(aktuellesFach, aktuellesThema);
+aktuelleFrageId = "";
+ladeFrageAusFach(aktuellesFach, aktuellesThema, "");
   }
 
 function naechsteFrage() {
@@ -345,7 +346,7 @@ function naechsteFrage() {
       return;
     }
 
-    ladeFrageAusFach(aktuellesFach, aktuellesThema);
+    ladeFrageAusFach(aktuellesFach, aktuellesThema, aktuelleFrageId);
   }
 
 function antwortLeeren() {
