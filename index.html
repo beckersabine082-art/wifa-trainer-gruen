@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>WiFa Trainer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#b794f6">
+
+
+</head>
+<body>
+  <div class="app">
+    <div class="container">
+
+      <nav class="top-nav">
+        <div class="brand">WiFa Trainer</div>
+
+        <div class="nav-actions">
+          <button class="nav-btn active" id="navStart" onclick="zeigeBereich('startView')">Start</button>
+
+          <div class="dropdown">
+<button class="nav-btn" id="navTrainer" type="button" onclick="toggleTrainerDropdown(event)">WIFA Trainer ▾</button>            <div class="dropdown-content">
+              <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ')">HQ – Handlungsspezifische Qualifikationen</button>
+              <button type="button" onclick="oeffneTrainerMitTeilbereich('WQ')">WQ – Wirtschaftsbezogene Qualifikationen</button>
+            </div>
+          </div>
+
+          <button class="nav-btn" id="navLernstand" onclick="zeigeBereich('lernstandView')">Lernstand</button>
+          <button class="nav-btn" id="navGlossar" onclick="zeigeBereich('glossarView')">Glossar</button>
+          <button class="nav-btn" id="navFormeln" onclick="zeigeBereich('formelView')">Formelsammlung</button>
+<div class="dropdown">
+  <button class="nav-btn" id="navPruefung" type="button" onclick="togglePruefungDropdown(event)">
+    Prüfungssimulation ▾
+  </button>
+
+  <div class="dropdown-content">
+    <button type="button" onclick="oeffnePruefungMitTeilbereich('WQ')">
+      WQ – Wirtschaftsbezogene Qualifikationen
+    </button>
+
+    <button type="button" onclick="oeffnePruefungMitTeilbereich('HQ')">
+      HQ – Handlungsspezifische Qualifikationen
+    </button>
+  </div>
+</div>     
+<button class="nav-btn" id="navWissen" onclick="zeigeBereich('wissenView')">Wissensdatenbank</button>
+          <button class="nav-btn" id="navKilian" onclick="zeigeBereich('kilianView')">Frag Kilian</button>
+          <button class="nav-btn" onclick="hinweisAnzeigen()">Nutzungshinweis</button>
+        </div>
+      </nav>
+
+      <section class="view active" id="startView">
+        <div class="hero-card">
+          <div class="hero-icon">🎓</div>
+
+          <div class="hero-text">
+            <h1>WiFa Trainer</h1>
+
+            <p>
+              Willkommen beim WiFa Trainer – einem digitalen Lernbereich zur Vorbereitung
+              auf kaufmännische Prüfungen und Weiterbildungen.
+            </p>
+
+            <p>
+              Die Plattform entstand ursprünglich zur Unterstützung bei der Vorbereitung
+              auf die Prüfung zum Wirtschaftsfachwirt und richtet sich besonders an Lernende,
+              die offene Fragen trainieren, Wissen strukturieren und ihren Lernstand
+              nachvollziehen möchten.
+            </p>
+
+            <p>
+              Gleichzeitig eignet sich der WiFa Trainer auch zur Wiederholung kaufmännischer
+              Grundlagen in vielen weiteren Aus- und Weiterbildungen.
+            </p>
+          </div>
+
+          <div class="notice-box">
+            <strong>Wichtiger Hinweis</strong>
+            <p>
+              Der WiFa Trainer ist ein unabhängiges Lernprojekt und steht in keiner Verbindung zur IHK.
+              Die Inhalte dienen ausschließlich der privaten Prüfungsvorbereitung und Orientierung.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Die Funktionen im Überblick</h2>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-icon">🎓</div>
+              <h3>WIFA Trainer</h3>
+              <p>Offene Fragen beantworten, Antworten auswerten lassen und gezielt Wissenslücken erkennen.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">📊</div>
+              <h3>Lernstand</h3>
+              <p>Fortschritte nach Fach und Thema nachvollziehen und Ergebnisse speichern.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">📚</div>
+              <h3>Glossar</h3>
+              <p>Fachbegriffe, Synonyme und kurze Erklärungen schnell nachschlagen.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">📐</div>
+              <h3>Formelsammlung</h3>
+              <p>Wichtige Formeln, Abkürzungen und spätere Seitenangaben gesammelt an einem Ort.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">🎯</div>
+              <h3>Prüfungssimulation</h3>
+              <p>Später realistische Prüfungssituationen mit Zeitdruck und Punkteauswertung trainieren.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">🗂️</div>
+              <h3>Wissensdatenbank</h3>
+              <p>Zusammenfassungen, Merksätze und zusätzliche Lerninhalte.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">ℹ️</div>
+              <h3>Nutzung</h3>
+              <p>Hinweise zur Nutzung, Funktionen und Tipps zum Lernen.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">💬</div>
+              <h3>Frag Kilian</h3>
+              <p>Direkter KI-Helfer für Verständnisfragen, Erklärungen und Unterstützung beim Lernen.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <span>© Sabine Becker 2026</span>
+          <button onclick="zeigeBereich('impressumView')">Impressum</button>
+          <button onclick="zeigeBereich('datenschutzView')">Datenschutzerklärung</button>
+        </div>
+      </section>
+
+      <section class="view" id="trainerView">
+        <div class="header">
+          <h1>WIFA Trainer</h1>
+          <p>Teilbereich, Fach und Thema auswählen, Antwort eingeben und direkt auswerten lassen.</p>
+        </div>
+
+        <div class="card" id="subjectCard">
+          <h2 class="section-title">Auswahl</h2>
+
+          <label class="label" for="teilbereichSelect" style="display:none;">Teilbereich auswählen</label>
+<select id="teilbereichSelect" onchange="waehleTeilbereich()" style="display:none;">
+            <option value="">-- Teilbereich wählen --</option>
+            <option value="WQ">Wirtschaftsbezogene Qualifikationen</option>
+            <option value="HQ">Handlungsspezifische Qualifikationen</option>
+          </select>
+
+          <div id="fachBereich" style="display:none; margin-top:15px;">
+            <label class="label" for="fachSelect">Fach auswählen</label>
+            <select id="fachSelect" onchange="waehleFachAusDropdown()">
+              <option value="">-- Fach wählen --</option>
+            </select>
+          </div>
+
+          <div id="themaBereich" style="display:none; margin-top:15px;">
+            <label class="label" for="themaSelect">Thema auswählen</label>
+            <select id="themaSelect">
+              <option value="">-- Thema wählen --</option>
+            </select>
+
+            <div style="margin-top:10px;">
+              <button class="action-btn" type="button" onclick="starteThema()" style="max-width:220px;">
+                Thema starten
+              </button>
+            </div>
+          </div>
+
+          <div class="status" id="fachStatus">Bitte zuerst einen Teilbereich auswählen.</div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Lernstand dieser Session</h2>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-title">Aktuelles Fach</div>
+              <div class="stat-value" id="fachProzent">0%</div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="fachProgressBar"></div>
+              </div>
+              <div class="stat-sub" id="fachDetails">0 von 0 Punkten im aktuellen Fach</div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-title">Gesamte Lernsession</div>
+              <div class="stat-value" id="sessionProzent">0%</div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="sessionProgressBar"></div>
+              </div>
+              <div class="stat-sub" id="sessionDetails">0 von 0 Punkten in dieser Session</div>
+            </div>
+          </div>
+
+          <div class="button-row" style="margin-top:14px;">
+            <button class="danger-btn" onclick="resetSession()">Session zurücksetzen</button>
+          </div>
+
+          <div class="result-list-wrap">
+            <h3 class="section-title" style="margin-top:16px;">Einzelergebnisse</h3>
+            <div id="einzelergebnisListe" class="result-list-empty">Noch keine Ergebnisse in dieser Session.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Frage</h2>
+
+          <div class="question-meta">
+            <span class="badge" id="anzeigeTeilbereich">Kein Teilbereich</span>
+            <span class="badge" id="anzeigeFach">Kein Fach</span>
+            <span class="badge" id="anzeigeThema">Bitte Thema wählen</span>
+          </div>
+
+          <div class="question-box" id="frageText">
+            Bitte zuerst Teilbereich, Fach und Thema auswählen.
+          </div>
+
+          <label class="label" for="antwortInput">Deine Antwort</label>
+          <textarea id="antwortInput" placeholder="Schreibe hier deine Antwort..."></textarea>
+
+          <div class="button-row">
+            <button class="action-btn" onclick="bewerteAntwort()">Auswertung starten</button>
+            <button class="secondary-btn" onclick="naechsteFrage()">Nächste Frage</button>
+            <button class="secondary-btn" onclick="zeigeMusterloesung()">Musterlösung anzeigen</button>
+            <button class="secondary-btn" onclick="antwortLeeren()">Antwort leeren</button>
+          </div>
+
+          <div class="result-box" id="resultBox">
+            <div class="result-title">Auswertung</div>
+            <div class="points" id="punkteAnzeige">0 / 0 Punkte</div>
+            <p class="result-text" id="ergebnisText">Hier erscheint die Bewertung.</p>
+
+            <div class="solution-box" id="solutionBox">
+              <strong>Musterlösung:</strong>
+              <div id="musterloesungText"></div>
+            </div>
+          </div>
+
+          <div class="status" id="ladeStatus"></div>
+        </div>
+      </section>
+
+      <section class="view" id="lernstandView">
+        <div class="header">
+          <h1>Lernstand</h1>
+          <p>Hier siehst du deinen gespeicherten Lernstand als Fachübersicht. Einzelne Versuche kannst du bei Bedarf aufklappen.</p>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Gespeicherter Lernstand</h2>
+
+          <button class="action-btn" onclick="ladeLernstand()" style="max-width:240px;">
+            Lernstand aktualisieren
+          </button>
+
+          <div class="status" id="lernstandStatus">Noch nicht geladen.</div>
+
+          <div id="lernstandListe" class="result-list-empty" style="margin-top:14px;">
+            Klicke auf „Lernstand aktualisieren“.
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="glossarView">
+        <div class="header">
+          <h1>Glossar</h1>
+          <p>Fachbegriffe, kurze Erklärungen und Synonyme zum schnellen Nachschlagen.</p>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Glossar-Suche</h2>
+
+         <input type="text" id="glossarSuche" placeholder="Begriff, Fach, Thema oder Synonym suchen..." oninput="filtereGlossar()">
+
+<div style="margin-top:12px;">
+  <label class="label" for="glossarThemaFilter">Nach Thema filtern</label>
+  <select id="glossarThemaFilter" onchange="filtereGlossar()">
+<option value="">Alle Themen</option>
+  </select>
+</div>
+
+<div id="glossarAlphabet" class="alphabet-bar" style="margin-top:14px;"></div>
+
+<div class="button-row" style="margin-top:12px;">
+  <button class="secondary-btn" onclick="resetGlossarFilter()">Filter zurücksetzen</button>
+</div>
+
+<div class="status" id="glossarStatus">Noch nicht geladen.</div>
+
+<div id="glossarListe" class="result-list-empty" style="margin-top:14px;">
+  Klicke auf „Glossar laden“.
+</div>
+        </div>
+      </section>
+
+     <section class="view" id="formelView">
+  <div class="header">
+    <h1>Formelsammlung</h1>
+    <p>Formeln, Abkürzungen, Beispiele und kurze Erklärungen zum schnellen Nachschlagen.</p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Formeln suchen</h2>
+
+    <input
+      type="text"
+      id="formelSuche"
+      placeholder="Begriff, Formel, Thema oder Abkürzung suchen..."
+      oninput="filtereFormeln()"
+    >
+
+    <div style="margin-top:12px;">
+<label class="label" for="formelThemaFilter">Nach Fach filtern</label>
+
+<select id="formelThemaFilter" onchange="filtereFormeln()">
+  <option value="">Alle Fächer</option>
+</select>
+    </div>
+
+    <div class="button-row" style="margin-top:14px;">
+      <button class="secondary-btn" onclick="resetFormelFilter()">Filter zurücksetzen</button>
+    </div>
+
+    <div class="status" id="formelStatus">Formelsammlung wird beim Öffnen automatisch geladen.</div>
+  </div>
+
+  <div id="formelListe" class="result-list-empty">
+    Öffne die Formelsammlung oder nutze die Suche.
+  </div>
+</section>
+
+    <section class="view" id="pruefungView">
+  <div class="header">
+    <h1>Prüfungssimulation</h1>
+    <p>Wähle oben im Menü WQ oder HQ, danach Simulation und Prüfungseinheit.</p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Prüfung auswählen</h2>
+
+    <select id="pruefungTeilbereichSelect" style="display:none;" onchange="pruefungTeilbereichWaehlen()">
+      <option value="">-- Teilbereich wählen --</option>
+      <option value="WQ">WQ – Wirtschaftsbezogene Qualifikationen</option>
+      <option value="HQ">HQ – Handlungsspezifische Qualifikationen</option>
+    </select>
+
+    <div id="pruefungSimulationBereich" style="display:none; margin-top:15px;">
+      <label class="label" for="pruefungSimulationSelect">Simulation auswählen</label>
+      <select id="pruefungSimulationSelect" onchange="pruefungSimulationWaehlen()">
+        <option value="">-- Simulation wählen --</option>
+      </select>
+    </div>
+
+    <div id="pruefungFachBereich" style="display:none; margin-top:15px;">
+      <label class="label" for="pruefungFachSelect">Prüfungseinheit auswählen</label>
+      <select id="pruefungFachSelect">
+        <option value="">-- Prüfungseinheit wählen --</option>
+      </select>
+    </div>
+
+    <div class="button-row" style="margin-top:14px;">
+      <button class="action-btn" onclick="startePruefungSimulation()">
+        Prüfung starten
+      </button>
+    </div>
+
+    <div class="status" id="pruefungStatus">
+      Bitte oben im Menü WQ oder HQ auswählen.
+    </div>
+  </div>
+
+  <div class="card" id="pruefungTimerBox" style="display:none;">
+    <h2 class="section-title">Prüfungszeit</h2>
+
+    <div class="stat-value">
+      ⏳ <span id="pruefungTimerText">00:00</span>
+    </div>
+
+    <div class="status" id="pruefungTimerStatus">
+      Die Prüfung läuft.
+    </div>
+
+    <div class="button-row" style="margin-top:14px;">
+      <button class="secondary-btn" onclick="stoppePruefungTimer()">
+        Timer stoppen
+      </button>
+
+      <button class="action-btn" onclick="pruefungManuellAbgeben()">
+        Prüfung abgeben
+      </button>
+    </div>
+  </div>
+
+  <div id="pruefungContainer"></div>
+</section>
+     <section class="view" id="wissenView">
+
+  <div class="header">
+    <h1>Wissensdatenbank</h1>
+    <p>
+      Hier entstehen zusätzliche Lernfunktionen wie Karteikarten,
+      Audio-Lernen, Zusammenfassungen und spätere Kurzabfragen.
+    </p>
+  </div>
+
+    <div>
+
+      <div class="home-tile">
+  <h3>🗂️ Karteikartenmodus</h3>
+
+  <p>
+    Themenbezogene Lernkarten aus deinen bestehenden Fragen und Musterlösungen.
+  </p>
+
+  <label class="label" for="kartenTeilbereichSelect">Teilbereich</label>
+  <select id="kartenTeilbereichSelect" onchange="kartenTeilbereichWaehlen()">
+    <option value="">-- Teilbereich wählen --</option>
+    <option value="WQ">WQ – Wirtschaftsbezogene Qualifikationen</option>
+    <option value="HQ">HQ – Handlungsspezifische Qualifikationen</option>
+  </select>
+
+  <label class="label" for="kartenFachSelect" style="margin-top:12px;">Fach</label>
+  <select id="kartenFachSelect" onchange="kartenFachWaehlen()">
+    <option value="">-- Fach wählen --</option>
+  </select>
+
+  <label class="label" for="kartenThemaSelect" style="margin-top:12px;">Thema</label>
+  <select id="kartenThemaSelect">
+    <option value="">Alle Themen</option>
+  </select>
+
+  <div class="button-row" style="margin-top:14px;">
+    <button class="action-btn" onclick="ladeKarteikarten()">
+      Karteikarten laden
+    </button>
+  </div>
+
+  <div class="status" id="kartenStatus">
+    Bitte Teilbereich und Fach auswählen.
+  </div>
+</div>
+      <div class="home-tile" style="margin-top:14px;">
+  <h3>🎧 Audiofunktion</h3>
+
+  <p>
+    Lies dir die aktuell geladene Karteikarte automatisch vor.
+    Erst wird die Frage gelesen, danach die Musterlösung.
+  </p>
+
+  <div class="button-row" style="margin-top:14px;">
+    <button class="secondary-btn" onclick="audioAktuelleKarte()">
+      Aktuelle Karte vorlesen
+    </button>
+
+    <button class="secondary-btn" onclick="audioStoppen()">
+      Audio stoppen
+    </button>
+  </div>
+
+  <div class="status" id="audioStatus">
+    Lade zuerst Karteikarten und wähle eine Karte aus.
+ 
+</div>
+</div>
+
+<div class="card" id="karteikartenBox" style="display:none;">
+  <h2 class="section-title">Karteikarten lernen</h2>
+
+  <div class="question-meta">
+    <span class="badge" id="kartenZaehler">0 von 0</span>
+    <span class="badge" id="kartenFachAnzeige">Kein Fach</span>
+    <span class="badge" id="kartenThemaAnzeige">Kein Thema</span>
+  </div>
+
+  <div class="question-box" id="kartenVorderseite">
+    Hier erscheint die Vorderseite der Karte.
+  </div>
+
+  <div class="solution-box" id="kartenRueckseite" style="display:none;">
+    <strong>Rückseite:</strong>
+    <div id="kartenRueckseiteText"></div>
+  </div>
+
+  <div class="button-row">
+    <button class="secondary-btn" onclick="vorherigeKarte()">Vorherige Karte</button>
+    <button class="action-btn" onclick="karteUmdrehen()">Karte umdrehen</button>
+    <button class="secondary-btn" onclick="naechsteKarteAnzeigen()">Nächste Karte</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="section-title">Geplante Erweiterungen</h2>
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>KI-Lernhilfe</h3>
+        <p>
+          Erklärungen und Unterstützung direkt zu schwierigen Themen.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔁</div>
+        <h3>Fehlertraining</h3>
+        <p>
+          Falsch beantwortete Fragen gezielt häufiger wiederholen.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Lernanalyse</h3>
+        <p>
+          Stärken, Schwächen und Lernfortschritte übersichtlich erkennen.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Kurzabfragen</h3>
+        <p>
+          Kleine spontane Wissensabfragen für zwischendurch.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+      <section class="view" id="kilianView">
+  <div class="header">
+    <h1>Frag Kilian</h1>
+
+    <p>
+      Direkter KI-Helfer für Verständnisfragen,
+      Erklärungen und Unterstützung beim Lernen.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Deine Frage</h2>
+
+   <textarea
+  id="kilianInput"
+  class="kilian-textarea"
+  placeholder="Stelle hier deine Frage..."
+  oninput="this.style.height='auto'; this.style.height=this.scrollHeight + 'px';"
+></textarea>
+
+    <div class="button-row">
+      <button class="action-btn" onclick="frageKilian()">
+        Frage senden
+      </button>
+
+      <button class="secondary-btn" onclick="kilianLeeren()">
+        Eingabe leeren
+      </button>
+    </div>
+
+    <div class="status" id="kilianStatus">
+      Kilian wartet auf deine Frage.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Antwort</h2>
+
+    <div class="question-box" id="kilianAntwort">
+      Hier erscheint die Antwort von Kilian.
+    </div>
+  </div>
+</section>
+
+    <section class="view" id="impressumView">
+  <div class="header">
+    <h1>Impressum</h1>
+    <p>Angaben gemäß § 5 TMG.</p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Anbieter</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Sabine Becker<br>
+      Wegefährels 44<br>
+      21706 Drochtersen<br><br>
+
+      E-Mail:<br>
+      biene-becks@web.de
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">Hinweis</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Der WiFa Trainer ist ein privates und unabhängiges Lernprojekt zur Unterstützung
+      bei der Prüfungsvorbereitung kaufmännischer Weiterbildungen.
+      <br><br>
+      Es besteht keinerlei Verbindung zur IHK oder zu offiziellen Prüfungsstellen.
+    </div>
+  </div>
+</section>
+
+    <section class="view" id="datenschutzView">
+  <div class="header">
+    <h1>Datenschutzerklärung</h1>
+    <p>Informationen zum Umgang mit Daten innerhalb des WiFa Trainers.</p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">1. Allgemeine Hinweise</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Diese Website dient ausschließlich privaten Lern- und Übungszwecken.
+      Personenbezogene Daten werden nur im technisch notwendigen Umfang verarbeitet.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">2. Nutzung des WiFa Trainers</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Zur Nutzung können freiwillige Nutzer-Codes verwendet werden, um Lernstände
+      und Ergebnisse zu speichern.
+      <br><br>
+      Es werden aktuell keine vollständigen Nutzerkonten mit Klarnamen,
+      Passwörtern oder Adressdaten angelegt.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">3. Speicherung von Lernständen</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Antworten, Bewertungen, Punkte und Lernstände können gespeichert werden,
+      um den Lernfortschritt innerhalb des Trainers darzustellen.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">4. Einsatz von OpenAI</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Für KI-gestützte Funktionen wie Antwortauswertungen und den Lernassistenten
+      „Frag Kilian“ werden Inhalte an die OpenAI API übertragen und dort verarbeitet.
+      <br><br>
+      Es wird empfohlen, keine sensiblen oder persönlichen Daten in Freitextfelder einzugeben.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">5. Hosting und technische Dienste</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Das Frontend dieser Website wird über GitHub Pages bereitgestellt.
+      Zusätzlich werden technische Dienste von Google Apps Script genutzt.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">6. Kontakt</h2>
+
+    <div style="line-height:1.8; color:#4a3970;">
+      Bei Fragen zum Datenschutz:
+      <br><br>
+      Sabine Becker<br>
+      biene-becks@web.de
+    </div>
+  </div>
+</section>
+
+    </div>
+  </div>
+
+    <div id="kilianBubbleButton" onclick="toggleKilianBubble()">
+  💬 Frag Kilian
+</div>
+
+<div id="kilianBubbleFenster">
+  <div class="kilian-bubble-header">
+    <strong>Frag Kilian</strong>
+    <button type="button" onclick="toggleKilianBubble()">×</button>
+  </div>
+
+  <textarea
+    id="kilianBubbleInput"
+    placeholder="Stelle hier deine Frage..."
+  ></textarea>
+
+  <div class="kilian-bubble-buttons">
+    <button type="button" onclick="frageKilianBubble()">Senden</button>
+    <button type="button" onclick="kilianBubbleVorlesen()">Vorlesen</button>
+    <button type="button" onclick="kilianBubbleAudioStoppen()">Stopp</button>
+  </div>
+
+  <div id="kilianBubbleStatus">Kilian wartet auf deine Frage.</div>
+
+  <div id="kilianBubbleAntwort">
+    Hier erscheint Kilians Antwort.
+  </div>
+</div>
+    
+  <button id="hinweisInfoButton" onclick="hinweisAnzeigen()" style="
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 9998;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 999px;
+    background: #fff3cd;
+    color: #8a5a00;
+    font-size: 13px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    cursor: pointer;
+  ">
+    Nutzungshinweis
+  </button>
+
+  <div id="hinweisOverlay" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+    box-sizing: border-box;
+  ">
+    <div style="
+      background: #fffdf7;
+      border: 3px solid #f0b429;
+      padding: 22px;
+      border-radius: 18px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+      text-align: left;
+      font-family: Arial, sans-serif;
+    ">
+      <div style="
+        display: inline-block;
+        background: #fff3cd;
+        color: #8a5a00;
+        font-weight: bold;
+        font-size: 13px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+      ">
+        Wichtiger Hinweis
+      </div>
+
+      <h2 style="margin: 0 0 12px 0; font-size: 22px; color: #5a3e00;">
+        Hinweis zur Nutzung
+      </h2>
+
+      <p style="font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 12px;">
+        Die Musterlösungen dienen nur als Vorschläge. Es sind auch andere fachlich korrekte Antworten möglich.
+      </p>
+
+      <p style="font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 18px;">
+        Das Bewertungssystem bietet lediglich eine Orientierung und stellt keine verbindliche Bewertung im Sinne einer Prüfung dar.
+      </p>
+
+      <p style="font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 18px;">
+  Die Inhalte des WiFa Trainers basieren auf eigener Lernaufbereitung, fachlicher Prüfungsvorbereitung sowie verschiedenen Lern- und Unterrichtsmaterialien aus kaufmännischen Weiterbildungen.
+  <br><br>
+  Alle Inhalte wurden für Lernzwecke didaktisch überarbeitet und stellen keine offiziellen Musterlösungen dar.
+  <br><br>
+  Alle genannten Marken, Prüfungsbezeichnungen und Institutionen bleiben Eigentum der jeweiligen Rechteinhaber.
+</p>
+      <label id="hinweisCheckboxWrap" style="
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 18px;
+        cursor: pointer;
+      ">
+        <input type="checkbox" id="hinweisCheckbox" style="
+          margin-top: 2px;
+          transform: scale(1.15);
+          accent-color: #f0b429;
+        ">
+        <span>Ich habe den Hinweis gelesen.</span>
+      </label>
+
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button id="hinweisButton" onclick="hinweisSchliessen()" disabled style="
+          flex: 1;
+          min-width: 180px;
+          padding: 12px 18px;
+          border: none;
+          border-radius: 12px;
+          background: #d9d9d9;
+          color: #666;
+          font-size: 15px;
+          font-weight: bold;
+          cursor: not-allowed;
+        ">
+          Gelesen und fortfahren
+        </button>
+
+        <button onclick="hinweisNurSchliessen()" style="
+          flex: 1;
+          min-width: 140px;
+          padding: 12px 18px;
+          border: 1px solid #d6c28a;
+          border-radius: 12px;
+          background: #fff8e6;
+          color: #7a5a00;
+          font-size: 15px;
+          font-weight: bold;
+          cursor: pointer;
+        ">
+          Schließen
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/glossar.js"></script>
+<script src="js/formelsammlung.js"></script>
+<script src="js/trainer.js"></script>
+<script src="js/bewertung.js"></script>
+<script src="js/lernstand.js"></script>
+<script src="js/wissensdatenbank.js"></script>
+<script src="js/pruefungssimulation.js"></script>
+<script src="js/linksammlung.js"></script>
+<script src="js/login.js"></script> </body>
+</html>
