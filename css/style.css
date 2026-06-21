@@ -1094,3 +1094,20 @@ select:focus {
   background: linear-gradient(135deg, #f2fbf5, #e1f4e7) !important;
   border-color: #b7dec2 !important;
 }
+/* =========================================================
+   Frage-ID direkt im Fragetext
+   ========================================================= */
+
+.frage-id-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #dff3e5;
+  border: 1px solid #b7dec2;
+  color: #245c3a;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}

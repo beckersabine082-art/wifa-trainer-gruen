@@ -230,8 +230,12 @@ const aufgabenHtml = String(daten.aufgabenHtml || "").trim();
 
 let frageHtml = "";
 
+const frageIdBadge = aktuelleFrageId
+  ? '<span class="frage-id-badge">ID ' + escapeHtml(aktuelleFrageId) + '</span> '
+  : "";
+
 if (aktuelleFrage) {
-  frageHtml += "<div>" + escapeHtml(aktuelleFrage) + "</div>";
+  frageHtml += "<div>" + frageIdBadge + escapeHtml(aktuelleFrage) + "</div>";
 }
 
 if (aufgabenHtml) {
