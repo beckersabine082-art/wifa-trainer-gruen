@@ -130,12 +130,25 @@ async function ladeThemen(fach) {
         return;
       }
 
-      themen.forEach(function(thema) {
-        const option = document.createElement("option");
-        option.value = thema;
-        option.textContent = thema;
-        select.appendChild(option);
-      });
+      themen.forEach(function(eintrag) {
+  const themaName = typeof eintrag === "string"
+    ? eintrag
+    : String(eintrag.thema || "").trim();
+
+  const anzahl = typeof eintrag === "object"
+    ? Number(eintrag.anzahl || 0)
+    : 0;
+
+  const option = document.createElement("option");
+  option.value = themaName;
+  option.textContent = anzahl > 0
+    ? themaName + " (" + anzahl + " Fragen)"
+    : themaName;
+
+  option.dataset.fragenAnzahl = anzahl;
+
+  select.appendChild(option);
+});
 
       document.getElementById("fachStatus").textContent =
         "Themen geladen für: " + fach + " (" + themen.length + ")";
@@ -230,12 +243,19 @@ const aufgabenHtml = String(daten.aufgabenHtml || "").trim();
 
 let frageHtml = "";
 
+const frageGesamt = Number(daten.frageGesamt || 0);
+const fragePosition = Number(daten.fragePosition || 0);
+
 const frageIdBadge = aktuelleFrageId
   ? '<span class="frage-id-badge">ID ' + escapeHtml(aktuelleFrageId) + '</span> '
   : "";
 
+const fragePositionsBadge = frageGesamt > 0 && fragePosition > 0
+  ? '<span class="frage-id-badge">Frage ' + fragePosition + ' von ' + frageGesamt + '</span> '
+  : "";
+
 if (aktuelleFrage) {
-  frageHtml += "<div>" + frageIdBadge + escapeHtml(aktuelleFrage) + "</div>";
+  frageHtml += "<div>" + fragePositionsBadge + frageIdBadge + escapeHtml(aktuelleFrage) + "</div>";
 }
 
 if (aufgabenHtml) {
