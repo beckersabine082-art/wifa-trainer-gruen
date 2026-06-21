@@ -207,7 +207,36 @@ async function ladeFrageAusFach(fach, thema, currentId = "") {
       }
 
       const daten = result.data || {};
+if (daten.themaAbgeschlossen) {
+  aktuelleFrage = "";
+  aktuelleMusterloesung = "";
+  aktuelleStichpunkte = [];
+  aktuelleFrageId = "";
 
+  const frageGesamt = Number(daten.frageGesamt || 0);
+
+  document.getElementById("frageText").innerHTML =
+    '<div class="thema-abgeschlossen-box">' +
+      '<strong>Thema abgeschlossen</strong><br>' +
+      'Du hast alle ' + frageGesamt + ' Fragen in diesem Thema einmal durchgeklickt.<br>' +
+      'Wenn du nochmal von vorne starten möchtest, klicke erneut auf <strong>Thema starten</strong>.' +
+    '</div>';
+
+  document.getElementById("anzeigeThema").textContent = aktuellesThema;
+
+  const antwortLabel = document.querySelector('label[for="antwortInput"]');
+  const antwortInput = document.getElementById("antwortInput");
+
+  if (antwortLabel) antwortLabel.style.display = "none";
+  antwortInput.style.display = "none";
+  antwortInput.value = "";
+
+  document.getElementById("resultBox").style.display = "none";
+  document.getElementById("solutionBox").style.display = "none";
+
+  setzeStatus("Thema abgeschlossen.");
+  return;
+}
       if (!daten.id) {
         aktuelleFrage = "";
         aktuelleMusterloesung = "";

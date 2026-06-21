@@ -1111,3 +1111,20 @@ select:focus {
   font-weight: 700;
   white-space: nowrap;
 }
+/* =========================================================
+   Thema abgeschlossen
+   ========================================================= */
+
+.thema-abgeschlossen-box {
+  padding: 18px;
+  border: 1px solid #b7dec2;
+  border-radius: 14px;
+  background: #f2fbf5;
+  color: #163522;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.thema-abgeschlossen-box strong {
+  color: #245c3a;
+}
