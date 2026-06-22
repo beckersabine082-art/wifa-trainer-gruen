@@ -71,9 +71,21 @@ const gesetzesLinks = [
   }
 ];
 
+function escapeGesetzHtml(text) {
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function renderGesetzeslinks() {
   const container = document.getElementById("gesetzeslinksListe");
-  if (!container) return;
+
+  if (!container) {
+    return;
+  }
 
   const gruppen = {};
 
@@ -88,15 +100,15 @@ function renderGesetzeslinks() {
   container.innerHTML = Object.keys(gruppen).map(function(fach) {
     return `
       <div class="gesetzeslinks-gruppe">
-        <h3>${escapeHtml(fach)}</h3>
+        <h3>${escapeGesetzHtml(fach)}</h3>
 
         ${gruppen[fach].map(function(link) {
           return `
-            <a class="gesetzeslink-card" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
-              <div class="gesetzeslink-kurz">${escapeHtml(link.kurz)}</div>
+            <a class="gesetzeslink-card" href="${escapeGesetzHtml(link.url)}" target="_blank" rel="noopener noreferrer">
+              <div class="gesetzeslink-kurz">${escapeGesetzHtml(link.kurz)}</div>
               <div class="gesetzeslink-inhalt">
-                <strong>${escapeHtml(link.name)}</strong>
-                <span>${escapeHtml(link.beschreibung)}</span>
+                <strong>${escapeGesetzHtml(link.name)}</strong>
+                <span>${escapeGesetzHtml(link.beschreibung)}</span>
               </div>
             </a>
           `;
@@ -106,4 +118,8 @@ function renderGesetzeslinks() {
   }).join("");
 }
 
-window.addEventListener("load", renderGesetzeslinks);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderGesetzeslinks);
+} else {
+  renderGesetzeslinks();
+}
