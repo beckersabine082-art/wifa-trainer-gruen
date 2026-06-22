@@ -1128,3 +1128,58 @@ select:focus {
 .thema-abgeschlossen-box strong {
   color: #245c3a;
 }
+/* =========================================================
+   Gesetzeslinks
+   ========================================================= */
+
+.gesetzeslinks-liste {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.gesetzeslinks-gruppe {
+  display: grid;
+  gap: 10px;
+}
+
+.gesetzeslinks-gruppe h3 {
+  margin: 12px 0 2px;
+  color: #245c3a;
+}
+
+.gesetzeslink-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid #b7dec2;
+  border-radius: 14px;
+  background: #f2fbf5;
+  color: #163522;
+  text-decoration: none;
+}
+
+.gesetzeslink-card:hover {
+  background: #dff3e5;
+}
+
+.gesetzeslink-kurz {
+  min-width: 58px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: #dff3e5;
+  color: #245c3a;
+  font-weight: 800;
+  text-align: center;
+}
+
+.gesetzeslink-inhalt {
+  display: grid;
+  gap: 4px;
+  line-height: 1.4;
+}
+
+.gesetzeslink-inhalt span {
+  font-size: 13px;
+}
