@@ -406,6 +406,102 @@
       background: #cdb7ff;
     }
 
+    /* Gesetzeslinks - left icon and fixed left column */
+    .gesetzeslinks-gruppe {
+      margin-bottom: 16px;
+    }
+
+    .gesetzeslink-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid #e9e6f8;
+      margin: 8px 0;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .gesetzeslink-left {
+      width: 110px;
+      min-width: 110px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .gesetzeslink-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      background: linear-gradient(#000 0 33%, #dd0000 33% 66%, #ffcc00 66% 100%);
+      overflow: hidden;
+    }
+
+    .gesetzeslink-icon::after {
+      content: "§";
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.45), 0 -1px 0 rgba(255,255,255,0.08);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .gesetzeslink-kurz-text {
+      font-weight: bold;
+      color: #245c3a;
+      min-width: 40px;
+    }
+
+    .gesetzeslink-inhalt {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .gesetzeslink-inhalt strong {
+      font-size: 15px;
+      color: #163522;
+    }
+
+    .gesetzeslink-inhalt span {
+      color: #4a3970;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .gesetzeslink-card {
+        flex-direction: row;
+        gap: 10px;
+        padding: 10px;
+      }
+
+      .gesetzeslink-left {
+        width: 86px;
+        min-width: 86px;
+      }
+
+      .gesetzeslink-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+
+      .gesetzeslink-kurz-text { min-width: 34px; }
+    }
+
     .question-meta {
       display: flex;
       flex-wrap: wrap;

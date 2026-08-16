@@ -105,7 +105,10 @@ function renderGesetzeslinks() {
         ${gruppen[fach].map(function(link) {
           return `
             <a class="gesetzeslink-card" href="${escapeGesetzHtml(link.url)}" target="_blank" rel="noopener noreferrer">
-              <div class="gesetzeslink-kurz">${escapeGesetzHtml(link.kurz)}</div>
+              <div class="gesetzeslink-left">
+                <span class="gesetzeslink-icon" aria-hidden="true"></span>
+                <span class="gesetzeslink-kurz-text">${escapeGesetzHtml(link.kurz)}</span>
+              </div>
               <div class="gesetzeslink-inhalt">
                 <strong>${escapeGesetzHtml(link.name)}</strong>
                 <span>${escapeGesetzHtml(link.beschreibung)}</span>
