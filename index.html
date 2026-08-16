@@ -19,40 +19,74 @@
   <div class="app">
     <div class="container">
 
-      <nav class="top-nav">
-        <div class="brand">WiFa Trainer</div>
+      <nav class="top-nav" aria-label="Hauptnavigation">
+        <div class="brand" aria-label="WiFa Trainer">WiFa Trainer</div>
 
-        <div class="nav-actions">
-          <button class="nav-btn active" id="navStart" onclick="zeigeBereich('startView')">Start</button>
+        <button
+          class="nav-hamburger"
+          type="button"
+          aria-label="Hauptmenü öffnen"
+          aria-expanded="false"
+          aria-controls="navMenu"
+          aria-haspopup="true"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-          <div class="dropdown">
-<button class="nav-btn" id="navTrainer" type="button" onclick="toggleTrainerDropdown(event)">WIFA Trainer ▾</button>            <div class="dropdown-content">
-              <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ')">HQ – Handlungsspezifische Qualifikationen</button>
-              <button type="button" onclick="oeffneTrainerMitTeilbereich('WQ')">WQ – Wirtschaftsbezogene Qualifikationen</button>
+        <div class="nav-menu" id="navMenu" aria-label="Hauptmenü">
+          <div class="nav-actions" role="menubar" aria-label="Navigationsmenü">
+            <button class="nav-btn active" id="navStart" type="button" onclick="zeigeBereich('startView'); closeMainMenu();">Start</button>
+
+            <div class="dropdown">
+              <button
+                class="nav-btn"
+                id="navTrainer"
+                type="button"
+                aria-expanded="false"
+                aria-controls="trainerDropdownMenu"
+                onclick="toggleTrainerDropdown(event)"
+              >
+                WIFA Trainer ▾
+              </button>
+              <div class="dropdown-content" id="trainerDropdownMenu" role="menu">
+                <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ'); closeMainMenu();">HQ – Handlungsspezifische Qualifikationen</button>
+                <button type="button" onclick="oeffneTrainerMitTeilbereich('WQ'); closeMainMenu();">WQ – Wirtschaftsbezogene Qualifikationen</button>
+              </div>
             </div>
+
+            <button class="nav-btn" id="navLernstand" type="button" onclick="zeigeBereich('lernstandView'); closeMainMenu();">Lernstand</button>
+            <button class="nav-btn" id="navGlossar" type="button" onclick="zeigeBereich('glossarView'); closeMainMenu();">Glossar</button>
+            <button class="nav-btn" id="navFormeln" type="button" onclick="zeigeBereich('formelView'); closeMainMenu();">Formelsammlung</button>
+
+            <div class="dropdown">
+              <button
+                class="nav-btn"
+                id="navPruefung"
+                type="button"
+                aria-expanded="false"
+                aria-controls="pruefungDropdownMenu"
+                onclick="togglePruefungDropdown(event)"
+              >
+                Prüfungssimulation ▾
+              </button>
+
+              <div class="dropdown-content" id="pruefungDropdownMenu" role="menu">
+                <button type="button" onclick="oeffnePruefungMitTeilbereich('WQ'); closeMainMenu();">
+                  WQ – Wirtschaftsbezogene Qualifikationen
+                </button>
+
+                <button type="button" onclick="oeffnePruefungMitTeilbereich('HQ'); closeMainMenu();">
+                  HQ – Handlungsspezifische Qualifikationen
+                </button>
+              </div>
+            </div>
+
+            <button class="nav-btn" id="navWissen" type="button" onclick="zeigeBereich('wissenView'); closeMainMenu();">Wissensdatenbank</button>
+            <button class="nav-btn" id="navKilian" type="button" onclick="zeigeBereich('kilianView'); closeMainMenu();">Frag Kilian</button>
+            <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">Nutzungshinweis</button>
           </div>
-
-          <button class="nav-btn" id="navLernstand" onclick="zeigeBereich('lernstandView')">Lernstand</button>
-          <button class="nav-btn" id="navGlossar" onclick="zeigeBereich('glossarView')">Glossar</button>
-          <button class="nav-btn" id="navFormeln" onclick="zeigeBereich('formelView')">Formelsammlung</button>
-<div class="dropdown">
-  <button class="nav-btn" id="navPruefung" type="button" onclick="togglePruefungDropdown(event)">
-    Prüfungssimulation ▾
-  </button>
-
-  <div class="dropdown-content">
-    <button type="button" onclick="oeffnePruefungMitTeilbereich('WQ')">
-      WQ – Wirtschaftsbezogene Qualifikationen
-    </button>
-
-    <button type="button" onclick="oeffnePruefungMitTeilbereich('HQ')">
-      HQ – Handlungsspezifische Qualifikationen
-    </button>
-  </div>
-</div>     
-<button class="nav-btn" id="navWissen" onclick="zeigeBereich('wissenView')">Wissensdatenbank</button>
-          <button class="nav-btn" id="navKilian" onclick="zeigeBereich('kilianView')">Frag Kilian</button>
-          <button class="nav-btn" onclick="hinweisAnzeigen()">Nutzungshinweis</button>
         </div>
       </nav>
 
@@ -144,11 +178,6 @@
           </div>
         </div>
 
-        <div class="footer-links">
-          <span>© Sabine Becker 2026</span>
-          <button onclick="zeigeBereich('impressumView')">Impressum</button>
-          <button onclick="zeigeBereich('datenschutzView')">Datenschutzerklärung</button>
-        </div>
       </section>
 
       <section class="view" id="trainerView">
@@ -704,6 +733,13 @@
 </section>
 
     </div>
+
+    <footer class="site-footer" aria-label="Footer">
+      <span>© Sabine Becker 2026</span>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+      <a href="copyright.html">Copyright</a>
+    </footer>
   </div>
 
     <div id="kilianBubbleButton" onclick="toggleKilianBubble()">

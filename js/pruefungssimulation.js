@@ -794,10 +794,20 @@ tabellenFelder.forEach(function(feld, index) {
 function togglePruefungDropdown(event) {
   event.stopPropagation();
 
-  const dropdown =
-    document.getElementById("navPruefung").closest(".dropdown");
+  const button = document.getElementById("navPruefung");
+  const dropdown = button.closest(".dropdown");
+  const isOpen = dropdown.classList.contains("open");
 
-  dropdown.classList.toggle("open");
+  document.querySelectorAll(".dropdown.open").forEach(function(openDropdown) {
+    openDropdown.classList.remove("open");
+    const openButton = openDropdown.querySelector("button");
+    if (openButton) {
+      openButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  dropdown.classList.toggle("open", !isOpen);
+  button.setAttribute("aria-expanded", String(!isOpen));
 }
 
 function oeffnePruefungMitTeilbereich(teilbereich) {

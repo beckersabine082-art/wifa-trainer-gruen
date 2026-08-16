@@ -58,6 +58,11 @@ let aktuelleKartenIndex = 0;
   window.addEventListener("load", function () {
     updateStatAnzeige();
     initialisiereHinweis();
+    // place hamburger into the active view on load
+    try {
+      const active = document.querySelector('.view.active');
+      moveHamburgerToView(active ? active.id : 'startView');
+    } catch (e) { console.warn('moveHamburgerToView init error', e); }
   });
 
 function zeigeBereich(viewId) {
@@ -96,7 +101,51 @@ if (viewId === "formelView") {
     if (viewId === "kilianView") document.getElementById("navKilian").classList.add("active");
 
     window.scrollTo({ top: 0, behavior: "smooth" });
+    // move the single hamburger/menu into the active view's heading
+    try { moveHamburgerToView(viewId); } catch (e) { console.warn('moveHamburgerToView error', e); }
   }
+
+function moveHamburgerToView(viewId) {
+  const hamburger = document.querySelector('.nav-hamburger');
+  const menu = document.querySelector('.nav-menu');
+  if (!hamburger || !menu) return;
+
+  const view = document.getElementById(viewId);
+  if (!view) return;
+
+  // find the main heading inside the view
+  const h1 = view.querySelector('h1');
+  if (!h1) {
+    // fallback: place hamburger at start of view
+    view.insertBefore(hamburger, view.firstChild);
+    view.insertBefore(menu, hamburger.nextSibling);
+    return;
+  }
+
+  // ensure title-row wrapper exists
+  let titleRow = h1.closest('.title-row');
+  if (!titleRow) {
+    titleRow = document.createElement('div');
+    titleRow.className = 'title-row';
+    // insert titleRow before h1 and move h1 inside it
+    h1.parentNode.insertBefore(titleRow, h1);
+    titleRow.appendChild(h1);
+  }
+
+  // make titleRow positioned so menu can be absolute relative to it
+  titleRow.style.position = 'relative';
+
+  // move hamburger and menu into titleRow (hamburger before the h1)
+  if (hamburger.parentNode !== titleRow) {
+    titleRow.insertBefore(hamburger, titleRow.firstChild);
+  }
+  if (menu.parentNode !== titleRow) {
+    titleRow.appendChild(menu);
+  }
+
+  // small spacing
+  hamburger.style.marginRight = '16px';
+}
 
 function oeffneTrainerMitTeilbereich(teilbereich) {
     zeigeBereich("trainerView");
@@ -202,14 +251,98 @@ function hinweisNurSchliessen() {
 function toggleTrainerDropdown(event) {
   event.stopPropagation();
 
-  const dropdown = document.getElementById("navTrainer").closest(".dropdown");
-  dropdown.classList.toggle("open");
+  const button = document.getElementById("navTrainer");
+  const dropdown = button.closest(".dropdown");
+  const isOpen = dropdown.classList.contains("open");
+
+  document.querySelectorAll(".dropdown.open").forEach(function(openDropdown) {
+    openDropdown.classList.remove("open");
+    const openButton = openDropdown.querySelector("button");
+    if (openButton) {
+      openButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  dropdown.classList.toggle("open", !isOpen);
+  button.setAttribute("aria-expanded", String(!isOpen));
 }
 
-document.addEventListener("click", function() {
+function closeMainMenu() {
+  const menu = document.querySelector(".nav-menu");
+  const button = document.querySelector(".nav-hamburger");
+
+  if (!menu || !button) return;
+
+  menu.classList.remove("open");
+  button.setAttribute("aria-expanded", "false");
+  button.setAttribute("aria-label", "Hauptmenü öffnen");
+
   document.querySelectorAll(".dropdown.open").forEach(function(dropdown) {
     dropdown.classList.remove("open");
+    const itemButton = dropdown.querySelector("button");
+    if (itemButton) {
+      itemButton.setAttribute("aria-expanded", "false");
+    }
   });
+}
+
+function toggleMainMenu() {
+  const menu = document.querySelector(".nav-menu");
+  const button = document.querySelector(".nav-hamburger");
+
+  if (!menu || !button) return;
+
+  const isOpen = menu.classList.contains("open");
+  menu.classList.toggle("open");
+  button.setAttribute("aria-expanded", String(!isOpen));
+  button.setAttribute("aria-label", isOpen ? "Hauptmenü öffnen" : "Hauptmenü schließen");
+
+  if (!isOpen) {
+    document.querySelectorAll(".dropdown.open").forEach(function(dropdown) {
+      dropdown.classList.remove("open");
+      const itemButton = dropdown.querySelector("button");
+      if (itemButton) {
+        itemButton.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+}
+
+document.addEventListener("click", function(event) {
+  const menu = document.querySelector(".nav-menu");
+  const toggleButton = document.querySelector(".nav-hamburger");
+  const clickedWithinMenu = menu && menu.contains(event.target);
+  const clickedToggle = toggleButton && toggleButton.contains(event.target);
+
+  if (!clickedWithinMenu && !clickedToggle) {
+    closeMainMenu();
+  }
+
+  document.querySelectorAll(".dropdown.open").forEach(function(dropdown) {
+    if (!dropdown.contains(event.target) && !dropdown.previousElementSibling?.contains(event.target)) {
+      dropdown.classList.remove("open");
+      const itemButton = dropdown.querySelector("button");
+      if (itemButton) {
+        itemButton.setAttribute("aria-expanded", "false");
+      }
+    }
+  });
+});
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    closeMainMenu();
+  }
+});
+
+window.addEventListener("DOMContentLoaded", function() {
+  const hamburger = document.querySelector(".nav-hamburger");
+  if (hamburger) {
+    hamburger.addEventListener("click", function(event) {
+      event.stopPropagation();
+      toggleMainMenu();
+    });
+  }
 });
 
 function autoResizeTextarea(el) {
