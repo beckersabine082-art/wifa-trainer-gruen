@@ -94,6 +94,7 @@
       top: calc(100% + 12px);
       right: 0;
       width: min(350px, calc(100vw - 24px));
+      box-sizing: border-box;
       background: #ffffff;
       border-radius: 22px;
       box-shadow: 0 16px 38px rgba(31, 52, 39, 0.18);
@@ -113,10 +114,13 @@
     }
 
     .title-row .nav-menu {
+      position: absolute;
+      top: calc(100% + 8px);
       right: auto;
       left: 0;
       min-width: 260px;
-      width: auto;
+      width: min(350px, calc(100vw - 24px));
+      z-index: 10000;
     }
 
     .nav-menu.open {
@@ -1476,7 +1480,77 @@ select:focus {
   min-width: 0;
 }
 
+#startUserGreeting {
+  margin: 0 0 14px;
+  font-size: 16px;
+}
+
+#startUserGreeting .start-user-name {
+  color: #245c3a !important;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#startUserGreeting .start-user-welcome {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.account-profile {
+  text-align: left;
+}
+
+.account-greeting {
+  margin-bottom: 16px;
+  color: #245c3a;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.account-section {
+  margin-top: 16px;
+}
+
+.account-profile .account-readonly,
+.account-profile .account-verification-status {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.account-profile .account-verification-status.is-verified {
+  color: #245c3a;
+  font-weight: 700;
+}
+
+.account-profile .account-actions {
+  max-width: 420px;
+}
+
+.account-display-name {
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.account-edit-link {
+  width: auto;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #245c3a;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#displayNameEditArea {
+  margin-top: 12px;
+}
+
 @media (max-width: 520px) {
+  .title-row .nav-menu {
+    width: min(350px, calc(100% - 40px));
+  }
+
   #authView > .card {
     width: calc(100% - 32px);
     padding-left: 12px;
@@ -1507,5 +1581,9 @@ select:focus {
   #authView .button-row > button {
     flex: 1 1 0;
     min-width: 0;
+  }
+
+  #authView .account-profile input[type="text"] {
+    width: 48%;
   }
 }

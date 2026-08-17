@@ -34,6 +34,18 @@ function clearDesiredView() {
 	window.desiredView = null;
 }
 
+async function getDisplayName(user) {
+	const authDisplayName = user && user.displayName ? user.displayName.trim() : '';
+	if (authDisplayName) return authDisplayName;
+	try {
+		const profile = await getDoc(doc(db, 'users', user.uid));
+		const profileDisplayName = profile.exists() ? profile.data().displayName : '';
+		return typeof profileDisplayName === 'string' ? profileDisplayName.trim() : '';
+	} catch (e) {
+		return '';
+	}
+}
+
 function translateError(code) {
 	const map = {
 		'auth/email-already-in-use': 'Diese E-Mail-Adresse wird bereits verwendet.',
@@ -58,6 +70,7 @@ function setBusy(flag) {
 function showStatus(msg, error=false) {
 	const el = $('authStatus');
 	el.textContent = msg;
+	el.hidden = !msg;
 	el.style.color = error ? '#a12d2d' : '';
 }
 
@@ -108,10 +121,10 @@ function updateNavForAuth(user) {
 		} else if (user.emailVerified !== true) {
 			authLabel.textContent = 'Konto bestätigen';
 		} else {
-			authLabel.textContent = '👤 Mein Konto';
+			authLabel.textContent = 'Mein Konto';
 		}
 	} else if (user && user.emailVerified) {
-		authBtn.textContent = '👤 Mein Konto';
+		authBtn.textContent = 'Mein Konto';
 	} else if (user) {
 		authBtn.textContent = 'Konto bestätigen';
 	} else {
@@ -119,12 +132,22 @@ function updateNavForAuth(user) {
 	}
 }
 
-function updateGreetingForStart(user) {
+function updateGreetingForStart(user, displayName = '') {
 	const el = $('startUserGreeting');
 	if (!el) return;
 	if (user && user.emailVerified === true) {
-		const name = user.displayName && user.displayName.trim() ? user.displayName.trim() : '';
-		el.textContent = name ? `Hallo ${name}, schön, dass du da bist.` : 'Hallo, schön, dass du da bist.';
+		el.replaceChildren();
+		if (displayName) {
+			const salutation = document.createElement('span');
+			salutation.className = 'start-user-name';
+			salutation.textContent = `Hallo ${displayName}`;
+			const welcome = document.createElement('span');
+			welcome.className = 'start-user-welcome';
+			welcome.textContent = ', schön, dass du da bist.';
+			el.append(salutation, welcome);
+		} else {
+			el.textContent = 'Willkommen zurück';
+		}
 		el.hidden = false;
 	} else {
 		el.textContent = '';
@@ -144,30 +167,39 @@ function updateAuthTitle(user) {
 	}
 }
 
-function updateProfileArea(user) {
+function updateProfileArea(user, displayName = '') {
 	const authProfile = $('authProfile');
 	const profileGreeting = $('profileGreeting');
 	const profileDisplayName = $('profileDisplayName');
+	const profileDisplayNameInput = $('profileDisplayNameInput');
 	const profileEmail = $('profileEmail');
 	const profileEmailVerified = $('profileEmailVerified');
 	const resend = $('resendVerificationBtn');
 	const check = $('checkVerificationBtn');
-	if (!authProfile || !profileGreeting || !profileDisplayName || !profileEmail || !profileEmailVerified) return;
+	if (!authProfile || !profileGreeting || !profileDisplayName || !profileDisplayNameInput || !profileEmail || !profileEmailVerified) return;
 	if (!user) {
 		authProfile.style.display = 'none';
 		profileGreeting.textContent = '';
 		profileDisplayName.textContent = '';
+		profileDisplayNameInput.value = '';
 		profileEmail.textContent = '';
 		profileEmailVerified.textContent = '';
 		if (resend) resend.style.display = 'none';
 		if (check) check.style.display = 'none';
 		return;
 	}
-	const displayName = user.displayName && user.displayName.trim() ? user.displayName.trim() : 'Unbekannt';
-	profileGreeting.textContent = user.emailVerified === true ? `Hallo ${displayName}!` : '';
-	profileDisplayName.textContent = `Anzeigename: ${displayName}`;
+	profileGreeting.textContent = user.emailVerified === true
+		? (displayName ? `Hallo ${displayName}` : 'Willkommen zurück')
+		: '';
+	profileDisplayName.textContent = displayName || 'Kein Nutzername hinterlegt';
+	profileDisplayNameInput.value = displayName;
+	const editArea = $('displayNameEditArea');
+	const editButton = $('editDisplayNameBtn');
+	if (editArea) editArea.hidden = true;
+	if (editButton) editButton.hidden = false;
 	profileEmail.textContent = `E-Mail: ${user.email || ''}`;
-	profileEmailVerified.textContent = `E-Mail bestätigt: ${user.emailVerified ? 'Ja' : 'Nein'}`;
+	profileEmailVerified.textContent = user.emailVerified ? 'E-Mail bestätigt' : 'E-Mail noch nicht bestätigt';
+	profileEmailVerified.classList.toggle('is-verified', user.emailVerified === true);
 	if (user.emailVerified === true) {
 		authProfile.style.display = '';
 		if (resend) resend.style.display = 'none';
@@ -177,6 +209,33 @@ function updateProfileArea(user) {
 		if (resend) resend.style.display = '';
 		if (check) check.style.display = '';
 	}
+}
+
+function showAuthenticatedAccount(user, displayName = '') {
+	updateAuthTitle(user);
+	updateProfileArea(user, displayName);
+	showStatus('');
+	const authLoginForm = $('authLoginForm');
+	const authRegisterForm = $('authRegisterForm');
+	const tabs = document.querySelector('#authView .auth-tabs');
+	if (authLoginForm) authLoginForm.style.display = 'none';
+	if (authRegisterForm) authRegisterForm.style.display = 'none';
+	if (tabs) tabs.style.display = 'none';
+}
+
+async function openAuthArea() {
+	const user = auth.currentUser;
+	if (user && user.emailVerified === true) {
+		showAuthenticatedAccount(user, user.displayName ? user.displayName.trim() : '');
+		zeigeBereich('authView');
+		const displayName = await getDisplayName(user);
+		if (auth.currentUser === user && user.emailVerified === true) {
+			showAuthenticatedAccount(user, displayName);
+		}
+	} else {
+		zeigeBereich('authView');
+	}
+	if (typeof closeMainMenu === 'function') closeMainMenu();
 }
 
 function setLoggedOutAuthState() {
@@ -466,6 +525,63 @@ function bindAuthUI() {
 			}
 		});
 	}
+
+	const saveDisplayNameBtn = $('saveDisplayNameBtn');
+	if (saveDisplayNameBtn) {
+		saveDisplayNameBtn.addEventListener('click', async () => {
+			const user = auth.currentUser;
+			const input = $('profileDisplayNameInput');
+			const displayName = input ? input.value.trim() : '';
+			if (!user || user.emailVerified !== true) {
+				showStatus('Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse.', true);
+				return;
+			}
+			if (!displayName || displayName.length > 50) {
+				showStatus('Bitte einen Anzeigenamen mit 1 bis 50 Zeichen eingeben.', true);
+				return;
+			}
+			setBusy(true);
+			try {
+				await updateProfile(user, { displayName });
+				await updateDoc(doc(db, 'users', user.uid), {
+					displayName,
+					updatedAt: serverTimestamp()
+				});
+				updateGreetingForStart(user, displayName);
+				updateProfileArea(user, displayName);
+				updateNavForAuth(user);
+				showStatus('Anzeigename gespeichert.');
+			} catch (e) {
+				showStatus('Anzeigename konnte nicht gespeichert werden. Bitte erneut versuchen.', true);
+			} finally {
+				setBusy(false);
+			}
+		});
+	}
+
+	const editDisplayNameBtn = $('editDisplayNameBtn');
+	if (editDisplayNameBtn) {
+		editDisplayNameBtn.addEventListener('click', () => {
+			const editArea = $('displayNameEditArea');
+			const input = $('profileDisplayNameInput');
+			if (editArea) editArea.hidden = false;
+			editDisplayNameBtn.hidden = true;
+			if (input) input.focus();
+		});
+	}
+
+	const cancelDisplayNameBtn = $('cancelDisplayNameBtn');
+	if (cancelDisplayNameBtn) {
+		cancelDisplayNameBtn.addEventListener('click', () => {
+			const editArea = $('displayNameEditArea');
+			const input = $('profileDisplayNameInput');
+			const displayName = $('profileDisplayName').textContent;
+			if (input) input.value = displayName === 'Kein Nutzername hinterlegt' ? '' : displayName;
+			if (editArea) editArea.hidden = true;
+			const editButton = $('editDisplayNameBtn');
+			if (editButton) editButton.hidden = false;
+		});
+	}
 }
 
 onAuthStateChanged(auth, async (user) => {
@@ -478,24 +594,31 @@ onAuthStateChanged(auth, async (user) => {
 		} else {
 			window.aktuellerNutzer = null;
 		}
-		updateGreetingForStart(user);
+		const displayName = await getDisplayName(user);
+		updateGreetingForStart(user, displayName);
 		updateNavForAuth(user);
-		updateAuthTitle(user);
-		updateProfileArea(user);
+		if (currentUserVerified) {
+			showAuthenticatedAccount(user, displayName);
+		} else {
+			updateAuthTitle(user);
+			updateProfileArea(user, displayName);
+		}
 
 		const loginTab = $('authTabLogin');
 		const registerTab = $('authTabRegister');
 		if (loginTab) { loginTab.classList.remove('active'); loginTab.disabled = true; }
 		if (registerTab) { registerTab.classList.remove('active'); registerTab.disabled = true; }
 
-		const authProfile = $('authProfile');
-		if (authProfile) authProfile.style.display = '';
-		const authLoginForm = $('authLoginForm');
-		if (authLoginForm) authLoginForm.style.display = 'none';
-		const authRegisterForm = $('authRegisterForm');
-		if (authRegisterForm) authRegisterForm.style.display = 'none';
-		const tabs = document.querySelector('#authView .auth-tabs');
-		if (tabs) tabs.style.display = 'none';
+		if (!currentUserVerified) {
+			const authProfile = $('authProfile');
+			if (authProfile) authProfile.style.display = '';
+			const authLoginForm = $('authLoginForm');
+			if (authLoginForm) authLoginForm.style.display = 'none';
+			const authRegisterForm = $('authRegisterForm');
+			if (authRegisterForm) authRegisterForm.style.display = 'none';
+			const tabs = document.querySelector('#authView .auth-tabs');
+			if (tabs) tabs.style.display = 'none';
+		}
 		const target = getDesiredView();
 		if (currentUserVerified && target) { zeigeBereich(target); clearDesiredView(); }
 	} else {
@@ -508,6 +631,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 window.requireAuth = requireAuth;
+window.openAuthArea = openAuthArea;
 
 document.addEventListener('DOMContentLoaded', bindAuthUI, { once: true });
 

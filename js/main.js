@@ -106,23 +106,18 @@ function moveHamburgerToView(viewId) {
   const view = document.getElementById(viewId);
   if (!view) return;
 
-  // find the main heading inside the view
-  const h1 = view.querySelector('h1');
-  if (!h1) {
-    // fallback: place hamburger at start of view
-    view.insertBefore(hamburger, view.firstChild);
-    view.insertBefore(menu, hamburger.nextSibling);
-    return;
-  }
+  // Find the main heading inside the view.
+  const heading = view.querySelector('h1, h2');
+  if (!heading) return;
 
   // ensure title-row wrapper exists
-  let titleRow = h1.closest('.title-row');
+  let titleRow = heading.closest('.title-row');
   if (!titleRow) {
     titleRow = document.createElement('div');
     titleRow.className = 'title-row';
-    // insert titleRow before h1 and move h1 inside it
-    h1.parentNode.insertBefore(titleRow, h1);
-    titleRow.appendChild(h1);
+    // Insert titleRow before the heading and move the heading inside it.
+    heading.parentNode.insertBefore(titleRow, heading);
+    titleRow.appendChild(heading);
   }
 
   // make titleRow positioned so menu can be absolute relative to it
@@ -194,7 +189,6 @@ function formatKilianAntwort(text) {
 function initialisiereHinweis() {
     const checkbox = document.getElementById("hinweisCheckbox");
     const button = document.getElementById("hinweisButton");
-  const closeButton = document.getElementById("hinweisCloseButton");
 
     if (!localStorage.getItem("hinweisGelesen")) {
       document.getElementById("hinweisOverlay").style.display = "flex";
@@ -203,18 +197,14 @@ function initialisiereHinweis() {
     checkbox.addEventListener("change", function () {
       if (checkbox.checked) {
         button.disabled = false;
-        closeButton.disabled = false;
         button.style.background = "linear-gradient(135deg, #f0b429, #d97706)";
         button.style.color = "#ffffff";
         button.style.cursor = "pointer";
-        closeButton.style.cursor = "pointer";
       } else {
         button.disabled = true;
-        closeButton.disabled = true;
         button.style.background = "#d9d9d9";
         button.style.color = "#666";
         button.style.cursor = "not-allowed";
-        closeButton.style.cursor = "not-allowed";
       }
     });
   }
@@ -225,12 +215,10 @@ function hinweisAnzeigen() {
     const checkboxWrap = document.getElementById("hinweisCheckboxWrap");
     const checkbox = document.getElementById("hinweisCheckbox");
     const button = document.getElementById("hinweisButton");
-    const closeButton = document.getElementById("hinweisCloseButton");
 
     checkboxWrap.style.display = "flex";
     checkbox.checked = false;
     button.disabled = true;
-    closeButton.disabled = true;
     button.style.background = "#d9d9d9";
     button.style.color = "#666";
     button.style.cursor = "not-allowed";
@@ -238,19 +226,14 @@ function hinweisAnzeigen() {
   }
 
 function hinweisSchliessen() {
-    const bereitsGelesen = localStorage.getItem("hinweisGelesen") === "true";
     const checkbox = document.getElementById("hinweisCheckbox");
 
-    if (!bereitsGelesen && !checkbox.checked) {
+  if (!checkbox.checked) {
       return;
     }
 
     document.getElementById("hinweisOverlay").style.display = "none";
     localStorage.setItem("hinweisGelesen", "true");
-  }
-
-function hinweisNurSchliessen() {
-  hinweisSchliessen();
   }
 
 function toggleTrainerDropdown(event) {

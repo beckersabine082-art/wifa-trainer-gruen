@@ -85,7 +85,7 @@
 
             <button class="nav-btn" id="navWissen" type="button" onclick="requireAuth('wissenView'); closeMainMenu();">Wissensdatenbank</button>
             <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();">Frag Kilian</button>
-            <button class="nav-btn" id="navAuth" type="button" onclick="zeigeBereich('authView'); closeMainMenu();"><span id="navAuthLabel">Anmelden</span></button>
+            <button class="nav-btn" id="navAuth" type="button" onclick="openAuthArea();"><span id="navAuthLabel">Anmelden</span></button>
             <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">Nutzungshinweis</button>
           </div>
         </div>
@@ -243,26 +243,44 @@
             </div>
           </form>
 
-          <div id="authProfile" style="display:none; margin-top:14px;">
-            <div id="profileGreeting" style="font-weight:bold; margin-bottom:12px;"></div>
-            <div class="label">Persönliche Daten</div>
-            <div id="profileDisplayName" style="margin-top:6px; font-weight:bold;"></div>
-            <div id="profileEmail" style="margin-top:6px; color:#5a4a80;"></div>
-            <div id="profileEmailVerified" style="margin-top:6px; color:#5a4a80;"></div>
+          <div id="authProfile" class="account-profile" style="display:none; margin-top:14px;">
+            <div id="profileGreeting" class="account-greeting"></div>
+            <section class="account-section" aria-labelledby="personalDataTitle">
+              <div id="personalDataTitle" class="label">Persönliche Daten</div>
+              <div class="label">Nutzername</div>
+              <div id="profileDisplayName" class="account-display-name"></div>
+              <button id="editDisplayNameBtn" class="small-link account-edit-link" type="button">Nutzernamen ändern</button>
+              <div id="displayNameEditArea" hidden>
+                <label class="label" for="profileDisplayNameInput">Nutzername</label>
+                <input id="profileDisplayNameInput" type="text" maxlength="50" autocomplete="name">
+                <div class="button-row account-actions">
+                  <button id="saveDisplayNameBtn" class="action-btn" type="button">Speichern</button>
+                  <button id="cancelDisplayNameBtn" class="secondary-btn" type="button">Abbrechen</button>
+                </div>
+              </div>
+              <div id="profileEmail" class="account-readonly"></div>
+              <div id="profileEmailVerified" class="account-verification-status"></div>
+            </section>
 
-            <div class="button-row" style="margin-top:12px;">
-              <button id="accountPasswordResetBtn" class="secondary-btn">Passwort ändern</button>
-              <button id="signOutBtn" class="danger-btn">Abmelden</button>
-            </div>
+            <section class="account-section" aria-labelledby="passwordTitle">
+              <div id="passwordTitle" class="label">Passwort</div>
+              <div class="button-row account-actions">
+                <button id="accountPasswordResetBtn" class="secondary-btn" type="button">E-Mail zum Ändern des Passworts senden</button>
+              </div>
+            </section>
 
-            <div style="margin-top:16px;">
-              <div class="label">Tarif &amp; Abonnement</div>
-              <div>Aktueller Zugang: Kostenlos. Abonnements sind noch nicht eingerichtet.</div>
-            </div>
+            <section class="account-section" aria-labelledby="subscriptionTitle">
+              <div id="subscriptionTitle" class="label">Abo</div>
+              <div>Noch nicht eingerichtet.</div>
+            </section>
 
-            <div style="margin-top:16px;">
-              <div class="label">Zahlungsdaten</div>
-              <div>Keine Zahlungsdaten hinterlegt. Zahlungsfunktionen sind noch nicht eingerichtet.</div>
+            <section class="account-section" aria-labelledby="paymentTitle">
+              <div id="paymentTitle" class="label">Zahlungsdaten</div>
+              <div>Noch nicht eingerichtet.</div>
+            </section>
+
+            <div class="button-row account-actions">
+              <button id="signOutBtn" class="danger-btn" type="button">Abmelden</button>
             </div>
 
             <div class="button-row" style="margin-top:12px;">
@@ -974,20 +992,6 @@
           Gelesen und fortfahren
         </button>
 
-        <button id="hinweisCloseButton" onclick="hinweisNurSchliessen()" disabled style="
-          flex: 1;
-          min-width: 140px;
-          padding: 12px 18px;
-          border: 1px solid #d6c28a;
-          border-radius: 12px;
-          background: #fff8e6;
-          color: #7a5a00;
-          font-size: 15px;
-          font-weight: bold;
-          cursor: pointer;
-        ">
-          Schließen
-        </button>
       </div>
     </div>
   </div>
