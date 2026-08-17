@@ -31,16 +31,9 @@ const faecherNachTeilbereich = {
   let ladeToken = 0;
   let appIstBeschaeftigt = false;
 
-  let aktuellerNutzer = localStorage.getItem("nutzerCode");
-
-  if (!aktuellerNutzer) {
-    aktuellerNutzer = prompt("Bitte gib deinen Nutzer-Code ein:");
-    if (!aktuellerNutzer || !aktuellerNutzer.trim()) {
-      aktuellerNutzer = "Gast";
-    }
-    aktuellerNutzer = aktuellerNutzer.trim();
-    localStorage.setItem("nutzerCode", aktuellerNutzer);
-  }
+  // Aktueller Nutzer (UID) wird in `window.aktuellerNutzer` verwaltet von `js/login.js`.
+  // Stelle sicher, dass kein lokales `aktuellerNutzer` existiert.
+  if (typeof window.aktuellerNutzer === 'undefined') window.aktuellerNutzer = null;
 
   const sessionStats = {
     totalErreicht: 0,
@@ -75,7 +68,7 @@ function zeigeBereich(viewId) {
       ziel.classList.add("active");
     }
 
-    document.querySelectorAll(".nav-btn").forEach(function(btn) {
+    document.querySelectorAll(".nav-actions .nav-btn").forEach(function(btn) {
       btn.classList.remove("active");
     });
 
@@ -148,7 +141,12 @@ function moveHamburgerToView(viewId) {
 }
 
 function oeffneTrainerMitTeilbereich(teilbereich) {
-    zeigeBereich("trainerView");
+    // Wenn requireAuth verfügbar ist, verwende es, sonst direkt öffnen
+    if (typeof requireAuth === 'function') {
+      requireAuth('trainerView');
+    } else {
+      zeigeBereich('trainerView');
+    }
     const select = document.getElementById("teilbereichSelect");
     select.value = teilbereich;
     waehleTeilbereich();
@@ -196,6 +194,7 @@ function formatKilianAntwort(text) {
 function initialisiereHinweis() {
     const checkbox = document.getElementById("hinweisCheckbox");
     const button = document.getElementById("hinweisButton");
+  const closeButton = document.getElementById("hinweisCloseButton");
 
     if (!localStorage.getItem("hinweisGelesen")) {
       document.getElementById("hinweisOverlay").style.display = "flex";
@@ -204,14 +203,18 @@ function initialisiereHinweis() {
     checkbox.addEventListener("change", function () {
       if (checkbox.checked) {
         button.disabled = false;
+        closeButton.disabled = false;
         button.style.background = "linear-gradient(135deg, #f0b429, #d97706)";
         button.style.color = "#ffffff";
         button.style.cursor = "pointer";
+        closeButton.style.cursor = "pointer";
       } else {
         button.disabled = true;
+        closeButton.disabled = true;
         button.style.background = "#d9d9d9";
         button.style.color = "#666";
         button.style.cursor = "not-allowed";
+        closeButton.style.cursor = "not-allowed";
       }
     });
   }
@@ -222,10 +225,12 @@ function hinweisAnzeigen() {
     const checkboxWrap = document.getElementById("hinweisCheckboxWrap");
     const checkbox = document.getElementById("hinweisCheckbox");
     const button = document.getElementById("hinweisButton");
+    const closeButton = document.getElementById("hinweisCloseButton");
 
     checkboxWrap.style.display = "flex";
     checkbox.checked = false;
     button.disabled = true;
+    closeButton.disabled = true;
     button.style.background = "#d9d9d9";
     button.style.color = "#666";
     button.style.cursor = "not-allowed";
@@ -245,7 +250,7 @@ function hinweisSchliessen() {
   }
 
 function hinweisNurSchliessen() {
-    document.getElementById("hinweisOverlay").style.display = "none";
+  hinweisSchliessen();
   }
 
 function toggleTrainerDropdown(event) {

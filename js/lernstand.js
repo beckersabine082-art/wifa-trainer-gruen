@@ -12,7 +12,7 @@ async function ladeLernstand() {
       liste.innerHTML = "Bitte kurz warten...";
 
       const result = await apiGet("getLernstand", {
-        nutzer: aktuellerNutzer
+        nutzer: window.aktuellerNutzer
       });
 
       if (!result.success) {

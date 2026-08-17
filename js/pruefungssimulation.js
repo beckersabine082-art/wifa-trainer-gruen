@@ -811,12 +811,13 @@ function togglePruefungDropdown(event) {
 }
 
 function oeffnePruefungMitTeilbereich(teilbereich) {
-  zeigeBereich("pruefungView");
+  if (typeof requireAuth === 'function') {
+    requireAuth('pruefungView');
+  } else {
+    zeigeBereich('pruefungView');
+  }
 
-  const select =
-    document.getElementById("pruefungTeilbereichSelect");
-
+  const select = document.getElementById("pruefungTeilbereichSelect");
   select.value = teilbereich;
-
   pruefungTeilbereichWaehlen();
 }

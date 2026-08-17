@@ -74,7 +74,7 @@ const bewertungText = bereinigeBewertungText(
       setzeStatus("Auswertung abgeschlossen. Lernstand wird gespeichert...");
 
       const speicherResult = await apiPost("speichereLernstand", {
-        nutzer: aktuellerNutzer,
+        nutzer: window.aktuellerNutzer,
         teilbereich: ermittleTeilbereich(aktuellesFach),
         fach: aktuellesFach,
         thema: aktuellesThema,

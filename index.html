@@ -56,9 +56,9 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navLernstand" type="button" onclick="zeigeBereich('lernstandView'); closeMainMenu();">Lernstand</button>
-            <button class="nav-btn" id="navGlossar" type="button" onclick="zeigeBereich('glossarView'); closeMainMenu();">Glossar</button>
-            <button class="nav-btn" id="navFormeln" type="button" onclick="zeigeBereich('formelView'); closeMainMenu();">Formelsammlung</button>
+            <button class="nav-btn" id="navLernstand" type="button" onclick="requireAuth('lernstandView'); closeMainMenu();">Lernstand</button>
+            <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">Glossar</button>
+            <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">Formelsammlung</button>
 
             <div class="dropdown">
               <button
@@ -83,8 +83,9 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navWissen" type="button" onclick="zeigeBereich('wissenView'); closeMainMenu();">Wissensdatenbank</button>
-            <button class="nav-btn" id="navKilian" type="button" onclick="zeigeBereich('kilianView'); closeMainMenu();">Frag Kilian</button>
+            <button class="nav-btn" id="navWissen" type="button" onclick="requireAuth('wissenView'); closeMainMenu();">Wissensdatenbank</button>
+            <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();">Frag Kilian</button>
+            <button class="nav-btn" id="navAuth" type="button" onclick="zeigeBereich('authView'); closeMainMenu();"><span id="navAuthLabel">Anmelden</span></button>
             <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">Nutzungshinweis</button>
           </div>
         </div>
@@ -96,6 +97,7 @@
 
           <div class="hero-text">
             <h1>WiFa Trainer</h1>
+            <div id="startUserGreeting" hidden></div>
 
             <p>
               Willkommen beim WiFa Trainer – einem digitalen Lernbereich zur Vorbereitung
@@ -178,6 +180,100 @@
           </div>
         </div>
 
+      </section>
+
+      <section class="view" id="authView">
+        <div class="card">
+          <h2 id="authViewTitle" class="section-title">Anmelden / Registrieren</h2>
+
+          <div id="authStatus" class="status">Bitte anmelden oder registrieren.</div>
+
+          <div class="auth-tabs">
+            <button id="authTabLogin" class="nav-btn active" type="button">Anmelden</button>
+            <button id="authTabRegister" class="nav-btn" type="button">Registrieren</button>
+          </div>
+
+          <form id="authLoginForm" style="margin-top:14px;">
+            <label class="label">E-Mail</label>
+            <input id="loginEmail" type="text" placeholder="E-Mail-Adresse">
+
+            <label class="label" style="margin-top:10px;">Passwort</label>
+            <input id="loginPassword" type="password" placeholder="Passwort">
+
+            <label style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+              <input id="loginRemember" type="checkbox" checked>
+              Angemeldet bleiben
+            </label>
+
+            <div class="button-row" style="margin-top:12px;">
+              <button id="loginSubmit" class="action-btn" type="submit">Anmelden</button>
+              <button id="forgotPasswordBtn" class="secondary-btn" type="button">Passwort vergessen</button>
+            </div>
+            <div style="margin-top:8px;">
+              <a href="#" id="loginBackStart" class="small-link">Zurück zum Start</a>
+            </div>
+          </form>
+
+          <form id="authRegisterForm" style="display:none; margin-top:14px;">
+            <label class="label">Anzeigename</label>
+            <input id="regDisplayName" type="text" placeholder="Anzeigename (max. 50 Zeichen)">
+
+            <label class="label" style="margin-top:10px;">E-Mail</label>
+            <input id="regEmail" type="text" placeholder="E-Mail-Adresse">
+
+            <label class="label" style="margin-top:10px;">Passwort</label>
+            <input id="regPassword" type="password" placeholder="Passwort (mind. 12 Zeichen)">
+
+            <label class="label" style="margin-top:10px;">Passwort wiederholen</label>
+            <input id="regPasswordConfirm" type="password" placeholder="Passwort wiederholen">
+
+            <div class="status" style="margin-top:8px;">Hinweis: Mindestens 12 Zeichen.</div>
+
+            <label style="display:flex; align-items:flex-start; gap:8px; margin-top:12px;">
+              <input id="regPrivacyAcknowledged" type="checkbox" />
+              <span>Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> zur Kenntnis genommen.</span>
+            </label>
+
+            <div class="button-row" style="margin-top:12px;">
+              <button id="regSubmit" class="action-btn" type="submit">Registrieren</button>
+            </div>
+            <div style="margin-top:8px; font-size:13px;">Durch die Registrierung akzeptieren Sie unsere <a href="datenschutz.html">Datenschutzerklärung</a>.</div>
+            <div style="margin-top:8px;">
+              <a href="#" id="regBackStart" class="small-link">Zurück zum Start</a>
+            </div>
+          </form>
+
+          <div id="authProfile" style="display:none; margin-top:14px;">
+            <div id="profileGreeting" style="font-weight:bold; margin-bottom:12px;"></div>
+            <div class="label">Persönliche Daten</div>
+            <div id="profileDisplayName" style="margin-top:6px; font-weight:bold;"></div>
+            <div id="profileEmail" style="margin-top:6px; color:#5a4a80;"></div>
+            <div id="profileEmailVerified" style="margin-top:6px; color:#5a4a80;"></div>
+
+            <div class="button-row" style="margin-top:12px;">
+              <button id="accountPasswordResetBtn" class="secondary-btn">Passwort ändern</button>
+              <button id="signOutBtn" class="danger-btn">Abmelden</button>
+            </div>
+
+            <div style="margin-top:16px;">
+              <div class="label">Tarif &amp; Abonnement</div>
+              <div>Aktueller Zugang: Kostenlos. Abonnements sind noch nicht eingerichtet.</div>
+            </div>
+
+            <div style="margin-top:16px;">
+              <div class="label">Zahlungsdaten</div>
+              <div>Keine Zahlungsdaten hinterlegt. Zahlungsfunktionen sind noch nicht eingerichtet.</div>
+            </div>
+
+            <div class="button-row" style="margin-top:12px;">
+              <button id="resendVerificationBtn" class="secondary-btn">Bestätigungs-E-Mail erneut senden</button>
+              <button id="checkVerificationBtn" class="secondary-btn">Bestätigungsstatus prüfen</button>
+            </div>
+            <div style="margin-top:8px;">
+              <a href="#" id="profileBackStart" class="small-link">Zurück zum Start</a>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="view" id="trainerView">
@@ -878,7 +974,7 @@
           Gelesen und fortfahren
         </button>
 
-        <button onclick="hinweisNurSchliessen()" style="
+        <button id="hinweisCloseButton" onclick="hinweisNurSchliessen()" disabled style="
           flex: 1;
           min-width: 140px;
           padding: 12px 18px;
@@ -897,7 +993,8 @@
   </div>
 
 <script src="js/api.js"></script>
-<script src="js/main.js"></script>
+<script src="js/auth-shim.js"></script>
+<script src="js/main.js?v=auth1"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
 <script src="js/trainer.js?v=frageid1"></script>
@@ -906,5 +1003,5 @@
 <script src="js/wissensdatenbank.js"></script>
 <script src="js/pruefungssimulation.js"></script>
 <script src="js/linksammlung.js?v=gesetze1"></script>
-<script src="js/login.js"></script> </body>
+<script type="module" src="js/login.js?v=auth1"></script> </body>
 </html>
