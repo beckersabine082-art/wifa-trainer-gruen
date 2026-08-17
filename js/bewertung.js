@@ -35,7 +35,8 @@ async function bewerteAntwort() {
       const result = await apiPost("bewerteAntwort", {
         fach: aktuellesFach,
         frageId: aktuelleFrageId,
-        antwort: antwort
+        antwort: antwort,
+        speichereInSheet: false
       });
 
       if (!result.success) {
@@ -73,21 +74,18 @@ const bewertungText = bereinigeBewertungText(
 
       setzeStatus("Auswertung abgeschlossen. Lernstand wird gespeichert...");
 
-      const speicherResult = await apiPost("speichereLernstand", {
-        nutzer: window.aktuellerNutzer,
-        teilbereich: ermittleTeilbereich(aktuellesFach),
+      if (typeof window.speichereWifaAttempt !== "function") {
+        throw new Error("Lernstand-Speicherung ist noch nicht bereit.");
+      }
+
+      await window.speichereWifaAttempt({
+        bereich: aktuellerTeilbereich || ermittleTeilbereich(aktuellesFach),
         fach: aktuellesFach,
         thema: aktuellesThema,
         frageId: aktuelleFrageId,
-        punkte: punkte,
-        maxPunkte: maxPunkte,
-        bewertung: bewertungText,
-        antwort: antwort
+        erreichtePunkte: punkte,
+        maximalePunkte: maxPunkte
       });
-
-      if (!speicherResult.success) {
-        throw new Error(speicherResult.error || "Lernstand konnte nicht gespeichert werden.");
-      }
 
       setzeStatus("Auswertung abgeschlossen und Lernstand gespeichert.");
     } catch (error) {
@@ -161,7 +159,6 @@ function updateStatAnzeige() {
       sessionStats.totalErreicht + " von " + sessionStats.totalMax + " Punkten in dieser Session";
     document.getElementById("sessionProgressBar").style.width = sessionProzent + "%";
 
-    renderEinzelergebnisse();
   }
 
 function renderEinzelergebnisse() {

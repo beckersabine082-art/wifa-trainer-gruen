@@ -15,10 +15,14 @@ import {
 import {
   getFirestore,
   doc,
+  collection,
   getDoc,
+  getDocs,
   setDoc,
   serverTimestamp,
-  updateDoc
+  updateDoc,
+  query,
+  orderBy
 } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -60,9 +64,13 @@ export {
   sendPasswordResetEmail,
   updateProfile,
   doc,
+  collection,
   getDoc,
+  getDocs,
   setDoc,
   serverTimestamp,
   updateDoc,
+  query,
+  orderBy,
   getReturnUrl
 };

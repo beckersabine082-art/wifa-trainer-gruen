@@ -42,6 +42,8 @@ const faecherNachTeilbereich = {
     eintraege: []
   };
 
+  window.faecherNachTeilbereich = faecherNachTeilbereich;
+
   let glossarDaten = [];
     let formelDaten = [];
 let glossarAktiverBuchstabe = "";
@@ -74,7 +76,15 @@ function zeigeBereich(viewId) {
 
     if (viewId === "startView") document.getElementById("navStart").classList.add("active");
     if (viewId === "trainerView") document.getElementById("navTrainer").classList.add("active");
-    if (viewId === "lernstandView") document.getElementById("navLernstand").classList.add("active");
+    if (["lernstandView", "lernstandPruefungView", "lernstandQuizView", "lernstandFehlerView"].includes(viewId)) {
+      document.getElementById("navLernstand").classList.add("active");
+    }
+    if (viewId === "lernstandView" && typeof window.ladeWifaLernstand === "function") {
+      window.ladeWifaLernstand();
+    }
+    if (viewId === "lernstandFehlerView" && typeof window.ladeFehleranalyse === "function") {
+      window.ladeFehleranalyse();
+    }
     if (viewId === "glossarView") {
   document.getElementById("navGlossar").classList.add("active");
 
@@ -253,6 +263,30 @@ function toggleTrainerDropdown(event) {
 
   dropdown.classList.toggle("open", !isOpen);
   button.setAttribute("aria-expanded", String(!isOpen));
+}
+
+function toggleLernstandDropdown(event) {
+  event.stopPropagation();
+  const button = document.getElementById("navLernstand");
+  const dropdown = button.closest(".dropdown");
+  const isOpen = dropdown.classList.contains("open");
+
+  document.querySelectorAll(".dropdown.open").forEach(function(openDropdown) {
+    openDropdown.classList.remove("open");
+    const openButton = openDropdown.querySelector("button");
+    if (openButton) openButton.setAttribute("aria-expanded", "false");
+  });
+
+  dropdown.classList.toggle("open", !isOpen);
+  button.setAttribute("aria-expanded", String(!isOpen));
+}
+
+function oeffneLernstandBereich(viewId) {
+  if (typeof requireAuth === "function") {
+    requireAuth(viewId);
+  } else {
+    zeigeBereich(viewId);
+  }
 }
 
 function closeMainMenu() {

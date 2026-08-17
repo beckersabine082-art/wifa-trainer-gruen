@@ -1,128 +1,339 @@
-async function ladeLernstand() {
-    if (appIstBeschaeftigt) return;
+import {
+  auth,
+  db,
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  serverTimestamp,
+  query,
+  orderBy
+} from './firebase-config.js';
 
-    try {
-      setzeAppBeschaeftigt(true);
+const MODULE_ID = 'wifa-trainer';
+const BERLIN_TIME_ZONE = 'Europe/Berlin';
 
-      const status = document.getElementById("lernstandStatus");
-      const liste = document.getElementById("lernstandListe");
-
-      status.textContent = "Lernstand wird geladen...";
-      liste.className = "result-list-empty";
-      liste.innerHTML = "Bitte kurz warten...";
-
-      const result = await apiGet("getLernstand", {
-        nutzer: window.aktuellerNutzer
-      });
-
-      if (!result.success) {
-        throw new Error(result.error || "Lernstand konnte nicht geladen werden.");
-      }
-
-      const daten = result.data || [];
-      aktuellePruefungsDaten = daten;
-const fachSelect =
-  document.getElementById("pruefungFachSelect");
-
-const gewaehlteOption =
-  fachSelect.options[fachSelect.selectedIndex];
-
-const minuten =
-  Number(gewaehlteOption?.dataset?.zeit || 0);
-
-if (minuten > 0) {
-  startePruefungTimer(minuten);
+function escapeText(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
-      if (!daten.length) {
-        status.textContent = "Keine gespeicherten Einträge gefunden.";
-        liste.className = "result-list-empty";
-        liste.innerHTML = "Für diesen Nutzer-Code wurde noch kein Lernstand gefunden.";
-        return;
-      }
 
-      status.textContent = daten.length + " gespeicherte Auswertungen geladen.";
-      liste.className = "";
+function percentage(points, maximum) {
+  return maximum > 0 ? (points / maximum) * 100 : 0;
+}
 
-      const fachMap = {};
+function roundedPercentage(points, maximum) {
+  return Math.round(percentage(points, maximum));
+}
 
-      daten.forEach(function(eintrag) {
-        const key = String(eintrag.teilbereich || "") + "||" + String(eintrag.fach || "");
+function statusForAttempt(points, maximum) {
+  if (points === maximum) return 'richtig';
+  if (points > 0) return 'teilweise richtig';
+  return 'falsch';
+}
 
-        if (!fachMap[key]) {
-          fachMap[key] = {
-            teilbereich: eintrag.teilbereich || "",
-            fach: eintrag.fach || "",
-            erreicht: 0,
-            max: 0,
-            anzahl: 0,
-            eintraege: []
-          };
-        }
+function questionKey({ bereich, fach, thema, frageId }) {
+  return [MODULE_ID, bereich, fach, thema, frageId].map(value => String(value || '').trim()).join('::');
+}
 
-        fachMap[key].erreicht += Number(eintrag.punkte || 0);
-        fachMap[key].max += Number(eintrag.maxPunkte || 0);
-        fachMap[key].anzahl += 1;
-        fachMap[key].eintraege.push(eintrag);
-      });
+function currentVerifiedUser() {
+  const user = auth.currentUser;
+  return user && user.emailVerified === true ? user : null;
+}
 
-      const fachBloecke = Object.values(fachMap);
+function timestampMillis(timestamp) {
+  return timestamp && typeof timestamp.toMillis === 'function' ? timestamp.toMillis() : 0;
+}
 
-      liste.innerHTML = fachBloecke.map(function(fachBlock, index) {
-        const prozent = fachBlock.max > 0
-          ? Math.round((fachBlock.erreicht / fachBlock.max) * 100)
-          : 0;
+function berlinDay(timestamp) {
+  const date = timestamp && typeof timestamp.toDate === 'function' ? timestamp.toDate() : null;
+  if (!date) return '';
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: BERLIN_TIME_ZONE,
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).formatToParts(date);
+  const part = type => parts.find(item => item.type === type)?.value || '';
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
 
-        return `
-          <div class="result-mini-entry">
-            <div class="result-mini-head">
-              <div class="result-mini-title">
-                ${escapeHtml(fachBlock.teilbereich)} · ${escapeHtml(fachBlock.fach)}
-              </div>
-              <div class="result-mini-score">
-                ${prozent}%
-              </div>
-            </div>
+function formatDate(timestamp) {
+  const date = timestamp && typeof timestamp.toDate === 'function' ? timestamp.toDate() : null;
+  return date ? new Intl.DateTimeFormat('de-DE', { timeZone: BERLIN_TIME_ZONE, dateStyle: 'medium' }).format(date) : 'Noch keine Lernaktivität';
+}
 
-            <div class="result-mini-bar">
-              <div class="result-mini-fill" style="width: ${prozent}%;"></div>
-            </div>
+function formatDateTime(timestamp) {
+  const date = timestamp && typeof timestamp.toDate === 'function' ? timestamp.toDate() : null;
+  return date ? new Intl.DateTimeFormat('de-DE', {
+    timeZone: BERLIN_TIME_ZONE,
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  }).format(date) : 'Zeitpunkt nicht verfügbar';
+}
 
-            <div class="result-mini-footer">
-              <span>${fachBlock.erreicht} / ${fachBlock.max} Punkte · ${fachBlock.anzahl} Auswertungen</span>
-              <button class="secondary-btn" style="padding:6px 10px; font-size:12px; width:auto;" onclick="toggleDetails(${index})">
-                Details
-              </button>
-            </div>
+export async function speichereWifaAttempt({ bereich, fach, thema, frageId, erreichtePunkte, maximalePunkte }) {
+  const user = currentVerifiedUser();
+  if (!user) throw new Error('Bitte melde dich mit einem bestätigten Konto an, um den Lernstand zu speichern.');
 
-            <div id="details-${index}" style="display:none; margin-top:10px;">
-              ${fachBlock.eintraege.map(function(eintrag) {
-                const einzelProzent = Number(eintrag.maxPunkte || 0) > 0
-                  ? Math.round((Number(eintrag.punkte || 0) / Number(eintrag.maxPunkte || 0)) * 100)
-                  : Number(eintrag.prozent || 0);
-
-                return `
-                  <div style="margin-top:10px; font-size:13px; color:#5a4a80; border-top:1px solid #eadfff; padding-top:8px; line-height:1.5;">
-                    <strong>${einzelProzent}%</strong> · ${escapeHtml(eintrag.punkte)} / ${escapeHtml(eintrag.maxPunkte)} Punkte · ${escapeHtml(eintrag.datum)}<br>
-                    <strong>Thema:</strong> ${escapeHtml(eintrag.thema)}<br>
-                    <strong>Frage:</strong> ${escapeHtml(eintrag.frage || eintrag.frageId || "Frage nicht gefunden")}
-                  </div>
-                `;
-              }).join("")}
-            </div>
-          </div>
-        `;
-      }).join("");
-
-    } catch (error) {
-      document.getElementById("lernstandStatus").textContent =
-        "Fehler beim Laden: " + error.message;
-    } finally {
-      setzeAppBeschaeftigt(false);
-    }
+  const points = Number(erreichtePunkte);
+  const maximum = Number(maximalePunkte);
+  if (!Number.isFinite(points) || !Number.isFinite(maximum) || maximum <= 0 || points < 0 || points > maximum) {
+    throw new Error('Die Bewertung enthält keine speicherbaren Punktwerte.');
   }
 
-function toggleDetails(index) {
-    const el = document.getElementById("details-" + index);
-    if (!el) return;
-    el.style.display = el.style.display === "none" ? "block" : "none";
+  const attemptReference = doc(collection(db, 'users', user.uid, 'attempts'));
+  const attempt = {
+    attemptId: attemptReference.id,
+    userId: user.uid,
+    modul: MODULE_ID,
+    timestamp: serverTimestamp(),
+    questionKey: questionKey({ bereich, fach, thema, frageId }),
+    frageId: String(frageId || ''),
+    bereich: String(bereich || ''),
+    fach: String(fach || ''),
+    thema: String(thema || ''),
+    erreichtePunkte: points,
+    maximalPunkte: maximum,
+    prozent: percentage(points, maximum),
+    status: statusForAttempt(points, maximum)
+  };
+
+  await setDoc(attemptReference, attempt);
+}
+
+async function loadQuestionCatalog() {
+  const subjects = Object.entries(window.faecherNachTeilbereich || {}).flatMap(([bereich, faecher]) =>
+    faecher.map(fach => ({ bereich, fach }))
+  );
+  const results = await Promise.all(subjects.map(async subject => {
+    const result = await window.apiGet('topics', { fach: subject.fach });
+    if (!result.success) throw new Error(result.error || `Fragenbestand für ${subject.fach} konnte nicht geladen werden.`);
+    return (result.data || []).map(item => ({
+      ...subject,
+      thema: typeof item === 'string' ? item : String(item.thema || ''),
+      total: Math.max(0, Number(typeof item === 'object' ? item.anzahl : 0) || 0)
+    }));
+  }));
+  return results.flat().filter(item => item.thema);
+}
+
+async function loadAttempts(user) {
+  const attemptQuery = query(collection(db, 'users', user.uid, 'attempts'), orderBy('timestamp', 'desc'));
+  const snapshot = await getDocs(attemptQuery);
+  return snapshot.docs.map(documentSnapshot => ({ id: documentSnapshot.id, ...documentSnapshot.data() }))
+    .filter(attempt => attempt.modul === MODULE_ID && attempt.userId === user.uid);
+}
+
+function latestAttempts(attempts) {
+  const latest = new Map();
+  attempts.forEach(attempt => {
+    if (!latest.has(attempt.questionKey)) latest.set(attempt.questionKey, attempt);
+  });
+  return [...latest.values()];
+}
+
+function aggregate(attempts) {
+  const reached = attempts.reduce((sum, attempt) => sum + Number(attempt.erreichtePunkte || 0), 0);
+  const maximum = attempts.reduce((sum, attempt) => sum + Number(attempt.maximalPunkte || 0), 0);
+  return {
+    attempts,
+    reached,
+    maximum,
+    performance: roundedPercentage(reached, maximum),
+    errors: attempts.filter(attempt => attempt.status !== 'richtig')
+  };
+}
+
+function renderMetric(label, value, detail = '') {
+  return `<div class="lernstand-metric"><div class="lernstand-metric-label">${escapeText(label)}</div><div class="lernstand-metric-value">${escapeText(value)}</div><div class="lernstand-metric-detail">${escapeText(detail)}</div></div>`;
+}
+
+function renderBar(label, value, detail) {
+  const rawValue = Math.max(0, Math.min(100, Number(value) || 0));
+  const displayValue = Math.round(rawValue);
+  return `<div class="lernstand-bar-row"><div class="lernstand-bar-label"><span>${escapeText(label)}</span><strong>${displayValue}%</strong></div><div class="lernstand-bar"><div class="lernstand-bar-fill" style="width:${rawValue}%"></div></div><div class="lernstand-bar-detail">${escapeText(detail)}</div></div>`;
+}
+
+function renderDevelopment(attempts) {
+  const byDay = new Map();
+  attempts.forEach(attempt => {
+    const day = berlinDay(attempt.timestamp);
+    if (!day) return;
+    const value = byDay.get(day) || { reached: 0, maximum: 0, count: 0 };
+    value.reached += Number(attempt.erreichtePunkte || 0);
+    value.maximum += Number(attempt.maximalPunkte || 0);
+    value.count += 1;
+    byDay.set(day, value);
+  });
+  const entries = [...byDay.entries()].sort(([first], [second]) => first.localeCompare(second));
+  if (!entries.length) return '<div class="result-list-empty">Noch keine Lernaktivität</div>';
+  const maxCount = Math.max(...entries.map(([, value]) => value.count), 1);
+  return entries.map(([day, value]) => `
+    <div class="lernstand-development-row">
+      <strong>${escapeText(day)}</strong>
+      ${renderBar('Leistung', roundedPercentage(value.reached, value.maximum), `${value.reached} / ${value.maximum} Punkte`)}
+      ${renderBar('Aktivität', (value.count / maxCount) * 100, `${value.count} Versuche`)}
+    </div>
+  `).join('');
+}
+
+function renderSubject(subject, latest, catalog) {
+  const subjectCatalog = catalog.filter(item => item.bereich === subject.bereich && item.fach === subject.fach);
+  const subjectAttempts = latest.filter(attempt => attempt.bereich === subject.bereich && attempt.fach === subject.fach);
+  const subjectStats = aggregate(subjectAttempts);
+  const total = subjectCatalog.reduce((sum, item) => sum + item.total, 0);
+  const progress = total ? roundedPercentage(subjectAttempts.length, total) : 0;
+  const topics = subjectCatalog.map(topic => {
+    const topicAttempts = subjectAttempts.filter(attempt => attempt.thema === topic.thema);
+    const stats = aggregate(topicAttempts);
+    return `<div class="lernstand-topic"><strong>${escapeText(topic.thema)}</strong><span>${topicAttempts.length} / ${topic.total || 0} Fragen bearbeitet</span><span>${stats.performance}% aktuelle Leistung</span><span>${stats.errors.length} offene Fehler</span></div>`;
+  }).join('') || '<div class="lernstand-topic">Noch keine Themen verfügbar.</div>';
+  const subjectId = `lernstand-subject-${subject.bereich}-${subject.fach}`.replace(/[^a-zA-Z0-9_-]/g, '-');
+  return `<article class="lernstand-subject"><div class="lernstand-subject-heading"><span><strong>${escapeText(subject.fach)}</strong><small>${escapeText(subject.bereich)}</small></span><span>${subjectAttempts.length} / ${total} Fragen · ${progress}%</span></div><div class="lernstand-subject-stats"><span>${subjectStats.performance}% aktuelle Leistung</span><span>${subjectStats.errors.length} offene Fehler</span></div><button class="secondary-btn lernstand-topic-toggle" type="button" aria-expanded="false" aria-controls="${subjectId}">Themen anzeigen</button><div id="${subjectId}" class="lernstand-topics" hidden>${topics}</div></article>`;
+}
+
+function renderThemeLists(latest, catalog) {
+  const themes = catalog.map(topic => {
+    const attempts = latest.filter(attempt => attempt.bereich === topic.bereich && attempt.fach === topic.fach && attempt.thema === topic.thema);
+    const qualified = topic.total > 0 && (topic.total < 3
+      ? attempts.length === topic.total
+      : attempts.length >= 3 && attempts.length / topic.total >= 0.3);
+    return { ...topic, ...aggregate(attempts), qualified };
+  }).filter(item => item.qualified);
+  const list = (items, emptyText) => items.length
+    ? items.slice(0, 5).map(item => renderBar(item.thema, item.performance, `${item.attempts.length} / ${item.total} Fragen bearbeitet`)).join('')
+    : `<div class="result-list-empty">${escapeText(emptyText)}</div>`;
+  return {
+    strongest: list(themes.filter(item => item.attempts.length > 0 && item.performance > 0).sort((a, b) => b.performance - a.performance), 'Noch keine ausreichenden Daten für ein starkes Thema.'),
+    repeat: list(themes.filter(item => item.attempts.length > 0).sort((a, b) => a.performance - b.performance), 'Noch nicht genügend Daten für eine Auswertung')
+  };
+}
+
+function bindLearningProgressInteractions() {
+  document.querySelectorAll('.lernstand-topic-toggle').forEach(button => {
+    button.addEventListener('click', () => {
+      const panel = document.getElementById(button.getAttribute('aria-controls'));
+      if (!panel) return;
+      panel.hidden = !panel.hidden;
+      button.setAttribute('aria-expanded', String(!panel.hidden));
+      button.textContent = panel.hidden ? 'Themen anzeigen' : 'Themen ausblenden';
+    });
+  });
+}
+
+function renderErrorAnalysis(attempts) {
+  const latestErrors = latestAttempts(attempts).filter(attempt => attempt.status !== 'richtig');
+  const partial = latestErrors.filter(attempt => attempt.status === 'teilweise richtig').length;
+  const incorrect = latestErrors.filter(attempt => attempt.status === 'falsch').length;
+  const subjects = new Map();
+
+  latestErrors.forEach(attempt => {
+    const subjectKey = `${attempt.bereich}::${attempt.fach}`;
+    const subject = subjects.get(subjectKey) || { bereich: attempt.bereich, fach: attempt.fach, topics: new Map() };
+    const topic = subject.topics.get(attempt.thema) || [];
+    topic.push(attempt);
+    subject.topics.set(attempt.thema, topic);
+    subjects.set(subjectKey, subject);
+  });
+
+  const groupedErrors = [...subjects.values()].map(subject => {
+    const topics = [...subject.topics.entries()].map(([topicName, topicAttempts], index) => {
+      const topicId = `fehler-${subject.bereich}-${subject.fach}-${topicName}-${index}`.replace(/[^a-zA-Z0-9_-]/g, '-');
+      const topicPartial = topicAttempts.filter(attempt => attempt.status === 'teilweise richtig').length;
+      const topicIncorrect = topicAttempts.filter(attempt => attempt.status === 'falsch').length;
+      const questions = topicAttempts.map(attempt => `
+        <article class="fehleranalyse-question">
+          <strong>Frage-ID: ${escapeText(attempt.frageId)}</strong>
+          <span>${escapeText(attempt.erreichtePunkte)} / ${escapeText(attempt.maximalPunkte)} Punkte · ${escapeText(attempt.status)}</span>
+          <span>Letzter Versuch: ${escapeText(formatDateTime(attempt.timestamp))}</span>
+          <button class="secondary-btn fehleranalyse-repeat" type="button" disabled title="Für das sichere direkte Wiederholen fehlt ein vorhandener Fragenabruf nach Frage-ID.">Jetzt wiederholen</button>
+        </article>
+      `).join('');
+      return `<section class="fehleranalyse-topic"><div><strong>${escapeText(topicName)}</strong><span>${topicAttempts.length} offene Fehler · ${topicPartial} teilweise richtig · ${topicIncorrect} falsch</span></div><button class="secondary-btn fehleranalyse-toggle" type="button" aria-expanded="false" aria-controls="${topicId}">Fehler anzeigen</button><div id="${topicId}" class="fehleranalyse-questions" hidden>${questions}</div></section>`;
+    }).join('');
+    return `<article class="fehleranalyse-subject"><h2 class="section-title">${escapeText(subject.fach)} <small>${escapeText(subject.bereich)}</small></h2>${topics}</article>`;
+  }).join('');
+
+  document.getElementById('fehleranalyseListe').innerHTML = `
+    <section class="lernstand-metrics">${renderMetric('Offene Fehler', latestErrors.length, `${partial} teilweise richtig · ${incorrect} falsch`)}${renderMetric('Teilweise richtig', partial)}${renderMetric('Falsch', incorrect)}</section>
+    <section class="lernstand-section"><h2 class="section-title">Offene Fehler nach Fach und Thema</h2>${groupedErrors || '<div class="result-list-empty">Keine offenen Fehler. Gut gemacht.</div>'}</section>
+  `;
+
+  document.querySelectorAll('.fehleranalyse-toggle').forEach(button => {
+    button.addEventListener('click', () => {
+      const panel = document.getElementById(button.getAttribute('aria-controls'));
+      if (!panel) return;
+      panel.hidden = !panel.hidden;
+      button.setAttribute('aria-expanded', String(!panel.hidden));
+      button.textContent = panel.hidden ? 'Fehler anzeigen' : 'Fehler ausblenden';
+    });
+  });
+}
+
+function renderLearningProgress(attempts, catalog) {
+  const latest = latestAttempts(attempts);
+  const current = aggregate(latest);
+  const totalQuestions = catalog.reduce((sum, item) => sum + item.total, 0);
+  const completed = latest.length;
+  const open = Math.max(0, totalQuestions - completed);
+  const correct = latest.filter(attempt => attempt.status === 'richtig').length;
+  const partial = latest.filter(attempt => attempt.status === 'teilweise richtig').length;
+  const incorrect = latest.filter(attempt => attempt.status === 'falsch').length;
+  const latestActivity = attempts[0]?.timestamp;
+  const subjects = Object.entries(window.faecherNachTeilbereich || {}).flatMap(([bereich, faecher]) => faecher.map(fach => ({ bereich, fach })));
+  const themeLists = renderThemeLists(latest, catalog);
+
+  document.getElementById('lernstandListe').innerHTML = `
+    <section class="lernstand-metrics">${renderMetric('Bearbeitete Fragen', `${completed} von ${totalQuestions}`, totalQuestions ? `${roundedPercentage(completed, totalQuestions)}% Fortschritt` : 'Fragenbestand noch nicht verfügbar')}${renderMetric('Aktuelle Leistung', completed ? `${current.performance}%` : '–', completed ? `${current.reached} / ${current.maximum} Punkte` : 'Noch keine Fragen bearbeitet')}${renderMetric('Offene Fehler', current.errors.length, `${partial} teilweise richtig · ${incorrect} falsch`)}${renderMetric('Letzte Aktivität', formatDate(latestActivity), attempts.length ? `${attempts.length} gespeicherte Versuche` : 'Noch keine Lernaktivität')}</section>
+    <section class="lernstand-section"><h2 class="section-title">Gesamtübersicht</h2><div class="lernstand-overview"><div class="lernstand-summary-card"><h3>Bearbeitungsstand</h3>${renderBar('Bearbeitet', totalQuestions ? (completed / totalQuestions) * 100 : 0, `${completed} bearbeitet · ${open} noch offen`)}</div><div class="lernstand-summary-card"><h3>Ergebnis der bearbeiteten Fragen</h3>${renderBar('Richtig', completed ? (correct / completed) * 100 : 0, `${correct} richtig · ${partial} teilweise · ${incorrect} falsch`)}</div></div></section>
+    <section class="lernstand-section"><h2 class="section-title">Lernstand nach Fach</h2><div class="lernstand-subject-list">${subjects.map(subject => renderSubject(subject, latest, catalog)).join('')}</div></section>
+    <section class="lernstand-section"><h2 class="section-title">Meine Entwicklung</h2>${renderDevelopment(attempts)}</section>
+    <section class="lernstand-section lernstand-strength-grid"><div><h2 class="section-title">Meine stärksten Themen</h2>${themeLists.strongest}</div><div><h2 class="section-title">Hier lohnt sich Wiederholen</h2>${themeLists.repeat}</div></section>
+    <section class="lernstand-section"><h2 class="section-title">Deine offenen Fehler</h2><p>${current.errors.length} offene Fehler: ${partial} teilweise richtig · ${incorrect} falsch</p><button class="secondary-btn lernstand-error-button" type="button" onclick="oeffneLernstandBereich('lernstandFehlerView')">Zur Fehleranalyse</button></section>
+  `;
+  bindLearningProgressInteractions();
+}
+
+export async function ladeWifaLernstand() {
+  const status = document.getElementById('lernstandStatus');
+  const list = document.getElementById('lernstandListe');
+  const user = currentVerifiedUser();
+  if (!status || !list || !user) return;
+  status.textContent = 'Lernstand wird geladen...';
+  list.innerHTML = '<div class="result-list-empty">Bitte kurz warten...</div>';
+  try {
+    const [attempts, catalog] = await Promise.all([loadAttempts(user), loadQuestionCatalog()]);
+    if (auth.currentUser !== user) return;
+    renderLearningProgress(attempts, catalog);
+    status.textContent = attempts.length ? `${attempts.length} Lernversuche geladen.` : 'Noch keine Fragen bearbeitet';
+  } catch (error) {
+    status.textContent = `Lernstand konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
+    list.innerHTML = '<div class="result-list-empty">Der Lernstand ist derzeit nicht verfügbar.</div>';
   }
+}
+
+export async function ladeFehleranalyse() {
+  const status = document.getElementById('fehleranalyseStatus');
+  const list = document.getElementById('fehleranalyseListe');
+  const user = currentVerifiedUser();
+  if (!status || !list || !user) return;
+  status.textContent = 'Fehleranalyse wird geladen...';
+  list.innerHTML = '<div class="result-list-empty">Bitte kurz warten...</div>';
+  try {
+    const attempts = await loadAttempts(user);
+    if (auth.currentUser !== user) return;
+    renderErrorAnalysis(attempts);
+    status.textContent = 'Fehleranalyse aktuell.';
+  } catch (error) {
+    status.textContent = `Fehleranalyse konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
+    list.innerHTML = '<div class="result-list-empty">Die Fehleranalyse ist derzeit nicht verfügbar.</div>';
+  }
+}
+
+window.speichereWifaAttempt = speichereWifaAttempt;
+window.ladeWifaLernstand = ladeWifaLernstand;
+window.ladeLernstand = ladeWifaLernstand;
+window.ladeFehleranalyse = ladeFehleranalyse;

@@ -56,7 +56,24 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navLernstand" type="button" onclick="requireAuth('lernstandView'); closeMainMenu();">Lernstand</button>
+            <div class="dropdown">
+              <button
+                class="nav-btn"
+                id="navLernstand"
+                type="button"
+                aria-expanded="false"
+                aria-controls="lernstandDropdownMenu"
+                onclick="toggleLernstandDropdown(event)"
+              >
+                Lernstand ▾
+              </button>
+              <div class="dropdown-content" id="lernstandDropdownMenu" role="menu">
+                <button type="button" onclick="oeffneLernstandBereich('lernstandView'); closeMainMenu();">WiFa-Trainer</button>
+                <button type="button" onclick="oeffneLernstandBereich('lernstandPruefungView'); closeMainMenu();">Prüfungssimulation</button>
+                <button type="button" onclick="oeffneLernstandBereich('lernstandQuizView'); closeMainMenu();">Quiz</button>
+                <button type="button" onclick="oeffneLernstandBereich('lernstandFehlerView'); closeMainMenu();">Fehleranalyse</button>
+              </div>
+            </div>
             <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">Glossar</button>
             <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">Formelsammlung</button>
 
@@ -359,11 +376,6 @@
           <div class="button-row" style="margin-top:14px;">
             <button class="danger-btn" onclick="resetSession()">Session zurücksetzen</button>
           </div>
-
-          <div class="result-list-wrap">
-            <h3 class="section-title" style="margin-top:16px;">Einzelergebnisse</h3>
-            <div id="einzelergebnisListe" class="result-list-empty">Noch keine Ergebnisse in dieser Session.</div>
-          </div>
         </div>
 
         <div class="card">
@@ -406,22 +418,34 @@
 
       <section class="view" id="lernstandView">
         <div class="header">
-          <h1>Lernstand</h1>
-          <p>Hier siehst du deinen gespeicherten Lernstand als Fachübersicht. Einzelne Versuche kannst du bei Bedarf aufklappen.</p>
+          <h1>Mein Lernstand – WiFa-Trainer</h1>
+          <p>Dein aktueller Bearbeitungsstand, deine Ergebnisse und deine Entwicklung im WiFa-Trainer.</p>
         </div>
 
-        <div class="card">
-          <h2 class="section-title">Gespeicherter Lernstand</h2>
+        <div id="lernstandStatus" class="status">Lernstand wird geladen.</div>
+        <div id="lernstandListe" class="lernstand-content">
+          <div class="result-list-empty">Bitte kurz warten...</div>
+        </div>
+      </section>
 
-          <button class="action-btn" onclick="ladeLernstand()" style="max-width:240px;">
-            Lernstand aktualisieren
-          </button>
+      <section class="view" id="lernstandPruefungView">
+        <div class="header"><h1>Lernstand – Prüfungssimulation</h1></div>
+        <div class="card">Dieser Bereich wird später ergänzt.</div>
+      </section>
 
-          <div class="status" id="lernstandStatus">Noch nicht geladen.</div>
+      <section class="view" id="lernstandQuizView">
+        <div class="header"><h1>Lernstand – Quiz</h1></div>
+        <div class="card">Dieser Bereich wird später ergänzt.</div>
+      </section>
 
-          <div id="lernstandListe" class="result-list-empty" style="margin-top:14px;">
-            Klicke auf „Lernstand aktualisieren“.
-          </div>
+      <section class="view" id="lernstandFehlerView">
+        <div class="header">
+          <h1>Fehleranalyse</h1>
+          <p>Offene Fehler aus dem aktuellen Stand deiner WiFa-Trainer-Versuche.</p>
+        </div>
+        <div id="fehleranalyseStatus" class="status">Fehleranalyse wird geladen.</div>
+        <div id="fehleranalyseListe" class="lernstand-content">
+          <div class="result-list-empty">Bitte kurz warten...</div>
         </div>
       </section>
 
@@ -998,12 +1022,12 @@
 
 <script src="js/api.js"></script>
 <script src="js/auth-shim.js"></script>
-<script src="js/main.js?v=auth1"></script>
+<script src="js/main.js?v=lernstand-v2"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
-<script src="js/trainer.js?v=frageid1"></script>
-<script src="js/bewertung.js"></script>
-<script src="js/lernstand.js"></script>
+<script src="js/trainer.js?v=trainer-next-v1"></script>
+<script src="js/bewertung.js?v=lernstand-v3"></script>
+<script type="module" src="js/lernstand.js?v=lernstand-v2"></script>
 <script src="js/wissensdatenbank.js"></script>
 <script src="js/pruefungssimulation.js"></script>
 <script src="js/linksammlung.js?v=gesetze1"></script>

@@ -275,16 +275,13 @@ let frageHtml = "";
 const frageGesamt = Number(daten.frageGesamt || 0);
 const fragePosition = Number(daten.fragePosition || 0);
 
-const frageIdBadge = aktuelleFrageId
-  ? '<span class="frage-id-badge">ID ' + escapeHtml(aktuelleFrageId) + '</span> '
-  : "";
-
 const fragePositionsBadge = frageGesamt > 0 && fragePosition > 0
   ? '<span class="frage-id-badge">Frage ' + fragePosition + ' von ' + frageGesamt + '</span> '
   : "";
 
 if (aktuelleFrage) {
-  frageHtml += "<div>" + fragePositionsBadge + frageIdBadge + escapeHtml(aktuelleFrage) + "</div>";
+  resetFrageAnzeige();
+  frageHtml += "<div>" + fragePositionsBadge + escapeHtml(aktuelleFrage) + "</div>";
 }
 
 if (aufgabenHtml) {
@@ -319,12 +316,7 @@ if (daten.bilddatei) {
     } catch (error) {
       if (eigenerToken !== ladeToken) return;
 
-      aktuelleFrage = "";
-      aktuelleMusterloesung = "";
-      aktuelleFrageId = "";
-
-      document.getElementById("frageText").textContent = "Fehler beim Laden der Frage.";
-      setzeStatus("Fehler: " + error.message);
+      setzeStatus("Fehler beim Laden der nächsten Frage: " + error.message + " Die bisherige Frage bleibt erhalten.");
     } finally {
       if (eigenerToken === ladeToken) {
         setzeAppBeschaeftigt(false);

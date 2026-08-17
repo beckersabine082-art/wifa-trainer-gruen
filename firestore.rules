@@ -29,6 +29,37 @@ service cloud.firestore {
                     && request.resource.data.updatedAt == request.time;
     }
 
+    match /users/{userId}/attempts/{attemptId} {
+      allow read: if request.auth != null
+                  && request.auth.uid == userId
+                  && request.auth.token.email_verified == true;
+
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.auth.token.email_verified == true
+                    && request.resource.data.keys().hasOnly(['attemptId', 'userId', 'modul', 'timestamp', 'questionKey', 'frageId', 'bereich', 'fach', 'thema', 'erreichtePunkte', 'maximalPunkte', 'prozent', 'status'])
+                    && request.resource.data.attemptId == attemptId
+                    && request.resource.data.userId == userId
+                    && request.resource.data.modul == 'wifa-trainer'
+                    && request.resource.data.timestamp == request.time
+                    && request.resource.data.questionKey is string
+                    && request.resource.data.frageId is string
+                    && request.resource.data.bereich is string
+                    && request.resource.data.fach is string
+                    && request.resource.data.thema is string
+                    && request.resource.data.erreichtePunkte is number
+                    && request.resource.data.maximalPunkte is number
+                    && request.resource.data.maximalPunkte > 0
+                    && request.resource.data.erreichtePunkte >= 0
+                    && request.resource.data.erreichtePunkte <= request.resource.data.maximalPunkte
+                    && request.resource.data.prozent is number
+                    && request.resource.data.prozent >= 0
+                    && request.resource.data.prozent <= 100
+                    && request.resource.data.status in ['richtig', 'teilweise richtig', 'falsch'];
+
+      allow update, delete: if false;
+    }
+
     // Deny all other access by default
     match /{document=**} {
       allow read, write: if false;
