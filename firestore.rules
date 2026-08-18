@@ -37,7 +37,7 @@ service cloud.firestore {
       allow create: if request.auth != null
                     && request.auth.uid == userId
                     && request.auth.token.email_verified == true
-                    && request.resource.data.keys().hasOnly(['attemptId', 'userId', 'modul', 'timestamp', 'questionKey', 'frageId', 'bereich', 'fach', 'thema', 'erreichtePunkte', 'maximalPunkte', 'prozent', 'status'])
+                  && request.resource.data.keys().hasOnly(['attemptId', 'userId', 'modul', 'timestamp', 'questionKey', 'frageId', 'bereich', 'fach', 'thema', 'antwort', 'erreichtePunkte', 'maximalPunkte', 'prozent', 'status'])
                     && request.resource.data.attemptId == attemptId
                     && request.resource.data.userId == userId
                     && request.resource.data.modul == 'wifa-trainer'
@@ -47,6 +47,9 @@ service cloud.firestore {
                     && request.resource.data.bereich is string
                     && request.resource.data.fach is string
                     && request.resource.data.thema is string
+                      && request.resource.data.antwort is string
+                      && request.resource.data.antwort.size() > 0
+                      && request.resource.data.antwort.size() <= 20000
                     && request.resource.data.erreichtePunkte is number
                     && request.resource.data.maximalPunkte is number
                     && request.resource.data.maximalPunkte > 0

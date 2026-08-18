@@ -74,7 +74,7 @@ function formatDateTime(timestamp) {
   }).format(date) : 'Zeitpunkt nicht verfügbar';
 }
 
-export async function speichereWifaAttempt({ bereich, fach, thema, frageId, erreichtePunkte, maximalePunkte }) {
+export async function speichereWifaAttempt({ bereich, fach, thema, frageId, antwort, erreichtePunkte, maximalePunkte }) {
   const user = currentVerifiedUser();
   if (!user) throw new Error('Bitte melde dich mit einem bestätigten Konto an, um den Lernstand zu speichern.');
 
@@ -95,6 +95,7 @@ export async function speichereWifaAttempt({ bereich, fach, thema, frageId, erre
     bereich: String(bereich || ''),
     fach: String(fach || ''),
     thema: String(thema || ''),
+     antwort: String(antwort || '').trim(),
     erreichtePunkte: points,
     maximalPunkte: maximum,
     prozent: percentage(points, maximum),

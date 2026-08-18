@@ -83,6 +83,7 @@ const bewertungText = bereinigeBewertungText(
         fach: aktuellesFach,
         thema: aktuellesThema,
         frageId: aktuelleFrageId,
+          antwort: antwort,
         erreichtePunkte: punkte,
         maximalePunkte: maxPunkte
       });
