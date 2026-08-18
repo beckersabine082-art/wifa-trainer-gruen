@@ -1634,6 +1634,59 @@ select:focus {
   gap: 10px;
 }
 
+.lernstand-attempt-chart {
+  border: 1px solid #b7dec2;
+  border-radius: 12px;
+  background: #f2fbf5;
+  padding: 14px;
+}
+
+.lernstand-attempt-chart h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.lernstand-chart-scroll {
+  overflow-x: auto;
+}
+
+.lernstand-chart-scroll svg {
+  display: block;
+  width: 100%;
+  min-width: 320px;
+  height: 180px;
+}
+
+.lernstand-chart-grid,
+.lernstand-chart-axis {
+  stroke: #b7dec2;
+  stroke-width: 1;
+}
+
+.lernstand-chart-bar {
+  fill: #4f9f68;
+}
+
+.lernstand-chart-x-label,
+.lernstand-chart-y-label {
+  fill: #245c3a;
+  font-size: 12px;
+}
+
+.lernstand-chart-x-label {
+  text-anchor: middle;
+}
+
+.lernstand-chart-y-label {
+  text-anchor: end;
+}
+
+@media (max-width: 520px) {
+  .lernstand-chart-scroll svg {
+    height: 150px;
+  }
+}
+
 .lernstand-summary-card h3 {
   margin: 0 0 12px;
   font-size: 16px;
@@ -1679,6 +1732,10 @@ select:focus {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid #b7dec2;
+}
+
+.lernstand-topics[hidden] {
+  display: none;
 }
 
 .lernstand-error-button {

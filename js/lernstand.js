@@ -158,6 +158,31 @@ function renderBar(label, value, detail) {
   return `<div class="lernstand-bar-row"><div class="lernstand-bar-label"><span>${escapeText(label)}</span><strong>${displayValue}%</strong></div><div class="lernstand-bar"><div class="lernstand-bar-fill" style="width:${rawValue}%"></div></div><div class="lernstand-bar-detail">${escapeText(detail)}</div></div>`;
 }
 
+function renderAttemptsChart(entries) {
+  const maxCount = Math.max(...entries.map(([, value]) => value.count), 1);
+  const stepCount = Math.min(maxCount, 4);
+  const scaleMaximum = Math.ceil(maxCount / stepCount) * stepCount;
+  const chartWidth = Math.max(320, entries.length * 52 + 52);
+  const chartHeight = 150;
+  const chartTop = 14;
+  const chartBottom = 32;
+  const chartLeft = 38;
+  const chartRight = 14;
+  const chartAreaHeight = chartHeight - chartTop - chartBottom;
+  const chartAreaWidth = chartWidth - chartLeft - chartRight;
+  const barWidth = Math.min(45, Math.max(12, chartAreaWidth / entries.length - 16));
+  const yPosition = value => chartTop + chartAreaHeight - (value / scaleMaximum) * chartAreaHeight;
+  const ticks = Array.from({ length: stepCount + 1 }, (_, index) => (scaleMaximum / stepCount) * index);
+  const grid = ticks.map(value => `<line x1="${chartLeft}" y1="${yPosition(value)}" x2="${chartWidth - chartRight}" y2="${yPosition(value)}" class="lernstand-chart-grid"/><text x="${chartLeft - 6}" y="${yPosition(value) + 4}" class="lernstand-chart-y-label">${value}</text>`).join('');
+  const bars = entries.map(([day, value], index) => {
+    const center = chartLeft + (chartAreaWidth / entries.length) * (index + 0.5);
+    const height = (value.count / scaleMaximum) * chartAreaHeight;
+    const label = `${day.slice(8, 10)}.${day.slice(5, 7)}.`;
+    return `<rect x="${center - barWidth / 2}" y="${chartTop + chartAreaHeight - height}" width="${barWidth}" height="${height}" class="lernstand-chart-bar"><title>${escapeText(label)}: ${value.count} Lernversuche</title></rect><text x="${center}" y="${chartHeight - 12}" class="lernstand-chart-x-label">${label}</text>`;
+  }).join('');
+  return `<div class="lernstand-attempt-chart" role="img" aria-label="Lernversuche pro Tag"><h3>Lernversuche pro Tag</h3><div class="lernstand-chart-scroll"><svg viewBox="0 0 ${chartWidth} ${chartHeight}" aria-hidden="true">${grid}<line x1="${chartLeft}" y1="${chartTop + chartAreaHeight}" x2="${chartWidth - chartRight}" y2="${chartTop + chartAreaHeight}" class="lernstand-chart-axis"/>${bars}</svg></div></div>`;
+}
+
 function renderDevelopment(attempts) {
   const byDay = new Map();
   attempts.forEach(attempt => {
@@ -171,14 +196,12 @@ function renderDevelopment(attempts) {
   });
   const entries = [...byDay.entries()].sort(([first], [second]) => first.localeCompare(second));
   if (!entries.length) return '<div class="result-list-empty">Noch keine Lernaktivität</div>';
-  const maxCount = Math.max(...entries.map(([, value]) => value.count), 1);
-  return entries.map(([day, value]) => `
+  return `${renderAttemptsChart(entries)}${entries.map(([day, value]) => `
     <div class="lernstand-development-row">
       <strong>${escapeText(day)}</strong>
       ${renderBar('Leistung', roundedPercentage(value.reached, value.maximum), `${value.reached} / ${value.maximum} Punkte`)}
-      ${renderBar('Aktivität', (value.count / maxCount) * 100, `${value.count} Versuche`)}
     </div>
-  `).join('');
+  `).join('')}`;
 }
 
 function renderSubject(subject, latest, catalog) {
@@ -225,37 +248,50 @@ function bindLearningProgressInteractions() {
   });
 }
 
+function errorAttemptKey(attempt) {
+  const storedQuestionKey = String(attempt.questionKey || '').trim();
+  return storedQuestionKey || `${String(attempt.fach || '').trim()}::${String(attempt.frageId || '').trim()}`;
+}
+
+function latestErrorAttempts(attempts) {
+  const latest = new Map();
+  attempts.forEach(attempt => {
+    const key = errorAttemptKey(attempt);
+    const previous = latest.get(key);
+    if (!previous || timestampMillis(attempt.timestamp) > timestampMillis(previous.timestamp)) {
+      latest.set(key, attempt);
+    }
+  });
+  return [...latest.values()].filter(attempt => attempt.status !== 'richtig');
+}
+
 function renderErrorAnalysis(attempts) {
-  const latestErrors = latestAttempts(attempts).filter(attempt => attempt.status !== 'richtig');
+  const latestErrors = latestErrorAttempts(attempts);
   const partial = latestErrors.filter(attempt => attempt.status === 'teilweise richtig').length;
   const incorrect = latestErrors.filter(attempt => attempt.status === 'falsch').length;
   const subjects = new Map();
 
   latestErrors.forEach(attempt => {
     const subjectKey = `${attempt.bereich}::${attempt.fach}`;
-    const subject = subjects.get(subjectKey) || { bereich: attempt.bereich, fach: attempt.fach, topics: new Map() };
-    const topic = subject.topics.get(attempt.thema) || [];
-    topic.push(attempt);
-    subject.topics.set(attempt.thema, topic);
+    const subject = subjects.get(subjectKey) || { bereich: attempt.bereich, fach: attempt.fach, attempts: [] };
+    subject.attempts.push(attempt);
     subjects.set(subjectKey, subject);
   });
 
-  const groupedErrors = [...subjects.values()].map(subject => {
-    const topics = [...subject.topics.entries()].map(([topicName, topicAttempts], index) => {
-      const topicId = `fehler-${subject.bereich}-${subject.fach}-${topicName}-${index}`.replace(/[^a-zA-Z0-9_-]/g, '-');
-      const topicPartial = topicAttempts.filter(attempt => attempt.status === 'teilweise richtig').length;
-      const topicIncorrect = topicAttempts.filter(attempt => attempt.status === 'falsch').length;
-      const questions = topicAttempts.map(attempt => `
+  const groupedErrors = [...subjects.values()].map((subject, index) => {
+    const subjectId = `fehler-${subject.bereich}-${subject.fach}-${index}`.replace(/[^a-zA-Z0-9_-]/g, '-');
+    const stats = aggregate(subject.attempts);
+    const questions = subject.attempts.map(attempt => `
         <article class="fehleranalyse-question">
-          <strong>Frage-ID: ${escapeText(attempt.frageId)}</strong>
+          <strong>${escapeText(attempt.fach)} · ${escapeText(attempt.thema)}</strong>
+          <span>Frage-ID: ${escapeText(attempt.frageId)}</span>
+          <span>Letzte eigene Antwort: ${escapeText(attempt.antwort ? attempt.antwort : 'Für diesen älteren Lernversuch ist keine eigene Antwort gespeichert.')}</span>
           <span>${escapeText(attempt.erreichtePunkte)} / ${escapeText(attempt.maximalPunkte)} Punkte · ${escapeText(attempt.status)}</span>
           <span>Letzter Versuch: ${escapeText(formatDateTime(attempt.timestamp))}</span>
           <button class="secondary-btn fehleranalyse-repeat" type="button" disabled title="Für das sichere direkte Wiederholen fehlt ein vorhandener Fragenabruf nach Frage-ID.">Jetzt wiederholen</button>
         </article>
       `).join('');
-      return `<section class="fehleranalyse-topic"><div><strong>${escapeText(topicName)}</strong><span>${topicAttempts.length} offene Fehler · ${topicPartial} teilweise richtig · ${topicIncorrect} falsch</span></div><button class="secondary-btn fehleranalyse-toggle" type="button" aria-expanded="false" aria-controls="${topicId}">Fehler anzeigen</button><div id="${topicId}" class="fehleranalyse-questions" hidden>${questions}</div></section>`;
-    }).join('');
-    return `<article class="fehleranalyse-subject"><h2 class="section-title">${escapeText(subject.fach)} <small>${escapeText(subject.bereich)}</small></h2>${topics}</article>`;
+    return `<article class="fehleranalyse-subject"><div class="fehleranalyse-topic"><div><strong>${escapeText(subject.fach)}</strong><span>${escapeText(subject.bereich)} · ${stats.performance}% aktuelle Leistung · ${subject.attempts.length} offene Fehler</span></div><button class="secondary-btn fehleranalyse-toggle" type="button" aria-expanded="false" aria-controls="${subjectId}">Offene Fehler anzeigen (${subject.attempts.length})</button></div><div id="${subjectId}" class="fehleranalyse-questions" hidden>${questions}</div></article>`;
   }).join('');
 
   document.getElementById('fehleranalyseListe').innerHTML = `
@@ -269,7 +305,7 @@ function renderErrorAnalysis(attempts) {
       if (!panel) return;
       panel.hidden = !panel.hidden;
       button.setAttribute('aria-expanded', String(!panel.hidden));
-      button.textContent = panel.hidden ? 'Fehler anzeigen' : 'Fehler ausblenden';
+      button.textContent = panel.hidden ? `Offene Fehler anzeigen (${panel.children.length})` : 'Offene Fehler ausblenden';
     });
   });
 }
