@@ -200,6 +200,47 @@
       background: #efe7ff;
     }
 
+    .nav-btn-split {
+      padding: 0;
+    }
+
+    .nav-btn-split .nav-btn-label,
+    .nav-btn-split .nav-btn-arrow {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: transparent !important;
+      background-color: transparent !important;
+      border: none;
+      border-radius: 0;
+      outline: none;
+      box-shadow: none;
+      color: inherit;
+      font: inherit;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .nav-btn-split .nav-btn-label {
+      flex: 1;
+      text-align: left;
+      padding: 11px 14px;
+      white-space: nowrap;
+    }
+
+    .nav-btn-split .nav-btn-arrow {
+      padding: 11px 14px 11px 4px;
+      font-size: 12px;
+    }
+
+    .nav-btn-split .nav-btn-label:focus-visible,
+    .nav-btn-split .nav-btn-arrow:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.85);
+      outline-offset: -2px;
+    }
+
     .view {
       display: none;
     }
@@ -310,6 +351,18 @@
       padding: 18px;
       text-align: center;
       box-shadow: 0 4px 14px rgba(80, 45, 140, 0.08);
+      cursor: pointer;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 8px 22px rgba(80, 45, 140, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .feature-card:focus-visible {
+      outline: 3px solid #4f9f68;
+      outline-offset: 2px;
     }
 
     .feature-icon {
@@ -1205,6 +1258,12 @@ button.nav-btn {
   background: #dff3e5 !important;
   color: #163522 !important;
   border-color: #b7dec2 !important;
+}
+
+.nav-btn-split .nav-btn-label,
+.nav-btn-split .nav-btn-arrow {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .nav-btn.active,

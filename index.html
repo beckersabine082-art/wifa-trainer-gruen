@@ -42,16 +42,25 @@
             <button class="nav-btn" id="navAuth" type="button" onclick="openAuthArea();"><span id="navAuthLabel">Anmelden</span></button>
 
             <div class="dropdown">
-              <button
-                class="nav-btn"
-                id="navLernstand"
-                type="button"
-                aria-expanded="false"
-                aria-controls="lernstandDropdownMenu"
-                onclick="toggleLernstandDropdown(event)"
-              >
-                Mein Lernstand ▾
-              </button>
+              <div class="nav-btn nav-btn-split" id="navLernstand">
+                <button
+                  type="button"
+                  class="nav-btn-label"
+                  onclick="oeffneLernstandBereich('lernstandView'); closeMainMenu();"
+                >
+                  📊 Mein Lernstand
+                </button>
+                <button
+                  type="button"
+                  class="nav-btn-arrow"
+                  aria-expanded="false"
+                  aria-controls="lernstandDropdownMenu"
+                  aria-label="Unterpunkte Lernstand ein-/ausklappen"
+                  onclick="toggleLernstandDropdown(event)"
+                >
+                  ▾
+                </button>
+              </div>
               <div class="dropdown-content" id="lernstandDropdownMenu" role="menu">
                 <button type="button" onclick="oeffneLernstandBereich('lernstandView'); closeMainMenu();">WiFa-Trainer</button>
                 <button type="button" onclick="oeffneLernstandBereich('lernstandPruefungView'); closeMainMenu();">Prüfungssimulation</button>
@@ -69,7 +78,7 @@
                 aria-controls="trainerDropdownMenu"
                 onclick="toggleTrainerDropdown(event)"
               >
-                WiFa Trainer ▾
+                🎓 WiFa Trainer ▾
               </button>
               <div class="dropdown-content" id="trainerDropdownMenu" role="menu">
                 <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ'); closeMainMenu();">HQ – Handlungsspezifische Qualifikationen</button>
@@ -77,7 +86,7 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navQuiz" type="button" onclick="requireAuth('quizView'); closeMainMenu();">Quiz</button>
+            <button class="nav-btn" id="navQuiz" type="button" onclick="requireAuth('quizView'); closeMainMenu();">🧩 Quiz</button>
 
             <div class="dropdown">
               <button
@@ -88,7 +97,7 @@
                 aria-controls="pruefungDropdownMenu"
                 onclick="togglePruefungDropdown(event)"
               >
-                Prüfungssimulation ▾
+                🎯 Prüfungssimulation ▾
               </button>
 
               <div class="dropdown-content" id="pruefungDropdownMenu" role="menu">
@@ -102,12 +111,12 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navKarteikarten" type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">Karteikarten</button>
-            <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">Formelsammlung</button>
-            <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">Glossar</button>
-            <button class="nav-btn" id="navLinks" type="button" onclick="oeffneWissenBereich('links'); closeMainMenu();">Links</button>
-            <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();">Frag Kilian</button>
-            <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">Nutzungshinweis</button>
+            <button class="nav-btn" id="navKarteikarten" type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">🗂️ Karteikarten</button>
+            <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">📐 Formelsammlung</button>
+            <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">📚 Glossar</button>
+            <button class="nav-btn" id="navLinks" type="button" onclick="oeffneWissenBereich('links'); closeMainMenu();">🗂️ Links</button>
+            <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();">💬 Frag Kilian</button>
+            <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">ℹ️ Nutzungshinweis</button>
           </div>
         </div>
       </nav>
@@ -151,49 +160,49 @@
           <h2 class="section-title">Die Funktionen im Überblick</h2>
 
           <div class="feature-grid">
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="WIFA Trainer öffnen" onclick="requireAuth('trainerView')">
               <div class="feature-icon">🎓</div>
               <h3>WIFA Trainer</h3>
               <p>Offene Fragen beantworten, Antworten auswerten lassen und gezielt Wissenslücken erkennen.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Lernstand öffnen" onclick="oeffneLernstandBereich('lernstandView')">
               <div class="feature-icon">📊</div>
               <h3>Lernstand</h3>
               <p>Fortschritte nach Fach und Thema nachvollziehen und Ergebnisse speichern.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Glossar öffnen" onclick="requireAuth('glossarView')">
               <div class="feature-icon">📚</div>
               <h3>Glossar</h3>
               <p>Fachbegriffe, Synonyme und kurze Erklärungen schnell nachschlagen.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Formelsammlung öffnen" onclick="requireAuth('formelView')">
               <div class="feature-icon">📐</div>
               <h3>Formelsammlung</h3>
-              <p>Wichtige Formeln, Abkürzungen und spätere Seitenangaben gesammelt an einem Ort.</p>
+              <p>Wichtige Formeln, Abkürzungen und Seitenangaben gesammelt an einem Ort.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Prüfungssimulation öffnen" onclick="requireAuth('pruefungView')">
               <div class="feature-icon">🎯</div>
               <h3>Prüfungssimulation</h3>
-              <p>Später realistische Prüfungssituationen mit Zeitdruck und Punkteauswertung trainieren.</p>
+              <p>Realistische Prüfungssituationen mit Zeitdruck und Punkteauswertung trainieren.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Wissensdatenbank öffnen" onclick="oeffneWissenBereich('karteikarten')">
               <div class="feature-icon">🗂️</div>
               <h3>Wissensdatenbank</h3>
               <p>Zusammenfassungen, Merksätze und zusätzliche Lerninhalte.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Nutzungshinweis öffnen" onclick="hinweisAnzeigen()">
               <div class="feature-icon">ℹ️</div>
               <h3>Nutzung</h3>
               <p>Hinweise zur Nutzung, Funktionen und Tipps zum Lernen.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Frag Kilian öffnen" onclick="requireAuth('kilianView')">
               <div class="feature-icon">💬</div>
               <h3>Frag Kilian</h3>
               <p>Direkter KI-Helfer für Verständnisfragen, Erklärungen und Unterstützung beim Lernen.</p>

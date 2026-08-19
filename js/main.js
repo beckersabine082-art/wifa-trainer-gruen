@@ -389,6 +389,15 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
+// Erlaubt das Öffnen der Funktionskarten auf der Startseite per Tastatur (role="button")
+document.addEventListener("keydown", function(event) {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const card = event.target.closest && event.target.closest(".feature-card");
+  if (!card) return;
+  event.preventDefault();
+  card.click();
+});
+
 window.addEventListener("DOMContentLoaded", function() {
   const hamburger = document.querySelector(".nav-hamburger");
   if (hamburger) {
