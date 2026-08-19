@@ -148,6 +148,39 @@ service cloud.firestore {
       }
     }
 
+    // Quiz: getrennt von den normalen WiFa-Trainer-Attempts und der Prüfungssimulation
+    match /users/{userId}/quizAttempts/{quizAttemptId} {
+      allow read: if request.auth != null
+                  && request.auth.uid == userId
+                  && request.auth.token.email_verified == true;
+
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.auth.token.email_verified == true
+                    && request.resource.data.keys().hasOnly(['attemptId', 'userId', 'modul', 'timestamp', 'quizKey', 'frageId', 'teilbereich', 'fach', 'thema', 'ausgewaehlteOption', 'richtigeOption', 'richtig'])
+                    && request.resource.data.attemptId == quizAttemptId
+                    && request.resource.data.userId == userId
+                    && request.resource.data.modul == 'quiz'
+                    && request.resource.data.timestamp == request.time
+                    && request.resource.data.quizKey is string
+                    && request.resource.data.quizKey.size() > 0
+                    && request.resource.data.quizKey.size() <= 200
+                    && request.resource.data.frageId is string
+                    && request.resource.data.frageId.size() > 0
+                    && request.resource.data.frageId.size() <= 50
+                    && request.resource.data.teilbereich is string
+                    && request.resource.data.teilbereich.size() <= 10
+                    && request.resource.data.fach is string
+                    && request.resource.data.fach.size() <= 100
+                    && request.resource.data.thema is string
+                    && request.resource.data.thema.size() <= 200
+                    && request.resource.data.ausgewaehlteOption in ['A', 'B', 'C', 'D']
+                    && request.resource.data.richtigeOption in ['A', 'B', 'C', 'D']
+                    && request.resource.data.richtig is bool;
+
+      allow update, delete: if false;
+    }
+
     // Deny all other access by default
     match /{document=**} {
       allow read, write: if false;

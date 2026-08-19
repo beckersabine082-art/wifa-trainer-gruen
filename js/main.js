@@ -90,6 +90,12 @@ function zeigeBereich(viewId) {
     if (viewId === "lernstandPruefungView" && typeof window.ladePruefungsLernstand === "function") {
       window.ladePruefungsLernstand();
     }
+    if (viewId === "lernstandQuizView" && typeof window.ladeQuizLernstand === "function") {
+      window.ladeQuizLernstand();
+    }
+    if (viewId === "quizView" && typeof window.initialisiereQuiz === "function") {
+      window.initialisiereQuiz();
+    }
     if (viewId === "glossarView") {
   document.getElementById("navGlossar").classList.add("active");
 

@@ -452,8 +452,14 @@
       </section>
 
       <section class="view" id="lernstandQuizView">
-        <div class="header"><h1>Lernstand – Quiz</h1></div>
-        <div class="card">Dieser Bereich wird später ergänzt.</div>
+        <div class="header">
+          <h1>Lernstand – Quiz</h1>
+          <p>Dein aktueller Stand im Quiz, getrennt vom normalen WiFa-Trainer.</p>
+        </div>
+        <div id="quizLernstandStatus" class="status">Lernstand wird geladen.</div>
+        <div id="quizLernstandInhalt" class="lernstand-content">
+          <div class="result-list-empty">Bitte kurz warten...</div>
+        </div>
       </section>
 
       <section class="view" id="lernstandFehlerView">
@@ -469,7 +475,26 @@
 
       <section class="view" id="quizView">
         <div class="header"><h1>Quiz</h1></div>
-        <div class="card">Quiz wird später ergänzt.</div>
+        <div id="quizStatus" class="status">Quiz wird geladen.</div>
+        <div class="card quiz-card" id="quizKarte" hidden>
+          <div class="quiz-progress">Runde <span id="quizRunde">1</span> · Frage <span id="quizFragenNummer">1</span> von <span id="quizRundenGroesse">-</span></div>
+          <div class="question-meta">
+            <span class="badge" id="quizBadgeTeilbereich"></span>
+            <span class="badge" id="quizBadgeFach"></span>
+            <span class="badge" id="quizBadgeThema"></span>
+          </div>
+          <div class="question-box" id="quizFrageText"></div>
+          <div class="quiz-optionen" id="quizOptionen" role="radiogroup" aria-label="Antwortmöglichkeiten"></div>
+          <div class="quiz-actions">
+            <button type="button" class="primary-btn" id="quizPruefenBtn">Antwort prüfen</button>
+            <button type="button" class="secondary-btn" id="quizNaechsteBtn" hidden>Nächste Frage</button>
+          </div>
+          <div class="quiz-ergebnis" id="quizErgebnisBereich" hidden></div>
+          <div class="quiz-session-stats" id="quizSessionStats">
+            <span class="quiz-stat-richtig">Richtig: <strong id="quizAnzahlRichtig">0</strong></span>
+            <span class="quiz-stat-falsch">Falsch: <strong id="quizAnzahlFalsch">0</strong></span>
+          </div>
+        </div>
       </section>
 
       <section class="view" id="glossarView">
@@ -1058,6 +1083,8 @@
 <script src="js/wissensdatenbank.js"></script>
 <script src="js/pruefungssimulation.js?v=lernstand-pruefung-v1"></script>
 <script type="module" src="js/pruefungslernstand.js?v=lernstand-pruefung-v1"></script>
+<script type="module" src="js/quiz.js?v=quiz-v1"></script>
+<script type="module" src="js/quizlernstand.js?v=quiz-v1"></script>
 <script src="js/linksammlung.js?v=gesetze1"></script>
 <script type="module" src="js/login.js?v=auth1"></script> </body>
 </html>
