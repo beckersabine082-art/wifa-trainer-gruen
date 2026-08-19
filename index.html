@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>WiFa Trainer</title>
-  <link rel="stylesheet" href="css/style.css?v=style-history-fix-v3">
+  <link rel="stylesheet" href="css/style.css?v=nav-menu-v1">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -39,22 +39,7 @@
           <div class="nav-actions" role="menubar" aria-label="Navigationsmenü">
             <button class="nav-btn active" id="navStart" type="button" onclick="zeigeBereich('startView'); closeMainMenu();">Start</button>
 
-            <div class="dropdown">
-              <button
-                class="nav-btn"
-                id="navTrainer"
-                type="button"
-                aria-expanded="false"
-                aria-controls="trainerDropdownMenu"
-                onclick="toggleTrainerDropdown(event)"
-              >
-                WIFA Trainer ▾
-              </button>
-              <div class="dropdown-content" id="trainerDropdownMenu" role="menu">
-                <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ'); closeMainMenu();">HQ – Handlungsspezifische Qualifikationen</button>
-                <button type="button" onclick="oeffneTrainerMitTeilbereich('WQ'); closeMainMenu();">WQ – Wirtschaftsbezogene Qualifikationen</button>
-              </div>
-            </div>
+            <button class="nav-btn" id="navAuth" type="button" onclick="openAuthArea();"><span id="navAuthLabel">Anmelden</span></button>
 
             <div class="dropdown">
               <button
@@ -65,7 +50,7 @@
                 aria-controls="lernstandDropdownMenu"
                 onclick="toggleLernstandDropdown(event)"
               >
-                Lernstand ▾
+                Mein Lernstand ▾
               </button>
               <div class="dropdown-content" id="lernstandDropdownMenu" role="menu">
                 <button type="button" onclick="oeffneLernstandBereich('lernstandView'); closeMainMenu();">WiFa-Trainer</button>
@@ -74,8 +59,25 @@
                 <button type="button" onclick="oeffneLernstandBereich('lernstandFehlerView'); closeMainMenu();">Fehleranalyse</button>
               </div>
             </div>
-            <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">Glossar</button>
-            <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">Formelsammlung</button>
+
+            <div class="dropdown">
+              <button
+                class="nav-btn"
+                id="navTrainer"
+                type="button"
+                aria-expanded="false"
+                aria-controls="trainerDropdownMenu"
+                onclick="toggleTrainerDropdown(event)"
+              >
+                WiFa Trainer ▾
+              </button>
+              <div class="dropdown-content" id="trainerDropdownMenu" role="menu">
+                <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ'); closeMainMenu();">HQ – Handlungsspezifische Qualifikationen</button>
+                <button type="button" onclick="oeffneTrainerMitTeilbereich('WQ'); closeMainMenu();">WQ – Wirtschaftsbezogene Qualifikationen</button>
+              </div>
+            </div>
+
+            <button class="nav-btn" id="navQuiz" type="button" onclick="requireAuth('quizView'); closeMainMenu();">Quiz</button>
 
             <div class="dropdown">
               <button
@@ -100,9 +102,11 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navWissen" type="button" onclick="requireAuth('wissenView'); closeMainMenu();">Wissensdatenbank</button>
+            <button class="nav-btn" id="navKarteikarten" type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">Karteikarten</button>
+            <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">Formelsammlung</button>
+            <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">Glossar</button>
+            <button class="nav-btn" id="navLinks" type="button" onclick="oeffneWissenBereich('links'); closeMainMenu();">Links</button>
             <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();">Frag Kilian</button>
-            <button class="nav-btn" id="navAuth" type="button" onclick="openAuthArea();"><span id="navAuthLabel">Anmelden</span></button>
             <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">Nutzungshinweis</button>
           </div>
         </div>
@@ -463,6 +467,11 @@
         </div>
       </section>
 
+      <section class="view" id="quizView">
+        <div class="header"><h1>Quiz</h1></div>
+        <div class="card">Quiz wird später ergänzt.</div>
+      </section>
+
       <section class="view" id="glossarView">
         <div class="header">
           <h1>Glossar</h1>
@@ -604,6 +613,7 @@
       Audio-Lernen, Zusammenfassungen und spätere Kurzabfragen.
     </p>
   </div>
+   <div id="wissenLinksBereich">
    <div class="card">
   <h2 class="section-title">Gesetzeslinks</h2>
   <p class="status">
@@ -614,6 +624,8 @@
     Gesetzeslinks werden geladen...
   </div>
 </div>
+   </div>
+    <div id="wissenKarteikartenBereich">
     <div>
 
       <div class="home-tile">
@@ -738,6 +750,7 @@
 
     </div>
   </div>
+    </div>
 
 </section>
 
@@ -1036,7 +1049,7 @@
 
 <script src="js/api.js"></script>
 <script src="js/auth-shim.js"></script>
-<script src="js/main.js?v=lernstand-pruefung-v1"></script>
+<script src="js/main.js?v=nav-menu-v2"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
 <script src="js/trainer.js?v=trainer-repeat-v4"></script>

@@ -102,6 +102,8 @@
       padding: 12px;
       display: none;
       z-index: 1200;
+      max-height: calc(100vh - 96px);
+      overflow-y: auto;
     }
 
     .title-row {

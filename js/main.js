@@ -105,7 +105,19 @@ if (viewId === "formelView") {
   }
 }
     if (viewId === "pruefungView") document.getElementById("navPruefung").classList.add("active");
-    if (viewId === "wissenView") document.getElementById("navWissen").classList.add("active");
+    if (viewId === "quizView") document.getElementById("navQuiz").classList.add("active");
+    if (viewId === "wissenView") {
+      const bereich = window.wissenAktiverBereich === "karteikarten" ? "karteikarten" : "links";
+      const linksBereich = document.getElementById("wissenLinksBereich");
+      const kartenBereich = document.getElementById("wissenKarteikartenBereich");
+      if (linksBereich) linksBereich.style.display = bereich === "links" ? "" : "none";
+      if (kartenBereich) kartenBereich.style.display = bereich === "karteikarten" ? "" : "none";
+      if (bereich === "karteikarten") {
+        document.getElementById("navKarteikarten").classList.add("active");
+      } else {
+        document.getElementById("navLinks").classList.add("active");
+      }
+    }
     if (viewId === "kilianView") document.getElementById("navKilian").classList.add("active");
 
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -291,6 +303,15 @@ function oeffneLernstandBereich(viewId) {
     requireAuth(viewId);
   } else {
     zeigeBereich(viewId);
+  }
+}
+
+function oeffneWissenBereich(teil) {
+  window.wissenAktiverBereich = teil === "karteikarten" ? "karteikarten" : "links";
+  if (typeof requireAuth === "function") {
+    requireAuth("wissenView");
+  } else {
+    zeigeBereich("wissenView");
   }
 }
 
