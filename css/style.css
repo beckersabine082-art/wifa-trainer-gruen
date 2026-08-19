@@ -1735,7 +1735,7 @@ select:focus {
 }
 
 .lernstand-topics[hidden] {
-  display: none;
+  display: none !important;
 }
 
 .lernstand-error-button {
@@ -1755,6 +1755,7 @@ select:focus {
 
 .lernstand-topic-toggle,
 .fehleranalyse-toggle,
+.fehleranalyse-resolved-toggle,
 .fehleranalyse-repeat {
   width: auto;
   margin-top: 12px;
@@ -1763,7 +1764,6 @@ select:focus {
 }
 
 .fehleranalyse-subject,
-.fehleranalyse-topic,
 .fehleranalyse-question {
   display: grid;
   gap: 8px;
@@ -1777,25 +1777,49 @@ select:focus {
   gap: 12px;
 }
 
-.fehleranalyse-subject .section-title {
-  margin: 0;
+.fehleranalyse-subject-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-.fehleranalyse-subject .section-title small,
+.fehleranalyse-subject-heading span,
 .fehleranalyse-topic span,
 .fehleranalyse-question span {
   font-size: 13px;
 }
 
+.fehleranalyse-topic {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #b7dec2;
+}
+
 .fehleranalyse-topic > div:first-child {
   display: grid;
-  gap: 4px;
+  gap: 2px;
 }
 
 .fehleranalyse-questions {
   display: grid;
+  grid-column: 1 / -1;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 2px;
+}
+
+.fehleranalyse-questions[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 520px) {
+  .fehleranalyse-topic {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
 }
 
 .fehleranalyse-repeat:disabled {

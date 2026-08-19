@@ -12,6 +12,10 @@ import {
 
 const MODULE_ID = 'wifa-trainer';
 const BERLIN_TIME_ZONE = 'Europe/Berlin';
+const questionDetailsCache = new Map();
+const repeatAttemptsByKey = new Map();
+let learningProgressInteractionsBound = false;
+let errorAnalysisInteractionsBound = false;
 
 function escapeText(value) {
   return String(value ?? '')
@@ -136,6 +140,15 @@ function latestAttempts(attempts) {
   return [...latest.values()];
 }
 
+function normalizedAttemptStatus(attempt) {
+  const points = Number(attempt.erreichtePunkte);
+  const maximum = Number(attempt.maximalPunkte);
+  if (Number.isFinite(points) && Number.isFinite(maximum) && maximum > 0) {
+    return statusForAttempt(points, maximum);
+  }
+  return String(attempt.status || '').trim().toLowerCase();
+}
+
 function aggregate(attempts) {
   const reached = attempts.reduce((sum, attempt) => sum + Number(attempt.erreichtePunkte || 0), 0);
   const maximum = attempts.reduce((sum, attempt) => sum + Number(attempt.maximalPunkte || 0), 0);
@@ -216,7 +229,7 @@ function renderSubject(subject, latest, catalog) {
     return `<div class="lernstand-topic"><strong>${escapeText(topic.thema)}</strong><span>${topicAttempts.length} / ${topic.total || 0} Fragen bearbeitet</span><span>${stats.performance}% aktuelle Leistung</span><span>${stats.errors.length} offene Fehler</span></div>`;
   }).join('') || '<div class="lernstand-topic">Noch keine Themen verfügbar.</div>';
   const subjectId = `lernstand-subject-${subject.bereich}-${subject.fach}`.replace(/[^a-zA-Z0-9_-]/g, '-');
-  return `<article class="lernstand-subject"><div class="lernstand-subject-heading"><span><strong>${escapeText(subject.fach)}</strong><small>${escapeText(subject.bereich)}</small></span><span>${subjectAttempts.length} / ${total} Fragen · ${progress}%</span></div><div class="lernstand-subject-stats"><span>${subjectStats.performance}% aktuelle Leistung</span><span>${subjectStats.errors.length} offene Fehler</span></div><button class="secondary-btn lernstand-topic-toggle" type="button" aria-expanded="false" aria-controls="${subjectId}">Themen anzeigen</button><div id="${subjectId}" class="lernstand-topics" hidden>${topics}</div></article>`;
+  return `<article class="lernstand-subject"><div class="lernstand-subject-heading"><span><strong>${escapeText(subject.fach)}</strong><small>${escapeText(subject.bereich)}</small></span><span>${subjectAttempts.length} / ${total} Fragen · ${progress}%</span></div><div class="lernstand-subject-stats"><span>${subjectStats.performance}% aktuelle Leistung</span><span>${subjectStats.errors.length} offene Fehler</span></div><button class="secondary-btn lernstand-topic-toggle" type="button" data-action="toggle-topics" data-target="${subjectId}" aria-expanded="false" aria-controls="${subjectId}">Themen anzeigen</button><div id="${subjectId}" class="lernstand-topics" hidden>${topics}</div></article>`;
 }
 
 function renderThemeLists(latest, catalog) {
@@ -237,77 +250,224 @@ function renderThemeLists(latest, catalog) {
 }
 
 function bindLearningProgressInteractions() {
-  document.querySelectorAll('.lernstand-topic-toggle').forEach(button => {
-    button.addEventListener('click', () => {
-      const panel = document.getElementById(button.getAttribute('aria-controls'));
-      if (!panel) return;
-      panel.hidden = !panel.hidden;
-      button.setAttribute('aria-expanded', String(!panel.hidden));
-      button.textContent = panel.hidden ? 'Themen anzeigen' : 'Themen ausblenden';
-    });
+  const container = document.getElementById('lernstandListe');
+  if (!container || learningProgressInteractionsBound) return;
+  learningProgressInteractionsBound = true;
+  container.addEventListener('click', event => {
+    const button = event.target.closest('button[data-action="toggle-topics"]');
+    if (!button) return;
+    const panel = document.getElementById(button.dataset.target);
+    if (!panel) return;
+    panel.hidden = !panel.hidden;
+    button.setAttribute('aria-expanded', String(!panel.hidden));
+    button.textContent = panel.hidden ? 'Themen anzeigen' : 'Themen ausblenden';
   });
 }
 
 function errorAttemptKey(attempt) {
-  const storedQuestionKey = String(attempt.questionKey || '').trim();
-  return storedQuestionKey || `${String(attempt.fach || '').trim()}::${String(attempt.frageId || '').trim()}`;
+  const fach = String(attempt.fach || '').trim();
+  const frageId = String(attempt.frageId || '').trim();
+  return fach && frageId ? `${fach}::${frageId}` : String(attempt.questionKey || '').trim();
 }
 
-function latestErrorAttempts(attempts) {
-  const latest = new Map();
+function groupErrorHistory(attempts) {
+  const grouped = new Map();
   attempts.forEach(attempt => {
     const key = errorAttemptKey(attempt);
-    const previous = latest.get(key);
-    if (!previous || timestampMillis(attempt.timestamp) > timestampMillis(previous.timestamp)) {
-      latest.set(key, attempt);
-    }
+    const history = grouped.get(key) || [];
+    history.push(attempt);
+    grouped.set(key, history);
   });
-  return [...latest.values()].filter(attempt => attempt.status !== 'richtig');
+  return [...grouped.entries()].map(([key, history]) => {
+    const chronologicalAttempts = [...history].sort((first, second) => timestampMillis(first.timestamp) - timestampMillis(second.timestamp));
+    const latestAttempt = chronologicalAttempts[chronologicalAttempts.length - 1];
+    const hasIncorrectAttempt = chronologicalAttempts.some(attempt => normalizedAttemptStatus(attempt) !== 'richtig');
+    return {
+      key,
+      attempts: chronologicalAttempts,
+      latestAttempt,
+      repetitions: Math.max(0, chronologicalAttempts.length - 1),
+      hasIncorrectAttempt,
+      isOpen: hasIncorrectAttempt && normalizedAttemptStatus(latestAttempt) !== 'richtig'
+    };
+  }).filter(entry => entry.hasIncorrectAttempt);
 }
 
-function renderErrorAnalysis(attempts) {
-  const latestErrors = latestErrorAttempts(attempts);
-  const partial = latestErrors.filter(attempt => attempt.status === 'teilweise richtig').length;
-  const incorrect = latestErrors.filter(attempt => attempt.status === 'falsch').length;
+function questionDetailsKey(attempt) {
+  return `${String(attempt.fach || '').trim()}::${String(attempt.frageId || '').trim()}`;
+}
+
+async function loadQuestionDetails(attempt) {
+  const fach = String(attempt.fach || '').trim();
+  const frageId = String(attempt.frageId || '').trim();
+  const cacheKey = questionDetailsKey(attempt);
+  if (!fach || !frageId) throw new Error('Fach oder Frage-ID fehlen.');
+  if (!questionDetailsCache.has(cacheKey)) {
+    const request = window.apiGet('questionById', { fach, frageId })
+      .then(result => {
+        if (!result.success) throw new Error(result.error || 'Die Frage konnte nicht geladen werden.');
+        const question = result.data || {};
+        if (!String(question.id || '').trim()) throw new Error('Die gespeicherte Frage wurde nicht gefunden.');
+        return question;
+      })
+      .catch(error => {
+        questionDetailsCache.delete(cacheKey);
+        throw error;
+      });
+    questionDetailsCache.set(cacheKey, request);
+  }
+  return questionDetailsCache.get(cacheKey);
+}
+
+function repetitionText(repetitions) {
+  if (repetitions === 0) return 'Noch nicht wiederholt';
+  if (repetitions === 1) return '1-mal wiederholt';
+  return `${repetitions}-mal wiederholt`;
+}
+
+async function wiederholeFehler(attempt, button) {
+  const fach = String(attempt.fach || '').trim();
+  const frageId = String(attempt.frageId || '').trim();
+  const status = document.getElementById('fehleranalyseStatus');
+
+  if (!fach || !frageId) {
+    status.textContent = 'Diese Wiederholungsfrage kann nicht geladen werden, weil Fach oder Frage-ID fehlen.';
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'Frage wird geladen...';
+  let openedTrainer = false;
+
+  try {
+    const question = await loadQuestionDetails(attempt);
+
+    if (typeof window.oeffneWifaWiederholungsfrage !== 'function') {
+      throw new Error('Die Wiederholungsfunktion des WiFa-Trainers ist nicht bereit.');
+    }
+
+    window.oeffneWifaWiederholungsfrage(question, {
+      bereich: String(attempt.bereich || '').trim(),
+      fach,
+      thema: String(attempt.thema || '').trim(),
+      questionKey: String(attempt.questionKey || '').trim()
+    });
+    openedTrainer = true;
+  } catch (error) {
+    status.textContent = `Wiederholungsfrage konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
+  } finally {
+    if (!openedTrainer) {
+      button.disabled = false;
+      button.textContent = 'Jetzt wiederholen';
+    }
+  }
+}
+
+function bindErrorAnalysisInteractions() {
+  const container = document.getElementById('fehleranalyseListe');
+  if (!container || errorAnalysisInteractionsBound) return;
+  errorAnalysisInteractionsBound = true;
+  container.addEventListener('click', event => {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+
+    if (button.dataset.action === 'repeat-error') {
+      const attempt = repeatAttemptsByKey.get(button.dataset.errorKey);
+      if (attempt) wiederholeFehler(attempt, button);
+      return;
+    }
+
+    const panel = document.getElementById(button.dataset.target);
+    if (!panel) return;
+    panel.hidden = !panel.hidden;
+    button.setAttribute('aria-expanded', String(!panel.hidden));
+    if (button.dataset.action === 'toggle-errors') {
+      button.textContent = panel.hidden ? 'Fehler anzeigen' : 'Fehler ausblenden';
+    }
+    if (button.dataset.action === 'toggle-resolved-errors') {
+      button.textContent = panel.hidden
+        ? `Behobene Fehler anzeigen (${button.dataset.count})`
+        : 'Behobene Fehler ausblenden';
+    }
+  });
+}
+
+async function renderErrorAnalysis(attempts) {
+  const errorHistory = groupErrorHistory(attempts);
+  const openErrors = errorHistory.filter(entry => entry.isOpen);
+  const resolvedErrors = errorHistory.filter(entry => !entry.isOpen);
+  const partial = openErrors.filter(entry => normalizedAttemptStatus(entry.latestAttempt) === 'teilweise richtig').length;
+  const incorrect = openErrors.filter(entry => normalizedAttemptStatus(entry.latestAttempt) === 'falsch').length;
   const subjects = new Map();
 
-  latestErrors.forEach(attempt => {
+  openErrors.forEach(entry => {
+    const attempt = entry.latestAttempt;
     const subjectKey = `${attempt.bereich}::${attempt.fach}`;
-    const subject = subjects.get(subjectKey) || { bereich: attempt.bereich, fach: attempt.fach, attempts: [] };
-    subject.attempts.push(attempt);
+    const subject = subjects.get(subjectKey) || { bereich: attempt.bereich, fach: attempt.fach, topics: new Map() };
+    const topicKey = String(attempt.thema || '').trim();
+    const topic = subject.topics.get(topicKey) || { thema: attempt.thema, entries: [] };
+    topic.entries.push(entry);
+    subject.topics.set(topicKey, topic);
     subjects.set(subjectKey, subject);
   });
 
+  const questions = await Promise.all(errorHistory.map(async entry => {
+    try {
+      return [entry.key, await loadQuestionDetails(entry.latestAttempt)];
+    } catch {
+      return [entry.key, null];
+    }
+  }));
+  const questionByKey = new Map(questions);
+  repeatAttemptsByKey.clear();
+  openErrors.forEach(entry => repeatAttemptsByKey.set(entry.key, entry.latestAttempt));
+
   const groupedErrors = [...subjects.values()].map((subject, index) => {
-    const subjectId = `fehler-${subject.bereich}-${subject.fach}-${index}`.replace(/[^a-zA-Z0-9_-]/g, '-');
-    const stats = aggregate(subject.attempts);
-    const questions = subject.attempts.map(attempt => `
-        <article class="fehleranalyse-question">
-          <strong>${escapeText(attempt.fach)} · ${escapeText(attempt.thema)}</strong>
-          <span>Frage-ID: ${escapeText(attempt.frageId)}</span>
-          <span>Letzte eigene Antwort: ${escapeText(attempt.antwort ? attempt.antwort : 'Für diesen älteren Lernversuch ist keine eigene Antwort gespeichert.')}</span>
-          <span>${escapeText(attempt.erreichtePunkte)} / ${escapeText(attempt.maximalPunkte)} Punkte · ${escapeText(attempt.status)}</span>
-          <span>Letzter Versuch: ${escapeText(formatDateTime(attempt.timestamp))}</span>
-          <button class="secondary-btn fehleranalyse-repeat" type="button" disabled title="Für das sichere direkte Wiederholen fehlt ein vorhandener Fragenabruf nach Frage-ID.">Jetzt wiederholen</button>
-        </article>
-      `).join('');
-    return `<article class="fehleranalyse-subject"><div class="fehleranalyse-topic"><div><strong>${escapeText(subject.fach)}</strong><span>${escapeText(subject.bereich)} · ${stats.performance}% aktuelle Leistung · ${subject.attempts.length} offene Fehler</span></div><button class="secondary-btn fehleranalyse-toggle" type="button" aria-expanded="false" aria-controls="${subjectId}">Offene Fehler anzeigen (${subject.attempts.length})</button></div><div id="${subjectId}" class="fehleranalyse-questions" hidden>${questions}</div></article>`;
+    const topicRows = [...subject.topics.values()].map((topic, topicIndex) => {
+      const topicId = `fehler-${index}-${topicIndex}`;
+      const questionRows = topic.entries.map(entry => {
+        const attempt = entry.latestAttempt;
+        const question = questionByKey.get(entry.key);
+        return `
+          <article class="fehleranalyse-question">
+            <strong>${escapeText(question?.frage || 'Fragetext konnte nicht geladen werden.')}</strong>
+            <span>Frage-ID: ${escapeText(attempt.frageId)}</span>
+            <span>Letzte eigene Antwort: ${escapeText(attempt.antwort ? attempt.antwort : 'Für diesen älteren Lernversuch ist keine eigene Antwort gespeichert.')}</span>
+            <span>${escapeText(attempt.erreichtePunkte)} / ${escapeText(attempt.maximalPunkte)} Punkte · ${escapeText(normalizedAttemptStatus(attempt) || attempt.status)}</span>
+            <span>Letzter Versuch: ${escapeText(formatDateTime(attempt.timestamp))}</span>
+            <span>${escapeText(repetitionText(entry.repetitions))} · ${entry.attempts.length} Versuche insgesamt</span>
+            <button class="secondary-btn fehleranalyse-repeat" type="button" data-action="repeat-error" data-error-key="${escapeText(entry.key)}">Jetzt wiederholen</button>
+          </article>
+        `;
+      }).join('');
+      return `<div class="fehleranalyse-topic"><div><strong>${escapeText(topic.thema || 'Thema nicht hinterlegt')}</strong><span>${topic.entries.length} offene Fehler</span></div><button class="secondary-btn fehleranalyse-toggle" type="button" data-action="toggle-errors" data-target="${topicId}" data-count="${topic.entries.length}" aria-expanded="false" aria-controls="${topicId}">Fehler anzeigen</button><div id="${topicId}" class="fehleranalyse-questions" hidden>${questionRows}</div></div>`;
+    }).join('');
+    return `<article class="fehleranalyse-subject"><div class="fehleranalyse-subject-heading"><strong>${escapeText(subject.fach)}</strong><span>${escapeText(subject.bereich)}</span></div>${topicRows}</article>`;
+  }).join('');
+
+  const resolvedId = 'behobene-fehler';
+  const resolvedRows = resolvedErrors.map(entry => {
+    const attempt = entry.latestAttempt;
+    const question = questionByKey.get(entry.key);
+    const successText = entry.repetitions === 1
+      ? 'Nach 1 Wiederholung richtig'
+      : `Nach insgesamt ${entry.attempts.length} Versuchen richtig`;
+    return `
+      <article class="fehleranalyse-question fehleranalyse-resolved-question">
+        <strong>${escapeText(question?.frage || 'Fragetext nicht verfügbar.')}</strong>
+        <span>${escapeText(attempt.fach)} · ${escapeText(attempt.thema)}</span>
+        <span>${escapeText(successText)}</span>
+        <span>Gelöst am: ${escapeText(formatDateTime(attempt.timestamp))}</span>
+        <span>Wird nicht mehr als offener Fehler gezählt.</span>
+      </article>
+    `;
   }).join('');
 
   document.getElementById('fehleranalyseListe').innerHTML = `
-    <section class="lernstand-metrics">${renderMetric('Offene Fehler', latestErrors.length, `${partial} teilweise richtig · ${incorrect} falsch`)}${renderMetric('Teilweise richtig', partial)}${renderMetric('Falsch', incorrect)}</section>
+    <section class="lernstand-metrics">${renderMetric('Offene Fehler', openErrors.length, `${partial} teilweise richtig · ${incorrect} falsch`)}${renderMetric('Behobene Fehler', resolvedErrors.length)}</section>
     <section class="lernstand-section"><h2 class="section-title">Offene Fehler nach Fach und Thema</h2>${groupedErrors || '<div class="result-list-empty">Keine offenen Fehler. Gut gemacht.</div>'}</section>
+    <section class="lernstand-section"><button class="secondary-btn fehleranalyse-resolved-toggle" type="button" data-action="toggle-resolved-errors" data-target="${resolvedId}" data-count="${resolvedErrors.length}" aria-expanded="false" aria-controls="${resolvedId}">Behobene Fehler anzeigen (${resolvedErrors.length})</button><div id="${resolvedId}" class="fehleranalyse-questions" hidden>${resolvedRows || '<div class="result-list-empty">Noch keine Fehler behoben.</div>'}</div></section>
   `;
-
-  document.querySelectorAll('.fehleranalyse-toggle').forEach(button => {
-    button.addEventListener('click', () => {
-      const panel = document.getElementById(button.getAttribute('aria-controls'));
-      if (!panel) return;
-      panel.hidden = !panel.hidden;
-      button.setAttribute('aria-expanded', String(!panel.hidden));
-      button.textContent = panel.hidden ? `Offene Fehler anzeigen (${panel.children.length})` : 'Offene Fehler ausblenden';
-    });
-  });
 }
 
 function renderLearningProgress(attempts, catalog) {
@@ -357,12 +517,13 @@ export async function ladeFehleranalyse() {
   const list = document.getElementById('fehleranalyseListe');
   const user = currentVerifiedUser();
   if (!status || !list || !user) return;
+  bindErrorAnalysisInteractions();
   status.textContent = 'Fehleranalyse wird geladen...';
   list.innerHTML = '<div class="result-list-empty">Bitte kurz warten...</div>';
   try {
     const attempts = await loadAttempts(user);
     if (auth.currentUser !== user) return;
-    renderErrorAnalysis(attempts);
+    await renderErrorAnalysis(attempts);
     status.textContent = 'Fehleranalyse aktuell.';
   } catch (error) {
     status.textContent = `Fehleranalyse konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;

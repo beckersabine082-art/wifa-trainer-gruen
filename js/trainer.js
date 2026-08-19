@@ -191,6 +191,66 @@ function waehleFach(fach) {
     }
   }
 
+  function zeigeGeladeneFrage(daten, fallbackThema, istWiederholungsfrage = false) {
+    aktuelleFrage = daten.frage || "";
+    aktuellesThema = daten.thema || fallbackThema || "Thema nicht hinterlegt";
+    aktuelleMusterloesung = daten.musterloesung || "";
+    aktuelleStichpunkte = String(daten.stichpunkte || "")
+      .split(";")
+      .map(function(punkt) {
+        return punkt.trim();
+      })
+      .filter(Boolean);
+    aktuelleFrageId = daten.id || "";
+
+    const frageTextBox = document.getElementById("frageText");
+    const antwortLabel = document.querySelector('label[for="antwortInput"]');
+    const antwortInput = document.getElementById("antwortInput");
+    const fragetyp = String(daten.fragetyp || "TEXT").trim().toUpperCase();
+    const aufgabenHtml = String(daten.aufgabenHtml || "").trim();
+    const frageGesamt = Number(daten.frageGesamt || 0);
+    const fragePosition = Number(daten.fragePosition || 0);
+    const fragePositionsBadge = istWiederholungsfrage
+      ? '<span class="frage-id-badge">Wiederholungsfrage</span> '
+      : frageGesamt > 0 && fragePosition > 0
+        ? '<span class="frage-id-badge">Frage ' + fragePosition + ' von ' + frageGesamt + '</span> '
+        : "";
+
+    resetFrageAnzeige();
+
+    let frageHtml = "";
+    if (aktuelleFrage) {
+      frageHtml += "<div>" + fragePositionsBadge + escapeHtml(aktuelleFrage) + "</div>";
+    }
+    if (aufgabenHtml) {
+      frageHtml += '<div class="aufgaben-html-bereich">' + aufgabenHtml + "</div>";
+    }
+    frageTextBox.innerHTML = frageHtml || "Keine Frage hinterlegt.";
+
+    if (fragetyp === "TEXT") {
+      if (antwortLabel) antwortLabel.style.display = "block";
+      antwortInput.style.display = "block";
+      antwortInput.placeholder = "Schreibe hier deine Antwort...";
+    } else if (fragetyp === "RECHNUNG") {
+      if (antwortLabel) antwortLabel.style.display = "block";
+      antwortInput.style.display = "block";
+      antwortInput.placeholder = "Trage hier deinen Rechenweg oder deine Ergänzung ein...";
+    } else {
+      if (antwortLabel) antwortLabel.style.display = "none";
+      antwortInput.style.display = "none";
+      antwortInput.value = "";
+    }
+
+    if (daten.bilddatei) {
+      frageTextBox.innerHTML += `
+        <div class="question-image-wrap">
+          <img src="bilder/${daten.bilddatei}" alt="Aufgabenbild" class="question-image">
+        </div>
+      `;
+    }
+    document.getElementById("anzeigeThema").textContent = aktuellesThema;
+  }
+
 async function ladeFrageAusFach(fach, thema, currentId = "") {
     const eigenerToken = ++ladeToken;
 
@@ -252,65 +312,7 @@ if (daten.themaAbgeschlossen) {
         return;
       }
 
-      aktuelleFrage = daten.frage || "";
-      aktuellesThema = daten.thema || thema || "Thema nicht hinterlegt";
-      aktuelleMusterloesung = daten.musterloesung || "";
-      aktuelleStichpunkte = String(daten.stichpunkte || "")
-  .split(";")
-  .map(function(punkt) {
-    return punkt.trim();
-  })
-  .filter(Boolean);
-      aktuelleFrageId = daten.id || "";
-
-const frageTextBox = document.getElementById("frageText");
-const antwortLabel = document.querySelector('label[for="antwortInput"]');
-const antwortInput = document.getElementById("antwortInput");
-
-const fragetyp = String(daten.fragetyp || "TEXT").trim().toUpperCase();
-const aufgabenHtml = String(daten.aufgabenHtml || "").trim();
-
-let frageHtml = "";
-
-const frageGesamt = Number(daten.frageGesamt || 0);
-const fragePosition = Number(daten.fragePosition || 0);
-
-const fragePositionsBadge = frageGesamt > 0 && fragePosition > 0
-  ? '<span class="frage-id-badge">Frage ' + fragePosition + ' von ' + frageGesamt + '</span> '
-  : "";
-
-if (aktuelleFrage) {
-  resetFrageAnzeige();
-  frageHtml += "<div>" + fragePositionsBadge + escapeHtml(aktuelleFrage) + "</div>";
-}
-
-if (aufgabenHtml) {
-  frageHtml += '<div class="aufgaben-html-bereich">' + aufgabenHtml + "</div>";
-}
-
-frageTextBox.innerHTML = frageHtml || "Keine Frage hinterlegt.";
-
-if (fragetyp === "TEXT") {
-  if (antwortLabel) antwortLabel.style.display = "block";
-  antwortInput.style.display = "block";
-  antwortInput.placeholder = "Schreibe hier deine Antwort...";
-} else if (fragetyp === "RECHNUNG") {
-  if (antwortLabel) antwortLabel.style.display = "block";
-  antwortInput.style.display = "block";
-  antwortInput.placeholder = "Trage hier deinen Rechenweg oder deine Ergänzung ein...";
-} else {
-  if (antwortLabel) antwortLabel.style.display = "none";
-  antwortInput.style.display = "none";
-  antwortInput.value = "";
-}
-if (daten.bilddatei) {
-  frageTextBox.innerHTML += `
-    <div class="question-image-wrap">
-      <img src="bilder/${daten.bilddatei}" alt="Aufgabenbild" class="question-image">
-    </div>
-  `;
-}
-      document.getElementById("anzeigeThema").textContent = aktuellesThema;
+      zeigeGeladeneFrage(daten, thema);
 
       setzeStatus("Frage geladen.");
     } catch (error) {
@@ -374,3 +376,49 @@ function antwortLeeren() {
     if (appIstBeschaeftigt) return;
     document.getElementById("antwortInput").value = "";
   }
+
+function oeffneWifaWiederholungsfrage(daten, kontext) {
+  const fach = String(kontext?.fach || "").trim();
+  const bereich = String(kontext?.bereich || ermittleTeilbereich(fach)).trim();
+  const thema = String(daten.thema || kontext?.thema || "").trim();
+
+  if (!fach || !bereich || !String(daten?.id || "").trim()) {
+    throw new Error("Die Wiederholungsfrage enthält keine vollständigen Trainerdaten.");
+  }
+
+  aktuellerTeilbereich = bereich;
+  aktuellesFach = fach;
+  aktuellesThema = thema;
+
+  const teilbereichSelect = document.getElementById("teilbereichSelect");
+  const fachSelect = document.getElementById("fachSelect");
+  const themaSelect = document.getElementById("themaSelect");
+  teilbereichSelect.value = bereich;
+  fachSelect.innerHTML = '<option value="">-- Fach wählen --</option>';
+  (faecherNachTeilbereich[bereich] || []).forEach(function(fachName) {
+    const option = document.createElement("option");
+    option.value = fachName;
+    option.textContent = fachName;
+    fachSelect.appendChild(option);
+  });
+  fachSelect.value = fach;
+  themaSelect.innerHTML = '<option value="">-- Thema wählen --</option>';
+  const themaOption = document.createElement("option");
+  themaOption.value = thema;
+  themaOption.textContent = thema;
+  themaSelect.appendChild(themaOption);
+  themaSelect.value = thema;
+
+  document.getElementById("fachBereich").style.display = "block";
+  document.getElementById("themaBereich").style.display = "block";
+  document.getElementById("anzeigeTeilbereich").textContent = bereich;
+  document.getElementById("anzeigeFach").textContent = fach;
+  document.getElementById("fachStatus").textContent = "Wiederholungsfrage geladen: " + fach;
+  updateStatAnzeige();
+  zeigeBereich("trainerView");
+  zeigeGeladeneFrage(daten, thema, true);
+  setzeStatus("Wiederholungsfrage geladen.");
+  document.getElementById("frageText").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+window.oeffneWifaWiederholungsfrage = oeffneWifaWiederholungsfrage;
