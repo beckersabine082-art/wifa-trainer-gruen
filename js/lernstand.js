@@ -325,33 +325,36 @@ function repetitionText(repetitions) {
   return `${repetitions}-mal wiederholt`;
 }
 
-async function wiederholeFehler(attempt, button) {
+async function oeffneWiederholungAusAttempt(attempt) {
   const fach = String(attempt.fach || '').trim();
   const frageId = String(attempt.frageId || '').trim();
-  const status = document.getElementById('fehleranalyseStatus');
-
   if (!fach || !frageId) {
-    status.textContent = 'Diese Wiederholungsfrage kann nicht geladen werden, weil Fach oder Frage-ID fehlen.';
-    return;
+    throw new Error('Fach oder Frage-ID fehlen.');
   }
+
+  const question = await loadQuestionDetails(attempt);
+
+  if (typeof window.oeffneWifaWiederholungsfrage !== 'function') {
+    throw new Error('Die Wiederholungsfunktion des WiFa-Trainers ist nicht bereit.');
+  }
+
+  window.oeffneWifaWiederholungsfrage(question, {
+    bereich: String(attempt.bereich || '').trim(),
+    fach,
+    thema: String(attempt.thema || '').trim(),
+    questionKey: String(attempt.questionKey || '').trim()
+  });
+}
+
+async function wiederholeFehler(attempt, button) {
+  const status = document.getElementById('fehleranalyseStatus');
 
   button.disabled = true;
   button.textContent = 'Frage wird geladen...';
   let openedTrainer = false;
 
   try {
-    const question = await loadQuestionDetails(attempt);
-
-    if (typeof window.oeffneWifaWiederholungsfrage !== 'function') {
-      throw new Error('Die Wiederholungsfunktion des WiFa-Trainers ist nicht bereit.');
-    }
-
-    window.oeffneWifaWiederholungsfrage(question, {
-      bereich: String(attempt.bereich || '').trim(),
-      fach,
-      thema: String(attempt.thema || '').trim(),
-      questionKey: String(attempt.questionKey || '').trim()
-    });
+    await oeffneWiederholungAusAttempt(attempt);
     openedTrainer = true;
   } catch (error) {
     status.textContent = `Wiederholungsfrage konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
@@ -361,6 +364,40 @@ async function wiederholeFehler(attempt, button) {
       button.textContent = 'Jetzt wiederholen';
     }
   }
+}
+
+// Ermittelt, ausgehend von der Fehleranalyse-Logik, den n\u00e4chsten offenen Fehler nach einem gegebenen Fach::frageId-Schl\u00fcssel
+export async function ermittleNaechstenOffenenFehler(aktuellerSchluessel) {
+  const user = currentVerifiedUser();
+  if (!user) throw new Error('Bitte melde dich mit einem best\u00e4tigten Konto an, um offene Fehler zu laden.');
+
+  const attempts = await loadAttempts(user);
+  const errorHistory = groupErrorHistory(attempts);
+  const openErrors = errorHistory.filter(entry => entry.isOpen);
+  const currentIndex = openErrors.findIndex(entry => entry.key === aktuellerSchluessel);
+  const otherOpenErrors = openErrors.filter(entry => entry.key !== aktuellerSchluessel);
+
+  let nextEntry = null;
+  if (otherOpenErrors.length) {
+    if (currentIndex === -1) {
+      nextEntry = otherOpenErrors[0];
+    } else {
+      for (let offset = 1; offset <= openErrors.length; offset++) {
+        const candidate = openErrors[(currentIndex + offset) % openErrors.length];
+        if (candidate.key !== aktuellerSchluessel) {
+          nextEntry = candidate;
+          break;
+        }
+      }
+    }
+  }
+
+  return {
+    openErrorsCount: openErrors.length,
+    currentIsOpen: currentIndex !== -1,
+    hasOtherOpenError: otherOpenErrors.length > 0,
+    nextEntry
+  };
 }
 
 function bindErrorAnalysisInteractions() {
@@ -535,3 +572,5 @@ window.speichereWifaAttempt = speichereWifaAttempt;
 window.ladeWifaLernstand = ladeWifaLernstand;
 window.ladeLernstand = ladeWifaLernstand;
 window.ladeFehleranalyse = ladeFehleranalyse;
+window.ermittleNaechstenOffenenFehler = ermittleNaechstenOffenenFehler;
+window.oeffneWiederholungAusAttempt = oeffneWiederholungAusAttempt;

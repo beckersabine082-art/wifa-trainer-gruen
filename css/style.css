@@ -775,6 +775,48 @@ white-space: normal;
       line-height: 1.5;
     }
 
+    .wiederholung-nav-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #fff7e6;
+      border: 1px solid #f2d9a1;
+    }
+
+    #btnMusterloesungAnzeigen[hidden] {
+      display: none !important;
+    }
+
+    .wiederholung-nav-hinweis {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      color: #6b5116;
+    }
+
+    .wiederholung-nav-hinweis:empty {
+      display: none;
+    }
+
+    .wiederholung-nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .wiederholung-nav-buttons > button {
+      flex: 1 1 200px;
+    }
+
+    @media (max-width: 520px) {
+      .wiederholung-nav-buttons {
+        flex-direction: column;
+      }
+
+      .wiederholung-nav-buttons > button {
+        flex: 1 1 auto;
+      }
+    }
+
     .status {
       margin-top: 10px;
       font-size: 14px;

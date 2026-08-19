@@ -46,6 +46,7 @@ async function bewerteAntwort() {
       const data = result.data || {};
 
       document.getElementById("resultBox").style.display = "block";
+      verbirgWiederholungsNavigation();
 
       const punkte = Number(data.punkte || 0);
       const maxPunkte = Number(data.maxPunkte || 0);
@@ -89,6 +90,11 @@ const bewertungText = bereinigeBewertungText(
       });
 
       setzeStatus("Auswertung abgeschlossen und Lernstand gespeichert.");
+
+      if (wiederholungsKontext) {
+        await zeigeWiederholungsNavigation();
+        sperreAbgeschlossenenWiederholungsversuch();
+      }
     } catch (error) {
       setzeStatus("Fehler bei der Auswertung oder Speicherung: " + error.message);
     } finally {

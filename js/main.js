@@ -30,6 +30,8 @@ const faecherNachTeilbereich = {
   let aktuelleFrageId = "";
   let ladeToken = 0;
   let appIstBeschaeftigt = false;
+  // Interner Zustand: true, wenn die aktuelle Frage über die Fehleranalyse-Wiederholung geöffnet wurde (nicht anhand von sichtbarem Text erkennen)
+  let wiederholungsKontext = null;
 
   // Aktueller Nutzer (UID) wird in `window.aktuellerNutzer` verwaltet von `js/login.js`.
   // Stelle sicher, dass kein lokales `aktuellerNutzer` existiert.

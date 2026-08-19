@@ -95,7 +95,140 @@ function resetFrageAnzeige() {
     document.getElementById("ergebnisText").textContent = "Hier erscheint die Bewertung.";
     document.getElementById("punkteAnzeige").textContent = "0 / 0 Punkte";
     document.getElementById("punkteAnzeige").classList.remove("good", "bad");
+    verbirgWiederholungsNavigation();
+    aktualisiereWiederholungsSperre();
     setzeStatus("");
+  }
+
+// Vor Auswertung einer Wiederholungsfrage bleibt die Musterlösung verborgen, alle Eingaben sind sonst frei
+function aktualisiereWiederholungsSperre() {
+    const antwortInput = document.getElementById("antwortInput");
+    const auswertungBtn = document.getElementById("btnAuswertungStarten");
+    const antwortLeerenBtn = document.getElementById("btnAntwortLeeren");
+    const musterloesungBtn = document.getElementById("btnMusterloesungAnzeigen");
+
+    if (antwortInput) antwortInput.readOnly = false;
+    if (auswertungBtn) auswertungBtn.disabled = false;
+    if (antwortLeerenBtn) antwortLeerenBtn.disabled = false;
+    if (musterloesungBtn) {
+      musterloesungBtn.disabled = Boolean(wiederholungsKontext);
+      musterloesungBtn.hidden = Boolean(wiederholungsKontext);
+    }
+  }
+
+// Nach erfolgreicher Auswertung und Firestore-Speicherung einer Wiederholungsfrage wird der Versuch fixiert
+function sperreAbgeschlossenenWiederholungsversuch() {
+    const antwortInput = document.getElementById("antwortInput");
+    const auswertungBtn = document.getElementById("btnAuswertungStarten");
+    const antwortLeerenBtn = document.getElementById("btnAntwortLeeren");
+    const musterloesungBtn = document.getElementById("btnMusterloesungAnzeigen");
+
+    if (antwortInput) antwortInput.readOnly = true;
+    if (auswertungBtn) auswertungBtn.disabled = true;
+    if (antwortLeerenBtn) antwortLeerenBtn.disabled = true;
+    if (musterloesungBtn) {
+      musterloesungBtn.disabled = false;
+      musterloesungBtn.hidden = false;
+    }
+  }
+
+function verbirgWiederholungsNavigation() {
+    const box = document.getElementById("wiederholungNavBox");
+    if (!box) return;
+    box.style.display = "none";
+    const hinweis = document.getElementById("wiederholungNavHinweis");
+    if (hinweis) hinweis.textContent = "";
+    const nextBtn = document.getElementById("btnNaechsterOffenerFehler");
+    if (nextBtn) {
+      nextBtn.style.display = "";
+      nextBtn.disabled = false;
+      nextBtn.textContent = "Nächsten offenen Fehler";
+    }
+  }
+
+async function zeigeWiederholungsNavigation() {
+    if (!wiederholungsKontext) return;
+
+    const box = document.getElementById("wiederholungNavBox");
+    const hinweis = document.getElementById("wiederholungNavHinweis");
+    const nextBtn = document.getElementById("btnNaechsterOffenerFehler");
+    if (!box || !nextBtn) return;
+
+    try {
+      if (typeof window.ermittleNaechstenOffenenFehler !== "function") {
+        throw new Error("Fehlerübersicht ist noch nicht bereit.");
+      }
+
+      const ergebnis = await window.ermittleNaechstenOffenenFehler(wiederholungsKontext.key);
+
+      if (ergebnis.hasOtherOpenError) {
+        nextBtn.style.display = "";
+        nextBtn.disabled = false;
+        nextBtn.textContent = "Nächsten offenen Fehler";
+        if (hinweis) hinweis.textContent = "";
+      } else if (ergebnis.currentIsOpen) {
+        nextBtn.style.display = "";
+        nextBtn.disabled = false;
+        nextBtn.textContent = "Diesen Fehler erneut versuchen";
+        if (hinweis) hinweis.textContent = "";
+      } else {
+        nextBtn.style.display = "none";
+        nextBtn.disabled = true;
+        if (hinweis) hinweis.textContent = "Keine weiteren offenen Fehler.";
+      }
+    } catch (error) {
+      if (hinweis) hinweis.textContent = "Fehlerübersicht konnte nicht aktualisiert werden: " + error.message;
+    } finally {
+      box.style.display = "block";
+    }
+  }
+
+async function naechsterOffenerFehler() {
+    if (appIstBeschaeftigt) return;
+    if (!wiederholungsKontext) return;
+
+    const kontext = wiederholungsKontext;
+    const hinweis = document.getElementById("wiederholungNavHinweis");
+
+    try {
+      setzeAppBeschaeftigt(true);
+
+      if (typeof window.ermittleNaechstenOffenenFehler !== "function") {
+        throw new Error("Fehlerübersicht ist noch nicht bereit.");
+      }
+
+      const ergebnis = await window.ermittleNaechstenOffenenFehler(kontext.key);
+
+      let zielAttempt = ergebnis.nextEntry ? ergebnis.nextEntry.latestAttempt : null;
+      if (!zielAttempt && ergebnis.currentIsOpen) {
+        zielAttempt = { fach: kontext.fach, frageId: kontext.frageId, thema: kontext.thema, bereich: kontext.bereich };
+      }
+
+      if (!zielAttempt) {
+        if (hinweis) hinweis.textContent = "Keine weiteren offenen Fehler.";
+        return;
+      }
+
+      if (typeof window.oeffneWiederholungAusAttempt !== "function") {
+        throw new Error("Die Wiederholungsfunktion ist noch nicht bereit.");
+      }
+
+      await window.oeffneWiederholungAusAttempt(zielAttempt);
+    } catch (error) {
+      setzeStatus("Nächster offener Fehler konnte nicht geladen werden: " + error.message);
+    } finally {
+      setzeAppBeschaeftigt(false);
+    }
+  }
+
+function zurueckZurFehleranalyse() {
+    if (appIstBeschaeftigt) return;
+    wiederholungsKontext = null;
+    if (typeof oeffneLernstandBereich === "function") {
+      oeffneLernstandBereich("lernstandFehlerView");
+    } else {
+      zeigeBereich("lernstandFehlerView");
+    }
   }
 
 async function ladeThemen(fach) {
@@ -348,6 +481,7 @@ function starteThema() {
 
     aktuellesThema = thema;
 aktuelleFrageId = "";
+wiederholungsKontext = null;
 ladeFrageAusFach(aktuellesFach, aktuellesThema, "");
   }
 
@@ -369,6 +503,7 @@ function naechsteFrage() {
       return;
     }
 
+    wiederholungsKontext = null;
     ladeFrageAusFach(aktuellesFach, aktuellesThema, aktuelleFrageId);
   }
 
@@ -389,6 +524,13 @@ function oeffneWifaWiederholungsfrage(daten, kontext) {
   aktuellerTeilbereich = bereich;
   aktuellesFach = fach;
   aktuellesThema = thema;
+  wiederholungsKontext = {
+    fach,
+    frageId: String(daten.id || "").trim(),
+    thema,
+    bereich,
+    key: fach + "::" + String(daten.id || "").trim()
+  };
 
   const teilbereichSelect = document.getElementById("teilbereichSelect");
   const fachSelect = document.getElementById("fachSelect");

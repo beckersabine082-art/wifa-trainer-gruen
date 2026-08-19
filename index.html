@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>WiFa Trainer</title>
-  <link rel="stylesheet" href="css/style.css?v=style-history-fix-v1">
+  <link rel="stylesheet" href="css/style.css?v=style-history-fix-v3">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -395,10 +395,10 @@
           <textarea id="antwortInput" placeholder="Schreibe hier deine Antwort..."></textarea>
 
           <div class="button-row">
-            <button class="action-btn" onclick="bewerteAntwort()">Auswertung starten</button>
+            <button class="action-btn" id="btnAuswertungStarten" onclick="bewerteAntwort()">Auswertung starten</button>
             <button class="secondary-btn" onclick="naechsteFrage()">Nächste Frage</button>
-            <button class="secondary-btn" onclick="zeigeMusterloesung()">Musterlösung anzeigen</button>
-            <button class="secondary-btn" onclick="antwortLeeren()">Antwort leeren</button>
+            <button class="secondary-btn" id="btnMusterloesungAnzeigen" onclick="zeigeMusterloesung()">Musterlösung anzeigen</button>
+            <button class="secondary-btn" id="btnAntwortLeeren" onclick="antwortLeeren()">Antwort leeren</button>
           </div>
 
           <div class="result-box" id="resultBox">
@@ -409,6 +409,14 @@
             <div class="solution-box" id="solutionBox">
               <strong>Musterlösung:</strong>
               <div id="musterloesungText"></div>
+            </div>
+
+            <div class="wiederholung-nav-box" id="wiederholungNavBox" style="display: none;">
+              <p class="wiederholung-nav-hinweis" id="wiederholungNavHinweis"></p>
+              <div class="wiederholung-nav-buttons">
+                <button class="action-btn wiederholung-nav-primary" id="btnNaechsterOffenerFehler" type="button" onclick="naechsterOffenerFehler()">Nächsten offenen Fehler</button>
+                <button class="secondary-btn" id="btnZurueckZurFehleranalyse" type="button" onclick="zurueckZurFehleranalyse()">Zurück zur Fehleranalyse</button>
+              </div>
             </div>
           </div>
 
@@ -1022,12 +1030,12 @@
 
 <script src="js/api.js"></script>
 <script src="js/auth-shim.js"></script>
-<script src="js/main.js?v=lernstand-v2"></script>
+<script src="js/main.js?v=lernstand-v3"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
-<script src="js/trainer.js?v=trainer-repeat-v1"></script>
-<script src="js/bewertung.js?v=lernstand-v4"></script>
-<script type="module" src="js/lernstand.js?v=lernstand-history-fix-v1"></script>
+<script src="js/trainer.js?v=trainer-repeat-v4"></script>
+<script src="js/bewertung.js?v=lernstand-v6"></script>
+<script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
 <script src="js/wissensdatenbank.js"></script>
 <script src="js/pruefungssimulation.js"></script>
 <script src="js/linksammlung.js?v=gesetze1"></script>
