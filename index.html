@@ -437,8 +437,14 @@
       </section>
 
       <section class="view" id="lernstandPruefungView">
-        <div class="header"><h1>Lernstand – Prüfungssimulation</h1></div>
-        <div class="card">Dieser Bereich wird später ergänzt.</div>
+        <div class="header">
+          <h1>Lernstand – Prüfungssimulation</h1>
+          <p>Deine bisher abgeschlossenen Prüfungssimulationen, getrennt vom normalen WiFa-Trainer.</p>
+        </div>
+        <div id="pruefungslernstandStatus" class="status">Lernstand wird geladen.</div>
+        <div id="pruefungslernstandListe" class="lernstand-content">
+          <div class="result-list-empty">Bitte kurz warten...</div>
+        </div>
       </section>
 
       <section class="view" id="lernstandQuizView">
@@ -1030,14 +1036,15 @@
 
 <script src="js/api.js"></script>
 <script src="js/auth-shim.js"></script>
-<script src="js/main.js?v=lernstand-v3"></script>
+<script src="js/main.js?v=lernstand-pruefung-v1"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
 <script src="js/trainer.js?v=trainer-repeat-v4"></script>
 <script src="js/bewertung.js?v=lernstand-v6"></script>
 <script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
 <script src="js/wissensdatenbank.js"></script>
-<script src="js/pruefungssimulation.js"></script>
+<script src="js/pruefungssimulation.js?v=lernstand-pruefung-v1"></script>
+<script type="module" src="js/pruefungslernstand.js?v=lernstand-pruefung-v1"></script>
 <script src="js/linksammlung.js?v=gesetze1"></script>
 <script type="module" src="js/login.js?v=auth1"></script> </body>
 </html>

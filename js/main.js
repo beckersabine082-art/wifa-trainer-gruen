@@ -87,6 +87,9 @@ function zeigeBereich(viewId) {
     if (viewId === "lernstandFehlerView" && typeof window.ladeFehleranalyse === "function") {
       window.ladeFehleranalyse();
     }
+    if (viewId === "lernstandPruefungView" && typeof window.ladePruefungsLernstand === "function") {
+      window.ladePruefungsLernstand();
+    }
     if (viewId === "glossarView") {
   document.getElementById("navGlossar").classList.add("active");
 

@@ -1868,3 +1868,114 @@ select:focus {
   cursor: not-allowed;
   opacity: 0.65;
 }
+
+.pruefungslernstand-overview {
+  display: grid;
+  gap: 12px;
+}
+
+.pruefungslernstand-teilbereich {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #b7dec2;
+  border-radius: 12px;
+  background: #f2fbf5;
+  padding: 14px;
+}
+
+.pruefungslernstand-teilbereich h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.pruefungslernstand-einheiten {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #b7dec2;
+}
+
+.pruefungslernstand-einheiten[hidden] {
+  display: none !important;
+}
+
+.pruefungslernstand-einheit {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  border: 1px solid #b7dec2;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px 12px;
+}
+
+.pruefungslernstand-entry {
+  display: grid;
+  gap: 8px;
+  border: 1px solid #b7dec2;
+  border-radius: 12px;
+  background: #f2fbf5;
+  padding: 14px;
+}
+
+.pruefungslernstand-entry-head,
+.pruefungslernstand-entry-score {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  font-size: 13px;
+}
+
+.pruefungslernstand-status {
+  font-weight: 700;
+}
+
+.pruefungslernstand-status-bestanden {
+  color: #16a34a;
+}
+
+.pruefungslernstand-status-nicht_bestanden {
+  color: #dc2626;
+}
+
+.pruefungslernstand-detail {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid #b7dec2;
+}
+
+.pruefungslernstand-detail[hidden] {
+  display: none !important;
+}
+
+.pruefungslernstand-task {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  border: 1px solid #b7dec2;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.pruefungslernstand-task p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.pruefungslernstand-skizzen-hinweis {
+  color: #92650c;
+}
+
+@media (max-width: 520px) {
+  .pruefungslernstand-entry-head,
+  .pruefungslernstand-entry-score {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

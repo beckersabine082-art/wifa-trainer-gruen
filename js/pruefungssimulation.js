@@ -21,6 +21,15 @@ const pruefungsEinheitenNachTeilbereich = {
   ]
 };
 
+// Schreibgeschützter Zugriff auf den Prüfungskatalog für js/pruefungslernstand.js (Modul-Scope sieht dieses const sonst nicht)
+window.getPruefungsEinheitenNachTeilbereich = function() {
+  return pruefungsEinheitenNachTeilbereich;
+};
+
+let pruefungAuswertungBereitsGespeichert = false;
+let pruefungAuswertungWirdGespeichert = false;
+let pruefungLetzterSpeicherPayload = null;
+
 function pruefungTeilbereichWaehlen() {
   const teilbereich = document.getElementById("pruefungTeilbereichSelect").value;
   const simulationBereich = document.getElementById("pruefungSimulationBereich");
@@ -124,6 +133,10 @@ function ermittlePruefungsEinheitTitel(teilbereich, einheitKey) {
 
 async function ladePruefungSimulation() {
   const box = document.getElementById("pruefungContainer");
+
+  pruefungAuswertungBereitsGespeichert = false;
+  pruefungAuswertungWirdGespeichert = false;
+  pruefungLetzterSpeicherPayload = null;
 
   box.innerHTML = "<div class='status'>Prüfung wird geladen...</div>";
 
@@ -637,6 +650,119 @@ function togglePruefungsMusterloesung(index) {
     box.style.display === "none" ? "block" : "none";
 }
 
+// Baut aus den eigenen Antworten (letztePruefungsAntworten) und der Server-Bewertung genau einen speicherbaren Pruefungsversuch, ohne Skizzendaten
+function erstellePruefungsSpeicherPayload(auswertungsDaten) {
+  const teilbereich = document.getElementById("pruefungTeilbereichSelect")?.value || "";
+  const simulation = document.getElementById("pruefungSimulationSelect")?.value || "";
+  const einheit = document.getElementById("pruefungFachSelect")?.value || "";
+
+  if (!teilbereich || !simulation || !einheit) return null;
+
+  const gesamtPunkte = Number(auswertungsDaten.gesamtPunkte || 0);
+  const gesamtMaxPunkte = Number(auswertungsDaten.gesamtMaxPunkte || 0);
+  const serverAufgaben = Array.isArray(auswertungsDaten.aufgaben) ? auswertungsDaten.aufgaben : [];
+
+  const tasks = (letztePruefungsAntworten || []).map(function(eigeneAntwort) {
+    const treffer = serverAufgaben.find(function(item) {
+      const gleicheAufgabe =
+        String(item.aufgabe) === String(eigeneAntwort.aufgabe)
+        && String(item.teilaufgabe) === String(eigeneAntwort.teilaufgabe);
+
+      if (!gleicheAufgabe) return false;
+
+      if (item.simulationId !== undefined && item.simulationId !== null && String(item.simulationId) !== "") {
+        return String(item.simulationId) === String(eigeneAntwort.simulationId);
+      }
+
+      return true;
+    }) || {};
+
+    const maxPunkte = Number(treffer.maxPunkte ?? eigeneAntwort.maxPunkte ?? 0);
+    const punkte = Number(treffer.punkte ?? 0);
+
+    return {
+      simulationId: String(eigeneAntwort.simulationId || ""),
+      aufgabe: String(eigeneAntwort.aufgabe || ""),
+      teilaufgabe: String(eigeneAntwort.teilaufgabe || ""),
+      fach: String(eigeneAntwort.fach || ""),
+      thema: String(eigeneAntwort.thema || ""),
+      fragetyp: String(eigeneAntwort.fragetyp || "text"),
+      frage: String(eigeneAntwort.frage || ""),
+      antwort: String(eigeneAntwort.antwort || ""),
+      punkte: Number.isFinite(punkte) ? punkte : 0,
+      maxPunkte: Number.isFinite(maxPunkte) ? maxPunkte : 0,
+      // ergebnis ist beim Apps Script ein ausführlicher Feedbacktext, kein Enum-Wert
+      ergebnis: String(treffer.ergebnis || ""),
+      erkannte: Array.isArray(treffer.erkannte) ? treffer.erkannte.map(String).slice(0, 30) : [],
+      fehlende: Array.isArray(treffer.fehlende) ? treffer.fehlende.map(String).slice(0, 30) : [],
+      // musterloesung kommt ausschließlich aus den eigenen Prüfungsdaten, da das Bewertungsobjekt sie nicht zuverlässig liefert
+      musterloesung: String(eigeneAntwort.musterloesung || ""),
+      hatSkizze: Boolean(eigeneAntwort.skizze)
+    };
+  }).slice(0, 100);
+
+  if (!tasks.length) return null;
+
+  const einheitLabel = String(ermittlePruefungsEinheitTitel(teilbereich, einheit) || einheit || "").trim() || einheit;
+
+  return {
+    teilbereich: teilbereich,
+    simulation: String(simulation),
+    einheit: einheit,
+    einheitLabel: einheitLabel,
+    gesamtPunkte: Number.isFinite(gesamtPunkte) ? gesamtPunkte : 0,
+    gesamtMaxPunkte: Number.isFinite(gesamtMaxPunkte) ? gesamtMaxPunkte : 0,
+    tasks: tasks
+  };
+}
+
+function aktualisierePruefungsSpeicherStatus(erfolgreich, error) {
+  const status = document.getElementById("pruefungStatus");
+  if (!status) return;
+
+  if (erfolgreich) {
+    status.innerHTML = "Prüfung abgeschlossen und Lernstand gespeichert.";
+    return;
+  }
+
+  status.innerHTML =
+    "Prüfung ausgewertet, Lernstand konnte nicht gespeichert werden. "
+    + '<button type="button" class="secondary-btn" onclick="pruefungLernstandErneutSpeichern()">Lernstand erneut speichern</button>';
+
+  if (error) {
+    console.warn("Lernstand konnte nicht gespeichert werden:", error);
+  }
+}
+
+// Speichert (oder wiederholt) genau einen abgeschlossenen Pruefungsversuch, ruft dabei nie erneut die Bewertung auf
+async function fuehrePruefungsSpeicherungDurch() {
+  if (pruefungAuswertungBereitsGespeichert || pruefungAuswertungWirdGespeichert) return;
+  if (!pruefungLetzterSpeicherPayload || typeof window.speicherePruefungsAttempt !== "function") return;
+
+  pruefungAuswertungWirdGespeichert = true;
+
+  try {
+    await window.speicherePruefungsAttempt(pruefungLetzterSpeicherPayload);
+    pruefungAuswertungBereitsGespeichert = true;
+    aktualisierePruefungsSpeicherStatus(true);
+  } catch (error) {
+    aktualisierePruefungsSpeicherStatus(false, error);
+  } finally {
+    pruefungAuswertungWirdGespeichert = false;
+  }
+}
+
+function pruefungLernstandErneutSpeichern() {
+  if (pruefungAuswertungBereitsGespeichert || pruefungAuswertungWirdGespeichert) return;
+
+  const status = document.getElementById("pruefungStatus");
+  if (status) {
+    status.textContent = "Lernstand wird erneut gespeichert...";
+  }
+
+  fuehrePruefungsSpeicherungDurch();
+}
+
 function stoppePruefungTimer() {
 
   clearInterval(pruefungTimerInterval);
@@ -782,6 +908,9 @@ tabellenFelder.forEach(function(feld, index) {
     }
 
     renderPruefungsAuswertung(bewertung.data || {});
+
+    pruefungLetzterSpeicherPayload = erstellePruefungsSpeicherPayload(bewertung.data || {});
+    await fuehrePruefungsSpeicherungDurch();
 
   } catch (error) {
     document.getElementById("pruefungStatus").textContent =

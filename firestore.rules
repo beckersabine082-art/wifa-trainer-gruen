@@ -63,6 +63,91 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Prüfungssimulation: getrennt von den normalen WiFa-Trainer-Attempts
+    match /users/{userId}/examAttempts/{examAttemptId} {
+      allow read: if request.auth != null
+                  && request.auth.uid == userId
+                  && request.auth.token.email_verified == true;
+
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.auth.token.email_verified == true
+                    && request.resource.data.keys().hasOnly(['attemptId', 'userId', 'modul', 'timestamp', 'teilbereich', 'simulation', 'einheit', 'einheitLabel', 'gesamtPunkte', 'gesamtMaxPunkte', 'prozent', 'status', 'aufgabenAnzahl'])
+                    && request.resource.data.attemptId == examAttemptId
+                    && request.resource.data.userId == userId
+                    && request.resource.data.modul == 'pruefungssimulation'
+                    && request.resource.data.timestamp == request.time
+                    && request.resource.data.teilbereich in ['WQ', 'HQ']
+                    && request.resource.data.simulation in ['1', '2', '3', '4']
+                    && request.resource.data.einheit is string
+                    && request.resource.data.einheit.size() > 0
+                    && request.resource.data.einheit.size() <= 50
+                    && request.resource.data.einheitLabel is string
+                    && request.resource.data.einheitLabel.size() > 0
+                    && request.resource.data.einheitLabel.size() <= 200
+                    && request.resource.data.gesamtPunkte is number
+                    && request.resource.data.gesamtMaxPunkte is number
+                    && request.resource.data.gesamtMaxPunkte > 0
+                    && request.resource.data.gesamtPunkte >= 0
+                    && request.resource.data.gesamtPunkte <= request.resource.data.gesamtMaxPunkte
+                    && request.resource.data.prozent is number
+                    && request.resource.data.prozent >= 0
+                    && request.resource.data.prozent <= 100
+                    && request.resource.data.status in ['bestanden', 'nicht_bestanden']
+                    && request.resource.data.aufgabenAnzahl is number
+                    && request.resource.data.aufgabenAnzahl >= 1
+                    && request.resource.data.aufgabenAnzahl <= 100;
+
+      allow update, delete: if false;
+
+      match /tasks/{taskAttemptId} {
+        allow read: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.auth.token.email_verified == true;
+
+        allow create: if request.auth != null
+                      && request.auth.uid == userId
+                      && request.auth.token.email_verified == true
+                      && request.resource.data.keys().hasOnly(['taskAttemptId', 'examAttemptId', 'userId', 'simulationId', 'aufgabe', 'teilaufgabe', 'fach', 'thema', 'fragetyp', 'frage', 'antwort', 'punkte', 'maxPunkte', 'ergebnis', 'erkannte', 'fehlende', 'musterloesung', 'hatSkizze'])
+                      && request.resource.data.taskAttemptId == taskAttemptId
+                      && request.resource.data.examAttemptId == examAttemptId
+                      && request.resource.data.userId == userId
+                      && request.resource.data.simulationId is string
+                      && request.resource.data.simulationId.size() <= 100
+                      && request.resource.data.aufgabe is string
+                      && request.resource.data.aufgabe.size() > 0
+                      && request.resource.data.aufgabe.size() <= 20
+                      && request.resource.data.teilaufgabe is string
+                      && request.resource.data.teilaufgabe.size() <= 20
+                      && request.resource.data.fach is string
+                      && request.resource.data.fach.size() <= 100
+                      && request.resource.data.thema is string
+                      && request.resource.data.thema.size() <= 200
+                      && request.resource.data.fragetyp is string
+                      && request.resource.data.fragetyp.size() <= 30
+                      && request.resource.data.frage is string
+                      && request.resource.data.frage.size() <= 4000
+                      && request.resource.data.antwort is string
+                      && request.resource.data.antwort.size() <= 20000
+                      && request.resource.data.punkte is number
+                      && request.resource.data.maxPunkte is number
+                      && request.resource.data.maxPunkte > 0
+                      && request.resource.data.punkte >= 0
+                      && request.resource.data.punkte <= request.resource.data.maxPunkte
+                      && request.resource.data.ergebnis is string
+                      && request.resource.data.ergebnis.size() <= 20000
+                      && request.resource.data.erkannte is list
+                      && request.resource.data.erkannte.size() <= 30
+                      && request.resource.data.fehlende is list
+                      && request.resource.data.fehlende.size() <= 30
+                      && request.resource.data.musterloesung is string
+                      && request.resource.data.musterloesung.size() <= 8000
+                      && request.resource.data.hatSkizze is bool;
+
+        allow update, delete: if false;
+      }
+    }
+
     // Deny all other access by default
     match /{document=**} {
       allow read, write: if false;
