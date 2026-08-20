@@ -2004,9 +2004,27 @@ select:focus {
   }
 }
 
+.lernstand-head-block {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 0 10px;
+  position: relative;
+}
+
+.lernstand-head-block::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: #b794f6;
+}
+
 .lernstand-content {
   display: grid;
-  gap: 16px;
+  gap: 22px;
 }
 
 .lernstand-metrics,
@@ -2014,20 +2032,32 @@ select:focus {
 .lernstand-strength-grid {
   display: grid;
   gap: 12px;
+  align-items: stretch;
 }
 
 .lernstand-metric,
 .lernstand-summary-card,
 .lernstand-subject,
-.lernstand-development-row {
+.lernstand-analysis-card,
+.lernstand-error-card {
   border: 1px solid #b7dec2;
   border-radius: 12px;
   background: #f2fbf5;
   padding: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* Kennzahlen: neutral gehalten, damit Gruen/Lila/warme Akzente andernorts hervorstechen */
+.lernstand-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  background: #f8f7fc;
+  border-color: #e2deef;
 }
 
 .lernstand-metric-label,
-.lernstand-metric-detail,
 .lernstand-bar-detail,
 .lernstand-subject-stats,
 .lernstand-topic,
@@ -2035,31 +2065,75 @@ select:focus {
   font-size: 13px;
 }
 
-.lernstand-metric-value {
-  margin: 4px 0;
+.lernstand-metric-label {
   color: #245c3a;
-  font-size: 22px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.lernstand-metric-value {
+  margin: 2px 0;
+  color: #245c3a;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.lernstand-metric-detail {
+  margin-top: auto;
+  color: #4a3970;
+  font-size: 13px;
 }
 
 .lernstand-section,
 .lernstand-bar-row,
-.lernstand-development-row,
 .lernstand-topic {
   display: grid;
   gap: 10px;
 }
 
 .lernstand-attempt-chart {
-  border: 1px solid #b7dec2;
+  border: 1px solid #d9c7ff;
   border-radius: 12px;
-  background: #f2fbf5;
+  background: #f6f2ff;
   padding: 14px;
 }
 
 .lernstand-attempt-chart h3 {
   margin: 0 0 10px;
   font-size: 16px;
+  color: #245c3a;
+}
+
+.lernstand-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #4a3970;
+}
+
+.lernstand-chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lernstand-chart-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.lernstand-chart-legend-dot-bar {
+  background: #9163d6;
+}
+
+.lernstand-chart-legend-dot-line {
+  background: #2f7d4c;
+  border-radius: 999px;
 }
 
 .lernstand-chart-scroll {
@@ -2126,17 +2200,17 @@ select:focus {
 
 .lernstand-chart-grid,
 .lernstand-chart-axis {
-  stroke: #b7dec2;
+  stroke: #d9c7ff;
   stroke-width: 1;
 }
 
 .lernstand-chart-bar {
-  fill: #4f9f68;
+  fill: #9163d6;
 }
 
 .lernstand-chart-x-label,
 .lernstand-chart-y-label {
-  fill: #245c3a;
+  fill: #4a3970;
   font-size: 12px;
 }
 
@@ -2148,10 +2222,35 @@ select:focus {
   text-anchor: end;
 }
 
+.lernstand-chart-y-label-percent {
+  text-anchor: start;
+  fill: #2f7d4c;
+}
+
+.lernstand-chart-line {
+  fill: none;
+  stroke: #2f7d4c;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.lernstand-chart-point {
+  fill: #ffffff;
+  stroke: #2f7d4c;
+  stroke-width: 2;
+}
+
 @media (max-width: 520px) {
   .lernstand-chart-scroll svg {
     height: 150px;
   }
+}
+
+.lernstand-summary-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .lernstand-summary-card h3 {
@@ -2168,22 +2267,103 @@ select:focus {
   gap: 10px;
 }
 
+.lernstand-bar-label strong {
+  font-size: 16px;
+  color: #245c3a;
+}
+
 .lernstand-bar {
-  height: 10px;
+  height: 12px;
   overflow: hidden;
   border-radius: 999px;
   background: #d8f0df;
+  box-shadow: inset 0 1px 2px rgba(36, 92, 58, 0.14);
 }
 
 .lernstand-bar-fill {
   height: 100%;
+  border-radius: 999px;
   background: linear-gradient(135deg, #4f9f68, #2f7d4c);
+  transition: width 0.3s ease;
 }
 
 .lernstand-subject-list,
 .lernstand-topics {
   display: grid;
   gap: 10px;
+}
+
+.lernstand-analysis-group {
+  display: grid;
+  gap: 22px;
+}
+
+.lernstand-analysis-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fbfbfe;
+  border: 1px solid #e2deef;
+  border-left: 4px solid transparent;
+}
+
+.lernstand-analysis-card .section-title {
+  margin-bottom: 4px;
+}
+
+/* Staerkste Themen: neutrale Flaeche, gruener Akzent */
+.lernstand-strong-card {
+  border-color: #cfe9d7;
+  border-left-color: #2f7d4c;
+}
+
+.lernstand-strong-card .lernstand-bar-fill {
+  background: linear-gradient(135deg, #4f9f68, #2f7d4c);
+}
+
+/* Wiederholen: neutrale Flaeche, warmer Akzent statt gruen */
+.lernstand-repeat-card {
+  border-color: #ecd8ad;
+  border-left-color: #c97f1f;
+}
+
+.lernstand-repeat-card .lernstand-bar {
+  background: #f6e6c4;
+}
+
+.lernstand-repeat-card .lernstand-bar-fill {
+  background: linear-gradient(135deg, #e3a53d, #c97f1f);
+}
+
+.lernstand-repeat-card .lernstand-bar-label strong {
+  color: #8a5a12;
+}
+
+.lernstand-repeat-empty p {
+  margin: 0;
+  color: #8a5a12;
+  font-weight: 700;
+}
+
+.lernstand-repeat-empty small {
+  color: #4a3970;
+  font-size: 13px;
+}
+
+/* Offene Fehler: neutrale Flaeche, dezenter Rose-Akzent zur Abgrenzung von positiven Bereichen */
+.lernstand-error-card {
+  background: #fbfbfe;
+  border-color: #f0d6d1;
+  border-left: 4px solid #c0554a;
+}
+
+.lernstand-error-card p {
+  margin: 0;
+  color: #4a3970;
+}
+
+.lernstand-subject {
+  padding: 12px 14px;
 }
 
 .lernstand-subject-heading > span:first-child {
@@ -2217,6 +2397,12 @@ select:focus {
   .lernstand-overview,
   .lernstand-strength-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 700px) {
+  .lernstand-subject-list {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
 }
 

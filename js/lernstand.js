@@ -180,20 +180,40 @@ function renderAttemptsChart(entries) {
   const chartTop = 14;
   const chartBottom = 32;
   const chartLeft = 38;
-  const chartRight = 14;
+  const chartRight = 34;
   const chartAreaHeight = chartHeight - chartTop - chartBottom;
   const chartAreaWidth = chartWidth - chartLeft - chartRight;
   const barWidth = Math.min(45, Math.max(12, chartAreaWidth / entries.length - 16));
   const yPosition = value => chartTop + chartAreaHeight - (value / scaleMaximum) * chartAreaHeight;
+  const yPositionPercent = value => chartTop + chartAreaHeight - (value / 100) * chartAreaHeight;
   const ticks = Array.from({ length: stepCount + 1 }, (_, index) => (scaleMaximum / stepCount) * index);
   const grid = ticks.map(value => `<line x1="${chartLeft}" y1="${yPosition(value)}" x2="${chartWidth - chartRight}" y2="${yPosition(value)}" class="lernstand-chart-grid"/><text x="${chartLeft - 6}" y="${yPosition(value) + 4}" class="lernstand-chart-y-label">${value}</text>`).join('');
-  const bars = entries.map(([day, value], index) => {
-    const center = chartLeft + (chartAreaWidth / entries.length) * (index + 0.5);
+  const percentLabels = [0, 50, 100].map(value => `<text x="${chartWidth - chartRight + 6}" y="${yPositionPercent(value) + 4}" class="lernstand-chart-y-label lernstand-chart-y-label-percent">${value}%</text>`).join('');
+  const points = entries.map(([day, value], index) => ({
+    day,
+    value,
+    center: chartLeft + (chartAreaWidth / entries.length) * (index + 0.5),
+    // Vorhandene Berechnung der Tagesleistung wird hier nur weiterverwendet, nicht neu erfunden.
+    performance: roundedPercentage(value.reached, value.maximum)
+  }));
+  const bars = points.map(({ day, value, center, performance }) => {
     const height = (value.count / scaleMaximum) * chartAreaHeight;
     const label = `${day.slice(8, 10)}.${day.slice(5, 7)}.`;
-    return `<rect x="${center - barWidth / 2}" y="${chartTop + chartAreaHeight - height}" width="${barWidth}" height="${height}" class="lernstand-chart-bar"><title>${escapeText(label)}: ${value.count} Lernversuche</title></rect><text x="${center}" y="${chartHeight - 12}" class="lernstand-chart-x-label">${label}</text>`;
+    return `<rect x="${center - barWidth / 2}" y="${chartTop + chartAreaHeight - height}" width="${barWidth}" height="${height}" class="lernstand-chart-bar"><title>${escapeText(label)}: ${value.count} Lernversuche · ${performance}% Tagesleistung</title></rect><text x="${center}" y="${chartHeight - 12}" class="lernstand-chart-x-label">${label}</text>`;
   }).join('');
-  return `<div class="lernstand-attempt-chart" role="img" aria-label="Lernversuche pro Tag"><h3>Lernversuche pro Tag</h3><div class="lernstand-chart-scroll"><svg viewBox="0 0 ${chartWidth} ${chartHeight}" aria-hidden="true">${grid}<line x1="${chartLeft}" y1="${chartTop + chartAreaHeight}" x2="${chartWidth - chartRight}" y2="${chartTop + chartAreaHeight}" class="lernstand-chart-axis"/>${bars}</svg></div></div>`;
+  const linePoints = points.map(({ center, performance }) => `${center},${yPositionPercent(performance)}`).join(' ');
+  const markers = points.map(({ day, value, center, performance }) => {
+    const label = `${day.slice(8, 10)}.${day.slice(5, 7)}.`;
+    return `<circle cx="${center}" cy="${yPositionPercent(performance)}" r="4" class="lernstand-chart-point"><title>${escapeText(label)}: ${value.count} Lernversuche · ${performance}% Tagesleistung</title></circle>`;
+  }).join('');
+  return `<div class="lernstand-attempt-chart" role="img" aria-label="Meine Lernentwicklung: Lernversuche und Tagesleistung">
+    <h3>Meine Lernentwicklung</h3>
+    <div class="lernstand-chart-legend">
+      <span class="lernstand-chart-legend-item"><span class="lernstand-chart-legend-dot lernstand-chart-legend-dot-bar"></span>Lernversuche</span>
+      <span class="lernstand-chart-legend-item"><span class="lernstand-chart-legend-dot lernstand-chart-legend-dot-line"></span>Leistung</span>
+    </div>
+    <div class="lernstand-chart-scroll"><svg viewBox="0 0 ${chartWidth} ${chartHeight}" aria-hidden="true">${grid}<line x1="${chartLeft}" y1="${chartTop + chartAreaHeight}" x2="${chartWidth - chartRight}" y2="${chartTop + chartAreaHeight}" class="lernstand-chart-axis"/>${bars}${percentLabels}<polyline points="${linePoints}" class="lernstand-chart-line"/>${markers}</svg></div>
+  </div>`;
 }
 
 function renderDevelopment(attempts) {
@@ -209,12 +229,7 @@ function renderDevelopment(attempts) {
   });
   const entries = [...byDay.entries()].sort(([first], [second]) => first.localeCompare(second));
   if (!entries.length) return '<div class="result-list-empty">Noch keine Lernaktivität</div>';
-  return `${renderAttemptsChart(entries)}${entries.map(([day, value]) => `
-    <div class="lernstand-development-row">
-      <strong>${escapeText(day)}</strong>
-      ${renderBar('Leistung', roundedPercentage(value.reached, value.maximum), `${value.reached} / ${value.maximum} Punkte`)}
-    </div>
-  `).join('')}`;
+  return renderAttemptsChart(entries);
 }
 
 function renderSubject(subject, latest, catalog) {
@@ -239,13 +254,22 @@ function renderThemeLists(latest, catalog) {
       ? attempts.length === topic.total
       : attempts.length >= 3 && attempts.length / topic.total >= 0.3);
     return { ...topic, ...aggregate(attempts), qualified };
-  }).filter(item => item.qualified);
-  const list = (items, emptyText) => items.length
-    ? items.slice(0, 5).map(item => renderBar(item.thema, item.performance, `${item.attempts.length} / ${item.total} Fragen bearbeitet`)).join('')
-    : `<div class="result-list-empty">${escapeText(emptyText)}</div>`;
+  }).filter(item => item.qualified && item.attempts.length > 0);
+  const themeBar = item => renderBar(item.thema, item.performance, `${item.attempts.length} / ${item.total} Fragen bearbeitet`);
+
+  // Staerkstes Thema: hoechste erreichte Leistung unter den bearbeiteten Themen.
+  const strongest = themes.filter(item => item.performance > 0).sort((a, b) => b.performance - a.performance)[0];
+
+  // Wiederholungskandidat: nur ein Thema, dessen Leistung schlechter als das staerkste Thema ist.
+  const repeatCandidate = strongest
+    ? themes.filter(item => item.performance < strongest.performance).sort((a, b) => a.performance - b.performance)[0]
+    : undefined;
+
   return {
-    strongest: list(themes.filter(item => item.attempts.length > 0 && item.performance > 0).sort((a, b) => b.performance - a.performance), 'Noch keine ausreichenden Daten für ein starkes Thema.'),
-    repeat: list(themes.filter(item => item.attempts.length > 0).sort((a, b) => a.performance - b.performance), 'Noch nicht genügend Daten für eine Auswertung')
+    strongest: strongest ? themeBar(strongest) : '<div class="result-list-empty">Noch keine ausreichenden Daten für ein starkes Thema.</div>',
+    repeat: repeatCandidate
+      ? themeBar(repeatCandidate)
+      : '<div class="lernstand-repeat-empty"><p>Noch kein Wiederholungsbedarf erkennbar.</p><small>Bearbeite weitere Fragen, damit eine aussagekräftige Empfehlung möglich wird.</small></div>'
   };
 }
 
@@ -523,10 +547,12 @@ function renderLearningProgress(attempts, catalog) {
   document.getElementById('lernstandListe').innerHTML = `
     <section class="lernstand-metrics">${renderMetric('Bearbeitete Fragen', `${completed} von ${totalQuestions}`, totalQuestions ? `${roundedPercentage(completed, totalQuestions)}% Fortschritt` : 'Fragenbestand noch nicht verfügbar')}${renderMetric('Aktuelle Leistung', completed ? `${current.performance}%` : '–', completed ? `${current.reached} / ${current.maximum} Punkte` : 'Noch keine Fragen bearbeitet')}${renderMetric('Offene Fehler', current.errors.length, `${partial} teilweise richtig · ${incorrect} falsch`)}${renderMetric('Letzte Aktivität', formatDate(latestActivity), attempts.length ? `${attempts.length} gespeicherte Versuche` : 'Noch keine Lernaktivität')}</section>
     <section class="lernstand-section"><h2 class="section-title">Gesamtübersicht</h2><div class="lernstand-overview"><div class="lernstand-summary-card"><h3>Bearbeitungsstand</h3>${renderBar('Bearbeitet', totalQuestions ? (completed / totalQuestions) * 100 : 0, `${completed} bearbeitet · ${open} noch offen`)}</div><div class="lernstand-summary-card"><h3>Ergebnis der bearbeiteten Fragen</h3>${renderBar('Richtig', completed ? (correct / completed) * 100 : 0, `${correct} richtig · ${partial} teilweise · ${incorrect} falsch`)}</div></div></section>
+    <section class="lernstand-section lernstand-development-section"><h2 class="section-title">Meine Entwicklung</h2>${renderDevelopment(attempts)}</section>
+    <div class="lernstand-analysis-group">
+      <section class="lernstand-section lernstand-strength-grid"><div class="lernstand-analysis-card lernstand-strong-card"><h2 class="section-title">Meine stärksten Themen</h2>${themeLists.strongest}</div><div class="lernstand-analysis-card lernstand-repeat-card"><h2 class="section-title">Hier lohnt sich Wiederholen</h2>${themeLists.repeat}</div></section>
+      <section class="lernstand-section lernstand-error-card"><h2 class="section-title">Deine offenen Fehler</h2><p>${current.errors.length} offene Fehler: ${partial} teilweise richtig · ${incorrect} falsch</p><button class="action-btn lernstand-error-button" type="button" onclick="oeffneLernstandBereich('lernstandFehlerView')">Zur Fehleranalyse</button></section>
+    </div>
     <section class="lernstand-section"><h2 class="section-title">Lernstand nach Fach</h2><div class="lernstand-subject-list">${subjects.map(subject => renderSubject(subject, latest, catalog)).join('')}</div></section>
-    <section class="lernstand-section"><h2 class="section-title">Meine Entwicklung</h2>${renderDevelopment(attempts)}</section>
-    <section class="lernstand-section lernstand-strength-grid"><div><h2 class="section-title">Meine stärksten Themen</h2>${themeLists.strongest}</div><div><h2 class="section-title">Hier lohnt sich Wiederholen</h2>${themeLists.repeat}</div></section>
-    <section class="lernstand-section"><h2 class="section-title">Deine offenen Fehler</h2><p>${current.errors.length} offene Fehler: ${partial} teilweise richtig · ${incorrect} falsch</p><button class="secondary-btn lernstand-error-button" type="button" onclick="oeffneLernstandBereich('lernstandFehlerView')">Zur Fehleranalyse</button></section>
   `;
   bindLearningProgressInteractions();
 }
