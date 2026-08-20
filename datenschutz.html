@@ -5,67 +5,255 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Datenschutz | WiFa Trainer</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .privacy-page .header {
+      background: linear-gradient(135deg, #dff3e5, #f1fbf4);
+      border: 1px solid rgba(36, 92, 58, 0.18);
+    }
+
+    .privacy-page .section-title {
+      color: #245c3a;
+    }
+
+    .privacy-page .privacy-text {
+      color: #2d4a38;
+      line-height: 1.75;
+    }
+
+    .privacy-page .privacy-text p {
+      margin: 0 0 10px;
+    }
+
+    .privacy-page .privacy-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .privacy-page .privacy-text ul {
+      margin: 8px 0 12px 20px;
+      padding: 0;
+    }
+
+    .privacy-page .privacy-text li {
+      margin: 0 0 6px;
+    }
+
+    .privacy-page .privacy-note {
+      background: #f4fbf6;
+      border: 1px solid #d2ead9;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 700px) {
+      .privacy-page .privacy-text {
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="app">
-    <div class="container">
+    <div class="container privacy-page">
       <div class="header">
         <h1>Datenschutzerklärung</h1>
         <p>Informationen zum Umgang mit Daten innerhalb des WiFa Trainers.</p>
       </div>
 
       <div class="card">
-        <h2 class="section-title">1. Allgemeine Hinweise</h2>
-        <div style="line-height:1.8; color:#4a3970;">
-          Diese Website dient ausschließlich privaten Lern- und Übungszwecken.
-          Personenbezogene Daten werden nur im technisch notwendigen Umfang verarbeitet.
+        <h2 class="section-title">1. Allgemeine Hinweise und verantwortliche Stelle</h2>
+        <div class="privacy-text">
+          <p>Der WiFa Trainer ist ein privates Lern- und Übungsprojekt.</p>
+          <p>Personenbezogene Daten werden nur verarbeitet, soweit dies für die Bereitstellung der Website, Nutzerkonten, Lernfunktionen, Sicherheit sowie KI-gestützte Funktionen erforderlich ist.</p>
+          <p>Verantwortliche Stelle:</p>
+          <p>Sabine Becker<br>biene-becks@web.de</p>
         </div>
       </div>
 
       <div class="card">
-        <h2 class="section-title">2. Nutzung des WiFa Trainers</h2>
-        <div style="line-height:1.8; color:#4a3970;">
-          Zur Nutzung können freiwillige Nutzer-Codes verwendet werden, um Lernstände
-          und Ergebnisse zu speichern.
-          <br><br>
-          Es werden aktuell keine vollständigen Nutzerkonten mit Klarnamen,
-          Passwörtern oder Adressdaten angelegt.
+        <h2 class="section-title">2. Hosting über GitHub Pages</h2>
+        <div class="privacy-text">
+          <p>Das Frontend des WiFa Trainers wird über GitHub Pages bereitgestellt (Dienst von GitHub).</p>
+          <p>Beim Aufruf einer GitHub-Pages-Seite können insbesondere technische Verbindungsdaten wie die IP-Adresse verarbeitet und zu Sicherheitszwecken protokolliert werden. Diese Verarbeitung erfolgt technisch durch GitHub.</p>
+          <p>Rechtsgrundlage für die technisch erforderliche Bereitstellung und die IT-Sicherheit ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und zuverlässigen Bereitstellung der Website).</p>
         </div>
       </div>
 
       <div class="card">
-        <h2 class="section-title">3. Speicherung von Lernständen</h2>
-        <div style="line-height:1.8; color:#4a3970;">
-          Antworten, Bewertungen, Punkte und Lernstände können gespeichert werden,
-          um den Lernfortschritt innerhalb des Trainers darzustellen.
+        <h2 class="section-title">3. Registrierung und Anmeldung über Firebase Authentication</h2>
+        <div class="privacy-text">
+          <p>Für Registrierung, Anmeldung, E-Mail-Verifizierung, Passwortverwaltung und Authentifizierung wird Firebase Authentication (Google) verwendet.</p>
+          <p>Verarbeitet werden dabei insbesondere:</p>
+          <ul>
+            <li>E-Mail-Adresse</li>
+            <li>Passwort (Verarbeitung über Firebase Authentication, nicht als Klartext im WiFa-Trainer-Code oder in Google Sheets gespeichert)</li>
+            <li>technische Authentifizierungsdaten</li>
+            <li>IP-Adresse</li>
+            <li>User-Agent</li>
+            <li>von Firebase erzeugte Benutzer-ID (UID)</li>
+            <li>gewählter Anzeigename (displayName)</li>
+          </ul>
+          <p>Nach aktuellen Firebase-Angaben werden protokollierte IP-Adressen bei Firebase Authentication einige Wochen gespeichert. Andere Authentifizierungsinformationen bleiben grundsätzlich gespeichert, bis die Löschung des zugehörigen Firebase-Nutzers veranlasst wird. Nach Veranlassung der Löschung kann die Entfernung aus Live- und Backup-Systemen bis zu 180 Tage dauern.</p>
+          <p>Firebase Authentication wird laut Firebase ausschließlich über Rechenzentren in den USA betrieben. Für internationale Datenübermittlungen stellt Google Datenschutzmechanismen wie Angemessenheitslösungen bzw. Standardvertragsklauseln bereit.</p>
         </div>
       </div>
 
       <div class="card">
-        <h2 class="section-title">4. Einsatz von OpenAI</h2>
-        <div style="line-height:1.8; color:#4a3970;">
-          Für KI-gestützte Funktionen wie Antwortauswertungen und den Lernassistenten
-          „Frag Kilian“ werden Inhalte an die OpenAI API übertragen und dort verarbeitet.
-          <br><br>
-          Es wird empfohlen, keine sensiblen oder persönlichen Daten in Freitextfelder einzugeben.
+        <h2 class="section-title">4. Benutzerprofil und Cloud Firestore</h2>
+        <div class="privacy-text">
+          <p>Cloud Firestore wird für nutzerbezogene Daten und Lernstände genutzt. Für das Benutzerprofil wird ein Dokument unter users/{uid} angelegt.</p>
+          <p>Dabei werden im Profilbereich nach aktuellem Code-Stand folgende Felder gespeichert:</p>
+          <ul>
+            <li>displayName</li>
+            <li>createdAt</li>
+            <li>updatedAt</li>
+          </ul>
+          <p>Die UID dient zur eindeutigen Zuordnung der Daten zu einem angemeldeten Nutzerkonto. Der Zugriff wird über Firebase Authentication und Firestore Security Rules geregelt. Laut vorhandenen Regeln soll ein angemeldeter, E-Mail-bestätigter Nutzer jeweils nur auf die eigenen vorgesehenen Daten zugreifen können.</p>
         </div>
       </div>
 
       <div class="card">
-        <h2 class="section-title">5. Hosting und technische Dienste</h2>
-        <div style="line-height:1.8; color:#4a3970;">
-          Das Frontend dieser Website wird über GitHub Pages bereitgestellt.
-          Zusätzlich werden technische Dienste von Google Apps Script genutzt.
+        <h2 class="section-title">5. Speicherung von Lernständen und Lernergebnissen</h2>
+        <div class="privacy-text">
+          <p>Zur Darstellung des persönlichen Lernfortschritts werden Lernstands- und Ergebnisdaten in Cloud Firestore gespeichert und dem jeweiligen Nutzerkonto (UID) zugeordnet.</p>
+          <p>Je nach Funktion werden insbesondere folgende Daten verarbeitet:</p>
+          <ul>
+            <li>Nutzerkennung (UID) und interne Attempt-ID</li>
+            <li>Datum/Zeitpunkt (timestamp)</li>
+            <li>Modul (z. B. wifa-trainer, pruefungssimulation, quiz)</li>
+            <li>Teilbereich, Fach, Thema</li>
+            <li>Frage-ID bzw. Quiz-Key / Question-Key</li>
+            <li>Frageinhalt (bei Prüfungssimulation je Aufgabe)</li>
+            <li>eigene Antwort</li>
+            <li>erreichte Punkte, maximal erreichbare Punkte, Prozentwert</li>
+            <li>Bewertung/Ergebnis (z. B. richtig, teilweise richtig, falsch, bestanden, nicht_bestanden)</li>
+          </ul>
+          <p>Bei der Prüfungssimulation werden zusätzlich aufgabenbezogene Auswertungsdaten gespeichert (z. B. erkannte/fehlende Punkte, Musterlösung, Kennzeichnung, ob eine Skizze abgegeben wurde).</p>
+          <p>Zwecke der Verarbeitung sind persönlicher Lernstand, Fortschrittsdarstellung, Fehleranalyse, Wiederholung falsch beantworteter Fragen und Auswertung von Übungs- und Prüfungsleistungen.</p>
         </div>
       </div>
 
       <div class="card">
-        <h2 class="section-title">6. Kontakt</h2>
-        <div style="line-height:1.8; color:#4a3970;">
-          Bei Fragen zum Datenschutz:
-          <br><br>
-          Sabine Becker<br>
-          biene-becks@web.de
+        <h2 class="section-title">6. Google Apps Script und Google Sheets</h2>
+        <div class="privacy-text">
+          <p>Für Backend-Funktionen nutzt der WiFa Trainer einen Google-Apps-Script-Webdienst. Darüber werden unter anderem Themen, Fragen, Quizdaten, Prüfungssimulationen, Karteikarten, Glossar- und Formelsammlungsinhalte bereitgestellt und KI-Funktionen ausgelöst.</p>
+          <p>Je nach Funktion können dabei insbesondere folgende Daten an Google Apps Script übertragen und dort verarbeitet werden:</p>
+          <ul>
+            <li>Fach, Thema, Frage-ID, Quiz-Parameter</li>
+            <li>freie Antworten und Prüfungsantworten</li>
+            <li>Punkte- und Bewertungsdaten</li>
+            <li>Lernstandsrelevante Inhaltsdaten der jeweiligen Anfrage</li>
+          </ul>
+          <p>Google Sheets ist in diesem Projekt als technischer Datenspeicher im Kontext der Google-Apps-Script-Funktionen eingebunden.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">7. Einsatz der OpenAI API</h2>
+        <div class="privacy-text">
+          <p>Für bestimmte KI-gestützte Funktionen wird die OpenAI API verwendet, insbesondere für:</p>
+          <ul>
+            <li>Auswertung freier Antworten</li>
+            <li>KI-gestützte Erklärungen im Bewertungskontext</li>
+            <li>Lernassistent „Frag Kilian“</li>
+          </ul>
+          <p>Bei Nutzung dieser Funktionen werden die für die Anfrage erforderlichen Inhalte über die angebundene Backend-Schnittstelle verarbeitet. Dazu können insbesondere gehören:</p>
+          <ul>
+            <li>gestellte Lernfrage</li>
+            <li>eingegebene Nutzerantwort</li>
+            <li>für die Bewertung notwendige Musterlösung, Stichpunkte und Bewertungskriterien</li>
+            <li>bei der Prüfungssimulation aufgabenbezogener Kontext (inklusive möglicher Skizzeninhalte)</li>
+            <li>bei „Frag Kilian“ die vom Nutzer eingegebene Frage</li>
+          </ul>
+          <p>E-Mail-Adresse, Passwort oder vollständige Nutzerkontodaten werden im vorliegenden Frontend-Code nicht an OpenAI übermittelt.</p>
+          <p class="privacy-note">Bitte geben Sie in Freitextfeldern keine sensiblen oder nicht erforderlichen personenbezogenen Daten ein.</p>
+          <p>Nach aktuellen offiziellen OpenAI-Angaben werden API-Eingaben und -Ausgaben standardmäßig nicht zum Training oder zur Verbesserung der Modelle verwendet, sofern nicht ausdrücklich eine Datenfreigabe aktiviert wurde. Protokolle zur Missbrauchsüberwachung können grundsätzlich bis zu 30 Tage gespeichert werden, sofern keine gesetzliche Pflicht oder produktspezifische Abweichung gilt.</p>
+          <p>Für Nutzer im Europäischen Wirtschaftsraum ist für entsprechende OpenAI-Vertragsbeziehungen grundsätzlich OpenAI Ireland Ltd. relevant. Internationale Übermittlungen können nach den OpenAI-Datenschutzbedingungen auf Angemessenheitsbeschlüssen oder Standardvertragsklauseln beruhen.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">8. Speicherdauer und Löschung</h2>
+        <div class="privacy-text">
+          <p>Personenbezogene Daten werden grundsätzlich nur so lange gespeichert, wie sie für den jeweiligen Zweck benötigt werden oder gesetzliche Pflichten eine längere Speicherung verlangen.</p>
+          <ul>
+            <li>Firebase Authentication: Authentifizierungsdaten grundsätzlich bis zur Löschung des Benutzerkontos; IP-Protokolle nach Firebase-Angaben einige Wochen; nach veranlasster Löschung kann die Entfernung aus Live- und Backup-Systemen bis zu 180 Tage dauern.</li>
+            <li>Lernstandsdaten in Firestore: Speicherung grundsätzlich, solange das jeweilige Nutzerkonto bzw. der gespeicherte Lernstand besteht; eine automatische Löschfrist ist im vorliegenden Code nicht hinterlegt.</li>
+            <li>OpenAI API: Daten können für Missbrauchsüberwachung grundsätzlich bis zu 30 Tage verarbeitet werden, soweit die eingesetzte API-Konfiguration keine abweichende Regel vorsieht.</li>
+            <li>GitHub Pages: Die Speicherdauer technischer Protokolldaten richtet sich nach den Vorgaben von GitHub.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">9. Löschung des Benutzerkontos</h2>
+        <div class="privacy-text">
+          <p>Im aktuell vorliegenden Trainer-Code ist keine eigenständige Nutzeroberflächen-Funktion vorhanden, mit der Nutzer ihr Konto direkt selbst löschen können.</p>
+          <p>Sie können die Löschung Ihres Benutzerkontos und Ihrer personenbezogenen Daten über die unten genannte Kontaktmöglichkeit verlangen.</p>
+          <p>Wichtig: Im vorliegenden Code ist keine automatische Gesamtlöschung sämtlicher Firestore-Unterdaten (z. B. Lernstands-Historien) als Folge einer reinen Firebase-Account-Löschung implementiert. Löschungen müssen daher technisch je Datenbereich veranlasst werden.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">10. Rechtsgrundlagen</h2>
+        <div class="privacy-text">
+          <p>Soweit einschlägig, erfolgt die Verarbeitung auf folgenden Rechtsgrundlagen:</p>
+          <ul>
+            <li>Art. 6 Abs. 1 lit. b DSGVO für Verarbeitungen, die zur Bereitstellung des angeforderten Nutzerkontos und personalisierter Lernfunktionen erforderlich sind.</li>
+            <li>Art. 6 Abs. 1 lit. f DSGVO für technisch notwendiges Hosting, IT-Sicherheit und den stabilen Betrieb der Website (berechtigtes Interesse an sicherer und zuverlässiger Bereitstellung).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">11. Empfänger und Dienstleister</h2>
+        <div class="privacy-text">
+          <p>Für den Betrieb des WiFa Trainers werden folgende externe technische Dienstleister eingesetzt:</p>
+          <ul>
+            <li>GitHub / GitHub Pages</li>
+            <li>Google / Firebase Authentication</li>
+            <li>Google / Cloud Firestore</li>
+            <li>Google Apps Script</li>
+            <li>Google Sheets</li>
+            <li>OpenAI API</li>
+          </ul>
+          <p>Diese Anbieter erhalten personenbezogene bzw. technische Daten nur insoweit, wie dies für die jeweilige Funktion erforderlich ist.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">12. Datenübermittlung in Drittländer</h2>
+        <div class="privacy-text">
+          <p>Einige eingesetzte Anbieter betreiben Infrastruktur auch außerhalb der Europäischen Union bzw. des Europäischen Wirtschaftsraums.</p>
+          <ul>
+            <li>Firebase Authentication wird laut Google ausschließlich über US-Rechenzentren betrieben.</li>
+            <li>Auch bei GitHub und OpenAI können internationale Datenübermittlungen stattfinden.</li>
+          </ul>
+          <p>Soweit personenbezogene Daten in Drittländer übermittelt werden, können je nach Anbieter insbesondere Angemessenheitsbeschlüsse der EU-Kommission oder Standardvertragsklauseln als Transfermechanismen eingesetzt werden.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">13. Rechte der betroffenen Personen</h2>
+        <div class="privacy-text">
+          <p>Betroffene Personen haben nach Maßgabe der gesetzlichen Voraussetzungen insbesondere folgende Rechte:</p>
+          <ul>
+            <li>Recht auf Auskunft (Art. 15 DSGVO)</li>
+            <li>Recht auf Berichtigung (Art. 16 DSGVO)</li>
+            <li>Recht auf Löschung (Art. 17 DSGVO)</li>
+            <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
+            <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</li>
+            <li>Widerspruchsrecht (Art. 21 DSGVO)</li>
+          </ul>
+          <p>Außerdem besteht grundsätzlich das Recht, sich bei einer zuständigen Datenschutzaufsichtsbehörde zu beschweren.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">14. Kontakt</h2>
+        <div class="privacy-text">
+          <p>Bei Fragen zum Datenschutz:</p>
+          <p>Sabine Becker<br><a href="mailto:biene-becks@web.de">biene-becks@web.de</a></p>
         </div>
       </div>
 
@@ -73,6 +261,7 @@
         <a href="index.html">Startseite</a>
         <a href="impressum.html">Impressum</a>
         <a href="datenschutz.html">Datenschutz</a>
+        <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a>
         <a href="copyright.html">Copyright</a>
       </footer>
     </div>

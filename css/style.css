@@ -283,6 +283,72 @@
       font-weight: bold;
     }
 
+    .privacy-page .header {
+      background: linear-gradient(135deg, #dff3e5, #f1fbf4);
+      border: 1px solid rgba(36, 92, 58, 0.18);
+    }
+
+    .privacy-page .section-title {
+      color: #245c3a;
+    }
+
+    .privacy-page .privacy-text {
+      color: #2d4a38;
+      line-height: 1.75;
+    }
+
+    .privacy-page .privacy-text p {
+      margin: 0 0 10px;
+    }
+
+    .privacy-page .privacy-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .privacy-page .privacy-text ul {
+      margin: 8px 0 12px 20px;
+      padding: 0;
+    }
+
+    .privacy-page .privacy-text li {
+      margin: 0 0 6px;
+    }
+
+    .privacy-page .privacy-note {
+      background: #f4fbf6;
+      border: 1px solid #d2ead9;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 8px;
+    }
+
+    .auth-consent-group {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .auth-consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.45;
+      color: #2d1f46;
+      font-size: 14px;
+    }
+
+    .auth-consent-row input[type="checkbox"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .auth-consent-note {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #4a3970;
+    }
+
     .hero-card {
       background: linear-gradient(135deg, #efe7ff, #f9f6ff);
       border-radius: 26px;

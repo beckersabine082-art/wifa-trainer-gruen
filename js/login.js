@@ -318,10 +318,12 @@ function bindAuthUI() {
 		if (authProfile) authProfile.style.display = 'none';
 		const tabs = document.querySelector('#authView .auth-tabs');
 		if (tabs) tabs.style.display = '';
+		const terms = $('regTermsAccepted');
+		if (terms) terms.checked = false;
 		const privacy = $('regPrivacyAcknowledged');
 		if (privacy) privacy.checked = false;
 		const status = $('authStatus');
-		if (status && status.textContent === 'Bitte bestätigen Sie, dass Sie die Datenschutzerklärung zur Kenntnis genommen haben.') {
+		if (status && (status.textContent === 'Bitte akzeptiere zuerst die Nutzungsbedingungen.' || status.textContent === 'Bitte bestätigen Sie, dass Sie die Datenschutzerklärung zur Kenntnis genommen haben.')) {
 			status.textContent = '';
 		}
 	});
@@ -360,13 +362,13 @@ function bindAuthUI() {
 		event.preventDefault();
 		const displayName = $('regDisplayName').value.trim();
 		const email = $('regEmail').value.trim().toLowerCase();
-		const privacy = $('regPrivacyAcknowledged');
+		const terms = $('regTermsAccepted');
 		const pw = $('regPassword').value;
 		const pw2 = $('regPasswordConfirm').value;
 		if (!displayName || displayName.length > 50) { showStatus('Bitte einen Anzeigenamen (max. 50 Zeichen) eingeben.', true); return; }
 		if (!email) { showStatus('Bitte eine gültige E-Mail-Adresse eingeben.', true); return; }
-		if (!privacy || !privacy.checked) {
-			showStatus('Bitte bestätigen Sie, dass Sie die Datenschutzerklärung zur Kenntnis genommen haben.', true);
+		if (!terms || !terms.checked) {
+			showStatus('Bitte akzeptiere zuerst die Nutzungsbedingungen.', true);
 			return;
 		}
 		if (pw.length < 12) { showStatus('Das Passwort muss mindestens 12 Zeichen lang sein.', true); return; }
@@ -378,6 +380,8 @@ function bindAuthUI() {
 			await updateProfile(cred.user, { displayName });
 			await sendEmailVerification(cred.user, { url: getReturnUrl() });
 			await signOut(auth);
+			const regTerms = $('regTermsAccepted');
+			if (regTerms) regTerms.checked = false;
 			const regPrivacy = $('regPrivacyAcknowledged');
 			if (regPrivacy) regPrivacy.checked = false;
 			showStatus('Registrierung erfolgreich. Bitte bestätigen Sie die E-Mail, bevor Sie sich anmelden.');
@@ -432,6 +436,16 @@ function bindAuthUI() {
 		privacyInput.addEventListener('input', () => {
 			const status = $('authStatus');
 			if (status && status.textContent === 'Bitte bestätigen Sie, dass Sie die Datenschutzerklärung zur Kenntnis genommen haben.') {
+				showStatus('');
+			}
+		});
+	}
+
+	const termsInput = $('regTermsAccepted');
+	if (termsInput) {
+		termsInput.addEventListener('input', () => {
+			const status = $('authStatus');
+			if (status && status.textContent === 'Bitte akzeptiere zuerst die Nutzungsbedingungen.') {
 				showStatus('');
 			}
 		});
