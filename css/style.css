@@ -1610,6 +1610,79 @@ select:focus {
   color: #163522 !important;
 }
 
+#startView .hero-card {
+  background: linear-gradient(135deg, #e8f7ed, #f6fbf7) !important;
+  border: 1px solid #b7dec2;
+  box-shadow: 0 10px 26px rgba(36, 92, 58, 0.12);
+}
+
+#startView .hero-icon {
+  width: 172px;
+  height: 172px;
+  font-size: 82px;
+  background: #d0ebd8 !important;
+  box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.42), 0 8px 18px rgba(36, 92, 58, 0.12);
+}
+
+#startView .hero-text h1 {
+  margin-bottom: 8px;
+  font-size: 36px;
+  letter-spacing: 0;
+}
+
+#startView .start-head-block {
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 0 10px;
+  position: relative;
+}
+
+#startView .start-head-block::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: #b794f6;
+}
+
+#startView #startUserGreeting {
+  margin: 14px 0 16px;
+  padding: 0;
+  border: 0;
+  background: transparent !important;
+}
+
+#startView #startUserGreeting .start-user-name {
+  display: inline;
+  margin-right: 4px;
+  color: #4a3970 !important;
+  font-size: 19px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+#startView #startUserGreeting .start-user-welcome {
+  color: #4a3970 !important;
+  font-size: 16px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+#startView .hero-text p {
+  color: #2d4a38 !important;
+}
+
+@media (max-width: 799px) {
+  #startView .hero-icon {
+    width: 136px;
+    height: 136px;
+    font-size: 66px;
+  }
+}
+
 /* falls der große lila Block über eine alte Klasse läuft */
 .intro-card,
 .welcome-section,
