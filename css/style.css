@@ -269,6 +269,75 @@
       line-height: 1.5;
     }
 
+    #glossarView,
+    #formelView,
+    #wissenView,
+    #kilianView {
+      display: none;
+    }
+
+    #glossarView.active,
+    #formelView.active,
+    #wissenView.active,
+    #kilianView.active {
+      display: block;
+    }
+
+    #glossarView .header,
+    #formelView .header,
+    #wissenView .header,
+    #kilianView .header,
+    #glossarView .card,
+    #formelView .card,
+    #wissenView .card,
+    #kilianView .card,
+    #formelView > .result-list-empty {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #glossarView input,
+    #glossarView select,
+    #formelView input,
+    #formelView select {
+      box-sizing: border-box;
+    }
+
+    #glossarView .header,
+    #formelView .header,
+    #wissenView .header,
+    #kilianView .header {
+      margin-bottom: 16px;
+    }
+
+    .knowledge-content-card {
+      padding: 18px;
+    }
+
+    .kilian-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .kilian-header-text {
+      min-width: 0;
+    }
+
+    .kilian-bear {
+      width: 112px;
+      height: 90px;
+      flex: 0 0 auto;
+    }
+
+    .kilian-menu-icon {
+      width: 24px;
+      height: 22px;
+      flex: 0 0 24px;
+      vertical-align: middle;
+    }
+
     .card {
       background: #ffffff;
       border-radius: 18px;
@@ -979,6 +1048,17 @@ white-space: normal;
   min-height: 80px;
   max-height: 260px;
   overflow-y: auto;
+}
+
+@media (max-width: 520px) {
+  .kilian-header {
+    align-items: flex-start;
+  }
+
+  .kilian-bear {
+    width: 82px;
+    height: 66px;
+  }
 }
     #kilianBubbleButton {
   position: fixed;

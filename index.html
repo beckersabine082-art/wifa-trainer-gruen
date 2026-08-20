@@ -111,11 +111,11 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navKarteikarten" type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">🗂️ Karteikarten</button>
+            <button class="nav-btn" id="navKarteikarten" type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">🗂️ Karteikarten &amp; Audio</button>
             <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">📐 Formelsammlung</button>
             <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">📚 Glossar</button>
-            <button class="nav-btn" id="navLinks" type="button" onclick="oeffneWissenBereich('links'); closeMainMenu();">🗂️ Links</button>
-            <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();">💬 Frag Kilian</button>
+            <button class="nav-btn" id="navLinks" type="button" onclick="oeffneWissenBereich('links'); closeMainMenu();">🔗 Links</button>
+            <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();"><svg class="kilian-menu-icon" viewBox="0 0 150 120" aria-hidden="true"><use href="#kilianBearIllustration"></use></svg> Frag Kilian</button>
             <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">ℹ️ Nutzungshinweis</button>
           </div>
         </div>
@@ -196,10 +196,10 @@
               <p>Wichtige Formeln, Abkürzungen und Seitenangaben gesammelt an einem Ort.</p>
             </div>
 
-            <div class="feature-card" role="button" tabindex="0" aria-label="Karteikarten öffnen" onclick="oeffneWissenBereich('karteikarten')">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Karteikarten und Audio öffnen" onclick="oeffneWissenBereich('karteikarten')">
               <div class="feature-icon">🗂️</div>
-              <h3>Karteikarten</h3>
-              <p>Themenbezogene Lernkarten aus deinen bestehenden Fragen und Musterlösungen.</p>
+              <h3>Karteikarten &amp; Audio</h3>
+              <p>Themenbezogene Lernkarten nutzen oder Frage und Musterlösung einzeln bzw. im Podcast-Modus vorlesen lassen.</p>
             </div>
 
             <div class="feature-card" role="button" tabindex="0" aria-label="Gesetzeslinks öffnen" onclick="oeffneWissenBereich('links')">
@@ -519,7 +519,7 @@
           <p>Fachbegriffe, kurze Erklärungen und Synonyme zum schnellen Nachschlagen.</p>
         </div>
 
-        <div class="card">
+        <div class="card knowledge-content-card">
           <h2 class="section-title">Glossar-Suche</h2>
 
          <input type="text" id="glossarSuche" placeholder="Begriff, Fach, Thema oder Synonym suchen..." oninput="filtereGlossar()">
@@ -551,7 +551,7 @@
     <p>Formeln, Abkürzungen, Beispiele und kurze Erklärungen zum schnellen Nachschlagen.</p>
   </div>
 
-  <div class="card">
+  <div class="card knowledge-content-card">
     <h2 class="section-title">Formeln suchen</h2>
 
     <input
@@ -648,14 +648,13 @@
      <section class="view" id="wissenView">
 
   <div class="header">
-    <h1>Wissensdatenbank</h1>
+    <h1>Links</h1>
     <p>
-      Hier findest du zusätzliche Lernfunktionen wie Karteikarten und
-      Audio-Lernen.
+      Hier findest du hilfreiche zusätzliche Seiten und weiterführende Lernlinks.
     </p>
   </div>
    <div id="wissenLinksBereich">
-   <div class="card">
+  <div class="card knowledge-content-card">
   <h2 class="section-title">Gesetzeslinks</h2>
   <p class="status">
     Direkte Links zu prüfungsrelevanten Gesetzestexten.
@@ -771,13 +770,47 @@
 </section>
 
       <section class="view" id="kilianView">
-  <div class="header">
-    <h1>Frag Kilian</h1>
+  <div class="header kilian-header">
+    <div class="kilian-header-text">
+      <h1>Frag Kilian</h1>
 
-    <p>
-      Direkter KI-Helfer für Verständnisfragen,
-      Erklärungen und Unterstützung beim Lernen.
-    </p>
+      <p>
+        Direkter KI-Helfer für Verständnisfragen,
+        Erklärungen und Unterstützung beim Lernen.
+      </p>
+    </div>
+
+    <svg id="kilianBearIllustration" class="kilian-bear" viewBox="0 0 150 120" aria-hidden="true">
+      <g transform="rotate(-6 76 68)">
+        <path d="M42 35q-10-16 5-25 15 4 16 20z" fill="#9a7bd1" stroke="#70519e" stroke-width="2"/>
+        <path d="M91 29q5-17 20-18 10 13-1 28z" fill="#9a7bd1" stroke="#70519e" stroke-width="2"/>
+        <path d="M47 28q1-9 10-10" fill="none" stroke="#c4a3ed" stroke-width="3" stroke-linecap="round"/>
+        <path d="M103 18q7 3 7 10" fill="none" stroke="#c4a3ed" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="76" cy="59" rx="39" ry="40" fill="#c99d78" stroke="#8f644d" stroke-width="2.5"/>
+        <path d="M48 46q7-9 17-6M84 39q10-4 18 4" fill="none" stroke="#705044" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="59" cy="55" r="10" fill="#ffffff" stroke="#2f7d4c" stroke-width="3"/>
+        <circle cx="89" cy="53" r="10" fill="#ffffff" stroke="#2f7d4c" stroke-width="3"/>
+        <path d="M69 54l10-1" fill="none" stroke="#2f7d4c" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="62" cy="57" r="3.5" fill="#2d1f46"/>
+        <circle cx="86" cy="55" r="3.5" fill="#2d1f46"/>
+        <path d="M59 57l2-1M87 55l2-1" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+        <ellipse cx="75" cy="73" rx="18" ry="14" fill="#f2d1b7" stroke="#a8755c" stroke-width="1.5"/>
+        <path d="M67 73q8 8 16-2" fill="none" stroke="#2d1f46" stroke-width="3" stroke-linecap="round"/>
+        <path d="M72 67q3-3 6 0" fill="none" stroke="#8f644d" stroke-width="2" stroke-linecap="round"/>
+        <path d="M42 103q31-25 69-6l-4 24H44z" fill="#4f9f68" stroke="#2f7d4c" stroke-width="2"/>
+        <path d="M49 94q-14 1-22 13" fill="none" stroke="#c99d78" stroke-width="11" stroke-linecap="round"/>
+        <circle cx="27" cy="107" r="6" fill="#f2d1b7" stroke="#8f644d" stroke-width="2"/>
+        <path d="M99 91q12-12 17-23" fill="none" stroke="#c99d78" stroke-width="11" stroke-linecap="round"/>
+        <circle cx="116" cy="67" r="6" fill="#f2d1b7" stroke="#8f644d" stroke-width="2"/>
+        <path d="M112 64l12-15" stroke="#2f7d4c" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M43 99h62v20H43z" fill="#efe7ff" stroke="#9a7bd1" stroke-width="3"/>
+        <path d="M74 99v20" stroke="#9a7bd1" stroke-width="3"/>
+        <path d="M51 105h14M82 105h14" stroke="#b794f6" stroke-width="2" stroke-linecap="round"/>
+        <path d="M52 91q20-12 43-2" fill="none" stroke="#6fc18a" stroke-width="2" opacity=".8"/>
+      </g>
+      <path d="M119 18h22v15h-14l-6 5v-5h-2z" fill="#ffffff" stroke="#9a7bd1" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M125 25h10" stroke="#4f9f68" stroke-width="2" stroke-linecap="round"/>
+    </svg>
   </div>
 
   <div class="card">
