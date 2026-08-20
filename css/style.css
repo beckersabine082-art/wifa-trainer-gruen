@@ -929,6 +929,53 @@ white-space: normal;
   cursor: pointer;
 }
 
+.kilian-tooltip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  width: max-content;
+  max-width: min(240px, calc(100vw - 32px));
+  background: #ffffff;
+  color: #2d1f46;
+  border: 1px solid #d8c8f8;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(80, 45, 140, 0.22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.kilian-tooltip strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #221344;
+  font-size: 14px;
+}
+
+.kilian-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 18px;
+  border: 6px solid transparent;
+  border-top-color: #ffffff;
+}
+
+#kilianBubbleButton:hover .kilian-tooltip,
+#kilianBubbleButton:focus-visible .kilian-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
 #kilianBubbleFenster {
   position: fixed;
   right: 16px;

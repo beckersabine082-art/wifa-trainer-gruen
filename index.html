@@ -166,6 +166,18 @@
               <p>Offene Fragen beantworten, Antworten auswerten lassen und gezielt Wissenslücken erkennen.</p>
             </div>
 
+            <div class="feature-card" role="button" tabindex="0" aria-label="Quiz öffnen" onclick="requireAuth('quizView')">
+              <div class="feature-icon">🧩</div>
+              <h3>Quiz</h3>
+              <p>In kurzen Runden Multiple-Choice-Fragen beantworten und Wissen spielerisch testen.</p>
+            </div>
+
+            <div class="feature-card" role="button" tabindex="0" aria-label="Prüfungssimulation öffnen" onclick="requireAuth('pruefungView')">
+              <div class="feature-icon">🎯</div>
+              <h3>Prüfungssimulation</h3>
+              <p>Realistische Prüfungssituationen mit Zeitdruck und Punkteauswertung trainieren.</p>
+            </div>
+
             <div class="feature-card" role="button" tabindex="0" aria-label="Lernstand öffnen" onclick="oeffneLernstandBereich('lernstandView')">
               <div class="feature-icon">📊</div>
               <h3>Lernstand</h3>
@@ -184,28 +196,16 @@
               <p>Wichtige Formeln, Abkürzungen und Seitenangaben gesammelt an einem Ort.</p>
             </div>
 
-            <div class="feature-card" role="button" tabindex="0" aria-label="Prüfungssimulation öffnen" onclick="requireAuth('pruefungView')">
-              <div class="feature-icon">🎯</div>
-              <h3>Prüfungssimulation</h3>
-              <p>Realistische Prüfungssituationen mit Zeitdruck und Punkteauswertung trainieren.</p>
-            </div>
-
-            <div class="feature-card" role="button" tabindex="0" aria-label="Wissensdatenbank öffnen" onclick="oeffneWissenBereich('karteikarten')">
+            <div class="feature-card" role="button" tabindex="0" aria-label="Karteikarten öffnen" onclick="oeffneWissenBereich('karteikarten')">
               <div class="feature-icon">🗂️</div>
-              <h3>Wissensdatenbank</h3>
-              <p>Zusammenfassungen, Merksätze und zusätzliche Lerninhalte.</p>
+              <h3>Karteikarten</h3>
+              <p>Themenbezogene Lernkarten aus deinen bestehenden Fragen und Musterlösungen.</p>
             </div>
 
-            <div class="feature-card" role="button" tabindex="0" aria-label="Nutzungshinweis öffnen" onclick="hinweisAnzeigen()">
-              <div class="feature-icon">ℹ️</div>
-              <h3>Nutzung</h3>
-              <p>Hinweise zur Nutzung, Funktionen und Tipps zum Lernen.</p>
-            </div>
-
-            <div class="feature-card" role="button" tabindex="0" aria-label="Frag Kilian öffnen" onclick="requireAuth('kilianView')">
-              <div class="feature-icon">💬</div>
-              <h3>Frag Kilian</h3>
-              <p>Direkter KI-Helfer für Verständnisfragen, Erklärungen und Unterstützung beim Lernen.</p>
+            <div class="feature-card" role="button" tabindex="0" aria-label="Gesetzeslinks öffnen" onclick="oeffneWissenBereich('links')">
+              <div class="feature-icon">⚖️</div>
+              <h3>Gesetzeslinks</h3>
+              <p>Direkte Links zu prüfungsrelevanten Gesetzestexten.</p>
             </div>
           </div>
         </div>
@@ -941,8 +941,12 @@
     </footer>
   </div>
 
-    <div id="kilianBubbleButton" onclick="toggleKilianBubble()">
+    <div id="kilianBubbleButton" onclick="toggleKilianBubble()" tabindex="0" role="button" aria-label="Frag Kilian öffnen">
   💬 Frag Kilian
+  <span class="kilian-tooltip" role="tooltip">
+    <strong>Frag Kilian</strong>
+    Dein Unterstützer, Berater und Erklärbär – für Fragen, Erklärungen und wenn du beim Lernen mal festhängst.
+  </span>
 </div>
 
 <div id="kilianBubbleFenster">

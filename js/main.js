@@ -389,10 +389,10 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
-// Erlaubt das Öffnen der Funktionskarten auf der Startseite per Tastatur (role="button")
+// Erlaubt das Öffnen der Funktionskarten und des Kilian-Buttons per Tastatur (role="button")
 document.addEventListener("keydown", function(event) {
   if (event.key !== "Enter" && event.key !== " ") return;
-  const card = event.target.closest && event.target.closest(".feature-card");
+  const card = event.target.closest && event.target.closest(".feature-card, #kilianBubbleButton");
   if (!card) return;
   event.preventDefault();
   card.click();
