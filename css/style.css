@@ -1873,6 +1873,57 @@ select:focus {
   height: 180px;
 }
 
+.audio-einstellungen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 14px 0 0;
+  padding: 12px;
+  border: 1px solid #b7dec2;
+  border-radius: 10px;
+  background: #f2fbf5;
+}
+
+.audio-einstellungen legend {
+  flex-basis: 100%;
+  color: #245c3a;
+  font-weight: 700;
+}
+
+.audio-einstellungen label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  font-size: 14px;
+}
+
+#podcastPauseEinstellung {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+#podcastPauseEinstellung[hidden] {
+  display: none;
+}
+
+#wissenKarteikartenBereich .button-row button[hidden] {
+  display: none;
+}
+
+@media (min-width: 521px) {
+  #wissenKarteikartenBereich .button-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  #wissenKarteikartenBereich .button-row button {
+    flex: 1 1 180px;
+  }
+}
+
 .lernstand-chart-grid,
 .lernstand-chart-axis {
   stroke: #b7dec2;

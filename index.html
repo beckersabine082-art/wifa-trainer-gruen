@@ -650,8 +650,8 @@
   <div class="header">
     <h1>Wissensdatenbank</h1>
     <p>
-      Hier entstehen zusätzliche Lernfunktionen wie Karteikarten,
-      Audio-Lernen, Zusammenfassungen und spätere Kurzabfragen.
+      Hier findest du zusätzliche Lernfunktionen wie Karteikarten und
+      Audio-Lernen.
     </p>
   </div>
    <div id="wissenLinksBereich">
@@ -706,19 +706,33 @@
       <div class="home-tile" style="margin-top:14px;">
   <h3>🎧 Audiofunktion</h3>
 
-  <p>
-    Lies dir die aktuell geladene Karteikarte automatisch vor.
-    Erst wird die Frage gelesen, danach die Musterlösung.
-  </p>
+  <p>Frage und Musterlösung werden nacheinander vorgelesen.</p>
+
+  <fieldset class="audio-einstellungen">
+    <legend>Modus</legend>
+    <label><input type="radio" name="audioModus" value="einzelkarte" checked onchange="audioModusWaehlen(this.value)"> Einzelkarte</label>
+    <label><input type="radio" name="audioModus" value="podcast" onchange="audioModusWaehlen(this.value)"> Podcast-Modus</label>
+
+    <legend>Sprechtempo</legend>
+    <label><input type="radio" name="audioTempo" value="0.75" onchange="audioTempoWaehlen(this.value)"> 0,75×</label>
+    <label><input type="radio" name="audioTempo" value="1" checked onchange="audioTempoWaehlen(this.value)"> 1,0×</label>
+    <label><input type="radio" name="audioTempo" value="1.25" onchange="audioTempoWaehlen(this.value)"> 1,25×</label>
+    <label><input type="radio" name="audioTempo" value="1.5" onchange="audioTempoWaehlen(this.value)"> 1,5×</label>
+
+    <div id="podcastPauseEinstellung" hidden>
+      <legend>Pause zwischen den Karten</legend>
+      <label><input type="radio" name="podcastPause" value="2" onchange="podcastPauseWaehlen(this.value)"> 2 s</label>
+      <label><input type="radio" name="podcastPause" value="5" checked onchange="podcastPauseWaehlen(this.value)"> 5 s</label>
+      <label><input type="radio" name="podcastPause" value="10" onchange="podcastPauseWaehlen(this.value)"> 10 s</label>
+    </div>
+  </fieldset>
 
   <div class="button-row" style="margin-top:14px;">
-    <button class="secondary-btn" onclick="audioAktuelleKarte()">
-      Aktuelle Karte vorlesen
-    </button>
-
-    <button class="secondary-btn" onclick="audioStoppen()">
-      Audio stoppen
-    </button>
+    <button class="secondary-btn" id="audioEinzelStartBtn" onclick="audioAktuelleKarte()">Aktuelle Karte vorlesen</button>
+    <button class="action-btn" id="podcastStartBtn" onclick="podcastStarten()" hidden>Podcast starten</button>
+    <button class="secondary-btn" id="audioPauseBtn" onclick="audioPausieren()" hidden disabled>Pause</button>
+    <button class="secondary-btn" id="audioFortsetzenBtn" onclick="audioFortsetzen()" hidden disabled>Fortsetzen</button>
+    <button class="secondary-btn" id="audioStopBtn" onclick="audioStoppen()">Audio stoppen</button>
   </div>
 
   <div class="status" id="audioStatus">
@@ -752,45 +766,6 @@
   </div>
 </div>
 
-<div class="card">
-  <h2 class="section-title">Geplante Erweiterungen</h2>
-
-    <div class="feature-grid">
-
-      <div class="feature-card">
-        <div class="feature-icon">🧠</div>
-        <h3>KI-Lernhilfe</h3>
-        <p>
-          Erklärungen und Unterstützung direkt zu schwierigen Themen.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🔁</div>
-        <h3>Fehlertraining</h3>
-        <p>
-          Falsch beantwortete Fragen gezielt häufiger wiederholen.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📈</div>
-        <h3>Lernanalyse</h3>
-        <p>
-          Stärken, Schwächen und Lernfortschritte übersichtlich erkennen.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">⏱️</div>
-        <h3>Kurzabfragen</h3>
-        <p>
-          Kleine spontane Wissensabfragen für zwischendurch.
-        </p>
-      </div>
-
-    </div>
-  </div>
     </div>
 
 </section>

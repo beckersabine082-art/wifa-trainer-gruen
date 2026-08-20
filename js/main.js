@@ -63,6 +63,10 @@ let aktuelleKartenIndex = 0;
   });
 
 function zeigeBereich(viewId) {
+    if (viewId !== "wissenView" && typeof karteikartenAudioStoppen === "function") {
+      karteikartenAudioStoppen();
+    }
+
     document.querySelectorAll(".view").forEach(function(view) {
       view.classList.remove("active");
     });
@@ -313,6 +317,9 @@ function oeffneLernstandBereich(viewId) {
 }
 
 function oeffneWissenBereich(teil) {
+  if (teil !== "karteikarten" && typeof karteikartenAudioStoppen === "function") {
+    karteikartenAudioStoppen();
+  }
   window.wissenAktiverBereich = teil === "karteikarten" ? "karteikarten" : "links";
   if (typeof requireAuth === "function") {
     requireAuth("wissenView");

@@ -1,4 +1,5 @@
 function kartenTeilbereichWaehlen() {
+  karteikartenAudioStoppen();
   const teilbereich = document.getElementById("kartenTeilbereichSelect").value;
   const fachSelect = document.getElementById("kartenFachSelect");
   const themaSelect = document.getElementById("kartenThemaSelect");
@@ -28,6 +29,7 @@ function kartenTeilbereichWaehlen() {
 }
 
 async function kartenFachWaehlen() {
+  karteikartenAudioStoppen();
   const fach = document.getElementById("kartenFachSelect").value;
   const themaSelect = document.getElementById("kartenThemaSelect");
 
@@ -71,6 +73,7 @@ async function kartenFachWaehlen() {
 }
 
 async function ladeKarteikarten() {
+  karteikartenAudioStoppen();
   const fach = document.getElementById("kartenFachSelect").value;
   const thema = document.getElementById("kartenThemaSelect").value;
 
@@ -148,6 +151,8 @@ function karteUmdrehen() {
 function naechsteKarteAnzeigen() {
   if (!karteikartenDaten.length) return;
 
+  karteikartenAudioStoppen();
+
   aktuelleKartenIndex++;
 
   if (aktuelleKartenIndex >= karteikartenDaten.length) {
@@ -160,6 +165,8 @@ function naechsteKarteAnzeigen() {
 function vorherigeKarte() {
   if (!karteikartenDaten.length) return;
 
+  karteikartenAudioStoppen();
+
   aktuelleKartenIndex--;
 
   if (aktuelleKartenIndex < 0) {
@@ -169,59 +176,191 @@ function vorherigeKarte() {
   zeigeAktuelleKarte();
 }
 
-function audioAktuelleKarte() {
-  if (!karteikartenDaten.length) {
-    document.getElementById("audioStatus").textContent =
-      "Bitte zuerst Karteikarten laden.";
-    return;
-  }
+let audioModus = "einzelkarte";
+let audioTempo = 1;
+let podcastPauseSekunden = 5;
+let podcastAktiv = false;
+let podcastPausiert = false;
+let podcastTimer = null;
+let podcastPauseEnde = 0;
+let audioGeneration = 0;
 
-  if (!("speechSynthesis" in window)) {
-    document.getElementById("audioStatus").textContent =
-      "Dein Browser unterstützt die Vorlesefunktion leider nicht.";
-    return;
-  }
-
-  const karte = karteikartenDaten[aktuelleKartenIndex];
-
-  const text =
-    "Frage. " +
-    String(karte.vorderseite || "") +
-    ". Musterlösung. " +
-    String(karte.rueckseite || "");
-
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "de-DE";
-  utterance.rate = 0.95;
-  utterance.pitch = 1;
-
-  utterance.onstart = function() {
-    document.getElementById("audioStatus").textContent =
-      "Audio läuft: Karte " + (aktuelleKartenIndex + 1) + " von " + karteikartenDaten.length;
-  };
-
-  utterance.onend = function() {
-    document.getElementById("audioStatus").textContent =
-      "Audio beendet.";
-  };
-
-  utterance.onerror = function() {
-    document.getElementById("audioStatus").textContent =
-      "Audio konnte nicht abgespielt werden.";
-  };
-
-  window.speechSynthesis.speak(utterance);
+function audioElement(id) {
+  return document.getElementById(id);
 }
 
-function audioStoppen() {
+function audioModusWaehlen(modus) {
+  karteikartenAudioStoppen();
+  audioModus = modus === "podcast" ? "podcast" : "einzelkarte";
+  audioElement("podcastPauseEinstellung").hidden = audioModus !== "podcast";
+  audioElement("audioEinzelStartBtn").hidden = audioModus === "podcast";
+  audioElement("podcastStartBtn").hidden = audioModus !== "podcast";
+  audioElement("audioPauseBtn").hidden = audioModus !== "podcast";
+  audioElement("audioFortsetzenBtn").hidden = audioModus !== "podcast";
+  audioElement("audioStopBtn").textContent = audioModus === "podcast" ? "Stoppen" : "Audio stoppen";
+  audioSteuerungAktualisieren();
+}
+
+function audioTempoWaehlen(tempo) {
+  audioTempo = Number(tempo) || 1;
+}
+
+function podcastPauseWaehlen(sekunden) {
+  podcastPauseSekunden = Number(sekunden) || 5;
+}
+
+function audioSteuerungAktualisieren() {
+  const aktiv = podcastAktiv && !podcastPausiert;
+  audioElement("audioPauseBtn").disabled = !aktiv;
+  audioElement("audioFortsetzenBtn").disabled = !podcastPausiert;
+  audioElement("podcastStartBtn").disabled = podcastAktiv;
+}
+
+function karteikartenAudioStoppen(status) {
+  audioGeneration++;
+  podcastAktiv = false;
+  podcastPausiert = false;
+  podcastPauseEnde = 0;
+  if (podcastTimer !== null) {
+    clearTimeout(podcastTimer);
+    podcastTimer = null;
+  }
   if ("speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
+  if (status && audioElement("audioStatus")) {
+    audioElement("audioStatus").textContent = status;
+  }
+  if (audioElement("audioPauseBtn")) {
+    audioSteuerungAktualisieren();
+  }
+}
 
-  document.getElementById("audioStatus").textContent =
-    "Audio gestoppt.";
+function audioAktuelleKarte() {
+  if (audioModus === "podcast") {
+    podcastStarten();
+    return;
+  }
+  if (!karteikartenDaten.length) {
+    audioElement("audioStatus").textContent = "Bitte zuerst Karteikarten laden.";
+    return;
+  }
+  if (!("speechSynthesis" in window)) {
+    audioElement("audioStatus").textContent = "Dein Browser unterstützt die Vorlesefunktion leider nicht.";
+    return;
+  }
+  karteikartenAudioStoppen();
+  sprecheKarte(aktuelleKartenIndex, false, ++audioGeneration);
+}
+
+function sprecheKarte(index, podcast, generation) {
+  const karte = karteikartenDaten[index];
+  if (!karte || generation !== audioGeneration || !((podcast && podcastAktiv) || !podcast)) return;
+
+  const texte = [
+    "Frage. " + String(karte.vorderseite || ""),
+    "Musterlösung. " + String(karte.rueckseite || "")
+  ];
+  let textIndex = 0;
+
+  function sprecheNaechstenText() {
+    if (generation !== audioGeneration || (podcast && (!podcastAktiv || podcastPausiert))) return;
+    const utterance = new SpeechSynthesisUtterance(texte[textIndex]);
+    utterance.lang = "de-DE";
+    utterance.rate = audioTempo;
+    utterance.pitch = 1;
+    utterance.onstart = function() {
+      audioElement("audioStatus").textContent = "Audio läuft: Karte " + (index + 1) + " von " + karteikartenDaten.length;
+    };
+    utterance.onend = function() {
+      if (generation !== audioGeneration) return;
+      textIndex++;
+      if (textIndex < texte.length) {
+        sprecheNaechstenText();
+      } else if (podcast) {
+        podcastNaechsteKarte(generation, index);
+      } else {
+        audioElement("audioStatus").textContent = "Audio beendet.";
+      }
+    };
+    utterance.onerror = function() {
+      if (generation === audioGeneration) {
+        audioElement("audioStatus").textContent = "Audio konnte nicht abgespielt werden.";
+      }
+    };
+    window.speechSynthesis.speak(utterance);
+  }
+
+  window.speechSynthesis.cancel();
+  sprecheNaechstenText();
+}
+
+function podcastStarten() {
+  if (!karteikartenDaten.length) {
+    audioElement("audioStatus").textContent = "Bitte zuerst Karteikarten laden.";
+    return;
+  }
+  if (!("speechSynthesis" in window)) {
+    audioElement("audioStatus").textContent = "Dein Browser unterstützt die Vorlesefunktion leider nicht.";
+    return;
+  }
+  karteikartenAudioStoppen();
+  podcastAktiv = true;
+  const generation = ++audioGeneration;
+  audioSteuerungAktualisieren();
+  sprecheKarte(aktuelleKartenIndex, true, generation);
+}
+
+function podcastNaechsteKarte(generation, index) {
+  if (generation !== audioGeneration || !podcastAktiv) return;
+  if (index >= karteikartenDaten.length - 1) {
+    karteikartenAudioStoppen("Alle Karteikarten wurden vorgelesen.");
+    return;
+  }
+  podcastPauseEnde = Date.now() + podcastPauseSekunden * 1000;
+  audioElement("audioStatus").textContent = "Pause zwischen den Karten.";
+  podcastTimer = setTimeout(function() {
+    podcastTimer = null;
+    if (generation !== audioGeneration || !podcastAktiv || podcastPausiert) return;
+    aktuelleKartenIndex = index + 1;
+    zeigeAktuelleKarte();
+    sprecheKarte(aktuelleKartenIndex, true, generation);
+  }, podcastPauseSekunden * 1000);
+}
+
+function audioPausieren() {
+  if (!podcastAktiv || podcastPausiert) return;
+  podcastPausiert = true;
+  if (podcastTimer !== null) {
+    clearTimeout(podcastTimer);
+    podcastTimer = null;
+    podcastPauseEnde = Math.max(0, podcastPauseEnde - Date.now());
+  }
+  if ("speechSynthesis" in window) window.speechSynthesis.pause();
+  audioElement("audioStatus").textContent = "Podcast pausiert.";
+  audioSteuerungAktualisieren();
+}
+
+function audioFortsetzen() {
+  if (!podcastAktiv || !podcastPausiert) return;
+  podcastPausiert = false;
+  if ("speechSynthesis" in window) window.speechSynthesis.resume();
+  if (podcastPauseEnde > 0) {
+    const generation = audioGeneration;
+    podcastTimer = setTimeout(function() {
+      podcastTimer = null;
+      if (generation !== audioGeneration || !podcastAktiv || podcastPausiert) return;
+      aktuelleKartenIndex++;
+      zeigeAktuelleKarte();
+      sprecheKarte(aktuelleKartenIndex, true, generation);
+    }, podcastPauseEnde);
+    podcastPauseEnde = 0;
+  }
+  audioSteuerungAktualisieren();
+}
+
+function audioStoppen() {
+  karteikartenAudioStoppen("Audio gestoppt.");
 }
 
 async function frageKilian() {
