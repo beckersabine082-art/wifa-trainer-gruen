@@ -525,14 +525,40 @@
 
       <section class="view" id="lerntextePodcastView">
         <div class="header">
-          <h1>Lerntexte &amp; Podcast</h1>
-          <p>Lerntexte und Podcast-Inhalte werden hier Schritt für Schritt aufgebaut.</p>
+          <div class="lerntexte-head-block">
+            <h1>Lerntexte &amp; Podcast</h1>
+          </div>
+          <p>Lerntexte lesen oder als Podcast anhören – Fach und Kapitel frei wählbar.</p>
         </div>
 
         <div class="card knowledge-content-card">
-          <h2 class="section-title">Lerntexte &amp; Podcast</h2>
-          <p class="status">Hier kannst du künftig Lerntexte lesen oder als Podcast anhören.</p>
+          <h2 class="section-title">Fach auswählen</h2>
+
+          <div class="subject-grid" id="lerntexteFachGrid"></div>
+
+          <div id="lerntexteKapitelBereich" style="display:none; margin-top:18px;">
+            <label class="label" for="lerntexteKapitelSelect">Kapitel auswählen</label>
+            <select id="lerntexteKapitelSelect" onchange="lerntexteKapitelWaehlen()">
+              <option value="">Alle Kapitel</option>
+            </select>
+          </div>
+
+          <div class="status" id="lerntexteStatus">Bitte zuerst ein Fach auswählen.</div>
         </div>
+
+        <div class="card knowledge-content-card" id="lerntexteAudioCard" style="display:none;">
+          <h2 class="section-title">Anhören</h2>
+
+          <div class="button-row">
+            <button class="action-btn" id="lerntexteAudioPlayBtn" type="button" onclick="lerntexteAudioAbspielen()">▶ Anhören</button>
+            <button class="secondary-btn" id="lerntexteAudioPauseBtn" type="button" onclick="lerntexteAudioPausieren()" disabled>⏸ Pause</button>
+            <button class="secondary-btn" id="lerntexteAudioStopBtn" type="button" onclick="lerntexteAudioStoppen()" disabled>⏹ Stop</button>
+          </div>
+
+          <div class="status" id="lerntexteAudioStatus">Noch keine Audiowiedergabe gestartet.</div>
+        </div>
+
+        <div id="lerntexteInhaltBereich"></div>
       </section>
 
       <section class="view" id="glossarView">
@@ -1417,6 +1443,7 @@
 <script src="js/bewertung.js?v=lernstand-v6"></script>
 <script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
 <script src="js/wissensdatenbank.js"></script>
+<script src="js/lerntexte.js?v=lerntexte-v3"></script>
 <script src="js/pruefungssimulation.js?v=lernstand-pruefung-v1"></script>
 <script type="module" src="js/pruefungslernstand.js?v=lernstand-pruefung-v1"></script>
 <script type="module" src="js/quiz.js?v=quiz-v1"></script>

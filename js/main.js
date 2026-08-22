@@ -66,6 +66,9 @@ function zeigeBereich(viewId) {
     if (viewId !== "wissenView" && typeof karteikartenAudioStoppen === "function") {
       karteikartenAudioStoppen();
     }
+    if (viewId !== "lerntextePodcastView" && typeof window.lerntexteAudioStoppen === "function") {
+      window.lerntexteAudioStoppen();
+    }
 
     document.querySelectorAll(".view").forEach(function(view) {
       view.classList.remove("active");
@@ -101,6 +104,9 @@ function zeigeBereich(viewId) {
     }
     if (viewId === "quizView" && typeof window.initialisiereQuiz === "function") {
       window.initialisiereQuiz();
+    }
+    if (viewId === "lerntextePodcastView" && typeof window.initialisiereLerntexteAnsicht === "function") {
+      window.initialisiereLerntexteAnsicht();
     }
     if (viewId === "glossarView") {
   document.getElementById("navNachschlagen").classList.add("active");
