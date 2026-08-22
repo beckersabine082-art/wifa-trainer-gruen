@@ -81,7 +81,9 @@ function zeigeBereich(viewId) {
     });
 
     if (viewId === "startView") document.getElementById("navStart").classList.add("active");
-    if (viewId === "trainerView") document.getElementById("navTrainer").classList.add("active");
+    if (["trainerView", "quizView", "lerntextePodcastView"].includes(viewId)) {
+      document.getElementById("navLernenUeben").classList.add("active");
+    }
     if (["lernstandView", "lernstandPruefungView", "lernstandQuizView", "lernstandFehlerView"].includes(viewId)) {
       document.getElementById("navLernstand").classList.add("active");
     }
@@ -101,21 +103,20 @@ function zeigeBereich(viewId) {
       window.initialisiereQuiz();
     }
     if (viewId === "glossarView") {
-  document.getElementById("navGlossar").classList.add("active");
+  document.getElementById("navNachschlagen").classList.add("active");
 
   if (!glossarDaten.length && !appIstBeschaeftigt) {
     ladeGlossar();
   }
 }
 if (viewId === "formelView") {
-  document.getElementById("navFormeln").classList.add("active");
+  document.getElementById("navNachschlagen").classList.add("active");
 
   if (!formelDaten.length && !appIstBeschaeftigt) {
     ladeFormelsammlung();
   }
 }
     if (viewId === "pruefungView") document.getElementById("navPruefung").classList.add("active");
-    if (viewId === "quizView") document.getElementById("navQuiz").classList.add("active");
     if (viewId === "wissenView") {
       const bereich = window.wissenAktiverBereich === "karteikarten" ? "karteikarten" : "links";
       const linksBereich = document.getElementById("wissenLinksBereich");
@@ -123,9 +124,9 @@ if (viewId === "formelView") {
       if (linksBereich) linksBereich.style.display = bereich === "links" ? "" : "none";
       if (kartenBereich) kartenBereich.style.display = bereich === "karteikarten" ? "" : "none";
       if (bereich === "karteikarten") {
-        document.getElementById("navKarteikarten").classList.add("active");
+        document.getElementById("navLernenUeben").classList.add("active");
       } else {
-        document.getElementById("navLinks").classList.add("active");
+        document.getElementById("navNachschlagen").classList.add("active");
       }
     }
     if (viewId === "kilianView") document.getElementById("navKilian").classList.add("active");
@@ -292,6 +293,25 @@ function toggleTrainerDropdown(event) {
   button.setAttribute("aria-expanded", String(!isOpen));
 }
 
+function toggleLernenUebenDropdown(event) {
+  event.stopPropagation();
+
+  const button = document.getElementById("navLernenUeben");
+  const dropdown = button.closest(".dropdown");
+  const isOpen = dropdown.classList.contains("open");
+
+  document.querySelectorAll(".dropdown.open").forEach(function(openDropdown) {
+    openDropdown.classList.remove("open");
+    const openButton = openDropdown.querySelector("button");
+    if (openButton) {
+      openButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  dropdown.classList.toggle("open", !isOpen);
+  button.setAttribute("aria-expanded", String(!isOpen));
+}
+
 function toggleLernstandDropdown(event) {
   event.stopPropagation();
   const button = document.getElementById("navLernstand");
@@ -302,6 +322,25 @@ function toggleLernstandDropdown(event) {
     openDropdown.classList.remove("open");
     const openButton = openDropdown.querySelector("button");
     if (openButton) openButton.setAttribute("aria-expanded", "false");
+  });
+
+  dropdown.classList.toggle("open", !isOpen);
+  button.setAttribute("aria-expanded", String(!isOpen));
+}
+
+function toggleNachschlagenDropdown(event) {
+  event.stopPropagation();
+
+  const button = document.getElementById("navNachschlagen");
+  const dropdown = button.closest(".dropdown");
+  const isOpen = dropdown.classList.contains("open");
+
+  document.querySelectorAll(".dropdown.open").forEach(function(openDropdown) {
+    openDropdown.classList.remove("open");
+    const openButton = openDropdown.querySelector("button");
+    if (openButton) {
+      openButton.setAttribute("aria-expanded", "false");
+    }
   });
 
   dropdown.classList.toggle("open", !isOpen);

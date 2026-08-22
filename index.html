@@ -42,51 +42,23 @@
             <button class="nav-btn" id="navAuth" type="button" onclick="openAuthArea();"><span id="navAuthLabel">Anmelden</span></button>
 
             <div class="dropdown">
-              <div class="nav-btn nav-btn-split" id="navLernstand">
-                <button
-                  type="button"
-                  class="nav-btn-label"
-                  onclick="oeffneLernstandBereich('lernstandView'); closeMainMenu();"
-                >
-                  📊 Mein Lernstand
-                </button>
-                <button
-                  type="button"
-                  class="nav-btn-arrow"
-                  aria-expanded="false"
-                  aria-controls="lernstandDropdownMenu"
-                  aria-label="Unterpunkte Lernstand ein-/ausklappen"
-                  onclick="toggleLernstandDropdown(event)"
-                >
-                  ▾
-                </button>
-              </div>
-              <div class="dropdown-content" id="lernstandDropdownMenu" role="menu">
-                <button type="button" onclick="oeffneLernstandBereich('lernstandView'); closeMainMenu();">WiFa-Trainer</button>
-                <button type="button" onclick="oeffneLernstandBereich('lernstandPruefungView'); closeMainMenu();">Prüfungssimulation</button>
-                <button type="button" onclick="oeffneLernstandBereich('lernstandQuizView'); closeMainMenu();">Quiz</button>
-                <button type="button" onclick="oeffneLernstandBereich('lernstandFehlerView'); closeMainMenu();">Fehleranalyse</button>
-              </div>
-            </div>
-
-            <div class="dropdown">
               <button
                 class="nav-btn"
-                id="navTrainer"
+                id="navLernenUeben"
                 type="button"
                 aria-expanded="false"
-                aria-controls="trainerDropdownMenu"
-                onclick="toggleTrainerDropdown(event)"
+                aria-controls="lernenUebenDropdownMenu"
+                onclick="toggleLernenUebenDropdown(event)"
               >
-                🎓 WiFa Trainer ▾
+                📚 Lernen &amp; Üben ▾
               </button>
-              <div class="dropdown-content" id="trainerDropdownMenu" role="menu">
-                <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ'); closeMainMenu();">HQ – Handlungsspezifische Qualifikationen</button>
-                <button type="button" onclick="oeffneTrainerMitTeilbereich('WQ'); closeMainMenu();">WQ – Wirtschaftsbezogene Qualifikationen</button>
+              <div class="dropdown-content" id="lernenUebenDropdownMenu" role="menu">
+                <button type="button" onclick="requireAuth('trainerView'); closeMainMenu();">🎓 WiFa Trainer</button>
+                <button type="button" onclick="requireAuth('quizView'); closeMainMenu();">🧩 Quiz</button>
+                <button type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">🗂️ Karteikarten &amp; Audio</button>
+                <button type="button" onclick="requireAuth('lerntextePodcastView'); closeMainMenu();">📖 Lerntexte &amp; Podcast</button>
               </div>
             </div>
-
-            <button class="nav-btn" id="navQuiz" type="button" onclick="requireAuth('quizView'); closeMainMenu();">🧩 Quiz</button>
 
             <div class="dropdown">
               <button
@@ -111,12 +83,45 @@
               </div>
             </div>
 
-            <button class="nav-btn" id="navKarteikarten" type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">🗂️ Karteikarten &amp; Audio</button>
-            <button class="nav-btn" id="navFormeln" type="button" onclick="requireAuth('formelView'); closeMainMenu();">📐 Formelsammlung</button>
-            <button class="nav-btn" id="navGlossar" type="button" onclick="requireAuth('glossarView'); closeMainMenu();">📚 Glossar</button>
-            <button class="nav-btn" id="navLinks" type="button" onclick="oeffneWissenBereich('links'); closeMainMenu();">🔗 Links</button>
+            <div class="dropdown">
+              <button
+                class="nav-btn"
+                id="navLernstand"
+                type="button"
+                aria-expanded="false"
+                aria-controls="lernstandDropdownMenu"
+                onclick="toggleLernstandDropdown(event)"
+              >
+                📊 Mein Lernstand ▾
+              </button>
+              <div class="dropdown-content" id="lernstandDropdownMenu" role="menu">
+                <button type="button" onclick="oeffneLernstandBereich('lernstandView'); closeMainMenu();">🎓 WiFa-Trainer</button>
+                <button type="button" onclick="oeffneLernstandBereich('lernstandPruefungView'); closeMainMenu();">🎯 Prüfungssimulation</button>
+                <button type="button" onclick="oeffneLernstandBereich('lernstandQuizView'); closeMainMenu();">🧩 Quiz</button>
+                <button type="button" onclick="oeffneLernstandBereich('lernstandFehlerView'); closeMainMenu();">🔍 Fehleranalyse</button>
+              </div>
+            </div>
+
+            <div class="dropdown">
+              <button
+                class="nav-btn"
+                id="navNachschlagen"
+                type="button"
+                aria-expanded="false"
+                aria-controls="nachschlagenDropdownMenu"
+                onclick="toggleNachschlagenDropdown(event)"
+              >
+                🔎 Nachschlagen ▾
+              </button>
+              <div class="dropdown-content" id="nachschlagenDropdownMenu" role="menu">
+                <button type="button" onclick="requireAuth('formelView'); closeMainMenu();">📐 Formelsammlung</button>
+                <button type="button" onclick="requireAuth('glossarView'); closeMainMenu();">📚 Glossar</button>
+                <button type="button" onclick="oeffneWissenBereich('links'); closeMainMenu();">🔗 Links</button>
+              </div>
+            </div>
+
             <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();"><svg class="kilian-menu-icon" viewBox="0 0 150 120" aria-hidden="true"><use href="#kilianBearIllustration"></use></svg> Frag Kilian</button>
-            <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">ℹ️ Nutzungshinweis</button>
+            <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">ℹ️ Nutzungshinweise</button>
           </div>
         </div>
       </nav>
@@ -515,6 +520,18 @@
             <span class="quiz-stat-richtig">Richtig: <strong id="quizAnzahlRichtig">0</strong></span>
             <span class="quiz-stat-falsch">Falsch: <strong id="quizAnzahlFalsch">0</strong></span>
           </div>
+        </div>
+      </section>
+
+      <section class="view" id="lerntextePodcastView">
+        <div class="header">
+          <h1>Lerntexte &amp; Podcast</h1>
+          <p>Lerntexte und Podcast-Inhalte werden hier Schritt für Schritt aufgebaut.</p>
+        </div>
+
+        <div class="card knowledge-content-card">
+          <h2 class="section-title">Lerntexte &amp; Podcast</h2>
+          <p class="status">Hier kannst du künftig Lerntexte lesen oder als Podcast anhören.</p>
         </div>
       </section>
 
