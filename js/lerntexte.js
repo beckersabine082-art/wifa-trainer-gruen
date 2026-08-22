@@ -127,11 +127,23 @@ function lerntexteAusgewaehlteEinheiten() {
   });
 }
 
+// Erkennt vollständig großgeschriebene Abschnittsbezeichnungen (z.B. "KERNIDEE:") am Absatzanfang,
+// nach einem Zeilenumbruch oder nach " | " und hebt sie in der lila Akzentfarbe hervor.
+function lerntexteHebeAbschnittsbezeichnungenHervor(escapedText) {
+  return escapedText.replace(
+    /(^|\n|\|\s*)([A-ZÄÖÜ][A-ZÄÖÜ0-9 \/\-\.]*:)/gm,
+    function (match, prefix, label) {
+      return prefix + '<strong class="lerntexte-abschnitt">' + label + "</strong>";
+    }
+  );
+}
+
 function lerntexteFormatiereText(text) {
   return String(text || "")
     .split(/\n\s*\n/)
     .map(function (absatz) {
-      return "<p>" + escapeHtml(absatz).replace(/\n/g, "<br>") + "</p>";
+      const hervorgehoben = lerntexteHebeAbschnittsbezeichnungenHervor(escapeHtml(absatz));
+      return "<p>" + hervorgehoben.replace(/\n/g, "<br>") + "</p>";
     })
     .join("");
 }

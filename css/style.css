@@ -2456,6 +2456,11 @@ select:focus {
   margin-bottom: 0;
 }
 
+.lerntexte-abschnitt {
+  color: #4a3970;
+  font-weight: 700;
+}
+
 
 .lernstand-error-button {
   max-width: 260px;
