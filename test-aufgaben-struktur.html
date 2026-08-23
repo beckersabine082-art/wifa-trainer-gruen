@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aufgaben-HTML Struktur Analyse</title>
+  <link rel="stylesheet" href="css/style.css?v=trainer-gapcss-v1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f6f2ff;
+    }
+    .test-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    .test-case {
+      background: #f2fbf5;
+      border: 1px solid #b7dec2;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .test-case h3 {
+      margin-top: 0;
+      color: #245c3a;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .aufgaben-html-bereich {
+      background: white;
+      border: 2px solid #d8c8f8;
+      border-radius: 8px;
+      padding: 12px;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    .pruefung-zusatzbereich {
+      background: #faf7ff;
+      border: 1px solid #eadfff;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+    }
+    .info-box {
+      background: #eef8f1;
+      border-left: 4px solid #4f9f68;
+      padding: 12px;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    .bad-box {
+      background: #fff5f5;
+      border-left: 4px solid #dc2626;
+      padding: 12px;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>🔬 Aufgaben-HTML Struktur Analyse</h1>
+    
+    <div class="info-box">
+      <strong>Ziel:</strong> Überprüfen, wie Lückentextfelder tatsächlich strukturiert sind und ob die CSS-Regel `.aufgaben-html-bereich input[type="text"], .aufgaben-html-bereich textarea` alle Fälle abdeckt.
+    </div>
+
+    <!-- FALL 1: Trainer mit Lückentextfrage -->
+    <div class="test-case">
+      <h3>FALL 1: Trainer-Frage (TEXT) mit Lückentexten</h3>
+      <p><strong>Fragetyp:</strong> TEXT<br>
+      <strong>Container:</strong> .aufgaben-html-bereich<br>
+      <strong>CSS-Regel wirkt:</strong> ✅ JA</p>
+      
+      <div class="aufgaben-html-bereich">
+        <p>
+          Die NAIRU wird häufig bei einer Arbeitslosenquote von etwa 
+          <input type="text" value="2–4 %" /> 
+          angenommen.
+        </p>
+        <p>
+          Preisstabilität wird im Euroraum über die 
+          <input type="text" value="harmonisierte Verbraucherpreisindex (HVPI)" /> 
+          beurteilt.
+        </p>
+      </div>
+      <p style="color: #5a4a80; font-size: 13px;">
+        <strong>Ergebnis:</strong> Felder sollten klein, inline und ~100–250px breit sein.
+      </p>
+    </div>
+
+    <!-- FALL 2: Trainer mit Textarea-Lückentexten (selten aber möglich) -->
+    <div class="test-case">
+      <h3>FALL 2: Trainer-Frage mit Textarea-Lückentexten (selten)</h3>
+      <p><strong>Hinweis:</strong> Falls jemand `&lt;textarea&gt;` statt `&lt;input type="text"&gt;` verwendet</p>
+      
+      <div class="aufgaben-html-bereich">
+        <p>
+          Fachbegriff: <textarea>Inflation</textarea> 
+          ist der Anstieg des Preisniveaus.
+        </p>
+      </div>
+      <p style="color: #5a4a80; font-size: 13px;">
+        <strong>Ergebnis:</strong> Textarea sollte ebenfalls klein und inline sein.
+      </p>
+    </div>
+
+    <!-- FALL 3: Prüfungssimulation mit Tabelle (ANDERE CSS-Klasse!) -->
+    <div class="test-case">
+      <h3>FALL 3: Prüfungssimulation (fragetyp="tabelle")</h3>
+      <p><strong>Fragetyp:</strong> TABELLE<br>
+      <strong>Container:</strong> .pruefung-zusatzbereich (NICHT .aufgaben-html-bereich)<br>
+      <strong>CSS-Regel wirkt:</strong> ❌ NEIN (beabsichtigt)</p>
+      
+      <div class="pruefung-zusatzbereich">
+        <strong>Tabellen-/Aufgabenstruktur:</strong>
+        <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; margin-top: 10px;">
+          <tr style="background: #f0f0f0;">
+            <th>Position</th>
+            <th>Kosten</th>
+            <th>Berechnung</th>
+          </tr>
+          <tr>
+            <td>Rohstoff</td>
+            <td><input type="text" value="100" /></td>
+            <td>Basis</td>
+          </tr>
+          <tr>
+            <td>Arbeit</td>
+            <td><input type="text" value="50" /></td>
+            <td>50% von Rohstoff</td>
+          </tr>
+        </table>
+      </div>
+      <p style="color: #5a4a80; font-size: 13px;">
+        <strong>Ergebnis:</strong> Diese Inputs sollten unverändert bleiben (100% breit in Tabelle).
+      </p>
+    </div>
+
+    <!-- FALL 4: Trainer mit großes Antwortfeld "Deine Antwort" -->
+    <div class="test-case">
+      <h3>FALL 4: Trainer - Großes Antwortfeld (KEINE Lückentexte)</h3>
+      <p><strong>ID:</strong> antwortInput<br>
+      <strong>Container:</strong> Nirgends (außerhalb .aufgaben-html-bereich)<br>
+      <strong>CSS-Regel wirkt:</strong> ❌ NEIN (beabsichtigt)</p>
+      
+      <label for="antwortInput-test" style="display: block; margin-bottom: 8px; font-weight: bold;">
+        Deine Antwort:
+      </label>
+      <textarea id="antwortInput-test" 
+                 placeholder="Schreibe hier deine Antwort..." 
+                 style="width: 100%; min-height: 120px;"></textarea>
+      
+      <p style="color: #5a4a80; font-size: 13px;">
+        <strong>Ergebnis:</strong> Textarea sollte weiterhin 100% breit und groß sein.
+      </p>
+    </div>
+
+    <!-- FALL 5: Mixed - Lückentexte + Großes Antwortfeld -->
+    <div class="test-case">
+      <h3>FALL 5: Kombiniert - Lückentextfrage + Großes Antwortfeld</h3>
+      <p><strong>Szenario:</strong> Fragetyp TEXT mit aufgabenHtml (Lückentexte) + normalem Antwortfeld</p>
+      
+      <h4 style="margin-top: 0;">Frage mit Lückentexten (in .aufgaben-html-bereich):</h4>
+      <div class="aufgaben-html-bereich">
+        <p>
+          <strong>Makroökonomie:</strong> Die <input type="text" value="NAIRU" /> 
+          ist die Quote, bei der die Inflation stabil bleibt. 
+          Sie wird durch <input type="text" value="Fiskalpolitik und Geldpolitik" /> 
+          beeinflusst.
+        </p>
+      </div>
+
+      <h4>Großes Antwortfeld (AUSSERHALB .aufgaben-html-bereich):</h4>
+      <label for="antwortInput-test2" style="display: block; margin-bottom: 8px; font-weight: bold;">
+        Erklärung:
+      </label>
+      <textarea id="antwortInput-test2" 
+                 placeholder="Erkläre dein Verständnis..." 
+                 style="width: 100%; min-height: 120px;"></textarea>
+      
+      <p style="color: #5a4a80; font-size: 13px;">
+        <strong>Ergebnis:</strong> Lückentextfelder klein/inline; Antwortfeld groß/100%.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <strong>✅ Zusammenfassung:</strong><br>
+      Die CSS-Regel <code>.aufgaben-html-bereich textarea, .aufgaben-html-bereich input[type="text"]</code> 
+      ist sehr spezifisch und betrifft AUSSCHLIESSLICH Lückentextfelder im Trainer-Modus.
+      Alle anderen Textareas/Inputs bleiben unverändert.
+    </div>
+  </div>
+</body>
+</html>

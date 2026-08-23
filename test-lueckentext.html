@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lückentextfeld Test - WiFa Trainer</title>
+  <link rel="stylesheet" href="css/style.css?v=test2">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f6f2ff;
+    }
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    h1 {
+      color: #2d1f46;
+      margin-bottom: 20px;
+    }
+    .test-section {
+      margin-bottom: 30px;
+    }
+    .test-section h2 {
+      font-size: 18px;
+      color: #5a4a80;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #eadfff;
+      padding-bottom: 8px;
+    }
+    .test-case {
+      background: #faf7ff;
+      border: 1px solid #eadfff;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .test-case h3 {
+      margin-top: 0;
+      font-size: 14px;
+      color: #2d1f46;
+    }
+    .aufgaben-html-bereich {
+      background: white;
+      border: 1px solid #d8c8f8;
+      border-radius: 8px;
+      padding: 12px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>🧪 Lückentextfeld-CSS Test</h1>
+    
+    <div class="test-section">
+      <h2>TEST 1: Kurze Lückentextfrage (Einzelwörter)</h2>
+      <div class="test-case">
+        <h3>Erwartung: Kleine inline Felder (~120-180px)</h3>
+        <div class="aufgaben-html-bereich">
+          <p><strong>NAIRU-Konzept:</strong></p>
+          <p>
+            Die NAIRU (Non-Accelerating Inflation Rate of Unemployment) wird häufig bei einer Arbeitslosenquote 
+            von etwa <input type="text" value="2–4 %" />
+            angenommen.
+          </p>
+          <p>
+            Preisstabilität wird im Euroraum über die <input type="text" value="harmonisierte Verbraucherpreisindex (HVPI)" />
+            beurteilt.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>TEST 2: Mit input[type="text"] Elementen</h2>
+      <div class="test-case">
+        <h3>Erwartung: Auch input-Elemente sollen klein und inline sein</h3>
+        <div class="aufgaben-html-bereich">
+          <p>
+            Die <input type="text" value="" placeholder="Geldmenge"> beeinflusst das Preisniveau.
+          </p>
+          <p>
+            Das <input type="text" value="" placeholder="Angebot-Nachfrage-Modell"> erklärt die Preisbildung.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+    <div class="test-section">
+      <h2>TEST 3: Längere Lückentexte</h2>
+      <div class="test-case">
+        <h3>Erwartung: Felder bis max-width: 250px</h3>
+        <div class="aufgaben-html-bereich">
+          <p>
+            Die Zentralbank verfolgt das Ziel der <input type="text" value="Preisstabilität und Bekämpfung von Arbeitslosigkeit" />.
+          </p>
+          <p>
+            Das <input type="text" value="Bruttoinlandsprodukt misst den Wert aller in einem Jahr produzierten Waren und Dienstleistungen" /> einer Volkswirtschaft.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>TEST 4: Vergleich - Großes Antwortfeld (sollte NICHT betroffen sein)</h2>
+      <div class="test-case">
+        <h3>Erwartung: Normales großes Textfeld (100% breit) bleibt unverändert</h3>
+        <div>
+          <label for="deine-antwort"><strong>Deine Antwort:</strong></label>
+          <textarea id="deine-antwort" placeholder="Schreibe hier deine Antwort..." style="width: 100%; min-height: 120px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>TEST 5: Responsive – Mobile Ansicht</h2>
+      <div class="test-case">
+        <h3>Erwartung: Bei schmaler Breite umbrechen Lückenfelder sauber</h3>
+        <div class="aufgaben-html-bereich">
+          <p>
+            Fachbegriff 1: <input type="text" value="Lorem ipsum" />,
+            Fachbegriff 2: <input type="text" value="Dolor sit amet" />,
+            Fachbegriff 3: <input type="text" value="Consectetur adipiscing" />,
+            Fachbegriff 4: <input type="text" value="Elit sed do eiusmod" />.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr style="border: 1px solid #eadfff; margin: 30px 0;">
+
+    <h2 style="color: #2d1f46; margin-bottom: 16px;">✅ Manuell zu überprüfen:</h2>
+    <ul style="color: #5a4a80; line-height: 1.8;">
+      <li><strong>Größe:</strong> Sind die Lückenfelder klein und übersichtlich? (~100–250px max)</li>
+      <li><strong>Inline:</strong> Stehen die Felder im Textfluss, nicht darunter?</li>
+      <li><strong>Höhe:</strong> Sind die Felder einzeilig?</li>
+      <li><strong>Textfluss:</strong> Ist der Satzkontext sofort lesbar?</li>
+      <li><strong>Fokus:</strong> Ändert sich die Farbe bei Fokus auf das grüne Theme?</li>
+      <li><strong>Vergleich:</strong> Das große "Deine Antwort"-Feld ist weiterhin 100% breit?</li>
+    </ul>
+  </div>
+</body>
+</html>

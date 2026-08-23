@@ -747,6 +747,87 @@ white-space: normal;
       box-shadow: 0 0 0 3px rgba(183, 148, 246, 0.15);
     }
 
+    .trainer-tipp-hinweis {
+      position: fixed;
+      right: 16px;
+      bottom: 78px;
+      z-index: 9998;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border: 1px solid #d8c8f8;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #4a3970;
+      font: inherit;
+      font-size: 18px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+      cursor: pointer;
+      overflow: visible;
+    }
+
+    .trainer-tipp-hinweis[hidden] {
+      display: none;
+    }
+
+    .trainer-tipp-hinweis:hover,
+    .trainer-tipp-hinweis:focus-visible {
+      background: #efe7ff;
+      outline: none;
+    }
+
+    .trainer-tipp-gluehbirne {
+      display: inline-block;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .trainer-tipp-hinweis.trainer-tipp-neu .trainer-tipp-gluehbirne {
+      animation: trainer-tipp-aufleuchten 700ms ease-out 2;
+    }
+
+    .trainer-tipp-tooltip {
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 9px);
+      width: max-content;
+      max-width: min(250px, calc(100vw - 32px));
+      padding: 8px 10px;
+      border: 1px solid #d8c8f8;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #2d1f46;
+      font-size: 12px;
+      font-weight: normal;
+      line-height: 1.35;
+      text-align: left;
+      box-shadow: 0 6px 18px rgba(80, 45, 140, 0.2);
+      display: none;
+      pointer-events: none;
+    }
+
+    .trainer-tipp-tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      right: 12px;
+      border: 5px solid transparent;
+      border-top-color: #ffffff;
+    }
+
+    .trainer-tipp-hinweis:hover .trainer-tipp-tooltip,
+    .trainer-tipp-hinweis:focus-visible .trainer-tipp-tooltip {
+      display: block;
+    }
+
+    @keyframes trainer-tipp-aufleuchten {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.15); filter: brightness(1.25); }
+    }
+
     select,
     input[type="text"] {
       width: 100%;
@@ -765,6 +846,30 @@ white-space: normal;
     input[type="text"]:focus {
       border-color: #b794f6;
       box-shadow: 0 0 0 3px rgba(183, 148, 246, 0.15);
+    }
+
+    /* Lückentextfelder – kleine inline Eingabefelder innerhalb von Aufgaben */
+    .aufgaben-html-bereich textarea,
+    .aufgaben-html-bereich input[type="text"] {
+      width: auto !important;
+      max-width: 250px !important;
+      min-width: 100px !important;
+      height: auto !important;
+      min-height: 32px !important;
+      display: inline-block !important;
+      margin: 0 3px !important;
+      padding: 4px 8px !important;
+      font-size: 14px !important;
+      line-height: 1.4 !important;
+      vertical-align: baseline !important;
+      resize: none !important;
+      overflow: hidden !important;
+    }
+
+    .aufgaben-html-bereich textarea:focus,
+    .aufgaben-html-bereich input[type="text"]:focus {
+      border-color: #4f9f68 !important;
+      box-shadow: 0 0 0 2px rgba(79, 159, 104, 0.25) !important;
     }
 
     .button-row {
@@ -1074,6 +1179,11 @@ white-space: normal;
     right: 12px;
     bottom: 12px;
     padding-left: 28px;
+  }
+
+  .trainer-tipp-hinweis {
+    right: 12px;
+    bottom: 68px;
   }
 
   .kilian-button-bear-wrap {

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>WiFa Trainer</title>
-  <link rel="stylesheet" href="css/style.css?v=nav-menu-v2">
+  <link rel="stylesheet" href="css/style.css?v=trainer-gapcss-v1">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -1331,6 +1331,11 @@
     Hier erscheint Kilians Antwort.
   </div>
 </div>
+
+<button class="trainer-tipp-hinweis" id="trainerTippHinweis" type="button" onclick="fordereTrainerTippAn(event)" aria-label="Kilian-Tipp zur aktuellen Trainerfrage" hidden>
+  <span class="trainer-tipp-gluehbirne" aria-hidden="true">💡</span>
+  <span class="trainer-tipp-tooltip" role="tooltip">Hier kann Kilian dir zu dieser Frage einen kleinen Schubs geben.</span>
+</button>
     
   <button id="hinweisInfoButton" onclick="hinweisAnzeigen()" style="
     position: fixed;
@@ -1453,8 +1458,8 @@
 <script src="js/main.js?v=nav-menu-v4"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
-<script src="js/trainer.js?v=trainer-enter-v1"></script>
-<script src="js/bewertung.js?v=bewertung-transparenz-v1"></script>
+<script src="js/trainer.js?v=trainer-lueckentext-v2"></script>
+<script src="js/bewertung.js?v=bewertung-lueckentext-v2"></script>
 <script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
 <script src="js/wissensdatenbank.js"></script>
 <script src="js/lerntexte.js?v=lerntexte-v4"></script>

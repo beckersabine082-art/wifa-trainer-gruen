@@ -99,15 +99,97 @@ function ermittleTeilbereich(fach) {
     return aktuellerTeilbereich || "";
   }
 
+let trainerTippTimer = null;
+let trainerTippFrageToken = 0;
+let trainerTippAngeboten = false;
+
+function trainerTippAusblenden() {
+    const hinweis = document.getElementById("trainerTippHinweis");
+    if (!hinweis) return;
+    hinweis.hidden = true;
+    hinweis.classList.remove("trainer-tipp-neu");
+  }
+
+function trainerTippTimerAbbrechen() {
+    if (trainerTippTimer !== null) {
+      clearTimeout(trainerTippTimer);
+      trainerTippTimer = null;
+    }
+    trainerTippFrageToken++;
+    trainerTippAngeboten = false;
+    trainerTippAusblenden();
+  }
+
+function starteTrainerTippTimer() {
+    trainerTippTimerAbbrechen();
+    const frageToken = trainerTippFrageToken;
+    const antwortInput = document.getElementById("antwortInput");
+
+    if (!aktuelleFrageId || !antwortInput || antwortInput.style.display === "none") return;
+
+    trainerTippTimer = window.setTimeout(function() {
+      trainerTippTimer = null;
+      if (frageToken !== trainerTippFrageToken || trainerTippAngeboten) return;
+      if (appIstBeschaeftigt || antwortInput.value.trim() || document.getElementById("resultBox").style.display !== "none") return;
+      const kilianView = document.getElementById("kilianView");
+      if (kilianView && kilianView.classList.contains("active")) return;
+
+      const hinweis = document.getElementById("trainerTippHinweis");
+      if (!hinweis) return;
+      trainerTippAngeboten = true;
+      hinweis.hidden = false;
+      hinweis.classList.add("trainer-tipp-neu");
+    }, 5000);
+  }
+
+function fordereTrainerTippAn(event) {
+    if (!aktuelleFrageId || trainerTippAngeboten === false) return;
+
+    if (event) event.stopPropagation();
+
+    trainerTippTimerAbbrechen();
+    trainerTippAngeboten = true;
+    const kilianInput = document.getElementById("kilianBubbleInput");
+    if (kilianInput) {
+      kilianInput.value =
+        "Gib mir einen kleinen Tipp zu dieser Frage, ohne mir direkt die vollständige Lösung zu verraten.\n\n" +
+        "Kontext:\n" +
+        "Teilbereich: " + aktuellerTeilbereich + "\n" +
+        "Fach: " + aktuellesFach + "\n" +
+        "Thema: " + aktuellesThema + "\n" +
+        "Frage-ID: " + aktuelleFrageId + "\n" +
+        "Fragetext: " + aktuelleFrage;
+    }
+
+      const kilianFenster = document.getElementById("kilianBubbleFenster");
+      if (kilianFenster) kilianFenster.style.display = "block";
+      if (typeof frageKilianBubble === "function") frageKilianBubble();
+  }
+
 function resetFrageAnzeige() {
-    document.getElementById("antwortInput").value = "";
-  letzteAusgewerteteAntwort = "";
-    document.getElementById("resultBox").style.display = "none";
-    document.getElementById("solutionBox").style.display = "none";
-    document.getElementById("musterloesungText").textContent = "";
-    document.getElementById("ergebnisText").textContent = "Hier erscheint die Bewertung.";
-    document.getElementById("punkteAnzeige").textContent = "0 / 0 Punkte";
-    document.getElementById("punkteAnzeige").classList.remove("good", "bad");
+    trainerTippTimerAbbrechen();
+    const antwortInput = document.getElementById("antwortInput");
+    const resultBox = document.getElementById("resultBox");
+    const solutionBox = document.getElementById("solutionBox");
+    const musterloesungText = document.getElementById("musterloesungText");
+    const bewertungBox = document.getElementById("bewertungskriterien");
+    const ergebnisText = document.getElementById("ergebnisText");
+    const punkteAnzeige = document.getElementById("punkteAnzeige");
+
+    if (antwortInput) antwortInput.value = "";
+    letzteAusgewerteteAntwort = "";
+    if (resultBox) resultBox.style.display = "none";
+    if (solutionBox) solutionBox.style.display = "none";
+    if (musterloesungText) musterloesungText.textContent = "";
+    if (bewertungBox) {
+      bewertungBox.innerHTML = "";
+      bewertungBox.hidden = true;
+    }
+    if (ergebnisText) ergebnisText.textContent = "Hier erscheint die Bewertung.";
+    if (punkteAnzeige) {
+      punkteAnzeige.textContent = "0 / 0 Punkte";
+      punkteAnzeige.classList.remove("good", "bad");
+    }
     verbirgWiederholungsNavigation();
     aktualisiereWiederholungsSperre();
     setzeStatus("");
@@ -372,6 +454,8 @@ function waehleFach(fach) {
       frageHtml += '<div class="aufgaben-html-bereich">' + aufgabenHtml + "</div>";
     }
     frageTextBox.innerHTML = frageHtml || "Keine Frage hinterlegt.";
+    frageTextBox.dataset.fragetyp = fragetyp;
+    frageTextBox.dataset.loesungsschluessel = String(daten.loesungsschluessel || "");
 
     if (fragetyp === "TEXT") {
       if (antwortLabel) antwortLabel.style.display = "block";
@@ -395,9 +479,11 @@ function waehleFach(fach) {
       `;
     }
     document.getElementById("anzeigeThema").textContent = aktuellesThema;
+    starteTrainerTippTimer();
   }
 
 async function ladeFrageAusFach(fach, thema, currentId = "") {
+  trainerTippTimerAbbrechen();
     const eigenerToken = ++ladeToken;
 
     try {
@@ -537,6 +623,12 @@ document.getElementById("antwortInput").addEventListener("keydown", function(eve
 
   event.preventDefault();
   bewerteAntwort();
+});
+
+document.getElementById("antwortInput").addEventListener("input", function(event) {
+  if (event.currentTarget.value.trim()) {
+    trainerTippAusblenden();
+  }
 });
 
 function oeffneWifaWiederholungsfrage(daten, kontext) {

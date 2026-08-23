@@ -1,7 +1,86 @@
+function normalisiereLueckenwert(wert) {
+    return String(wert || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLocaleLowerCase("de-DE");
+  }
+
+function ermittleLueckenLoesungen(loesungsschluessel) {
+    const text = String(loesungsschluessel || "").trim();
+    if (!text) return [];
+
+    try {
+      const jsonWert = JSON.parse(text);
+      if (Array.isArray(jsonWert)) {
+        return jsonWert.map(function(wert) {
+          return String(wert || "").trim();
+        });
+      }
+    } catch (error) {
+      // Der Lösungsschlüssel ist normalerweise eine Semikolon-/Zeilenliste.
+    }
+
+    return text
+      .split(/[;\r\n]+/)
+      .map(function(wert) {
+        return wert.replace(/^\s*\d+\s*[.):-]\s*/, "").trim();
+      })
+      .filter(Boolean);
+  }
+
+function bewerteLueckentext(lueckenInputs, loesungsschluessel) {
+    const schluesselLoesungen = ermittleLueckenLoesungen(loesungsschluessel);
+    const erkannte = [];
+    const fehlende = [];
+    let punkte = 0;
+
+    lueckenInputs.forEach(function(input, index) {
+      const antwort = String(input.value || "").trim();
+      const dataAnswer = String(input.getAttribute("data-answer") || "").trim();
+      const loesung = dataAnswer || schluesselLoesungen[index] || "";
+      const istRichtig = Boolean(loesung) &&
+        normalisiereLueckenwert(antwort) === normalisiereLueckenwert(loesung);
+
+      if (istRichtig) {
+        punkte++;
+        erkannte.push("Lücke " + (index + 1) + ": " + loesung);
+      } else {
+        fehlende.push("Lücke " + (index + 1) + (loesung ? ": " + loesung : ""));
+      }
+    });
+
+    const maxPunkte = lueckenInputs.length;
+    const ergebnis = punkte + " von " + maxPunkte + " Punkten.\n" +
+      (punkte === maxPunkte
+        ? "Alle Lücken sind richtig beantwortet."
+        : "Falsch oder leer: " + fehlende.join(", ") + ".");
+
+    return {
+      punkte: punkte,
+      maxPunkte: maxPunkte,
+      ergebnis: ergebnis,
+      musterloesung: loesungsschluessel,
+      erkannte: erkannte,
+      fehlende: fehlende
+    };
+  }
+
 async function bewerteAntwort() {
     if (appIstBeschaeftigt) return;
 
-    const antwort = document.getElementById("antwortInput").value.trim();
+    const frageTextBox = document.getElementById("frageText");
+    const fragetyp = String(frageTextBox?.dataset.fragetyp || "TEXT").trim().toUpperCase();
+    const istLueckentext = fragetyp === "LUECKENTEXT";
+    const lueckenInputs = istLueckentext
+      ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input[type="text"]'))
+      : [];
+    const lueckenAntworten = lueckenInputs.map(function(input) {
+      return input.value.trim();
+    });
+    const antwort = istLueckentext
+      ? lueckenAntworten.join(" | ").trim()
+      : document.getElementById("antwortInput").value.trim();
+    const hatAusgefüllteLücke = lueckenAntworten.some(Boolean);
 
     if (!aktuellerTeilbereich) {
       alert("Bitte zuerst einen Teilbereich auswählen.");
@@ -23,8 +102,10 @@ async function bewerteAntwort() {
       return;
     }
 
-    if (!antwort) {
-      alert("Bitte zuerst eine Antwort eingeben.");
+    if (istLueckentext ? !hatAusgefüllteLücke : !antwort) {
+      alert(istLueckentext
+        ? "Bitte zuerst mindestens eine Lücke ausfüllen."
+        : "Bitte zuerst eine Antwort eingeben.");
       return;
     }
 
@@ -32,12 +113,20 @@ async function bewerteAntwort() {
       setzeAppBeschaeftigt(true);
       setzeStatus("Antwort wird ausgewertet...");
 
-      const result = await apiPost("bewerteAntwort", {
-        fach: aktuellesFach,
-        frageId: aktuelleFrageId,
-        antwort: antwort,
-        speichereInSheet: false
-      });
+      const result = istLueckentext
+        ? {
+            success: true,
+            data: bewerteLueckentext(
+              lueckenInputs,
+              frageTextBox?.dataset.loesungsschluessel || ""
+            )
+          }
+        : await apiPost("bewerteAntwort", {
+            fach: aktuellesFach,
+            frageId: aktuelleFrageId,
+            antwort: antwort,
+            speichereInSheet: false
+          });
 
       if (!result.success) {
         throw new Error(result.error || "Auswertung fehlgeschlagen.");
