@@ -53,7 +53,26 @@
                 📚 Lernen &amp; Üben ▾
               </button>
               <div class="dropdown-content" id="lernenUebenDropdownMenu" role="menu">
-                <button type="button" onclick="requireAuth('trainerView'); closeMainMenu();">🎓 WiFa Trainer</button>
+                <div class="dropdown">
+                  <button
+                    class="nav-btn"
+                    id="navTrainer"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="trainerDropdownMenu"
+                    onclick="toggleTrainerDropdown(event)"
+                  >
+                    🎓 WiFa Trainer ▾
+                  </button>
+                  <div class="dropdown-content" id="trainerDropdownMenu" role="menu">
+                    <button type="button" onclick="oeffneTrainerMitTeilbereich('WQ'); closeMainMenu();">
+                      Wirtschaftsbezogene Qualifikationen (WQ)
+                    </button>
+                    <button type="button" onclick="oeffneTrainerMitTeilbereich('HQ'); closeMainMenu();">
+                      Handlungsspezifische Qualifikationen (HQ)
+                    </button>
+                  </div>
+                </div>
                 <button type="button" onclick="requireAuth('quizView'); closeMainMenu();">🧩 Quiz</button>
                 <button type="button" onclick="oeffneWissenBereich('karteikarten'); closeMainMenu();">🗂️ Karteikarten &amp; Audio</button>
                 <button type="button" onclick="requireAuth('lerntextePodcastView'); closeMainMenu();">📖 Lerntexte &amp; Podcast</button>
@@ -168,7 +187,7 @@
           <h2 class="section-title">Die Funktionen im Überblick</h2>
 
           <div class="feature-grid">
-            <div class="feature-card" role="button" tabindex="0" aria-label="WIFA Trainer öffnen" onclick="requireAuth('trainerView')">
+            <div class="feature-card" role="button" tabindex="0" aria-label="WIFA Trainer öffnen" onclick="oeffneTrainerMitTeilbereich()">
               <div class="feature-icon">🎓</div>
               <h3>WIFA Trainer</h3>
               <p>Offene Fragen beantworten, Antworten auswerten lassen und gezielt Wissenslücken erkennen.</p>

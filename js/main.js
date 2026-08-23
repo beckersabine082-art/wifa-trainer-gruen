@@ -180,15 +180,31 @@ function moveHamburgerToView(viewId) {
 }
 
 function oeffneTrainerMitTeilbereich(teilbereich) {
-    // Wenn requireAuth verfügbar ist, verwende es, sonst direkt öffnen
     if (typeof requireAuth === 'function') {
       requireAuth('trainerView');
     } else {
       zeigeBereich('trainerView');
     }
+
     const select = document.getElementById("teilbereichSelect");
-    select.value = teilbereich;
-    waehleTeilbereich();
+    if (select) {
+      select.value = teilbereich || "";
+      select.style.display = "none";
+    }
+
+    const fachBereich = document.getElementById("fachBereich");
+    const themaBereich = document.getElementById("themaBereich");
+    if (fachBereich) fachBereich.style.display = "none";
+    if (themaBereich) themaBereich.style.display = "none";
+
+    if (typeof teilbereich === "string" && teilbereich) {
+      window.setTimeout(function() {
+        const trainerView = document.getElementById("trainerView");
+        if (trainerView && trainerView.classList.contains("active") && select) {
+          waehleTeilbereich();
+        }
+      }, 0);
+    }
   }
 
 function setzeAppBeschaeftigt(status) {
@@ -281,13 +297,17 @@ function hinweisSchliessen() {
   }
 
 function toggleTrainerDropdown(event) {
-  event.stopPropagation();
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
   const button = document.getElementById("navTrainer");
   const dropdown = button.closest(".dropdown");
   const isOpen = dropdown.classList.contains("open");
 
   document.querySelectorAll(".dropdown.open").forEach(function(openDropdown) {
+    if (openDropdown === dropdown || openDropdown.contains(dropdown) || dropdown.contains(openDropdown)) return;
     openDropdown.classList.remove("open");
     const openButton = openDropdown.querySelector("button");
     if (openButton) {
@@ -297,6 +317,7 @@ function toggleTrainerDropdown(event) {
 
   dropdown.classList.toggle("open", !isOpen);
   button.setAttribute("aria-expanded", String(!isOpen));
+  button.textContent = "🎓 WiFa Trainer " + (!isOpen ? "▴" : "▾");
 }
 
 function toggleLernenUebenDropdown(event) {
@@ -388,6 +409,9 @@ function closeMainMenu() {
     const itemButton = dropdown.querySelector("button");
     if (itemButton) {
       itemButton.setAttribute("aria-expanded", "false");
+      if (itemButton.id === "navTrainer") {
+        itemButton.textContent = "🎓 WiFa Trainer ▾";
+      }
     }
   });
 }

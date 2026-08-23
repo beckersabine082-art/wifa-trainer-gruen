@@ -178,7 +178,7 @@
       z-index: 1000;
     }
 
-    .dropdown.open .dropdown-content {
+    .dropdown.open > .dropdown-content {
       display: block;
     }
 
