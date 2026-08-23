@@ -632,11 +632,41 @@ function renderPruefungsAuswertung(data) {
         <h2 class="section-title">Einzelbewertung</h2>
     `;
 
+    let letzteAngezeigteSituation = "";
+
     aufgaben.forEach(function(item, index) {
       const eigeneAntwort = letztePruefungsAntworten.find(function(eintrag) {
         return String(eintrag.aufgabe) === String(item.aufgabe)
           && String(eintrag.teilaufgabe) === String(item.teilaufgabe);
       }) || {};
+
+      const pruefungsAufgabe = (aktuellePruefungsDaten || []).find(function(eintrag) {
+        const gleicheTeilaufgabe = String(eintrag.aufgabe) === String(item.aufgabe)
+          && String(eintrag.teilaufgabe) === String(item.teilaufgabe);
+
+        if (!gleicheTeilaufgabe) return false;
+
+        if (item.simulationId && eintrag.simulationId) {
+          return String(eintrag.simulationId) === String(item.simulationId);
+        }
+
+        return true;
+      }) || {};
+
+      const frage = eigeneAntwort.frage || pruefungsAufgabe.frage || item.frage || "Keine Frage hinterlegt.";
+      const hauptsituation = String(pruefungsAufgabe.hauptsituation || "").trim();
+      const situation = String(pruefungsAufgabe.situation || "").trim();
+      const zeigtHauptsituation = hauptsituation && hauptsituation !== letzteAngezeigteSituation;
+      const zeigtSituation = !zeigtHauptsituation
+        && situation
+        && situation !== hauptsituation
+        && situation !== letzteAngezeigteSituation;
+
+      if (zeigtHauptsituation) {
+        letzteAngezeigteSituation = hauptsituation;
+      } else if (zeigtSituation) {
+        letzteAngezeigteSituation = situation;
+      }
 
       const musterloesung =
         item.musterloesung ||
@@ -656,9 +686,18 @@ function renderPruefungsAuswertung(data) {
             </div>
           </div>
 
-          <div style="font-size:13px; line-height:1.5; color:#5a4a80;">
+          ${zeigtHauptsituation || zeigtSituation ? `
+            <div style="background:#f4ecff; padding:14px; border-radius:12px; margin-bottom:14px; line-height:1.6; white-space:pre-wrap;">
+              ${escapeHtml(zeigtHauptsituation ? hauptsituation : situation)}
+            </div>
+          ` : ""}
 
-            ${renderPruefungsPunkteBegründung(item)}
+          <div style="margin-bottom:14px; line-height:1.6;">
+            <strong>Frage:</strong><br>
+            ${escapeHtml(frage)}
+          </div>
+
+          <div style="font-size:13px; line-height:1.5; color:#5a4a80;">
 
             <strong>Deine Antwort:</strong><br>
             ${escapeHtml(eigeneAntwort.antwort || "keine schriftliche Ergänzung")}
@@ -680,6 +719,8 @@ function renderPruefungsAuswertung(data) {
 
               <br>
             ` : ""}
+
+            ${renderPruefungsPunkteBegründung(item)}
 
             <button
               class="secondary-btn"
