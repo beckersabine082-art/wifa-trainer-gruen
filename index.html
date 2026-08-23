@@ -383,15 +383,9 @@
 
           <div id="themaBereich" style="display:none; margin-top:15px;">
             <label class="label" for="themaSelect">Thema auswählen</label>
-            <select id="themaSelect">
+            <select id="themaSelect" onchange="waehleThemaAusDropdown()">
               <option value="">-- Thema wählen --</option>
             </select>
-
-            <div style="margin-top:10px;">
-              <button class="action-btn" type="button" onclick="starteThema()" style="max-width:220px;">
-                Thema starten
-              </button>
-            </div>
           </div>
 
           <div class="status" id="fachStatus">Bitte zuerst einen Teilbereich auswählen.</div>
@@ -452,6 +446,7 @@
             <div class="result-title">Auswertung</div>
             <div class="points" id="punkteAnzeige">0 / 0 Punkte</div>
             <p class="result-text" id="ergebnisText">Hier erscheint die Bewertung.</p>
+            <div class="bewertungskriterien" id="bewertungskriterien" hidden></div>
 
             <div class="solution-box" id="solutionBox">
               <strong>Musterlösung:</strong>
@@ -1458,8 +1453,8 @@
 <script src="js/main.js?v=nav-menu-v2"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
-<script src="js/trainer.js?v=trainer-repeat-v4"></script>
-<script src="js/bewertung.js?v=lernstand-v6"></script>
+<script src="js/trainer.js?v=trainer-enter-v1"></script>
+<script src="js/bewertung.js?v=bewertung-transparenz-v1"></script>
 <script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
 <script src="js/wissensdatenbank.js"></script>
 <script src="js/lerntexte.js?v=lerntexte-v4"></script>

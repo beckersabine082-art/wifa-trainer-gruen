@@ -953,6 +953,16 @@ white-space: normal;
       color: #c0392b;
     }
 
+    .bewertungskriterien {
+      margin: 10px 0 12px;
+      line-height: 1.5;
+    }
+
+    .bewertungskriterien ul {
+      margin: 4px 0 10px 20px;
+      padding: 0;
+    }
+
     .solution-box {
       margin-top: 12px;
       padding: 12px;

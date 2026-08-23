@@ -44,6 +44,7 @@ async function bewerteAntwort() {
       }
 
       const data = result.data || {};
+      letzteAusgewerteteAntwort = antwort;
 
       document.getElementById("resultBox").style.display = "block";
       verbirgWiederholungsNavigation();
@@ -59,6 +60,7 @@ const bewertungText = bereinigeBewertungText(
       punkteAnzeige.classList.add(maxPunkte > 0 && punkte >= maxPunkte / 2 ? "good" : "bad");
 
       document.getElementById("ergebnisText").textContent = bewertungText;
+      zeigeBewertungskriterien(data);
 
       aktuelleMusterloesung = data.musterloesung || "";
       document.getElementById("solutionBox").style.display = "none";
@@ -219,6 +221,96 @@ function bereinigeBewertungText(text) {
     .trim();
 
   return sauber || "Ergebnis wurde berechnet.";
+}
+
+function normalisiereKriterien(wert) {
+  if (Array.isArray(wert)) {
+    return wert.map(function(eintrag) {
+      return String(eintrag || "").trim();
+    }).filter(Boolean);
+  }
+
+  return String(wert || "")
+    .split(/[;\n]/)
+    .map(function(eintrag) {
+      return eintrag.replace(/^[•*-]\s*/, "").trim();
+    })
+    .filter(Boolean);
+}
+
+function findeKriterien(data, namen) {
+  for (const name of namen) {
+    if (data[name] !== undefined && data[name] !== null) {
+      return normalisiereKriterien(data[name]);
+    }
+  }
+
+  return [];
+}
+
+function extrahiereKriterienAusErgebnis(text) {
+  const quelle = String(text || "");
+  const erkannteMatch = quelle.match(/Erkannte Stichpunkte:\s*([\s\S]*?)(?=Fehlende Stichpunkte:|$)/i);
+  const fehlendeMatch = quelle.match(/Fehlende Stichpunkte:\s*([\s\S]*?)$/i);
+
+  return {
+    erkannte: normalisiereKriterien(erkannteMatch ? erkannteMatch[1] : ""),
+    fehlende: normalisiereKriterien(fehlendeMatch ? fehlendeMatch[1] : "")
+  };
+}
+
+function zeigeBewertungskriterien(data) {
+  const box = document.getElementById("bewertungskriterien");
+  if (!box) return;
+
+  let erkannte = findeKriterien(data, [
+    "erkannteKriterien",
+    "erfuellteKriterien",
+    "erkannteStichpunkte",
+    "erkannte"
+  ]);
+  let fehlende = findeKriterien(data, [
+    "fehlendeKriterien",
+    "nichtErfuellteKriterien",
+    "fehlendeStichpunkte",
+    "fehlende"
+  ]);
+
+  if (!erkannte.length && !fehlende.length) {
+    const ausErgebnis = extrahiereKriterienAusErgebnis(data.ergebnis);
+    erkannte = ausErgebnis.erkannte;
+    fehlende = ausErgebnis.fehlende;
+  }
+
+  if (!erkannte.length && !fehlende.length) {
+    const punkte = Number(data.punkte || 0);
+    const maxPunkte = Number(data.maxPunkte || 0);
+    if (maxPunkte > 0 && punkte >= maxPunkte) {
+      box.textContent = "Alle wesentlichen Inhalte wurden erkannt.";
+      box.hidden = false;
+      return;
+    }
+
+    box.hidden = true;
+    box.innerHTML = "";
+    return;
+  }
+
+  let html = "";
+  if (erkannte.length) {
+    html += "<strong>Erkannt:</strong><ul>" + erkannte.map(function(kriterium) {
+      return "<li>" + escapeHtml(kriterium) + "</li>";
+    }).join("") + "</ul>";
+  }
+
+  if (fehlende.length) {
+    html += "<strong>Für die volle Punktzahl fehlte noch:</strong><ul>" + fehlende.map(function(kriterium) {
+      return "<li>" + escapeHtml(kriterium) + "</li>";
+    }).join("") + "</ul>";
+  }
+
+  box.innerHTML = html;
+  box.hidden = false;
 }
 
 function resetSession() {

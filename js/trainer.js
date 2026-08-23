@@ -81,6 +81,18 @@ function waehleFachAusDropdown() {
     waehleFach(fach);
   }
 
+function waehleThemaAusDropdown() {
+    if (appIstBeschaeftigt) return;
+
+    const thema = document.getElementById("themaSelect").value;
+
+    if (!thema) {
+      return;
+    }
+
+    starteThema();
+  }
+
 function ermittleTeilbereich(fach) {
     if (faecherNachTeilbereich.WQ.includes(fach)) return "WQ";
     if (faecherNachTeilbereich.HQ.includes(fach)) return "HQ";
@@ -89,6 +101,7 @@ function ermittleTeilbereich(fach) {
 
 function resetFrageAnzeige() {
     document.getElementById("antwortInput").value = "";
+  letzteAusgewerteteAntwort = "";
     document.getElementById("resultBox").style.display = "none";
     document.getElementById("solutionBox").style.display = "none";
     document.getElementById("musterloesungText").textContent = "";
@@ -510,7 +523,21 @@ function naechsteFrage() {
 function antwortLeeren() {
     if (appIstBeschaeftigt) return;
     document.getElementById("antwortInput").value = "";
+  letzteAusgewerteteAntwort = "";
   }
+
+document.getElementById("antwortInput").addEventListener("keydown", function(event) {
+  if (event.key !== "Enter" || event.shiftKey) return;
+
+  const antwort = event.currentTarget.value.trim();
+  if (!antwort || appIstBeschaeftigt || antwort === letzteAusgewerteteAntwort) {
+    event.preventDefault();
+    return;
+  }
+
+  event.preventDefault();
+  bewerteAntwort();
+});
 
 function oeffneWifaWiederholungsfrage(daten, kontext) {
   const fach = String(kontext?.fach || "").trim();
