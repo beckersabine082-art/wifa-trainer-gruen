@@ -272,6 +272,7 @@ function doPost(e) {
   fach: body.fach,
   frageId: body.frageId,
   antwort: body.antwort,
+          skizze: body.skizze,
   speichereInSheet: body.speichereInSheet
 })
       };
@@ -632,6 +633,7 @@ function bewerteAntwortFrontend(payload) {
   const sheetName = String(payload?.fach || "").trim();
   const questionId = String(payload?.frageId || "").trim();
   const userAnswer = String(payload?.antwort || "").trim();
+  const skizze = String(payload?.skizze || "").trim();
 const speichereInSheet = payload?.speichereInSheet !== false;
 
   if (!sheetName) {
@@ -659,11 +661,14 @@ const speichereInSheet = payload?.speichereInSheet !== false;
   const frage = String(frageDaten.frage || "").trim();
   const muster = String(frageDaten.musterloesung || "").trim();
   const stichpunkteRaw = String(frageDaten.stichpunkte || "").trim();
+  const fragetyp = String(frageDaten.fragetyp || "text").trim().toLowerCase();
+  const istDiagramm = fragetyp === "diagramm";
+  const hatSkizze = istDiagramm && skizze.startsWith("data:image");
 
   const stichpunkteListe = getStichpunkteListe_(stichpunkteRaw);
   const maxPunkte = getMaxPunkteFromStichpunkte_(stichpunkteRaw);
 
-  if (!userAnswer) {
+  if (!userAnswer && !hatSkizze) {
     return {
       id: frageDaten.id,
       punkte: 0,
@@ -675,7 +680,7 @@ const speichereInSheet = payload?.speichereInSheet !== false;
     };
   }
 
-  if (istKeineVerwertbareAntwort_(userAnswer)) {
+  if (!hatSkizze && istKeineVerwertbareAntwort_(userAnswer)) {
     const feedbackText =
       "Ergebnis: unzureichend\n\n" +
       "Erkannte Stichpunkte:\n- keine\n\n" +
@@ -718,6 +723,8 @@ const speichereInSheet = payload?.speichereInSheet !== false;
 
   const antwortIstExakteMusterloesung =
     Boolean(muster) &&
+    Boolean(userAnswer) &&
+    !istDiagramm &&
     normalizeTextForCompare_(userAnswer) ===
       normalizeTextForCompare_(muster);
 
@@ -809,6 +816,8 @@ Bewertungsregeln:
 - Verwende ausschließlich Stichpunkte aus der vorgegebenen Liste.
 - Wenn kein Stichpunkt eindeutig enthalten ist, schreibe bei erkannten Stichpunkten nur "- keine".
 
+${istDiagramm ? "- Bewerte bei DIAGRAMM zusätzlich die übermittelte Skizze auf Achsen, Kurven, Verläufe, Verschiebungen, Schnittpunkte und relevante Beschriftungen. Eine Skizze darf die schriftliche Antwort ergänzen oder ersetzen." : ""}
+
 Arbeitsweise vor der Ausgabe (nicht ausgeben):
 1. Prüfe die Passung zur Frage.
 2. Entscheide für jeden Stichpunkt separat: eindeutig erfüllt oder nicht erfüllt.
@@ -825,6 +834,19 @@ Fehlende Stichpunkte:
 - ...
 `;
 
+  const messages = [];
+  if (istDiagramm && hatSkizze) {
+    messages.push({
+      role: "user",
+      content: [
+        { type: "text", text: prompt },
+        { type: "image_url", image_url: { url: skizze } }
+      ]
+    });
+  } else {
+    messages.push({ role: "user", content: prompt });
+  }
+
   const response = UrlFetchApp.fetch("https://api.openai.com/v1/chat/completions", {
     method: "post",
     headers: {
@@ -833,7 +855,7 @@ Fehlende Stichpunkte:
     },
     payload: JSON.stringify({
       model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
+      messages: messages,
       temperature: 0
     }),
     muteHttpExceptions: true

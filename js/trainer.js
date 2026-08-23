@@ -169,6 +169,7 @@ function fordereTrainerTippAn(event) {
 function resetFrageAnzeige() {
     trainerTippTimerAbbrechen();
     const antwortInput = document.getElementById("antwortInput");
+  const diagrammCanvas = document.getElementById("skizze-normal");
     const resultBox = document.getElementById("resultBox");
     const solutionBox = document.getElementById("solutionBox");
     const musterloesungText = document.getElementById("musterloesungText");
@@ -177,6 +178,7 @@ function resetFrageAnzeige() {
     const punkteAnzeige = document.getElementById("punkteAnzeige");
 
     if (antwortInput) antwortInput.value = "";
+    if (diagrammCanvas) loescheSkizze("normal");
     letzteAusgewerteteAntwort = "";
     if (resultBox) resultBox.style.display = "none";
     if (solutionBox) solutionBox.style.display = "none";
@@ -453,9 +455,37 @@ function waehleFach(fach) {
     if (aufgabenHtml) {
       frageHtml += '<div class="aufgaben-html-bereich">' + aufgabenHtml + "</div>";
     }
+    if (fragetyp === "DIAGRAMM") {
+      frageHtml += '<div class="pruefung-zusatzbereich normal-diagramm-bereich">' +
+        '<strong>Skizzenbereich:</strong>' +
+        '<div class="skizzen-toolbar">' +
+        '<button type="button" onclick="zeichneAchsenvorlage(\'normal\')">Achsenvorlage</button>' +
+        '<button type="button" onclick="loescheSkizze(\'normal\')">Skizze löschen</button>' +
+        '</div>' +
+        '<canvas class="skizzen-canvas" id="skizze-normal" width="760" height="420"></canvas>' +
+        '</div>';
+    }
     frageTextBox.innerHTML = frageHtml || "Keine Frage hinterlegt.";
     frageTextBox.dataset.fragetyp = fragetyp;
     frageTextBox.dataset.loesungsschluessel = String(daten.loesungsschluessel || "");
+
+    if (fragetyp === "DIAGRAMM" && typeof initialisiereSkizzenCanvas === "function") {
+      initialisiereSkizzenCanvas(document.getElementById("skizze-normal"));
+    }
+
+    if (fragetyp === "ANKREUZ") {
+      const ankreuzCheckboxes = frageTextBox.querySelectorAll('.aufgaben-html-bereich input[type="checkbox"]');
+      ankreuzCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener("change", function() {
+          const schluessel = String(checkbox.value || "").split("=")[0];
+          ankreuzCheckboxes.forEach(function(andereCheckbox) {
+            if (andereCheckbox !== checkbox && String(andereCheckbox.value || "").split("=")[0] === schluessel) {
+              andereCheckbox.checked = false;
+            }
+          });
+        });
+      });
+    }
 
     if (fragetyp === "TEXT") {
       if (antwortLabel) antwortLabel.style.display = "block";
@@ -465,6 +495,10 @@ function waehleFach(fach) {
       if (antwortLabel) antwortLabel.style.display = "block";
       antwortInput.style.display = "block";
       antwortInput.placeholder = "Trage hier deinen Rechenweg oder deine Ergänzung ein...";
+    } else if (fragetyp === "DIAGRAMM") {
+      if (antwortLabel) antwortLabel.style.display = "block";
+      antwortInput.style.display = "block";
+      antwortInput.placeholder = "Schriftliche Ergänzung zur Skizze (optional)...";
     } else {
       if (antwortLabel) antwortLabel.style.display = "none";
       antwortInput.style.display = "none";
@@ -609,6 +643,7 @@ function naechsteFrage() {
 function antwortLeeren() {
     if (appIstBeschaeftigt) return;
     document.getElementById("antwortInput").value = "";
+  if (document.getElementById("skizze-normal")) loescheSkizze("normal");
   letzteAusgewerteteAntwort = "";
   }
 
