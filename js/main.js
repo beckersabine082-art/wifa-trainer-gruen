@@ -13,7 +13,8 @@ const faecherNachTeilbereich = {
       "Logistik",
       "Marketing",
       "Vertrieb",
-      "Finance Controlling"
+      "Investition und Finanzierung",
+      "Betriebliches Rechnungswesen und Controlling"
     ]
   };
 
