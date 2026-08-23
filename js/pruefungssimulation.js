@@ -752,7 +752,7 @@ function renderPruefungsAuswertung(data) {
   document.getElementById("pruefungStatus").innerHTML =
     "Prüfung abgeschlossen.";
 
-  document.getElementById("pruefungContainer").innerHTML += html;
+  document.getElementById("pruefungContainer").innerHTML = html;
 }
 
 function togglePruefungsMusterloesung(index) {
