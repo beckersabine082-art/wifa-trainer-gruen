@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Exam Answer Collection Test – WiFa Trainer</title>
+  <link rel="stylesheet" href="css/style.css?v=test-real-v1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f6f2ff; }
+    .test-container { max-width: 1200px; margin: 0 auto; }
+    .test-section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d8c8f8; }
+    .test-section h2 { color: #5a4a80; margin-top: 0; }
+    .log-box { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 6px; font-size: 12px; font-family: monospace; line-height: 1.5; max-height: 600px; overflow-y: auto; border: 1px solid #ccc; }
+    .log-entry { margin: 8px 0; padding: 6px; background: white; border-radius: 3px; }
+    .log-label { color: #666; font-weight: bold; }
+    .log-value { color: #333; }
+    .button-group { margin: 20px 0; }
+    button { padding: 10px 20px; margin-right: 10px; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    button:hover { background: #7c3aed; }
+    .btn-secondary { background: #6b7280; }
+    .btn-secondary:hover { background: #4b5563; }
+    .result-section { background: #f0fdf4; border: 2px solid #22c55e; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    .error-section { background: #fef2f2; border: 2px solid #dc2626; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    .success { color: #22c55e; font-weight: bold; }
+    .error { color: #dc2626; font-weight: bold; }
+    .exam-view { background: #faf7ff; border: 1px solid #e5d9f2; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    #pruefungContainer { margin: 20px 0; }
+    .pruefung-antwort { width: 100%; }
+    .card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>🔬 Real Exam Answer Collection Test</h1>
+    
+    <div class="test-section">
+      <h2>Schritt 1: Exam mit Multi-Teil Fragen laden</h2>
+      <button onclick="loadRealExam()">📋 Exam laden</button>
+      <div id="pruefungContainer" class="exam-view"></div>
+    </div>
+
+    <div class="test-section">
+      <h2>Schritt 2: DOM inspizieren NACH dem Laden</h2>
+      <button class="btn-secondary" onclick="inspectDOMAfterLoad()">🔍 DOM inspizieren</button>
+      <div id="domLog" class="log-box" style="display:none;">
+        <div id="domContent"></div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Schritt 3: Antworten eingeben und Payload sammeln</h2>
+      <button class="btn-secondary" onclick="fillAnswersAndCollect()">✍️ Antworten eingeben & Payload sammeln</button>
+      <div id="payloadLog" class="log-box" style="display:none;">
+        <div id="payloadContent"></div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>Schritt 4: Backend-Response Mapping</h2>
+      <button class="btn-secondary" onclick="testMappingWithResponse()">🎯 Mapping testen</button>
+      <div id="mappingLog" class="log-box" style="display:none;">
+        <div id="mappingContent"></div>
+      </div>
+    </div>
+
+    <div class="test-section" id="diagnosisSection" style="display:none;">
+      <h2>Diagnose Ergebnis</h2>
+      <div id="diagnosisContent"></div>
+    </div>
+  </div>
+
+  <script>
+    // Global state from pruefungssimulation.js
+    let letztePruefungsAntworten = [];
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+
+    function loadRealExam() {
+      // Simulate backend response with MULTI-PART QUESTIONS
+      const mockExamData = [
+        {
+          aufgabe: "1",
+          teilaufgabe: "a",
+          punkte: 10,
+          maxPunkte: 10,
+          fragetyp: "text",
+          simulationId: "MOCK-001",
+          fach: "VWL",
+          thema: "Test",
+          situation: "Situation für Aufgabe 1",
+          frage: "<strong>Frage 1a:</strong> Erklären Sie das Konzept",
+          musterloesung: "Musterloesung 1a",
+          stichpunkte: "Punkt1, Punkt2",
+          aufgabenHtml: ""
+        },
+        {
+          aufgabe: "1",
+          teilaufgabe: "b",
+          punkte: 10,
+          maxPunkte: 10,
+          fragetyp: "text",
+          simulationId: "MOCK-001",
+          fach: "VWL",
+          thema: "Test",
+          situation: "Situation für Aufgabe 1",
+          frage: "<strong>Frage 1b:</strong> Geben Sie ein Beispiel",
+          musterloesung: "Musterloesung 1b",
+          stichpunkte: "Beispiel1",
+          aufgabenHtml: ""
+        },
+        {
+          aufgabe: "2",
+          teilaufgabe: "a",
+          punkte: 15,
+          maxPunkte: 15,
+          fragetyp: "text",
+          simulationId: "MOCK-001",
+          fach: "VWL",
+          thema: "Test",
+          situation: "Situation für Aufgabe 2",
+          frage: "<strong>Frage 2a:</strong> Analysieren Sie den Fall",
+          musterloesung: "Musterloesung 2a",
+          stichpunkte: "Analysis",
+          aufgabenHtml: ""
+        },
+        {
+          aufgabe: "2",
+          teilaufgabe: "b",
+          punkte: 15,
+          maxPunkte: 15,
+          fragetyp: "text",
+          simulationId: "MOCK-001",
+          fach: "VWL",
+          thema: "Test",
+          situation: "Situation für Aufgabe 2",
+          frage: "<strong>Frage 2b:</strong> Diskutieren Sie die Folgen",
+          musterloesung: "Musterloesung 2b",
+          stichpunkte: "Diskussion",
+          aufgabenHtml: ""
+        },
+        {
+          aufgabe: "3",
+          teilaufgabe: "a",
+          punkte: 12,
+          maxPunkte: 12,
+          fragetyp: "text",
+          simulationId: "MOCK-001",
+          fach: "VWL",
+          thema: "Test",
+          situation: "Situation für Aufgabe 3",
+          frage: "<strong>Frage 3a:</strong> Berechnen Sie",
+          musterloesung: "Musterloesung 3a",
+          stichpunkte: "Berechnung",
+          aufgabenHtml: ""
+        },
+        {
+          aufgabe: "3",
+          teilaufgabe: "b",
+          punkte: 13,
+          maxPunkte: 13,
+          fragetyp: "text",
+          simulationId: "MOCK-001",
+          fach: "VWL",
+          thema: "Test",
+          situation: "Situation für Aufgabe 3",
+          frage: "<strong>Frage 3b:</strong> Interpretieren Sie das Ergebnis",
+          musterloesung: "Musterloesung 3b",
+          stichpunkte: "Interpretation",
+          aufgabenHtml: ""
+        }
+      ];
+
+      // Render questions like real pruefungssimulation.js
+      const box = document.getElementById("pruefungContainer");
+      let html = "";
+      let letzteAufgabe = "";
+
+      mockExamData.forEach(function(item, index) {
+        const fragetyp = String(item.fragetyp || "text").trim().toLowerCase();
+
+        if (letzteAufgabe !== "" && letzteAufgabe !== item.aufgabe) {
+          html += `</div>`;
+        }
+
+        if (letzteAufgabe !== item.aufgabe) {
+          html += `
+            <div class="card" style="margin-bottom:18px;">
+              <h2 style="margin-bottom:10px;">
+                Aufgabe ${escapeHtml(item.aufgabe)}
+              </h2>
+              <div style="background:#f4ecff; padding:14px; border-radius:12px; margin-bottom:16px;">
+                ${escapeHtml(item.situation)}
+              </div>
+          `;
+          letzteAufgabe = item.aufgabe;
+        }
+
+        html += `
+          <div style="border:1px solid #ddd; border-radius:12px; padding:14px; margin-bottom:14px;">
+            <div style="font-weight:700; margin-bottom:8px;">
+              ${escapeHtml(item.teilaufgabe)}) (${escapeHtml(item.punkte)} Punkte)
+            </div>
+            <div style="margin-bottom:12px;">
+              ${item.frage}
+            </div>
+            <textarea
+              class="input pruefung-antwort"
+              rows="6"
+              placeholder="Deine schriftliche Ergänzung..."
+              data-index="${index}"
+              data-fragetyp="${escapeHtml(fragetyp)}"
+              data-simulation-id="${escapeHtml(item.simulationId)}"
+              data-aufgabe="${escapeHtml(item.aufgabe)}"
+              data-teilaufgabe="${escapeHtml(item.teilaufgabe)}"
+              data-fach="${escapeHtml(item.fach)}"
+              data-thema="${escapeHtml(item.thema)}"
+              data-punkte="${escapeHtml(item.punkte)}"
+            ></textarea>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      box.innerHTML = html;
+      
+      // Store exam data for later matching
+      window.mockExamData = mockExamData;
+      
+      alert("✓ Exam mit 6 Teilfragen geladen (1a, 1b, 2a, 2b, 3a, 3b)");
+    }
+
+    function inspectDOMAfterLoad() {
+      const log = document.getElementById("domContent");
+      let html = "<strong>🔍 DOM-Inspektionsergebnisse nach Laden:</strong><br>";
+
+      const textareas = document.querySelectorAll("textarea.pruefung-antwort");
+      html += `<div class="log-entry"><strong>Textareas gefunden: ${textareas.length} (ERWARTET: 6)</strong></div>`;
+
+      textareas.forEach((textarea, index) => {
+        const aufgabe = textarea.dataset.aufgabe;
+        const teilaufgabe = textarea.dataset.teilaufgabe;
+        const dataIndex = textarea.dataset.index;
+
+        html += `<div class="log-entry">
+          <span class="log-label">${index + 1}. Aufgabe ${aufgabe}${teilaufgabe}:</span><br>
+          <span class="log-value">  data-index: ${dataIndex}</span><br>
+          <span class="log-value">  data-aufgabe: ${aufgabe}</span><br>
+          <span class="log-value">  data-teilaufgabe: ${teilaufgabe}</span><br>
+          <span class="log-value">  data-fragetyp: ${textarea.dataset.fragetyp}</span>
+        </div>`;
+      });
+
+      document.getElementById("domLog").style.display = "block";
+      document.getElementById("domContent").innerHTML = html;
+    }
+
+    function fillAnswersAndCollect() {
+      const testAnswers = {
+        "1a": "",
+        "1b": "",
+        "2a": "TEST-ANTWORT-2A",
+        "2b": "TEST-ANTWORT-2B",
+        "3a": "TEST-ANTWORT-3A",
+        "3b": "TEST-ANTWORT-3B"
+      };
+
+      // Fill textareas
+      const textareas = document.querySelectorAll("textarea.pruefung-antwort");
+      textareas.forEach((textarea) => {
+        const aufgabe = textarea.dataset.aufgabe;
+        const teilaufgabe = textarea.dataset.teilaufgabe;
+        const key = aufgabe + teilaufgabe;
+        if (testAnswers.hasOwnProperty(key)) {
+          textarea.value = testAnswers[key];
+        }
+      });
+
+      // Now collect like startePruefungsAuswertung() does
+      const log = document.getElementById("payloadContent");
+      let html = "<strong>📦 Payload Sammlung (wie startePruefungsAuswertung):</strong><br>";
+
+      const daten = [];
+      const textareasForCollection = document.querySelectorAll("textarea.pruefung-antwort");
+      
+      html += `<div class="log-entry"><strong>Textareas zum Sammeln: ${textareasForCollection.length}</strong></div>`;
+
+      textareasForCollection.forEach((textarea) => {
+        const aufgabe = textarea.dataset.aufgabe || "";
+        const teilaufgabe = textarea.dataset.teilaufgabe || "";
+        const index = textarea.dataset.index || "";
+        const fragetyp = textarea.dataset.fragetyp || "text";
+        const antwort = String(textarea.value || "").trim();
+        const simulationId = textarea.dataset.simulationId || "";
+        const fach = textarea.dataset.fach || "";
+        const thema = textarea.dataset.thema || "";
+
+        daten.push({
+          simulationId: simulationId,
+          aufgabe: aufgabe,
+          teilaufgabe: teilaufgabe,
+          fach: fach,
+          thema: thema,
+          fragetyp: fragetyp,
+          maxPunkte: Number(textarea.dataset.punkte || 0),
+          antwort: antwort,
+          skizze: ""
+        });
+
+        const key = aufgabe + teilaufgabe;
+        const expectedAnswer = testAnswers[key] || "";
+        const matches = antwort === expectedAnswer;
+
+        html += `<div class="log-entry">
+          <span class="log-label">${matches ? "✓" : "✗"} Aufgabe ${aufgabe}${teilaufgabe}:</span><br>
+          <span class="log-value">  index: ${index}</span><br>
+          <span class="log-value">  aufgabe: ${aufgabe}</span><br>
+          <span class="log-value">  teilaufgabe: ${teilaufgabe}</span><br>
+          <span class="log-value">  antwort: "${antwort}" ${antwort === "" ? "(LEER)" : `(ERWARTET: "${expectedAnswer}")`}</span><br>
+          <span class="log-value">  fragetyp: ${fragetyp}</span>
+        </div>`;
+      });
+
+      html += `<br><strong>⚠️ KONTROLLE:</strong><br>`;
+      html += `<span class="log-value">Gesendete Elemente: ${daten.length} (SOLLTE: 6 sein)</span><br>`;
+      
+      if (daten.length === 6) {
+        html += `<span class="success">✓ Alle 6 Elemente vorhanden</span>`;
+      } else {
+        html += `<span class="error">✗ FEHLER: Nicht alle 6 Elemente!</span>`;
+      }
+
+      letztePruefungsAntworten = daten;
+      window.collectedPayload = daten;
+
+      document.getElementById("payloadLog").style.display = "block";
+      document.getElementById("payloadContent").innerHTML = html;
+    }
+
+    function testMappingWithResponse() {
+      if (!window.collectedPayload) {
+        alert("Bitte zuerst Schritt 3 (Antworten eingeben) durchführen!");
+        return;
+      }
+
+      const log = document.getElementById("mappingContent");
+      let html = "<strong>🎯 Result Mapping Test:</strong><br>";
+
+      // Simulate backend response using the mock exam data
+      const backendResponse = {
+        success: true,
+        data: {
+          gesamtPunkte: 60,
+          gesamtMaxPunkte: 100,
+          aufgaben: window.mockExamData.map(item => ({
+            aufgabe: item.aufgabe,
+            teilaufgabe: item.teilaufgabe,
+            punkte: item.punkte,
+            maxPunkte: item.maxPunkte,
+            erkannte: [],
+            fehlende: []
+          }))
+        }
+      };
+
+      html += `<div class="log-entry"><strong>Backend Response hat ${backendResponse.data.aufgaben.length} Aufgaben</strong></div>`;
+      html += `<div class="log-entry"><strong>Collected Answers hat ${letztePruefungsAntworten.length} Einträge</strong></div><br>`;
+
+      html += `<strong>🔗 MATCHING RESULT:</strong><br>`;
+
+      backendResponse.data.aufgaben.forEach(item => {
+        // THIS IS HOW renderPruefungsAuswertung() MATCHES
+        const eigeneAntwort = letztePruefungsAntworten.find(function(eintrag) {
+          return String(eintrag.aufgabe) === String(item.aufgabe)
+            && String(eintrag.teilaufgabe) === String(item.teilaufgabe);
+        }) || {};
+
+        const found = eigeneAntwort.antwort !== undefined;
+        const displayedAnswer = eigeneAntwort.antwort || "keine schriftliche Ergänzung";
+        const expectedAnswer = window.collectedPayload.find(e => 
+          String(e.aufgabe) === String(item.aufgabe) && 
+          String(e.teilaufgabe) === String(item.teilaufgabe)
+        )?.antwort || "";
+
+        const color = found && eigeneAntwort.antwort !== "" ? "color: green;" : "color: red;";
+        const icon = found && eigeneAntwort.antwort !== "" ? "✓" : "✗";
+
+        html += `<div class="log-entry" style="${color}">
+          <span class="log-label">${icon} Aufgabe ${item.aufgabe}${item.teilaufgabe}:</span><br>
+          <span class="log-value">  Erwartet im Payload: "${expectedAnswer}"</span><br>
+          <span class="log-value">  Im Display: "${displayedAnswer}"</span><br>
+          <span class="log-value">  Match: ${found && eigeneAntwort.antwort !== "" ? "JA ✓" : "NEIN ✗"}</span>
+        </div>`;
+      });
+
+      document.getElementById("mappingLog").style.display = "block";
+      document.getElementById("mappingContent").innerHTML = html;
+    }
+  </script>
+</body>
+</html>

@@ -1791,12 +1791,15 @@ function bewertePruefungFrontend(daten) {
     }
 
     const promptText = `
-Du bist ein strenger, aber fairer IHK-Korrektor für eine Prüfungssimulation.
+Du bist ein strenger, fachlich genauer Korrektor für eine Prüfungssimulation.
 
-WICHTIG:
-Die vorgegebenen Stichpunkte sind Bewertungskriterien, keine Pflichtwörter.
-Ein Stichpunkt gilt als erkannt, wenn der fachliche Sinn eindeutig erfüllt ist.
-Die Antwort muss die Stichpunkte NICHT wortgleich nennen.
+Deine Aufgabe:
+Prüfe zuerst, ob die Teilnehmerantwort die konkrete Frage beantwortet. Bewerte danach
+JEDEN Stichpunkt einzeln anhand des fachlichen Inhalts der Teilnehmerantwort.
+
+Die Stichpunkte sind Bewertungskriterien und keine Pflichtwörter. Ein Stichpunkt ist
+erfüllt, wenn die Antwort seine fachliche Aussage eindeutig wiedergibt. Anerkenne
+grammatische Varianten, geläufige Synonyme und klare Umschreibungen.
 
 Fragetyp:
 ${fragetyp}
@@ -1807,30 +1810,35 @@ ${frage}
 Musterlösung:
 ${muster}
 
-Bewertungskriterien/Stichpunkte:
+Vorgegebene Stichpunkte zur Bewertung:
 ${stichpunkteListe.map(function(p) { return "- " + p; }).join("\n")}
 
 Teilnehmerantwort:
 ${antwort || "(keine schriftliche Ergänzung)"}
 
 Bewertungsregeln:
-- Bewerte ausschließlich die fachliche Aussage der Teilnehmerantwort und gegebenenfalls der Skizze.
-- Vergleiche jeden Stichpunkt einzeln mit der Antwort.
-- Ein Stichpunkt ist erkannt, wenn die Antwort denselben fachlichen Inhalt sinngemäß ausdrückt.
-- Synonyme, andere Formulierungen, Beispiele und Umschreibungen müssen anerkannt werden.
-- Der genaue Wortlaut des Stichpunkts muss NICHT vorkommen.
-- Auch Oberbegriffe dürfen erkannt werden, wenn sie eindeutig aus der Antwort hervorgehen.
-- Auch Unterpunkte oder Beispiele dürfen einen allgemeineren Stichpunkt erfüllen.
+- Bewerte ausschließlich die Teilnehmerantwort.
+- Musterlösung und Stichpunkte zählen NICHT als vom Teilnehmer genannt.
+- Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema.
+- Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
+- Ein Stichpunkt ist nur erkannt, wenn ein konkreter Bestandteil der Teilnehmerantwort ihn trägt.
+- Eine bloß allgemeine oder thematisch passende Aussage erfüllt keinen Stichpunkt.
+- Prüfe bei jedem erfüllten Kriterium, ob die konkrete Aussage wirklich in der
+  Teilnehmerantwort steht und nicht nur aus Musterlösung oder Thema stammt.
 - Verwende ausschließlich Stichpunkte aus der vorgegebenen Liste.
 - Erfinde keine neuen Stichpunkte.
-- Wenn die Antwort inhaltlich der Musterlösung entspricht, müssen die dazu passenden Stichpunkte erkannt werden.
-- Wenn ein Satz mehrere Bewertungskriterien erfüllt, dürfen mehrere Stichpunkte erkannt werden.
+- Wenn kein Stichpunkt eindeutig enthalten ist, schreibe bei erkannten Stichpunkten nur "- keine".
 
-Besonders wichtig:
-- "geringere Mengen anbieten können oder wollen" erfüllt sinngemäß "geringeres Marktangebot".
-- "voll ausgelastete Produktionsanlagen", "ausgeschöpfte Produktion" oder "Produktionskapazitäten eingeschränkt" erfüllt sinngemäß "Kapazitätsgrenzen".
-- "Kosten steigen", "Produktion verteuert sich" oder konkrete Kostenarten erfüllen passende Kosten-Stichpunkte.
-- Bei Diagrammaufgaben zählen erkennbare Achsen, Kurven, Schnittpunkte, Hilfslinien und Beschriftungen auch ohne lange Textbeschreibung.
+Besonderheiten:
+- Prüfe Negationen ausdrücklich. "Kein/keine/keinen" und "nicht" dürfen einen positiven Anspruch nicht als negiert erscheinen lassen.
+${fragetyp === "diagramm" ? "- Bei Diagrammaufgaben zählen erkennbare Achsen, Kurven, Schnittpunkte, Hilfslinien und Beschriftungen auch ohne lange Textbeschreibung." : ""}
+- Bei Synonymen und sinngemäßen Formulierungen ist der exakte Wortlaut nicht erforderlich.
+
+Arbeitsweise vor der Ausgabe (nicht ausgeben):
+1. Prüfe die Passung zur Frage.
+2. Entscheide für jeden Stichpunkt separat: eindeutig erfüllt oder nicht erfüllt.
+3. Prüfe bei jedem erfüllten Kriterium, ob die konkrete Aussage wirklich in der Teilnehmerantwort steht.
+4. Gib bei erkannten Kriterien ausschließlich die unveränderten Stichpunkttexte aus.
 
 Gib das Ergebnis EXAKT in diesem Format zurück:
 
@@ -1903,7 +1911,7 @@ const messages = [];
 
     let erreichtePunkte = uniqueErkannte.length;
 
-if (uniqueFehlende.length === 0 && stichpunkteListe.length > 0) {
+if (uniqueErkannte.length === stichpunkteListe.length && stichpunkteListe.length > 0) {
   erreichtePunkte = maxPunkte;
 } else if (stichpunkteListe.length > 0 && maxPunkte !== stichpunkteListe.length) {
   erreichtePunkte = Math.round((uniqueErkannte.length / stichpunkteListe.length) * maxPunkte);

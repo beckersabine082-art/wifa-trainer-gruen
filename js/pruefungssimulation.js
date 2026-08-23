@@ -29,6 +29,7 @@ window.getPruefungsEinheitenNachTeilbereich = function() {
 let pruefungAuswertungBereitsGespeichert = false;
 let pruefungAuswertungWirdGespeichert = false;
 let pruefungLetzterSpeicherPayload = null;
+let pruefungIstAktiv = false;
 
 function pruefungTeilbereichWaehlen() {
   const teilbereich = document.getElementById("pruefungTeilbereichSelect").value;
@@ -284,6 +285,8 @@ async function ladePruefungSimulation() {
     html += `</div>`;
     box.innerHTML = html;
 
+    pruefungIstAktiv = true;
+
     initialisiereAlleSkizzenfelder();
 
   } catch (error) {
@@ -339,6 +342,9 @@ function initialisiereSkizzenCanvas(canvas) {
   const ctx = canvas.getContext("2d");
   let zeichnet = false;
 
+  // Track if user has actually drawn on this canvas
+  canvas.hasUserDrawing = false;
+
   ctx.lineWidth = 3;
   ctx.lineCap = "round";
   ctx.strokeStyle = "#111111";
@@ -359,6 +365,7 @@ function initialisiereSkizzenCanvas(canvas) {
   function start(event) {
     event.preventDefault();
     zeichnet = true;
+    canvas.hasUserDrawing = true;
 
     const pos = position(event);
     ctx.beginPath();
@@ -396,6 +403,9 @@ function loescheSkizze(index) {
 
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Reset the drawing flag when clearing
+  canvas.hasUserDrawing = false;
 }
 
 function zeichneAchsenvorlage(index) {
@@ -471,6 +481,8 @@ function pruefungBeendenWegenZeitablauf() {
   pruefungTimerInterval = null;
   pruefungRestzeitSekunden = 0;
 
+  pruefungIstAktiv = false;
+
   document.getElementById("pruefungTimerText").textContent =
     "Zeit abgelaufen";
 
@@ -505,6 +517,8 @@ function pruefungManuellAbgeben() {
 
   clearInterval(pruefungTimerInterval);
 
+  pruefungIstAktiv = false;
+
   document.querySelectorAll(
     "#pruefungContainer textarea"
   ).forEach(function(textarea) {
@@ -519,6 +533,62 @@ function pruefungManuellAbgeben() {
   document.getElementById("pruefungTimerText").textContent =
     "Prüfung beendet";
       startePruefungsAuswertung();
+}
+
+function renderPruefungsPunkteBegründung(item) {
+  const erkannte = Array.isArray(item.erkannte) ? item.erkannte : [];
+  const fehlende = Array.isArray(item.fehlende) ? item.fehlende : [];
+  const punkte = Number(item.punkte || 0);
+  const maxPunkte = Number(item.maxPunkte || 0);
+
+  let html = "";
+
+  if (punkte === 0 && erkannte.length === 0 && fehlende.length === 0) {
+    return html;
+  }
+
+  html += `<div style="margin-bottom: 14px; padding: 12px; background: #f9f7ff; border-radius: 8px;">`;
+
+  if (erkannte.length > 0) {
+    html += `
+      <div style="margin-bottom: 10px;">
+        <strong style="color: #16a34a;">Dafür hast du Punkte erhalten:</strong><br>
+    `;
+    erkannte.forEach(function(kriterium) {
+      html += `<div style="margin: 4px 0; color: #16a34a;">✓ ${escapeHtml(kriterium)}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (fehlende.length > 0) {
+    html += `
+      <div>
+        <strong style="color: #dc2626;">Für weitere Punkte fehlte noch / war nicht korrekt:</strong><br>
+    `;
+    fehlende.forEach(function(kriterium) {
+      html += `<div style="margin: 4px 0; color: #dc2626;">✗ ${escapeHtml(kriterium)}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (erkannte.length === 0 && fehlende.length > 0) {
+    html = `<div style="margin-bottom: 14px; padding: 12px; background: #f9f7ff; border-radius: 8px;">
+      <strong style="color: #dc2626;">Für die erreichbaren Punkte fehlte:</strong><br>
+    `;
+    fehlende.forEach(function(kriterium) {
+      html += `<div style="margin: 4px 0; color: #dc2626;">✗ ${escapeHtml(kriterium)}</div>`;
+    });
+  }
+
+  if (erkannte.length > 0 && fehlende.length === 0) {
+    html = `<div style="margin-bottom: 14px; padding: 12px; background: #f9f7ff; border-radius: 8px;">
+      <strong style="color: #16a34a;">Alle Bewertungskriterien erfüllt.</strong>
+    `;
+  }
+
+  html += `</div><br>`;
+
+  return html;
 }
 
 function renderPruefungsAuswertung(data) {
@@ -587,6 +657,8 @@ function renderPruefungsAuswertung(data) {
           </div>
 
           <div style="font-size:13px; line-height:1.5; color:#5a4a80;">
+
+            ${renderPruefungsPunkteBegründung(item)}
 
             <strong>Deine Antwort:</strong><br>
             ${escapeHtml(eigeneAntwort.antwort || "keine schriftliche Ergänzung")}
@@ -867,9 +939,10 @@ tabellenFelder.forEach(function(feld, index) {
       const fragetyp = textarea.dataset.fragetyp || "text";
       let skizze = "";
 
+      // Only include sketch if it's a diagram question AND user actually drew on it
       if (fragetyp === "diagramm") {
         const canvas = document.getElementById("skizze-" + index);
-        if (canvas) {
+        if (canvas && canvas.hasUserDrawing === true) {
           skizze = canvas.toDataURL("image/png");
         }
       }
@@ -908,6 +981,8 @@ tabellenFelder.forEach(function(feld, index) {
     }
 
     renderPruefungsAuswertung(bewertung.data || {});
+
+    pruefungIstAktiv = false;
 
     pruefungLetzterSpeicherPayload = erstellePruefungsSpeicherPayload(bewertung.data || {});
     await fuehrePruefungsSpeicherungDurch();

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backend Response Inspector – WiFa Trainer</title>
+  <link rel="stylesheet" href="css/style.css?v=test-backend-v1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f6f2ff; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d8c8f8; }
+    .section h2 { color: #5a4a80; margin-top: 0; }
+    .log-box { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 6px; font-size: 12px; font-family: monospace; line-height: 1.5; max-height: 600px; overflow-y: auto; border: 1px solid #ccc; }
+    .log-entry { margin: 8px 0; padding: 6px; background: white; border-radius: 3px; }
+    button { padding: 10px 20px; margin: 10px 10px 10px 0; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #7c3aed; }
+    .btn-secondary { background: #6b7280; }
+    .btn-secondary:hover { background: #4b5563; }
+    .success { color: #22c55e; font-weight: bold; }
+    .error { color: #dc2626; font-weight: bold; }
+    select { padding: 8px; margin: 5px 10px 5px 0; border: 1px solid #ccc; border-radius: 4px; }
+    .info-box { background: #eef8f1; border-left: 4px solid #4f9f68; padding: 12px; margin: 10px 0; }
+    .warning-box { background: #fff5f5; border-left: 4px solid #dc2626; padding: 12px; margin: 10px 0; }
+    .exam-controls { background: #faf7ff; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #e5d9f2; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Backend Response Inspector</h1>
+    
+    <div class="section">
+      <h2>1. Exam auswählen und laden</h2>
+      <div class="exam-controls">
+        <div>
+          <label>Teilbereich:</label>
+          <select id="teilbereichSelect" onchange="updateSimulationen()">
+            <option value="">-- Auswählen --</option>
+            <option value="WQ">WQ (Wirtschaftsquali)</option>
+            <option value="HQ">HQ (Handelsquali)</option>
+          </select>
+        </div>
+        <div>
+          <label>Simulation:</label>
+          <select id="simulationSelect" onchange="updateEinheiten()">
+            <option value="">-- Auswählen --</option>
+          </select>
+        </div>
+        <div>
+          <label>Prüfungsfach/Einheit:</label>
+          <select id="einheitSelect">
+            <option value="">-- Auswählen --</option>
+          </select>
+        </div>
+        <br>
+        <button onclick="loadExamData()">📋 Exam-Daten vom Backend laden</button>
+      </div>
+      
+      <div id="examStatus" style="display:none;">
+        <div class="log-box" id="statusContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>2. Backend Response inspizieren</h2>
+      <button class="btn-secondary" onclick="analyzeBackendResponse()">🔎 Response analysieren</button>
+      <div id="analysisLog" class="log-box" style="display:none;">
+        <div id="analysisContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>3. Aufgaben in der Response</h2>
+      <button class="btn-secondary" onclick="listAllQuestions()">📊 Alle Aufgaben auflisten</button>
+      <div id="questionsList" class="log-box" style="display:none;">
+        <div id="questionsContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>4. Diagnose</h2>
+      <button class="btn-secondary" onclick="runDiagnosis()">🔍 Diagnose durchführen</button>
+      <div id="diagnosisResult" style="display:none; margin-top: 20px;"></div>
+    </div>
+  </div>
+
+  <script src="js/api.js?v=api-v2"></script>
+  <script>
+    // Global state
+    window.capturedBackendResponse = null;
+    window.backendInterceptorActive = false;
+
+    // Inject fetch interceptor to capture API responses
+    const originalFetch = window.fetch;
+    window.fetch = function(...args) {
+      const result = originalFetch.apply(this, args);
+      
+      if (args[0].includes("action=getPruefungSimulation")) {
+        return result.then(response => {
+          // Clone to read without consuming
+          return response.clone().json().then(data => {
+            window.capturedBackendResponse = data;
+            console.log("Backend response captured:", data);
+            // Return original response
+            return response;
+          }).catch(() => response);
+        });
+      }
+      return result;
+    };
+
+    function updateSimulationen() {
+      const teilbereich = document.getElementById("teilbereichSelect").value;
+      const simulationSelect = document.getElementById("simulationSelect");
+      
+      simulationSelect.innerHTML = '<option value="">-- Auswählen --</option>';
+      
+      if (teilbereich) {
+        for (let i = 1; i <= 4; i++) {
+          const option = document.createElement("option");
+          option.value = i;
+          option.textContent = "Simulation " + i;
+          simulationSelect.appendChild(option);
+        }
+      }
+    }
+
+    function updateEinheiten() {
+      const teilbereich = document.getElementById("teilbereichSelect").value;
+      const einheitSelect = document.getElementById("einheitSelect");
+      
+      einheitSelect.innerHTML = '<option value="">-- Auswählen --</option>';
+      
+      let einheiten = [];
+      if (teilbereich === "WQ") {
+        einheiten = [
+          { key: "VWL/BWL", label: "VWL/BWL" },
+          { key: "Rechnungswesen", label: "Rechnungswesen" },
+          { key: "Recht und Steuern", label: "Recht und Steuern" },
+          { key: "Unternehmensführung", label: "Unternehmensführung" }
+        ];
+      } else if (teilbereich === "HQ") {
+        einheiten = [
+          { key: "HQ_A1", label: "Aufgabenstellung 1" },
+          { key: "HQ_A2", label: "Aufgabenstellung 2" }
+        ];
+      }
+      
+      einheiten.forEach(e => {
+        const option = document.createElement("option");
+        option.value = e.key;
+        option.textContent = e.label;
+        einheitSelect.appendChild(option);
+      });
+    }
+
+    async function loadExamData() {
+      const teilbereich = document.getElementById("teilbereichSelect").value;
+      const simulation = document.getElementById("simulationSelect").value;
+      const einheit = document.getElementById("einheitSelect").value;
+
+      if (!teilbereich || !simulation || !einheit) {
+        alert("Bitte alle Felder auswählen");
+        return;
+      }
+
+      const statusDiv = document.getElementById("examStatus");
+      const statusContent = document.getElementById("statusContent");
+      statusContent.innerHTML = "<strong>Laden...</strong>";
+      statusDiv.style.display = "block";
+
+      try {
+        const response = await fetch(
+          API_BASE_URL +
+          "?action=getPruefungSimulation" +
+          "&teilbereich=" + encodeURIComponent(teilbereich) +
+          "&simulation=" + encodeURIComponent(simulation) +
+          "&einheit=" + encodeURIComponent(einheit)
+        );
+
+        const result = await response.json();
+
+        if (!result.success) {
+          statusContent.innerHTML = `<span class="error">❌ Fehler: ${result.error}</span>`;
+          return;
+        }
+
+        const daten = result.data || [];
+        statusContent.innerHTML = `
+          <div class="log-entry">
+            <strong class="success">✓ Backend Response erhalten</strong><br>
+            <strong>Aufgaben in Response: ${daten.length}</strong><br>
+            <strong>Erfolg: ${result.success}</strong>
+          </div>
+        `;
+
+        if (daten.length > 0) {
+          statusContent.innerHTML += `
+            <div class="info-box">
+              <strong>Erste Aufgabe:</strong><br>
+              aufgabe: "${daten[0].aufgabe}"<br>
+              teilaufgabe: "${daten[0].teilaufgabe}"<br>
+              fach: "${daten[0].fach}"
+            </div>
+          `;
+        }
+
+        window.lastBackendResponse = result;
+      } catch (error) {
+        statusContent.innerHTML = `<span class="error">❌ Fehler: ${error.message}</span>`;
+      }
+    }
+
+    function analyzeBackendResponse() {
+      if (!window.lastBackendResponse) {
+        alert("Bitte zuerst ein Exam laden!");
+        return;
+      }
+
+      const data = window.lastBackendResponse.data || [];
+      const log = document.getElementById("analysisContent");
+      let html = "<strong>📊 Backend Response Analyse:</strong><br>";
+
+      html += `<div class="log-entry">
+        <strong>Aufgaben gesamt: ${data.length}</strong><br>
+        <strong>Structure Check:</strong>
+      </div>`;
+
+      if (data.length === 0) {
+        html += `<div class="warning-box">⚠️ Keine Aufgaben in Response!</div>`;
+      } else {
+        // Check first few entries
+        const sample = data.slice(0, 3);
+        sample.forEach((item, idx) => {
+          const hasRequired = item.aufgabe && item.teilaufgabe;
+          html += `<div class="log-entry">
+            <strong>${idx + 1}. Aufgabe ${item.aufgabe}${item.teilaufgabe}:</strong><br>
+            aufgabe type: ${typeof item.aufgabe} = "${item.aufgabe}"<br>
+            teilaufgabe type: ${typeof item.teilaufgabe} = "${item.teilaufgabe}"<br>
+            required fields: ${hasRequired ? "✓ OK" : "✗ FEHLER"}
+          </div>`;
+        });
+      }
+
+      // Check for duplicates or ordering issues
+      html += `<br><strong>🔍 Duplikate & Reihenfolge:</strong><br>`;
+      const grouped = {};
+      data.forEach(item => {
+        const key = item.aufgabe + item.teilaufgabe;
+        grouped[key] = (grouped[key] || 0) + 1;
+      });
+
+      const duplicates = Object.entries(grouped).filter(([k, v]) => v > 1);
+      if (duplicates.length === 0) {
+        html += `<div class="success">✓ Keine Duplikate</div>`;
+      } else {
+        html += `<div class="warning-box">⚠️ ${duplicates.length} Duplikate gefunden!</div>`;
+        duplicates.forEach(([key, count]) => {
+          html += `<div class="log-entry">Aufgabe ${key}: ${count}x</div>`;
+        });
+      }
+
+      document.getElementById("analysisLog").style.display = "block";
+      document.getElementById("analysisContent").innerHTML = html;
+    }
+
+    function listAllQuestions() {
+      if (!window.lastBackendResponse) {
+        alert("Bitte zuerst ein Exam laden!");
+        return;
+      }
+
+      const data = window.lastBackendResponse.data || [];
+      const log = document.getElementById("questionsContent");
+      let html = "<strong>📋 Alle Aufgaben aus Backend-Response:</strong><br>";
+
+      if (data.length === 0) {
+        html += "<div class='warning-box'>Keine Aufgaben gefunden</div>";
+      } else {
+        html += `<div class="log-entry"><strong>Gesamt: ${data.length} Aufgaben</strong></div>`;
+        
+        data.forEach((item, idx) => {
+          html += `<div class="log-entry">
+            <strong>${idx + 1}.</strong> Aufgabe <strong>${item.aufgabe}</strong>${item.teilaufgabe}
+            | ${item.punkte} Punkte
+            | ${item.fragetyp}
+            | ${item.fach}
+          </div>`;
+        });
+      }
+
+      document.getElementById("questionsList").style.display = "block";
+      document.getElementById("questionsContent").innerHTML = html;
+    }
+
+    function runDiagnosis() {
+      if (!window.lastBackendResponse) {
+        alert("Bitte zuerst ein Exam laden!");
+        return;
+      }
+
+      const data = window.lastBackendResponse.data || [];
+      const diagDiv = document.getElementById("diagnosisResult");
+      let html = "<h3>📊 Diagnose der Backend-Response:</h3>";
+
+      html += `<div class="info-box">
+        <strong>✓ Backend gibt ${data.length} Aufgaben zurück</strong><br>
+        Aufgabe-Felder sind vorhanden: ${data.length > 0 && data[0].aufgabe ? "JA ✓" : "NEIN ✗"}<br>
+        Teilaufgabe-Felder sind vorhanden: ${data.length > 0 && data[0].teilaufgabe ? "JA ✓" : "NEIN ✗"}
+      </div>`;
+
+      // Check if there's a pattern mismatch
+      const aufgabenKeys = new Set();
+      data.forEach(item => {
+        aufgabenKeys.add(item.aufgabe + item.teilaufgabe);
+      });
+
+      html += `<div class="log-entry">
+        <strong>Eindeutige Aufgaben-Kombinationen: ${aufgabenKeys.size}</strong><br>
+        Erwartet: ${data.length} = Erhalten: ${aufgabenKeys.size}
+      </div>`;
+
+      if (aufgabenKeys.size < data.length) {
+        html += `<div class="warning-box">
+          ⚠️ FEHLER: Doppelte Aufgaben-Kombinationen gefunden!<br>
+          Das könnte zu Matching-Problemen führen!
+        </div>`;
+      } else {
+        html += `<div class="success">✓ Alle Aufgaben-Kombinationen sind eindeutig</div>`;
+      }
+
+      diagDiv.innerHTML = html;
+      diagDiv.style.display = "block";
+    }
+  </script>
+</body>
+</html>

@@ -237,14 +237,58 @@ function renderSubject(subject, latest, catalog) {
   const subjectAttempts = latest.filter(attempt => attempt.bereich === subject.bereich && attempt.fach === subject.fach);
   const subjectStats = aggregate(subjectAttempts);
   const total = subjectCatalog.reduce((sum, item) => sum + item.total, 0);
-  const progress = total ? roundedPercentage(subjectAttempts.length, total) : 0;
+  const answeredQuestions = subjectAttempts.length;
+  const progressPercent = total ? roundedPercentage(answeredQuestions, total) : 0;
+  const performance = subjectStats.performance;
+  const openErrors = subjectStats.errors.length;
+  const errorRate = answeredQuestions > 0 ? openErrors / answeredQuestions : 0;
+  const statusClass = answeredQuestions === 0
+    ? 'status-neutral'
+    : performance >= 80
+      ? 'status-good-4'
+      : performance >= 65
+        ? 'status-good-3'
+        : performance >= 50
+          ? 'status-good-2'
+          : performance >= 40
+            ? 'status-bad-3'
+            : performance >= 20
+              ? 'status-bad-2'
+              : 'status-bad-1';
+  const progressClass = answeredQuestions === 0
+    ? 'progress-1'
+    : progressPercent >= 50
+      ? 'progress-4'
+      : progressPercent >= 25
+        ? 'progress-3'
+        : progressPercent >= 10
+          ? 'progress-2'
+          : 'progress-1';
+  const badgeState = answeredQuestions === 0
+    ? 'neutral'
+    : openErrors === 0
+      ? (answeredQuestions < 5 ? 'good-start' : 'safe')
+      : errorRate <= 0.25
+        ? 'mostly-safe'
+        : errorRate <= 0.5
+          ? 'mixed'
+          : 'unsafe';
+  const statusText = answeredQuestions === 0
+    ? 'nicht begonnen'
+    : openErrors === 0
+      ? (answeredQuestions < 5 ? 'guter Start' : 'sicher')
+      : errorRate <= 0.25
+        ? 'überwiegend sicher'
+        : errorRate <= 0.5
+          ? 'gemischt'
+          : 'noch unsicher';
   const topics = subjectCatalog.map(topic => {
     const topicAttempts = subjectAttempts.filter(attempt => attempt.thema === topic.thema);
     const stats = aggregate(topicAttempts);
     return `<div class="lernstand-topic"><strong>${escapeText(topic.thema)}</strong><span>${topicAttempts.length} / ${topic.total || 0} Fragen bearbeitet</span><span>${stats.performance}% aktuelle Leistung</span><span>${stats.errors.length} offene Fehler</span></div>`;
   }).join('') || '<div class="lernstand-topic">Noch keine Themen verfügbar.</div>';
   const subjectId = `lernstand-subject-${subject.bereich}-${subject.fach}`.replace(/[^a-zA-Z0-9_-]/g, '-');
-  return `<article class="lernstand-subject"><div class="lernstand-subject-heading"><span><strong>${escapeText(subject.fach)}</strong><small>${escapeText(subject.bereich)}</small></span><span>${subjectAttempts.length} / ${total} Fragen · ${progress}%</span></div><div class="lernstand-subject-stats"><span>${subjectStats.performance}% aktuelle Leistung</span><span>${subjectStats.errors.length} offene Fehler</span></div><button class="secondary-btn lernstand-topic-toggle" type="button" data-action="toggle-topics" data-target="${subjectId}" aria-expanded="false" aria-controls="${subjectId}">Themen anzeigen</button><div id="${subjectId}" class="lernstand-topics" hidden>${topics}</div></article>`;
+  return `<article class="lernstand-subject ${statusClass} ${progressClass}"><div class="lernstand-subject-heading"><span><strong>${escapeText(subject.fach)}</strong><small>${escapeText(subject.bereich)}</small></span><span>${answeredQuestions} / ${total} Fragen · ${progressPercent}%</span></div><div class="lernstand-subject-status badge-${badgeState}">${escapeText(statusText)}</div><div class="lernstand-subject-stats"><span>${performance}% aktuelle Punktleistung</span><span>${openErrors} offene Fehler</span></div><div class="lernstand-subject-progress" aria-label="Bearbeitungsfortschritt: ${progressPercent}%"><span class="lernstand-subject-progress-fill" style="width: ${Math.max(0, Math.min(100, progressPercent))}%"></span></div><button class="secondary-btn lernstand-topic-toggle" type="button" data-action="toggle-topics" data-target="${subjectId}" aria-expanded="false" aria-controls="${subjectId}">Themen anzeigen</button><div id="${subjectId}" class="lernstand-topics" hidden>${topics}</div></article>`;
 }
 
 function renderThemeLists(latest, catalog) {

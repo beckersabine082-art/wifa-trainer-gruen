@@ -364,6 +364,11 @@ function audioStoppen() {
 }
 
 async function frageKilian() {
+  if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
+    alert("Sorry – Betrug auf diesem Weg nicht möglich.\n\nDie Prüfung soll deinen tatsächlichen Wissensstand zeigen.\nIn den anderen Lernbereichen unterstütze ich dich danach gerne wieder.");
+    return;
+  }
+
   const frage = document.getElementById("kilianInput").value.trim();
 
   if (!frage) {
@@ -405,6 +410,11 @@ function kilianLeeren() {
 }
 
 function toggleKilianBubble() {
+  if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
+    alert("Sorry – Betrug auf diesem Weg nicht möglich.\n\nDie Prüfung soll deinen tatsächlichen Wissensstand zeigen.\nIn den anderen Lernbereichen unterstütze ich dich danach gerne wieder.");
+    return;
+  }
+
   const fenster = document.getElementById("kilianBubbleFenster");
 
   fenster.style.display =
@@ -412,6 +422,11 @@ function toggleKilianBubble() {
 }
 
 async function frageKilianBubble() {
+  if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
+    alert("Sorry – Betrug auf diesem Weg nicht möglich.\n\nDie Prüfung soll deinen tatsächlichen Wissensstand zeigen.\nIn den anderen Lernbereichen unterstütze ich dich danach gerne wieder.");
+    return;
+  }
+
   const frage = document.getElementById("kilianBubbleInput").value.trim();
 
   if (!frage) {

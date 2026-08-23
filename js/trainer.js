@@ -143,6 +143,11 @@ function starteTrainerTippTimer() {
   }
 
 function fordereTrainerTippAn(event) {
+    if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
+      alert("Sorry – Betrug auf diesem Weg nicht möglich.\n\nDie Prüfung soll deinen tatsächlichen Wissensstand zeigen.\nIn den anderen Lernbereichen unterstütze ich dich danach gerne wieder.");
+      return;
+    }
+
     if (!aktuelleFrageId || trainerTippAngeboten === false) return;
 
     if (event) event.stopPropagation();

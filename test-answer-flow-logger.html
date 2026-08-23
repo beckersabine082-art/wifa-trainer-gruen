@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Answer Flow Logger – WiFa Trainer</title>
+  <link rel="stylesheet" href="css/style.css?v=test-logger-v1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f6f2ff; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d8c8f8; }
+    .section h2 { color: #5a4a80; margin-top: 0; }
+    .log-box { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 6px; font-size: 11px; font-family: 'Courier New', monospace; line-height: 1.4; max-height: 600px; overflow-y: auto; border: 1px solid #ccc; }
+    .log-entry { margin: 4px 0; padding: 4px; }
+    .log-step { background: white; border-left: 3px solid #8b5cf6; margin: 5px 0; padding: 5px; }
+    .log-label { color: #666; font-weight: bold; font-size: 10px; }
+    .log-value { color: #333; }
+    button { padding: 10px 20px; margin: 10px 5px 10px 0; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #7c3aed; }
+    .btn-secondary { background: #6b7280; }
+    .btn-secondary:hover { background: #4b5563; }
+    .btn-danger { background: #dc2626; }
+    .btn-danger:hover { background: #b91c1c; }
+    .success { color: #22c55e; }
+    .error { color: #dc2626; }
+    .warning { color: #ea8c55; }
+    .info { color: #3b82f6; }
+    .link-section { background: #faf7ff; padding: 15px; border-radius: 8px; border: 1px solid #e5d9f2; margin: 15px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Answer Flow Logger</h1>
+    
+    <div class="section">
+      <h2>Instrumentation & Logging Setup</h2>
+      <p>This page injects detailed logging into pruefungssimulation.js to trace answer collection and result mapping.</p>
+      
+      <button onclick="setupLogging()">📊 Setup Logging (inject into page)</button>
+      <button class="btn-secondary" onclick="clearLogs()">🗑️ Clear Logs</button>
+      <button class="btn-danger" onclick="downloadLogs()">💾 Download Log File</button>
+      
+      <div class="log-box" id="setupLog" style="display:none;">
+        <div id="setupContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Flow Trace Log</h2>
+      <p>Events will appear here as you interact with the exam system.</p>
+      <div class="log-box" id="flowLog">
+        <div id="flowContent">Waiting for events...</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Analysis &  Diagnosis</h2>
+      <button class="btn-secondary" onclick="analyzeCollectedData()">📈 Analyze Collected Data</button>
+      <div class="log-box" id="analysisLog" style="display:none;">
+        <div id="analysisContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Instructions</h2>
+      <div class="link-section">
+        <ol>
+          <li>Click "Setup Logging" to inject logging into the page</li>
+          <li>Navigate to and load a pruefungssimulation exam</li>
+          <li>Fill in some answers (e.g., 2a, 2b, 3a, 3b)</li>
+          <li>Submit the exam ("Auswertung durchführen")</li>
+          <li>Check the "Flow Trace Log" to see what happened at each step</li>
+          <li>Click "Analyze Collected Data" to see the diagnosis</li>
+        </ol>
+        <p><strong>The log will show:</strong></p>
+        <ul>
+          <li>When exam is loaded and what data is received</li>
+          <li>When answers are collected and their values</li>
+          <li>When backend response is received</li>
+          <li>When results are being matched and mapped</li>
+          <li>Any mismatches or problems in the flow</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global logging state
+    window.answerFlowLog = [];
+    window.collectedAnswersSnapshot = null;
+    window.backendResponseSnapshot = null;
+    window.resultMappingTrace = [];
+
+    function logEvent(step, data) {
+      const timestamp = new Date().toLocaleTimeString();
+      window.answerFlowLog.push({
+        timestamp,
+        step,
+        data
+      });
+
+      const log = document.getElementById("flowContent");
+      const entry = document.createElement("div");
+      entry.className = "log-step";
+      entry.innerHTML = `
+        <span class="log-label">[${timestamp}] ${step}</span><br>
+        <span class="log-value">${JSON.stringify(data, null, 2)}</span>
+      `;
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function setupLogging() {
+      const setupDiv = document.getElementById("setupContent");
+      setupDiv.innerHTML = "<strong>Injecting logging hooks...</strong><br>";
+      document.getElementById("setupLog").style.display = "block";
+
+      try {
+        // Inject into startePruefungsAuswertung
+        const originalStartePruefungsAuswertung = window.startePruefungsAuswertung;
+        if (originalStartePruefungsAuswertung) {
+          window.startePruefungsAuswertung = async function() {
+            logEvent("STEP 1: startePruefungsAuswertung() called", {});
+            
+            // Collect textareas to log
+            const textareas = document.querySelectorAll("textarea.pruefung-antwort");
+            const answerSnapshot = [];
+            textareas.forEach((textarea, idx) => {
+              answerSnapshot.push({
+                domIndex: idx,
+                aufgabe: textarea.dataset.aufgabe,
+                teilaufgabe: textarea.dataset.teilaufgabe,
+                value: textarea.value.substring(0, 50) + (textarea.value.length > 50 ? "..." : ""),
+                index: textarea.dataset.index
+              });
+            });
+            logEvent("STEP 2: DOM Answers Snapshot", { count: answerSnapshot.length, answers: answerSnapshot });
+            window.collectedAnswersSnapshot = answerSnapshot;
+
+            // Call original
+            return originalStartePruefungsAuswertung.call(this);
+          };
+        }
+
+        // Inject into bewertePruefungsAntworten
+        const originalBewertePruefungsAntworten = window.bewertePruefungsAntworten;
+        if (originalBewertePruefungsAntworten) {
+          window.bewertePruefungsAntworten = async function(daten) {
+            logEvent("STEP 3: bewertePruefungsAntworten() called", {
+              count: daten.length,
+              sample: daten.slice(0, 3).map(d => ({
+                aufgabe: d.aufgabe,
+                teilaufgabe: d.teilaufgabe,
+                antwort: d.antwort.substring(0, 30)
+              }))
+            });
+
+            const result = await originalBewertePruefungsAntworten.call(this, daten);
+            
+            if (result && result.data) {
+              window.backendResponseSnapshot = result.data;
+              logEvent("STEP 4: Backend Response Received", {
+                gesamtPunkte: result.data.gesamtPunkte,
+                aufgabenCount: result.data.aufgaben ? result.data.aufgaben.length : 0,
+                aufgaben: result.data.aufgaben.slice(0, 3).map(a => ({
+                  aufgabe: a.aufgabe,
+                  teilaufgabe: a.teilaufgabe,
+                  punkte: a.punkte
+                }))
+              });
+            }
+
+            return result;
+          };
+        }
+
+        // Inject into renderPruefungsAuswertung
+        const originalRenderPruefungsAuswertung = window.renderPruefungsAuswertung;
+        if (originalRenderPruefungsAuswertung) {
+          window.renderPruefungsAuswertung = function(data) {
+            logEvent("STEP 5: renderPruefungsAuswertung() called", {
+              aufgabenCount: data.aufgaben ? data.aufgaben.length : 0
+            });
+
+            // Trace the matching for each aufgabe
+            if (data.aufgaben) {
+              const mappingTrace = [];
+              data.aufgaben.forEach((item, idx) => {
+                const eigeneAntwort = window.letztePruefungsAntworten.find(function(eintrag) {
+                  return String(eintrag.aufgabe) === String(item.aufgabe)
+                    && String(eintrag.teilaufgabe) === String(item.teilaufgabe);
+                }) || {};
+
+                mappingTrace.push({
+                  aufgabe: item.aufgabe + item.teilaufgabe,
+                  backendAufgabe: item.aufgabe,
+                  backendTeilaufgabe: item.teilaufgabe,
+                  foundInCollected: !!eigeneAntwort.antwort,
+                  displayedAnswer: eigeneAntwort.antwort || "keine schriftliche Ergänzung"
+                });
+              });
+
+              window.resultMappingTrace = mappingTrace;
+              logEvent("STEP 6: Result Mapping Trace", mappingTrace);
+            }
+
+            // Call original
+            return originalRenderPruefungsAuswertung.call(this, data);
+          };
+        }
+
+        setupDiv.innerHTML += "<div class='success'>✓ Logging injected successfully</div>";
+        setupDiv.innerHTML += "<div class='info'>Now navigate to an exam and submit it to see the flow trace</div>";
+      } catch (error) {
+        setupDiv.innerHTML += `<div class='error'>✗ Error: ${error.message}</div>`;
+      }
+    }
+
+    function clearLogs() {
+      window.answerFlowLog = [];
+      document.getElementById("flowContent").innerHTML = "Logs cleared. Waiting for events...";
+      window.collectedAnswersSnapshot = null;
+      window.backendResponseSnapshot = null;
+      window.resultMappingTrace = [];
+    }
+
+    function downloadLogs() {
+      const logContent = JSON.stringify({
+        timestamp: new Date().toISOString(),
+        flowLog: window.answerFlowLog,
+        collectedAnswers: window.collectedAnswersSnapshot,
+        backendResponse: window.backendResponseSnapshot,
+        resultMapping: window.resultMappingTrace
+      }, null, 2);
+
+      const blob = new Blob([logContent], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `answer-flow-log-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function analyzeCollectedData() {
+      const analysisDiv = document.getElementById("analysisContent");
+      let html = "<strong>📈 Flow Analysis:</strong><br>";
+
+      if (!window.collectedAnswersSnapshot) {
+        html += "<div class='warning'>⚠️ No collected answers snapshot. Run an exam submission first.</div>";
+      } else {
+        html += `<div class='log-entry'><strong>Answers Collected:</strong> ${window.collectedAnswersSnapshot.length} questions</div>`;
+        window.collectedAnswersSnapshot.forEach(ans => {
+          html += `<div class='log-entry'>
+            Q${ans.aufgabe}${ans.teilaufgabe}: "${ans.value.substring(0, 20)}" (index: ${ans.index})
+          </div>`;
+        });
+      }
+
+      if (!window.backendResponseSnapshot) {
+        html += "<div class='warning'>⚠️ No backend response snapshot.</div>";
+      } else {
+        html += `<div class='log-entry'><strong>Backend Response Aufgaben:</strong> ${window.backendResponseSnapshot.aufgaben.length}</div>`;
+      }
+
+      if (!window.resultMappingTrace || window.resultMappingTrace.length === 0) {
+        html += "<div class='warning'>⚠️ No mapping trace. Submit exam first.</div>";
+      } else {
+        html += `<div class='log-entry'><strong>Result Mapping:</strong></div>`;
+        window.resultMappingTrace.forEach(mapping => {
+          const icon = mapping.foundInCollected ? "✓" : "✗";
+          const color = mapping.foundInCollected ? "success" : "error";
+          html += `<div class='log-entry ${color}'>
+            ${icon} ${mapping.aufgabe}: Found=${mapping.foundInCollected}, Display="${mapping.displayedAnswer.substring(0, 30)}"
+          </div>`;
+        });
+      }
+
+      document.getElementById("analysisLog").style.display = "block";
+      document.getElementById("analysisContent").innerHTML = html;
+    }
+
+    // Auto-setup on page load
+    window.addEventListener("load", function() {
+      document.getElementById("setupLog").style.display = "block";
+      document.getElementById("setupContent").innerHTML = "<div class='info'>ℹ️ Click 'Setup Logging' to enable tracing</div>";
+    });
+  </script>
+</body>
+</html>

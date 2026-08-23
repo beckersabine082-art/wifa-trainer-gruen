@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Attributes & String Matching Inspector – WiFa Trainer</title>
+  <link rel="stylesheet" href="css/style.css?v=test-attrs-v1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f6f2ff; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d8c8f8; }
+    .section h2 { color: #5a4a80; margin-top: 0; }
+    .log-box { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 6px; font-size: 11px; font-family: 'Courier New', monospace; line-height: 1.5; max-height: 600px; overflow-y: auto; border: 1px solid #ccc; }
+    .log-entry { margin: 5px 0; padding: 5px; background: white; border-radius: 3px; }
+    button { padding: 10px 20px; margin: 10px 5px 10px 0; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #7c3aed; }
+    .btn-secondary { background: #6b7280; }
+    .btn-secondary:hover { background: #4b5563; }
+    .success { color: #22c55e; font-weight: bold; }
+    .error { color: #dc2626; font-weight: bold; }
+    .warning { color: #ea8c55; font-weight: bold; }
+    .info-box { background: #eef8f1; border-left: 4px solid #4f9f68; padding: 12px; margin: 10px 0; border-radius: 4px; }
+    .error-box { background: #fef2f2; border-left: 4px solid #dc2626; padding: 12px; margin: 10px 0; border-radius: 4px; }
+    .monitor-area { background: #faf7ff; border: 1px solid #e5d9f2; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+    .table-view { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
+    .table-view th, .table-view td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+    .table-view th { background: #f0f0f0; font-weight: bold; }
+    .table-view .match { background: #d1fae5; }
+    .table-view .mismatch { background: #fee2e2; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔬 Data Attributes & String Matching Inspector</h1>
+    
+    <div class="section">
+      <h2>1. Real-Time Form Monitor</h2>
+      <p>This inspector analyzes the currently rendered exam form for data consistency issues.</p>
+      
+      <button onclick="inspectCurrentForm()">🔍 Inspect Current Exam Form</button>
+      <button class="btn-secondary" onclick="startAutoMonitoring()">📡 Start Auto-Monitoring (updates every 2s)</button>
+      <button class="btn-secondary" onclick="stopAutoMonitoring()">⏹️ Stop Monitoring</button>
+      
+      <div id="formInspection" class="log-box" style="display:none;">
+        <div id="formContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>2. Data Attribute Issues Detection</h2>
+      <button class="btn-secondary" onclick="detectAttributeIssues()">🔎 Detect Attribute Issues</button>
+      
+      <div id="issuesDetection" class="log-box" style="display:none;">
+        <div id="issuesContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>3. String Matching Test (Collection ↔ Rendering)</h2>
+      <button class="btn-secondary" onclick="testStringMatching()">🔗 Test Matching Logic</button>
+      
+      <div id="matchingTest" class="log-box" style="display:none;">
+        <div id="matchingContent"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>4. Full Diagnostic Report</h2>
+      <button onclick="runFullDiagnostic()">🔍 Generate Full Report</button>
+      
+      <div id="diagnosticReport" style="display:none; margin-top: 20px;"></div>
+    </div>
+  </div>
+
+  <script>
+    let autoMonitoringInterval = null;
+
+    function inspectCurrentForm() {
+      const formDiv = document.getElementById("formContent");
+      let html = "<strong>🔍 Current Exam Form Inspection:</strong><br>";
+
+      const textareas = document.querySelectorAll("textarea.pruefung-antwort");
+      
+      if (textareas.length === 0) {
+        html += "<div class='error-box'>❌ Keine pruefung-antwort Textareas gefunden. Ist eine Prüfung geladen?</div>";
+      } else {
+        html += `<div class='info-box'>✓ ${textareas.length} Textareas gefunden</div>`;
+        
+        // Create table of attributes
+        html += `<table class='table-view'>
+          <thead>
+            <tr>
+              <th>DOM Idx</th>
+              <th>data-aufgabe</th>
+              <th>data-teilaufgabe</th>
+              <th>data-index</th>
+              <th>data-fragetyp</th>
+              <th>Value (first 30 chars)</th>
+              <th>Value Length</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+        textareas.forEach((textarea, idx) => {
+          const aufgabe = textarea.dataset.aufgabe;
+          const teilaufgabe = textarea.dataset.teilaufgabe;
+          const value = textarea.value;
+          const isEmpty = value.trim() === "";
+          
+          const rowClass = isEmpty ? "mismatch" : "match";
+          
+          html += `<tr class='${rowClass}'>
+            <td>${idx}</td>
+            <td><code>${aufgabe || "(EMPTY)"}</code></td>
+            <td><code>${teilaufgabe || "(EMPTY)"}</code></td>
+            <td><code>${textarea.dataset.index || "(EMPTY)"}</code></td>
+            <td><code>${textarea.dataset.fragetyp || "(EMPTY)"}</code></td>
+            <td><code>${escapeHtml(value.substring(0, 30))}</code></td>
+            <td>${value.length}</td>
+          </tr>`;
+        });
+
+        html += `</tbody></table>`;
+
+        // Check for issues
+        let issues = [];
+        textareas.forEach((textarea, idx) => {
+          if (!textarea.dataset.aufgabe) issues.push(`Textarea ${idx}: data-aufgabe MISSING`);
+          if (!textarea.dataset.teilaufgabe) issues.push(`Textarea ${idx}: data-teilaufgabe MISSING`);
+          if (textarea.dataset.aufgabe && textarea.dataset.aufgabe.trim() !== textarea.dataset.aufgabe) {
+            issues.push(`Textarea ${idx}: data-aufgabe has EXTRA SPACES: "${textarea.dataset.aufgabe}"`);
+          }
+        });
+
+        if (issues.length > 0) {
+          html += `<div class='error-box'><strong>⚠️ ${issues.length} Issues found:</strong><br>`;
+          issues.forEach(issue => html += `• ${issue}<br>`);
+          html += `</div>`;
+        } else {
+          html += `<div class='info-box'><strong>✓ No attribute issues detected</strong></div>`;
+        }
+      }
+
+      document.getElementById("formInspection").style.display = "block";
+      document.getElementById("formContent").innerHTML = html;
+    }
+
+    function startAutoMonitoring() {
+      if (autoMonitoringInterval) clearInterval(autoMonitoringInterval);
+      
+      autoMonitoringInterval = setInterval(function() {
+        inspectCurrentForm();
+      }, 2000);
+      
+      alert("Auto-Monitoring started. Form will be inspected every 2 seconds.");
+    }
+
+    function stopAutoMonitoring() {
+      if (autoMonitoringInterval) {
+        clearInterval(autoMonitoringInterval);
+        autoMonitoringInterval = null;
+        alert("Auto-Monitoring stopped.");
+      }
+    }
+
+    function detectAttributeIssues() {
+      const issuesDiv = document.getElementById("issuesContent");
+      let html = "<strong>🔎 Attribute Issues Detection:</strong><br>";
+
+      const textareas = document.querySelectorAll("textarea.pruefung-antwort");
+      
+      if (textareas.length === 0) {
+        html += "<div class='error-box'>❌ Keine Textareas gefunden</div>";
+      } else {
+        const issues = [];
+        const aufgabenValues = new Map(); // Track all values we see
+
+        textareas.forEach((textarea, idx) => {
+          const aufgabe = textarea.dataset.aufgabe;
+          const teilaufgabe = textarea.dataset.teilaufgabe;
+
+          // Issue 1: Trimming
+          if (aufgabe && aufgabe !== aufgabe.trim()) {
+            issues.push({
+              type: "EXTRA_SPACES_IN_AUFGABE",
+              idx, aufgabe,
+              message: `Aufgabe has leading/trailing spaces: "${aufgabe}"`,
+              severity: "CRITICAL"
+            });
+          }
+
+          if (teilaufgabe && teilaufgabe !== teilaufgabe.trim()) {
+            issues.push({
+              type: "EXTRA_SPACES_IN_TEILAUFGABE",
+              idx, teilaufgabe,
+              message: `Teilaufgabe has leading/trailing spaces: "${teilaufgabe}"`,
+              severity: "CRITICAL"
+            });
+          }
+
+          // Issue 2: Type check
+          if (typeof aufgabe === "undefined") {
+            issues.push({
+              type: "MISSING_AUFGABE",
+              idx,
+              message: `Missing data-aufgabe attribute`,
+              severity: "CRITICAL"
+            });
+          }
+
+          // Issue 3: Case sensitivity
+          const key = (aufgabe + teilaufgabe).toLowerCase();
+          if (aufgabenValues.has(key)) {
+            const existing = aufgabenValues.get(key);
+            if (existing.aufgabe !== aufgabe || existing.teilaufgabe !== teilaufgabe) {
+              issues.push({
+                type: "CASE_SENSITIVITY_MISMATCH",
+                idx,
+                message: `Case mismatch: "${aufgabe}${teilaufgabe}" vs "${existing.aufgabe}${existing.teilaufgabe}"`,
+                severity: "HIGH"
+              });
+            }
+          } else {
+            aufgabenValues.set(key, { aufgabe, teilaufgabe });
+          }
+        });
+
+        if (issues.length === 0) {
+          html += `<div class='success'>✓ No issues found in ${textareas.length} textareas</div>`;
+        } else {
+          html += `<div class='error-box'><strong>❌ ${issues.length} Issues Found:</strong></div>`;
+          issues.forEach(issue => {
+            const severityColor = issue.severity === "CRITICAL" ? "error" : "warning";
+            html += `<div class='log-entry'>
+              <strong class='${severityColor}'>[${issue.severity}]</strong> ${issue.message}
+            </div>`;
+          });
+        }
+      }
+
+      document.getElementById("issuesDetection").style.display = "block";
+      document.getElementById("issuesContent").innerHTML = html;
+    }
+
+    function testStringMatching() {
+      const matchingDiv = document.getElementById("matchingContent");
+      let html = "<strong>🔗 String Matching Test:</strong><br>";
+
+      const textareas = document.querySelectorAll("textarea.pruefung-antwort");
+      
+      // Simulate the collection logic
+      const collected = [];
+      textareas.forEach((textarea) => {
+        collected.push({
+          aufgabe: textarea.dataset.aufgabe || "",
+          teilaufgabe: textarea.dataset.teilaufgabe || "",
+          antwort: textarea.value
+        });
+      });
+
+      // Simulate backend response (same data)
+      const backend = collected.map(item => ({
+        aufgabe: item.aufgabe,
+        teilaufgabe: item.teilaufgabe,
+        punkte: 10
+      }));
+
+      html += `<div class='info-box'>Collected: ${collected.length} | Backend: ${backend.length}</div>`;
+
+      // Test matching
+      html += `<table class='table-view'>
+        <thead>
+          <tr>
+            <th>Aufgabe</th>
+            <th>Collected Val</th>
+            <th>Backend Val</th>
+            <th>String()==String()</th>
+            <th>Match Result</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      backend.forEach((item, idx) => {
+        const eigeneAntwort = collected.find(function(eintrag) {
+          return String(eintrag.aufgabe) === String(item.aufgabe)
+            && String(eintrag.teilaufgabe) === String(item.teilaufgabe);
+        });
+
+        const found = !!eigeneAntwort;
+        const rowClass = found ? "match" : "mismatch";
+
+        const collectedStr = eigeneAntwort ? 
+          `"${eigeneAntwort.aufgabe}|${eigeneAntwort.teilaufgabe}"` : 
+          "(NOT FOUND)";
+        const backendStr = `"${item.aufgabe}|${item.teilaufgabe}"`;
+        const matchTest = found ? "✓ Match" : "✗ No Match";
+
+        html += `<tr class='${rowClass}'>
+          <td>${item.aufgabe}${item.teilaufgabe}</td>
+          <td><code>${collectedStr}</code></td>
+          <td><code>${backendStr}</code></td>
+          <td>${found ? "=" : "≠"}</td>
+          <td>${matchTest}</td>
+        </tr>`;
+      });
+
+      html += `</tbody></table>`;
+
+      const failedMatches = backend.filter(item => 
+        !collected.find(e => String(e.aufgabe) === String(item.aufgabe) && String(e.teilaufgabe) === String(item.teilaufgabe))
+      );
+
+      if (failedMatches.length === 0) {
+        html += `<div class='success'>✓ All ${backend.length} matches successful</div>`;
+      } else {
+        html += `<div class='error-box'><strong>❌ ${failedMatches.length} Matches FAILED:</strong><br>`;
+        failedMatches.forEach(item => {
+          html += `• Aufgabe ${item.aufgabe}${item.teilaufgabe}<br>`;
+        });
+        html += `</div>`;
+      }
+
+      document.getElementById("matchingTest").style.display = "block";
+      document.getElementById("matchingContent").innerHTML = html;
+    }
+
+    function runFullDiagnostic() {
+      inspectCurrentForm();
+      detectAttributeIssues();
+      testStringMatching();
+
+      const reportDiv = document.getElementById("diagnosticReport");
+      let html = "<h3>📊 Vollständiger Diagnosebericht:</h3>";
+
+      const textareas = document.querySelectorAll("textarea.pruefung-antwort");
+      
+      if (textareas.length === 0) {
+        html += "<div class='error-box'>❌ FEHLER: Keine Prüfung geladen</div>";
+      } else {
+        // Check for potential issues
+        let potentialIssues = [];
+        
+        textareas.forEach((textarea, idx) => {
+          if (!textarea.dataset.aufgabe || !textarea.dataset.teilaufgabe) {
+            potentialIssues.push("Fehlende data-Attribute");
+          }
+          if (textarea.dataset.aufgabe && /\s/.test(textarea.dataset.aufgabe.charAt(0) + textarea.dataset.aufgabe.charAt(textarea.dataset.aufgabe.length - 1))) {
+            potentialIssues.push("Whitespace in Aufgabe-Attribute");
+          }
+        });
+
+        if (potentialIssues.length === 0) {
+          html += "<div class='info-box'><strong>✓ DIAGNOSE: Keine bekannten Probleme gefunden</strong><br>";
+          html += "Die DOM-Struktur und Attribute scheinen korrekt zu sein.<br>";
+          html += "Falls trotzdem Antworten fehlen, könnte das Problem sein:<br>";
+          html += "1. Backend gibt andere Aufgaben-IDs zurück als erwartet<br>";
+          html += "2. Globale letztePruefungsAntworten wurde nicht korrekt gesetzt<br>";
+          html += "3. Das Timing der Ergebnisanzeige ist falsch<br>";
+          html += "</div>";
+        } else {
+          html += "<div class='error-box'><strong>❌ PROBLEME ERKANNT:</strong><br>";
+          potentialIssues.forEach(issue => html += `• ${issue}<br>`);
+          html += "</div>";
+        }
+      }
+
+      reportDiv.innerHTML = html;
+      reportDiv.style.display = "block";
+    }
+
+    function escapeHtml(text) {
+      const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+  </script>
+</body>
+</html>

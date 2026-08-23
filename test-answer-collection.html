@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antwortsammlung Test – WiFa Trainer</title>
+  <link rel="stylesheet" href="css/style.css?v=test-v1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f6f2ff; }
+    .test-container { max-width: 1000px; margin: 0 auto; }
+    .test-section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d8c8f8; }
+    .test-section h2 { color: #5a4a80; margin-top: 0; }
+    .question-group { background: #f9f7ff; padding: 15px; margin: 15px 0; border-radius: 6px; border-left: 4px solid #8b5cf6; }
+    textarea { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #d8c8f8; border-radius: 4px; font-family: monospace; }
+    .log-box { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 6px; font-size: 12px; font-family: monospace; line-height: 1.5; max-height: 400px; overflow-y: auto; border: 1px solid #ccc; }
+    .log-entry { margin: 5px 0; }
+    .log-label { color: #666; font-weight: bold; }
+    .log-value { color: #333; }
+    .button-group { margin: 20px 0; }
+    button { padding: 10px 20px; margin-right: 10px; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    button:hover { background: #7c3aed; }
+    .btn-secondary { background: #6b7280; }
+    .btn-secondary:hover { background: #4b5563; }
+    .result-section { background: #f0fdf4; border: 2px solid #22c55e; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    .error-section { background: #fef2f2; border: 2px solid #dc2626; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    .success-checkmark { color: #22c55e; font-weight: bold; font-size: 16px; }
+    .error-cross { color: #dc2626; font-weight: bold; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>🔬 Antwortsammlung & Mapping Test</h1>
+    
+    <div class="test-section">
+      <h2>SCHRITT 1: Fragen laden und Antworten eingeben</h2>
+      <div id="questionContainer"></div>
+      <div class="button-group">
+        <button onclick="fillTestAnswers()">Test-Antworten ausfüllen</button>
+        <button class="btn-secondary" onclick="inspectDOM()">1️⃣ DOM inspizieren</button>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>SCHRITT 2: DOM-Inspektionsergebnisse</h2>
+      <div id="domInspectionLog" class="log-box" style="display:none;">
+        <div id="domInspectionContent"></div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>SCHRITT 3: Payload vor API</h2>
+      <button class="btn-secondary" onclick="testPayloadCollection()">2️⃣ Payload sammeln & inspizieren</button>
+      <div id="payloadLog" class="log-box" style="display:none;">
+        <div id="payloadContent"></div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>SCHRITT 4: Backend-Mapping Test</h2>
+      <button class="btn-secondary" onclick="testResultMapping()">3️⃣ Result-Mapping testen</button>
+      <div id="mappingLog" class="log-box" style="display:none;">
+        <div id="mappingContent"></div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>ERGEBNIS & DIAGNOSE</h2>
+      <button onclick="runFullDiagnosis()">🔍 Vollständige Diagnose durchführen</button>
+      <div id="diagnosisResult" style="display:none; margin-top: 20px;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Test data structure
+    const TEST_QUESTIONS = [
+      { aufgabe: "1", teilaufgabe: "a", fragetyp: "text", index: "0", simulationId: "TEST", fach: "TEST", thema: "TEST" },
+      { aufgabe: "1", teilaufgabe: "b", fragetyp: "text", index: "1", simulationId: "TEST", fach: "TEST", thema: "TEST" },
+      { aufgabe: "2", teilaufgabe: "a", fragetyp: "text", index: "2", simulationId: "TEST", fach: "TEST", thema: "TEST" },
+      { aufgabe: "2", teilaufgabe: "b", fragetyp: "text", index: "3", simulationId: "TEST", fach: "TEST", thema: "TEST" },
+      { aufgabe: "3", teilaufgabe: "a", fragetyp: "text", index: "4", simulationId: "TEST", fach: "TEST", thema: "TEST" },
+      { aufgabe: "3", teilaufgabe: "b", fragetyp: "text", index: "5", simulationId: "TEST", fach: "TEST", thema: "TEST" }
+    ];
+
+    const TEST_ANSWERS = {
+      "1a": "",
+      "1b": "",
+      "2a": "TEST-ANTWORT-2A",
+      "2b": "TEST-ANTWORT-2B",
+      "3a": "TEST-ANTWORT-3A",
+      "3b": "TEST-ANTWORT-3B"
+    };
+
+    const STUB_RESULTS = {
+      "1a": "RESULT-1A",
+      "1b": "RESULT-1B",
+      "2a": "RESULT-2A",
+      "2b": "RESULT-2B",
+      "3a": "RESULT-3A",
+      "3b": "RESULT-3B"
+    };
+
+    function createQuestionHTML() {
+      let html = "";
+      TEST_QUESTIONS.forEach(q => {
+        const key = q.aufgabe + q.teilaufgabe;
+        html += `
+          <div class="question-group">
+            <label><strong>Aufgabe ${q.aufgabe}${q.teilaufgabe}</strong></label>
+            <textarea 
+              id="answer-${key}"
+              data-index="${q.index}" 
+              data-aufgabe="${q.aufgabe}" 
+              data-teilaufgabe="${q.teilaufgabe}" 
+              data-fragetyp="${q.fragetyp}"
+              data-simulationId="${q.simulationId}"
+              data-fach="${q.fach}"
+              data-thema="${q.thema}"
+              placeholder="Antwort für ${q.aufgabe}${q.teilaufgabe}"
+            ></textarea>
+          </div>
+        `;
+      });
+      document.getElementById("questionContainer").innerHTML = html;
+    }
+
+    function fillTestAnswers() {
+      Object.entries(TEST_ANSWERS).forEach(([key, answer]) => {
+        const textarea = document.getElementById(`answer-${key}`);
+        if (textarea) {
+          textarea.value = answer;
+        }
+      });
+      alert("Test-Antworten ausgefüllt:\n1a: LEER\n1b: LEER\n2a: TEST-ANTWORT-2A\n2b: TEST-ANTWORT-2B\n3a: TEST-ANTWORT-3A\n3b: TEST-ANTWORT-3B");
+    }
+
+    function inspectDOM() {
+      const log = document.getElementById("domInspectionContent");
+      let html = "<strong>🔍 DOM-Inspektionsergebnisse:</strong><br>";
+
+      TEST_QUESTIONS.forEach(q => {
+        const key = q.aufgabe + q.teilaufgabe;
+        const textarea = document.getElementById(`answer-${key}`);
+        
+        if (!textarea) {
+          html += `<div class="log-entry error-cross" style="color:red;"> FEHLER: ${key} nicht gefunden</div>`;
+          return;
+        }
+
+        const actualValue = textarea.value;
+        const expectedValue = TEST_ANSWERS[key];
+        const matches = actualValue === expectedValue;
+        const icon = matches ? "✓" : "✗";
+
+        html += `<div class="log-entry">
+          <span class="log-label">${icon} Aufgabe ${q.aufgabe}${q.teilaufgabe}:</span><br>
+          <span class="log-value">  index: ${textarea.dataset.index}</span><br>
+          <span class="log-value">  aufgabe: ${textarea.dataset.aufgabe}</span><br>
+          <span class="log-value">  teilaufgabe: ${textarea.dataset.teilaufgabe}</span><br>
+          <span class="log-value">  dataset.fragetyp: ${textarea.dataset.fragetyp}</span><br>
+          <span class="log-value">  textarea.value: "${actualValue}" ${expectedValue === "" ? "(ERWARTET LEER)" : `(ERWARTET: "${expectedValue}")`}</span><br>
+        </div>`;
+      });
+
+      document.getElementById("domInspectionLog").style.display = "block";
+      document.getElementById("domInspectionContent").innerHTML = html;
+    }
+
+    function testPayloadCollection() {
+      const log = document.getElementById("mappingContent");
+      let html = "<strong>📦 Payload vor API-Aufruf:</strong><br>";
+
+      const daten = [];
+      const textareas = document.querySelectorAll("textarea[data-aufgabe]");
+      
+      html += `<div class="log-entry"><span class="log-label">Textareas gefunden: ${textareas.length}</span></div>`;
+
+      textareas.forEach((textarea, domIndex) => {
+        const aufgabe = textarea.dataset.aufgabe || "";
+        const teilaufgabe = textarea.dataset.teilaufgabe || "";
+        const index = textarea.dataset.index || "";
+        const fragetyp = textarea.dataset.fragetyp || "text";
+        const antwort = String(textarea.value || "").trim();
+
+        const entry = {
+          index: index,
+          aufgabe: aufgabe,
+          teilaufgabe: teilaufgabe,
+          antwort: antwort,
+          fragetyp: fragetyp,
+          hatSkizze: false
+        };
+
+        daten.push(entry);
+
+        html += `<div class="log-entry">
+          <span class="log-label">Element ${domIndex + 1}: Aufgabe ${aufgabe}${teilaufgabe}</span><br>
+          <span class="log-value">  index: ${index}</span><br>
+          <span class="log-value">  aufgabe: ${aufgabe}</span><br>
+          <span class="log-value">  teilaufgabe: ${teilaufgabe}</span><br>
+          <span class="log-value">  antwort: "${antwort}" ${antwort === "" ? "(LEER)" : ""}</span><br>
+          <span class="log-value">  fragetyp: ${fragetyp}</span><br>
+          <span class="log-value">  hatSkizze: false</span><br>
+        </div>`;
+      });
+
+      html += `<br><strong>⚠️ WICHTIG: Wurde ein .filter() verwendet der leere Antworten entfernt?</strong><br>`;
+      html += `<span class="log-value">Gesendete Elemente: ${daten.length} (SOLLTE: 6 sein)</span><br>`;
+
+      if (daten.length !== 6) {
+        html += `<span style="color: red; font-weight: bold;">❌ PROBLEM: Nicht alle 6 Elemente vorhanden!</span><br>`;
+      } else {
+        html += `<span style="color: green; font-weight: bold;">✓ OK: Alle 6 Elemente vorhanden</span><br>`;
+      }
+
+      // Store for result mapping test
+      window.lastCollectedData = daten;
+
+      document.getElementById("payloadLog").style.display = "block";
+      document.getElementById("payloadContent").innerHTML = html;
+    }
+
+    function testResultMapping() {
+      if (!window.lastCollectedData) {
+        alert("Bitte zuerst Schritt 2 (Payload sammeln) ausführen!");
+        return;
+      }
+
+      const log = document.getElementById("mappingContent");
+      let html = "<strong>🎯 Result Mapping Test:</strong><br>";
+
+      // Simulate backend response with stub results
+      const stubResponse = {
+        success: true,
+        data: {
+          gesamtPunkte: 60,
+          gesamtMaxPunkte: 100,
+          aufgaben: [
+            { aufgabe: "1", teilaufgabe: "a", punkte: 0, maxPunkte: 10, erkannte: [], fehlende: ["test1a"] },
+            { aufgabe: "1", teilaufgabe: "b", punkte: 0, maxPunkte: 10, erkannte: [], fehlende: ["test1b"] },
+            { aufgabe: "2", teilaufgabe: "a", punkte: 10, maxPunkte: 10, erkannte: ["test2a"], fehlende: [] },
+            { aufgabe: "2", teilaufgabe: "b", punkte: 10, maxPunkte: 10, erkannte: ["test2b"], fehlende: [] },
+            { aufgabe: "3", teilaufgabe: "a", punkte: 10, maxPunkte: 10, erkannte: ["test3a"], fehlende: [] },
+            { aufgabe: "3", teilaufgabe: "b", punkte: 10, maxPunkte: 10, erkannte: ["test3b"], fehlende: [] }
+          ]
+        }
+      };
+
+      html += `<div class="log-entry"><strong>Backend Response:</strong><br>`;
+      html += `<span class="log-value">Aufgaben im Response: ${stubResponse.data.aufgaben.length}</span></div>`;
+
+      // Store collected answers
+      const letztePruefungsAntworten = window.lastCollectedData;
+      html += `<div class="log-entry"><strong>Collected Answers:</strong><br>`;
+      html += `<span class="log-value">Elemente: ${letztePruefungsAntworten.length}</span></div>`;
+
+      html += `<br><strong>🔗 MAPPING RESULT (Backend → Display):</strong><br>`;
+
+      stubResponse.data.aufgaben.forEach((item, idx) => {
+        const eigeneAntwort = letztePruefungsAntworten.find(function(eintrag) {
+          return String(eintrag.aufgabe) === String(item.aufgabe)
+            && String(eintrag.teilaufgabe) === String(item.teilaufgabe);
+        }) || {};
+
+        const found = !!eigeneAntwort.antwort;
+        const displayedAnswer = eigeneAntwort.antwort || "keine schriftliche Ergänzung";
+        const expectedAnswer = window.lastCollectedData[idx]?.antwort || "";
+        const matchesExpected = displayedAnswer.includes(expectedAnswer);
+
+        const icon = found ? "✓" : "✗";
+        const color = found ? "color: green;" : "color: red;";
+
+        html += `<div class="log-entry" style="${color}">
+          <span class="log-label">${icon} Aufgabe ${item.aufgabe}${item.teilaufgabe}:</span><br>
+          <span class="log-value">  Backend erhielt: "${expectedAnswer}" ${expectedAnswer === "" ? "(LEER)" : ""}</span><br>
+          <span class="log-value">  Im Display: "${displayedAnswer}"</span><br>
+          <span class="log-value">  Match: ${found ? "JA ✓" : "NEIN ✗"}</span><br>
+        </div>`;
+      });
+
+      document.getElementById("mappingLog").style.display = "block";
+      document.getElementById("mappingContent").innerHTML = html;
+    }
+
+    function runFullDiagnosis() {
+      createQuestionHTML();
+      fillTestAnswers();
+      
+      setTimeout(() => {
+        inspectDOM();
+        testPayloadCollection();
+        testResultMapping();
+        
+        // Generate diagnosis
+        const diagResult = document.getElementById("diagnosisResult");
+        let diagHTML = "<h3>📊 Diagnoseergebnis:</h3>";
+        
+        const domLog = document.getElementById("domInspectionContent").innerHTML;
+        const payloadLog = document.getElementById("payloadContent").innerHTML;
+        const mappingLog = document.getElementById("mappingContent").innerHTML;
+        
+        if (payloadLog.includes("SOLLTE: 6 sein")) {
+          if (payloadLog.includes("✓ OK: Alle 6 Elemente")) {
+            diagHTML += "<div class='result-section'><strong>✓ SCHRITT 2 BESTANDEN:</strong> Payload enthält alle 6 Elemente korrekt</div>";
+          } else {
+            diagHTML += "<div class='error-section'><strong>✗ SCHRITT 2 FEHLER:</strong> Nicht alle 6 Elemente im Payload! Filter entfernt möglicherweise leere Antworten.</div>";
+          }
+        }
+        
+        diagResult.innerHTML = diagHTML;
+        diagResult.style.display = "block";
+      }, 100);
+    }
+
+    // Initialize on load
+    document.addEventListener("DOMContentLoaded", createQuestionHTML);
+  </script>
+</body>
+</html>

@@ -2411,6 +2411,11 @@ select:focus {
 .lernstand-topics {
   display: grid;
   gap: 10px;
+  align-items: start;
+}
+
+.lernstand-subject-list > * {
+  align-self: start;
 }
 
 .lernstand-analysis-group {
@@ -2483,7 +2488,83 @@ select:focus {
 }
 
 .lernstand-subject {
-  padding: 12px 14px;
+  --subject-bg-start: #f5fbf6;
+  --subject-bg-end: #ebf7ee;
+  --subject-border: #d9eadb;
+  --subject-accent: #8ec39a;
+  --subject-shadow: rgba(31, 74, 50, 0.08);
+  --subject-status-bg: rgba(255, 255, 255, 0.22);
+  --progress-fill: var(--subject-accent);
+  align-self: start;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--subject-border);
+  border-left: 7px solid var(--subject-accent);
+  background: linear-gradient(135deg, var(--subject-bg-start), var(--subject-bg-end));
+  color: #1f2f24;
+  box-shadow: 0 2px 8px var(--subject-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.lernstand-subject.status-neutral {
+  --subject-bg-start: #f4fbf4;
+  --subject-bg-end: #e7f5e7;
+  --subject-border: #d9ebd8;
+  --subject-accent: #8ebd93;
+  --progress-fill: #8ebd93;
+  --subject-status-bg: rgba(142, 189, 147, 0.14);
+}
+
+.lernstand-subject.status-good-4 {
+  --subject-bg-start: #eafafc;
+  --subject-bg-end: #bfe5ee;
+  --subject-border: #b7dfe8;
+  --subject-accent: #6bb3c4;
+  --progress-fill: #6bb3c4;
+  --subject-status-bg: rgba(107, 179, 196, 0.12);
+}
+
+.lernstand-subject.status-good-3 {
+  --subject-bg-start: #edf9fc;
+  --subject-bg-end: #cfeaf2;
+  --subject-border: #c3e0ec;
+  --subject-accent: #7eb7c8;
+  --progress-fill: #7eb7c8;
+  --subject-status-bg: rgba(126, 183, 200, 0.12);
+}
+
+.lernstand-subject.status-good-2 {
+  --subject-bg-start: #f0f9fb;
+  --subject-bg-end: #dfeef7;
+  --subject-border: #d0e8f3;
+  --subject-accent: #9ccfe0;
+  --progress-fill: #9ccfe0;
+  --subject-status-bg: rgba(156, 207, 224, 0.12);
+}
+
+.lernstand-subject.status-bad-3 {
+  --subject-bg-start: #fff9f1;
+  --subject-bg-end: #f7e2bf;
+  --subject-border: #f0d7a8;
+  --subject-accent: #e7a55a;
+  --progress-fill: #e7a55a;
+  --subject-status-bg: rgba(231, 165, 90, 0.13);
+}
+
+.lernstand-subject.status-bad-2 {
+  --subject-bg-start: #fff4e8;
+  --subject-bg-end: #f8d6aa;
+  --subject-border: #efc98a;
+  --subject-accent: #e2913e;
+  --progress-fill: #e2913e;
+  --subject-status-bg: rgba(226, 145, 62, 0.12);
+}
+
+.lernstand-subject.status-bad-1 {
+  --subject-bg-start: #ffeedc;
+  --subject-bg-end: #f9c789;
+  --subject-border: #efba74;
+  --subject-accent: #d9822d;
+  --progress-fill: #d9822d;
+  --subject-status-bg: rgba(217, 130, 45, 0.12);
 }
 
 .lernstand-subject-heading > span:first-child {
@@ -2491,14 +2572,92 @@ select:focus {
   gap: 2px;
 }
 
+.lernstand-subject-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--subject-status-bg);
+  border: 1px solid rgba(31, 47, 36, 0.08);
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: #2c4434;
+}
+
+.lernstand-subject-status.badge-neutral {
+  background: rgba(142, 189, 147, 0.16);
+  border-color: rgba(110, 160, 116, 0.18);
+  color: #2c4a35;
+}
+
+.lernstand-subject-status.badge-good-start,
+.lernstand-subject-status.badge-safe,
+.lernstand-subject-status.badge-mostly-safe {
+  background: rgba(118, 178, 198, 0.15);
+  border-color: rgba(86, 151, 176, 0.18);
+  color: #234d59;
+}
+
+.lernstand-subject-status.badge-mixed {
+  background: rgba(240, 201, 110, 0.16);
+  border-color: rgba(206, 156, 62, 0.18);
+  color: #685220;
+}
+
+.lernstand-subject-status.badge-unsafe {
+  background: rgba(216, 138, 58, 0.13);
+  border-color: rgba(188, 112, 40, 0.18);
+  color: #744417;
+}
+
 .lernstand-subject-stats {
   margin-top: 10px;
+}
+
+.lernstand-subject-progress {
+  position: relative;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(74, 92, 79, 0.08);
+  border: 1px solid rgba(74, 92, 79, 0.08);
+}
+
+.lernstand-subject-progress-fill {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  border-radius: inherit;
+  background: var(--progress-fill);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.lernstand-subject.progress-1 .lernstand-subject-progress-fill {
+  opacity: 0.55;
+}
+
+.lernstand-subject.progress-2 .lernstand-subject-progress-fill {
+  opacity: 0.7;
+}
+
+.lernstand-subject.progress-3 .lernstand-subject-progress-fill {
+  opacity: 0.84;
+}
+
+.lernstand-subject.progress-4 .lernstand-subject-progress-fill {
+  opacity: 1;
 }
 
 .lernstand-topics {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #b7dec2;
+  border-top: 1px solid rgba(94, 140, 99, 0.3);
 }
 
 .lernstand-topics[hidden] {
