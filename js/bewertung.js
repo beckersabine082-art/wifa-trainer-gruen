@@ -42,7 +42,14 @@ function ermittleLueckenLoesungen(loesungsschluessel) {
       .filter(Boolean);
   }
 
-function bewerteLueckentext(lueckenInputs, loesungsschluessel) {
+function ermittleMaxPunkteFuerFrage(frageTextBox, fallbackWert) {
+    if (Number.isFinite(fallbackWert) && fallbackWert > 0) {
+      return fallbackWert;
+    }
+    return 0;
+  }
+
+function bewerteLueckentext(lueckenInputs, loesungsschluessel, maxPunkteOverride) {
     const schluesselLoesungen = ermittleLueckenLoesungen(loesungsschluessel);
     const erkannte = [];
     const fehlende = [];
@@ -63,7 +70,9 @@ function bewerteLueckentext(lueckenInputs, loesungsschluessel) {
       }
     });
 
-    const maxPunkte = lueckenInputs.length;
+    const maxPunkte = Number.isFinite(maxPunkteOverride) && maxPunkteOverride > 0
+      ? maxPunkteOverride
+      : lueckenInputs.length;
     const ergebnis = punkte + " von " + maxPunkte + " Punkten.\n" +
       (punkte === maxPunkte
         ? "Alle Lücken sind richtig beantwortet."
@@ -79,14 +88,15 @@ function bewerteLueckentext(lueckenInputs, loesungsschluessel) {
     };
   }
 
-function bewerteZuordnung(zuordnungInputs) {
+function bewerteZuordnung(zuordnungInputs, maxPunkteOverride, loesungsschluessel) {
     const erkannte = [];
     const fehlende = [];
+    const paare = ermittleStrukturPaare(loesungsschluessel);
     let punkte = 0;
 
     zuordnungInputs.forEach(function(input, index) {
       const antwort = String(input.value || "").trim();
-      const loesung = String(input.getAttribute("data-answer") || "").trim();
+      const loesung = String(input.getAttribute("data-answer") || input.dataset.answer || input.name || paare[index]?.loesung || "").trim();
       const istRichtig = Boolean(loesung) &&
         normalisiereLueckenwert(antwort) === normalisiereLueckenwert(loesung);
 
@@ -98,7 +108,9 @@ function bewerteZuordnung(zuordnungInputs) {
       }
     });
 
-    const maxPunkte = zuordnungInputs.length;
+    const maxPunkte = Number.isFinite(maxPunkteOverride) && maxPunkteOverride > 0
+      ? maxPunkteOverride
+      : zuordnungInputs.length;
     const ergebnis = punkte + " von " + maxPunkte + " Punkten.\n" +
       (punkte === maxPunkte
         ? "Alle Zuordnungen sind richtig beantwortet."
@@ -118,7 +130,7 @@ function bewerteZuordnung(zuordnungInputs) {
 
 function ermittleStrukturPaare(loesungsschluessel) {
     return String(loesungsschluessel || "")
-      .split(/[;\r\n]+/)
+  .split(/[|;\r\n]+/)
       .map(function(wert) {
         const teile = wert.trim().split(/\s*=\s*/);
         return teile.length >= 2
@@ -144,7 +156,7 @@ function ermittleAuswahlFuerSchluessel(eingaben, paar) {
     };
   }
 
-function bewerteAnkreuz(eingaben, loesungsschluessel) {
+function bewerteAnkreuz(eingaben, loesungsschluessel, maxPunkteOverride) {
     const paare = ermittleStrukturPaare(loesungsschluessel);
     const erkannte = [];
     const fehlende = [];
@@ -165,11 +177,15 @@ function bewerteAnkreuz(eingaben, loesungsschluessel) {
       }
     });
 
+    const maxPunkte = Number.isFinite(maxPunkteOverride) && maxPunkteOverride > 0
+      ? maxPunkteOverride
+      : paare.length;
+
     return {
       punkte: punkte,
-      maxPunkte: paare.length,
-      ergebnis: punkte + " von " + paare.length + " Punkten.\n" +
-        (punkte === paare.length
+      maxPunkte: maxPunkte,
+      ergebnis: punkte + " von " + maxPunkte + " Punkten.\n" +
+        (punkte === maxPunkte
           ? "Alle Aussagen sind richtig beantwortet."
           : "Falsch oder leer: " + fehlende.join(", ") + "."),
       musterloesung: paare.map(function(paar) { return paar.schluessel + "=" + paar.loesung; }),
@@ -178,13 +194,25 @@ function bewerteAnkreuz(eingaben, loesungsschluessel) {
     };
   }
 
-function bewerteMatrix(eingaben, loesungsschluessel) {
+function bewerteMatrix(eingaben, loesungsschluessel, maxPunkteOverride) {
     const paare = ermittleStrukturPaare(loesungsschluessel);
     const erkannte = [];
     const fehlende = [];
     let punkte = 0;
 
-    paare.forEach(function(paar) {
+    paare.forEach(function(paar, index) {
+      const eingabe = eingaben[index];
+      if (eingabe && !["checkbox", "radio"].includes(eingabe.type) && eingabe.tagName !== "SELECT" && !eingabe.name && !eingabe.getAttribute("data-answer")) {
+        const antwort = String(eingabe.value || "").trim();
+        const istRichtig = normalisiereLueckenwert(antwort) === normalisiereLueckenwert(paar.loesung);
+        if (istRichtig) {
+          punkte++;
+          erkannte.push("Zuordnung " + paar.schluessel + ": " + paar.loesung);
+        } else {
+          fehlende.push("Zuordnung " + paar.schluessel + ": " + paar.loesung);
+        }
+        return;
+      }
       const auswahl = ermittleAuswahlFuerSchluessel(eingaben, paar).ausgewaehlt;
       const istRichtig = auswahl.length === 1;
 
@@ -196,11 +224,15 @@ function bewerteMatrix(eingaben, loesungsschluessel) {
       }
     });
 
+    const maxPunkte = Number.isFinite(maxPunkteOverride) && maxPunkteOverride > 0
+      ? maxPunkteOverride
+      : paare.length;
+
     return {
       punkte: punkte,
-      maxPunkte: paare.length,
-      ergebnis: punkte + " von " + paare.length + " Punkten.\n" +
-        (punkte === paare.length
+      maxPunkte: maxPunkte,
+      ergebnis: punkte + " von " + maxPunkte + " Punkten.\n" +
+        (punkte === maxPunkte
           ? "Alle Zuordnungen sind richtig beantwortet."
           : "Falsch oder leer: " + fehlende.join(", ") + "."),
       musterloesung: paare.map(function(paar) { return paar.schluessel + "=" + paar.loesung; }),
@@ -219,33 +251,55 @@ async function bewerteAntwort() {
     const istAnkreuz = fragetyp === "ANKREUZ";
     const istMatrix = fragetyp === "MATRIX";
     const istDiagramm = fragetyp === "DIAGRAMM";
+    const loesungsschluessel = String(frageTextBox?.dataset.loesungsschluessel || "");
     const lueckenInputs = istLueckentext
-      ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input[type="text"]'))
+      ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input:not([type="hidden"]), .aufgaben-html-bereich textarea'))
       : [];
-    const zuordnungInputs = istZuordnung
-      ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input[type="text"]'))
+    const zuordnungInputs = istZuordnung || istMatrix
+      ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input:not([type="hidden"]), .aufgaben-html-bereich textarea, .aufgaben-html-bereich select'))
       : [];
     const strukturInputs = istAnkreuz
       ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input[type="checkbox"]'))
       : istMatrix
-        ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input[type="checkbox"], .aufgaben-html-bereich input[type="radio"], .aufgaben-html-bereich select option'))
+        ? Array.from(document.querySelectorAll('.aufgaben-html-bereich input:not([type="hidden"]), .aufgaben-html-bereich textarea, .aufgaben-html-bereich select, .aufgaben-html-bereich input[type="checkbox"], .aufgaben-html-bereich input[type="radio"]'))
         : [];
+    const maxPunkteFuerFrage = ermittleMaxPunkteFuerFrage(
+      frageTextBox,
+      istZuordnung
+        ? ermittleStrukturPaare(loesungsschluessel).length
+        : istLueckentext
+          ? ermittleLueckenLoesungen(loesungsschluessel).length
+          : istAnkreuz || istMatrix
+            ? ermittleStrukturPaare(loesungsschluessel).length
+            : fragetyp === "RECHNUNG"
+              ? ermittleStrukturPaare(loesungsschluessel).length
+              : 0
+    );
     const lueckenAntworten = lueckenInputs.map(function(input) {
-      return input.value.trim();
+      return String(input.value || "").trim();
     });
+    const nurWert = function(input) {
+      if (input && (input.type === "checkbox" || input.type === "radio")) {
+        return input.checked ? String(input.value || "").trim() : "";
+      }
+      if (input && input.tagName === "SELECT") {
+        return String(input.value || "").trim();
+      }
+      return String(input && input.value || "").trim();
+    };
     const antwort = istLueckentext
       ? lueckenAntworten.join(" | ").trim()
       : istZuordnung
-        ? zuordnungInputs.map(function(input) { return input.value.trim(); }).join(" | ").trim()
+        ? zuordnungInputs.map(function(input) { return String(input.value || "").trim(); }).filter(Boolean).join(" | ").trim()
         : istAnkreuz || istMatrix
-          ? strukturInputs.filter(function(input) { return input.checked || input.selected; }).map(function(input) { return input.value; }).join(" | ").trim()
-        : document.getElementById("antwortInput").value.trim();
+          ? strukturInputs.map(nurWert).filter(Boolean).join(" | ").trim()
+          : document.getElementById("antwortInput").value.trim();
     const hatAusgefüllteLücke = lueckenAntworten.some(Boolean);
     const hatAusgefüllteZuordnung = zuordnungInputs.some(function(input) {
-      return input.value.trim();
+      return String(input.value || "").trim();
     });
     const hatAusgefüllteStruktur = strukturInputs.some(function(input) {
-      return input.checked || input.selected;
+      return Boolean(nurWert(input));
     });
     const diagrammCanvas = istDiagramm ? document.getElementById("skizze-normal") : null;
     const hatSkizze = Boolean(diagrammCanvas && canvasHatInhalt(diagrammCanvas));
@@ -271,19 +325,6 @@ async function bewerteAntwort() {
       return;
     }
 
-    if (istLueckentext ? !hatAusgefüllteLücke : istZuordnung ? !hatAusgefüllteZuordnung : istAnkreuz || istMatrix ? !hatAusgefüllteStruktur : istDiagramm ? !antwort && !hatSkizze : !antwort) {
-      alert(istLueckentext
-        ? "Bitte zuerst mindestens eine Lücke ausfüllen."
-        : istZuordnung
-          ? "Bitte zuerst mindestens eine Zuordnung ausfüllen."
-          : istAnkreuz || istMatrix
-            ? "Bitte zuerst mindestens eine Antwort auswählen."
-          : istDiagramm
-            ? "Bitte zuerst eine Antwort eingeben oder eine Skizze erstellen."
-          : "Bitte zuerst eine Antwort eingeben.");
-      return;
-    }
-
     try {
       setzeAppBeschaeftigt(true);
       setzeStatus("Antwort wird ausgewertet...");
@@ -293,23 +334,24 @@ async function bewerteAntwort() {
             success: true,
             data: bewerteLueckentext(
               lueckenInputs,
-              frageTextBox?.dataset.loesungsschluessel || ""
+              loesungsschluessel,
+              maxPunkteFuerFrage
             )
           }
         : istZuordnung
           ? {
               success: true,
-              data: bewerteZuordnung(zuordnungInputs)
+              data: bewerteZuordnung(zuordnungInputs, maxPunkteFuerFrage, loesungsschluessel)
             }
         : istAnkreuz
           ? {
               success: true,
-              data: bewerteAnkreuz(strukturInputs, frageTextBox?.dataset.loesungsschluessel || "")
+              data: bewerteAnkreuz(strukturInputs, loesungsschluessel, maxPunkteFuerFrage)
             }
         : istMatrix
           ? {
               success: true,
-              data: bewerteMatrix(strukturInputs, frageTextBox?.dataset.loesungsschluessel || "")
+              data: bewerteMatrix(strukturInputs, loesungsschluessel, maxPunkteFuerFrage)
             }
         : await apiPost("bewerteAntwort", {
             fach: aktuellesFach,

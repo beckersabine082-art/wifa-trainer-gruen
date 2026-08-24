@@ -429,7 +429,8 @@ function getActiveQuestions(sheetName) {
         fragetyp: String(rowValues[COL.FRAGETYP - 1] || "text").trim(),
         aufgabenHtml: String(rowValues[COL.AUFGABEN_HTML - 1] || "").trim(),
         loesungsschluessel: String(rowValues[COL.LOESUNGSSCHLUESSEL - 1] || "").trim(),
-        bilddatei: String(rowValues[COL.BILDDATEI - 1] || "").trim()      });
+        bilddatei: String(rowValues[COL.BILDDATEI - 1] || "").trim()
+      });
     }
   });
 

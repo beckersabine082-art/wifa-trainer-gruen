@@ -866,8 +866,26 @@ white-space: normal;
       overflow: hidden !important;
     }
 
+    .aufgaben-html-bereich table td {
+      min-width: 120px;
+    }
+
+    .aufgaben-html-bereich .trainer-tabellen-input,
+    .aufgaben-html-bereich table td .trainer-tabellen-input {
+      width: 100% !important;
+      min-width: 220px !important;
+      min-height: 44px !important;
+      box-sizing: border-box !important;
+      padding: 8px 10px !important;
+      font-size: 14px !important;
+      line-height: 1.4 !important;
+      margin: 0 !important;
+      resize: vertical !important;
+    }
+
     .aufgaben-html-bereich textarea:focus,
-    .aufgaben-html-bereich input[type="text"]:focus {
+    .aufgaben-html-bereich input[type="text"]:focus,
+    .aufgaben-html-bereich .trainer-tabellen-input:focus {
       border-color: #4f9f68 !important;
       box-shadow: 0 0 0 2px rgba(79, 159, 104, 0.25) !important;
     }

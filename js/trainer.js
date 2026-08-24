@@ -124,8 +124,13 @@ function starteTrainerTippTimer() {
     trainerTippTimerAbbrechen();
     const frageToken = trainerTippFrageToken;
     const antwortInput = document.getElementById("antwortInput");
+    const hatInteraktiveTabellenFelder = Boolean(
+      document.querySelector('.aufgaben-html-bereich .trainer-tabellen-input, .aufgaben-html-bereich input:not([type="hidden"]), .aufgaben-html-bereich textarea, .aufgaben-html-bereich select')
+    );
 
-    if (!aktuelleFrageId || !antwortInput || antwortInput.style.display === "none") return;
+    if (!aktuelleFrageId) return;
+    if (!antwortInput && !hatInteraktiveTabellenFelder) return;
+    if (antwortInput && antwortInput.style.display === "none" && !hatInteraktiveTabellenFelder) return;
 
     trainerTippTimer = window.setTimeout(function() {
       trainerTippTimer = null;
@@ -169,6 +174,42 @@ function fordereTrainerTippAn(event) {
       const kilianFenster = document.getElementById("kilianBubbleFenster");
       if (kilianFenster) kilianFenster.style.display = "block";
       if (typeof frageKilianBubble === "function") frageKilianBubble();
+  }
+
+function ergaenzeLeereTabellenAntwortfelder() {
+    const container = document.querySelector(".aufgaben-html-bereich");
+    if (!container) return;
+
+    container.querySelectorAll("table td").forEach(function(td) {
+      if (td.closest("thead") || td.querySelector("input, textarea, select, button, label")) {
+        return;
+      }
+
+      const text = String(td.textContent || "").replace(/\u00A0/g, " ").trim();
+      if (text) return;
+      if (td.dataset.trainerInputErzeugt === "true") return;
+
+      const istTextarea = td.dataset.inputType === "textarea" || td.dataset.textarea === "true" || td.dataset.langeAntwort === "true";
+      const feld = istTextarea ? document.createElement("textarea") : document.createElement("input");
+      const answer = String(td.dataset.answer || td.getAttribute("data-answer") || td.dataset.loesung || td.getAttribute("data-loesung") || "").trim();
+      const name = String(td.dataset.name || td.dataset.key || td.dataset.schluessel || "").trim();
+
+      if (istTextarea) {
+        feld.rows = 3;
+      } else {
+        feld.type = "text";
+      }
+
+      feld.className = "trainer-tabellen-input";
+      feld.placeholder = istTextarea ? "Antwort..." : "Antwort...";
+      feld.setAttribute("aria-label", "Tabellenantwort");
+      if (answer) feld.setAttribute("data-answer", answer);
+      if (name) feld.name = name;
+
+      td.textContent = "";
+      td.appendChild(feld);
+      td.dataset.trainerInputErzeugt = "true";
+    });
   }
 
 function resetFrageAnzeige() {
@@ -474,6 +515,8 @@ function waehleFach(fach) {
     frageTextBox.dataset.fragetyp = fragetyp;
     frageTextBox.dataset.loesungsschluessel = String(daten.loesungsschluessel || "");
 
+    ergaenzeLeereTabellenAntwortfelder();
+
     if (fragetyp === "DIAGRAMM" && typeof initialisiereSkizzenCanvas === "function") {
       initialisiereSkizzenCanvas(document.getElementById("skizze-normal"));
     }
@@ -647,9 +690,20 @@ function naechsteFrage() {
 
 function antwortLeeren() {
     if (appIstBeschaeftigt) return;
-    document.getElementById("antwortInput").value = "";
-  if (document.getElementById("skizze-normal")) loescheSkizze("normal");
-  letzteAusgewerteteAntwort = "";
+
+    const antwortInput = document.getElementById("antwortInput");
+    if (antwortInput) antwortInput.value = "";
+
+    document.querySelectorAll(".aufgaben-html-bereich input[type='text'], .aufgaben-html-bereich textarea, .aufgaben-html-bereich select").forEach(function(element) {
+      element.value = "";
+    });
+
+    document.querySelectorAll(".aufgaben-html-bereich input[type='checkbox'], .aufgaben-html-bereich input[type='radio']").forEach(function(element) {
+      element.checked = false;
+    });
+
+    if (document.getElementById("skizze-normal")) loescheSkizze("normal");
+    letzteAusgewerteteAntwort = "";
   }
 
 document.getElementById("antwortInput").addEventListener("keydown", function(event) {
