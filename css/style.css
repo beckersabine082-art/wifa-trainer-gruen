@@ -2983,6 +2983,28 @@ select:focus {
   gap: 14px;
 }
 
+.quiz-mode {
+  display: grid;
+  gap: 6px;
+  max-width: 420px;
+}
+
+.quiz-mode label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #245c3a;
+}
+
+.quiz-mode select {
+  min-height: 42px;
+  border: 1px solid #9fcdb0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px 10px;
+  color: inherit;
+  font: inherit;
+}
+
 .quiz-progress {
   font-size: 14px;
   font-weight: 700;

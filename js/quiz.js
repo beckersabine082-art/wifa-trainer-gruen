@@ -22,6 +22,7 @@ let antwortGespeichert = false;
 let letzteAuswahl = null;
 let ladeToken = 0;
 let quizInteraktionenGebunden = false;
+let quizFach = '';
 
 const sitzungsStatistik = { richtig: 0, falsch: 0 };
 
@@ -55,8 +56,13 @@ async function ladeKatalog() {
   return katalogLadung;
 }
 
+function neuerFragenpool() {
+  const gefiltert = quizFach ? katalog.filter(item => item.fach === quizFach) : katalog;
+  return [...new Map(gefiltert.map(item => [item.quizKey, item])).values()];
+}
+
 function neueRunde() {
-  let neu = mischen(katalog);
+  let neu = mischen(neuerFragenpool());
   if (neu.length > 1 && letzteFrageAlterRunde && neu[0].quizKey === letzteFrageAlterRunde) {
     const swapIndex = 1 + Math.floor(Math.random() * (neu.length - 1));
     [neu[0], neu[swapIndex]] = [neu[swapIndex], neu[0]];
@@ -64,6 +70,37 @@ function neueRunde() {
   rundenReihenfolge = neu;
   rundenNummer += 1;
   fragenIndex = 0;
+}
+
+function befuelleQuizModus() {
+  const modus = document.getElementById('quizModus');
+  if (!modus || !katalog) return;
+
+  const faecher = [...new Set(katalog.map(item => String(item.fach || '').trim()).filter(Boolean))]
+    .sort((first, second) => first.localeCompare(second, 'de'));
+  modus.replaceChildren(
+    new Option('🎲 Alle Fächer – Zufallsmix', ''),
+    ...faecher.map(fach => new Option(fach, fach))
+  );
+  modus.value = quizFach;
+}
+
+async function wechsleQuizmodus(event) {
+  quizFach = event.target.value;
+  ladeToken += 1;
+  aktuelleFrage = null;
+  aktuellerKatalogEintrag = null;
+  antwortGespeichert = false;
+  letzteAuswahl = null;
+  letzteFrageAlterRunde = null;
+  rundenNummer = 0;
+  neueRunde();
+
+  const status = document.getElementById('quizStatus');
+  const karte = document.getElementById('quizKarte');
+  if (karte) karte.hidden = true;
+  if (status) status.textContent = '';
+  await zeigeAktuelleFrage();
 }
 
 function setQuizButtonsDisabled(disabled) {
@@ -312,9 +349,11 @@ function bindeQuizInteraktionen() {
   const pruefenBtn = document.getElementById('quizPruefenBtn');
   const naechsteBtn = document.getElementById('quizNaechsteBtn');
   const optionenContainer = document.getElementById('quizOptionen');
+  const modus = document.getElementById('quizModus');
 
   if (pruefenBtn) pruefenBtn.addEventListener('click', pruefeAntwort);
   if (naechsteBtn) naechsteBtn.addEventListener('click', naechsteFrageHandler);
+  if (modus) modus.addEventListener('change', wechsleQuizmodus);
   if (optionenContainer) {
     optionenContainer.addEventListener('change', event => {
       if (!event.target || event.target.name !== 'quizOption') return;
@@ -356,6 +395,7 @@ export async function initialisiereQuiz() {
       status.textContent = 'Es sind derzeit keine Quizfragen verfügbar.';
       return;
     }
+    befuelleQuizModus();
     neueRunde();
     await zeigeAktuelleFrage();
   } catch (error) {

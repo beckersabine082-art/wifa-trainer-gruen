@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>WiFa Trainer</title>
-  <link rel="stylesheet" href="css/style.css?v=trainer-gapcss-v1">
+  <link rel="stylesheet" href="css/style.css?v=trainer-gapcss-v2">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -523,6 +523,12 @@
         <div class="header"><h1>Quiz</h1></div>
         <div id="quizStatus" class="status">Quiz wird geladen.</div>
         <div class="card quiz-card" id="quizKarte" hidden>
+          <div class="quiz-mode">
+            <label for="quizModus">Quizmodus</label>
+            <select id="quizModus">
+              <option value="">🎲 Alle Fächer – Zufallsmix</option>
+            </select>
+          </div>
           <div class="quiz-progress">Runde <span id="quizRunde">1</span> · Frage <span id="quizFragenNummer">1</span> von <span id="quizRundenGroesse">-</span></div>
           <div class="question-meta">
             <span class="badge" id="quizBadgeTeilbereich"></span>
@@ -1471,7 +1477,7 @@
 <script src="js/lerntexte.js?v=lerntexte-v4"></script>
 <script src="js/pruefungssimulation.js?v=lernstand-pruefung-v3"></script>
 <script type="module" src="js/pruefungslernstand.js?v=lernstand-pruefung-v1"></script>
-<script type="module" src="js/quiz.js?v=quiz-v1"></script>
+<script type="module" src="js/quiz.js?v=quiz-v2"></script>
 <script type="module" src="js/quizlernstand.js?v=quiz-v1"></script>
 <script src="js/linksammlung.js?v=gesetze1"></script>
 <script type="module" src="js/login.js?v=auth1"></script> </body>
