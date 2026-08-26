@@ -128,10 +128,10 @@ function lerntexteAusgewaehlteEinheiten() {
 }
 
 // Erkennt vollständig großgeschriebene Abschnittsbezeichnungen (z.B. "KERNIDEE:") am Absatzanfang,
-// nach einem Zeilenumbruch oder nach " | " und hebt sie in der lila Akzentfarbe hervor.
+// nach einem Zeilenumbruch oder nach " | " und formatiert sie als klare Lernabschnitte.
 function lerntexteHebeAbschnittsbezeichnungenHervor(escapedText) {
   return escapedText.replace(
-    /(^|\n|\|\s*)([A-ZÄÖÜ][A-ZÄÖÜ0-9 \/\-\.]*:)/gm,
+    /(^|\n|\|\s*)([A-ZÄÖÜ][A-ZÄÖÜ0-9 \/\-\.()&]*:)/gm,
     function (match, prefix, label) {
       return prefix + '<strong class="lerntexte-abschnitt">' + label + "</strong>";
     }
@@ -139,10 +139,40 @@ function lerntexteHebeAbschnittsbezeichnungenHervor(escapedText) {
 }
 
 function lerntexteFormatiereText(text) {
-  return String(text || "")
-    .split(/\n\s*\n/)
+  const normalisierterText = String(text || "")
+    .replace(/\r\n/g, "\n")
+    .replace(/\s*\|\s*/g, "\n\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  const absatzListe = normalisierterText.split(/\n\s*\n/).filter(function (absatz) {
+    return String(absatz || "").trim();
+  });
+
+  return absatzListe
     .map(function (absatz) {
-      const hervorgehoben = lerntexteHebeAbschnittsbezeichnungenHervor(escapeHtml(absatz));
+      const klarerAbsatz = String(absatz || "").trim();
+      if (!klarerAbsatz) return "";
+
+      const sectionMatcher = klarerAbsatz.match(/^([A-ZÄÖÜ][A-ZÄÖÜ0-9 \/\-\.()&]*?)(?::|\s*$)\s*(.*)$/s);
+      if (sectionMatcher) {
+        const label = String(sectionMatcher[1] || "").trim();
+        const rest = String(sectionMatcher[2] || "").trim();
+        const normalizedLabel = label.toUpperCase();
+        const isKernidee = normalizedLabel === "KERNIDEE";
+        const isSectionHeading = /^(KERNIDEE|NATÜRLICHE PERSONEN|JURISTISCHE PERSONEN|SACHEN UND RECHTE|BEWEGLICHE ODER UNBEWEGLICH|BEWEGLICHE UND UNBEWEGLICHE SACHEN|BESTANDTEILE|EIGENSCHAFTEN|RECHTSFOLGEN)$/i.test(normalizedLabel);
+
+        if (isKernidee || isSectionHeading) {
+          const wrapperClass = isKernidee ? "lerntexte-kernidee" : "lerntexte-sektionsblock";
+          const sectionHeader = '<div class="lerntexte-section-header">' + escapeHtml(label.replace(/:$/, "")) + '</div>';
+          const bodyHtml = rest
+            ? '<p>' + lerntexteHebeAbschnittsbezeichnungenHervor(escapeHtml(rest)).replace(/\n/g, "<br>") + '</p>'
+            : "";
+          return '<div class="' + wrapperClass + '">' + sectionHeader + bodyHtml + '</div>';
+        }
+      }
+
+      const hervorgehoben = lerntexteHebeAbschnittsbezeichnungenHervor(escapeHtml(klarerAbsatz));
       return "<p>" + hervorgehoben.replace(/\n/g, "<br>") + "</p>";
     })
     .join("");
