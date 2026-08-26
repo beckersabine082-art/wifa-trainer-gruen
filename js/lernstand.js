@@ -185,34 +185,53 @@ function renderAttemptsChart(entries) {
   const chartAreaWidth = chartWidth - chartLeft - chartRight;
   const barWidth = Math.min(45, Math.max(12, chartAreaWidth / entries.length - 16));
   const yPosition = value => chartTop + chartAreaHeight - (value / scaleMaximum) * chartAreaHeight;
-  const yPositionPercent = value => chartTop + chartAreaHeight - (value / 100) * chartAreaHeight;
   const ticks = Array.from({ length: stepCount + 1 }, (_, index) => (scaleMaximum / stepCount) * index);
   const grid = ticks.map(value => `<line x1="${chartLeft}" y1="${yPosition(value)}" x2="${chartWidth - chartRight}" y2="${yPosition(value)}" class="lernstand-chart-grid"/><text x="${chartLeft - 6}" y="${yPosition(value) + 4}" class="lernstand-chart-y-label">${value}</text>`).join('');
-  const percentLabels = [0, 50, 100].map(value => `<text x="${chartWidth - chartRight + 6}" y="${yPositionPercent(value) + 4}" class="lernstand-chart-y-label lernstand-chart-y-label-percent">${value}%</text>`).join('');
+  const points = entries.map(([day, value], index) => ({
+    day,
+    value,
+    center: chartLeft + (chartAreaWidth / entries.length) * (index + 0.5)
+  }));
+  const bars = points.map(({ day, value, center }) => {
+    const height = (value.count / scaleMaximum) * chartAreaHeight;
+    const label = `${day.slice(8, 10)}.${day.slice(5, 7)}.`;
+    return `<rect x="${center - barWidth / 2}" y="${chartTop + chartAreaHeight - height}" width="${barWidth}" height="${height}" class="lernstand-chart-bar"><title>${escapeText(label)}: ${value.count} Lernversuche</title></rect><text x="${center}" y="${chartHeight - 12}" class="lernstand-chart-x-label">${label}</text>`;
+  }).join('');
+  return `<div class="lernstand-attempt-chart" role="img" aria-label="Lernversuche pro Tag">
+    <h3>Lernversuche pro Tag</h3>
+    <div class="lernstand-chart-scroll"><svg viewBox="0 0 ${chartWidth} ${chartHeight}" aria-hidden="true">${grid}<line x1="${chartLeft}" y1="${chartTop + chartAreaHeight}" x2="${chartWidth - chartRight}" y2="${chartTop + chartAreaHeight}" class="lernstand-chart-axis"/>${bars}</svg></div>
+  </div>`;
+}
+
+function renderPerformanceChart(entries) {
+  const chartWidth = Math.max(320, entries.length * 52 + 52);
+  const chartHeight = 150;
+  const chartTop = 14;
+  const chartBottom = 32;
+  const chartLeft = 38;
+  const chartRight = 34;
+  const chartAreaHeight = chartHeight - chartTop - chartBottom;
+  const chartAreaWidth = chartWidth - chartLeft - chartRight;
+  const yPositionPercent = value => chartTop + chartAreaHeight - (value / 100) * chartAreaHeight;
+  const ticks = [0, 25, 50, 75, 100];
+  const grid = ticks.map(value => `<line x1="${chartLeft}" y1="${yPositionPercent(value)}" x2="${chartWidth - chartRight}" y2="${yPositionPercent(value)}" class="lernstand-chart-grid"/><text x="${chartLeft - 6}" y="${yPositionPercent(value) + 4}" class="lernstand-chart-y-label">${value}%</text>`).join('');
   const points = entries.map(([day, value], index) => ({
     day,
     value,
     center: chartLeft + (chartAreaWidth / entries.length) * (index + 0.5),
-    // Vorhandene Berechnung der Tagesleistung wird hier nur weiterverwendet, nicht neu erfunden.
     performance: roundedPercentage(value.reached, value.maximum)
   }));
-  const bars = points.map(({ day, value, center, performance }) => {
-    const height = (value.count / scaleMaximum) * chartAreaHeight;
-    const label = `${day.slice(8, 10)}.${day.slice(5, 7)}.`;
-    return `<rect x="${center - barWidth / 2}" y="${chartTop + chartAreaHeight - height}" width="${barWidth}" height="${height}" class="lernstand-chart-bar"><title>${escapeText(label)}: ${value.count} Lernversuche · ${performance}% Tagesleistung</title></rect><text x="${center}" y="${chartHeight - 12}" class="lernstand-chart-x-label">${label}</text>`;
-  }).join('');
   const linePoints = points.map(({ center, performance }) => `${center},${yPositionPercent(performance)}`).join(' ');
   const markers = points.map(({ day, value, center, performance }) => {
     const label = `${day.slice(8, 10)}.${day.slice(5, 7)}.`;
-    return `<circle cx="${center}" cy="${yPositionPercent(performance)}" r="4" class="lernstand-chart-point"><title>${escapeText(label)}: ${value.count} Lernversuche · ${performance}% Tagesleistung</title></circle>`;
+    return `<circle cx="${center}" cy="${yPositionPercent(performance)}" r="4" class="lernstand-chart-point"><title>${escapeText(label)}: ${performance}% Tagesleistung · ${value.reached}/${value.maximum} Punkte</title></circle>`;
   }).join('');
-  return `<div class="lernstand-attempt-chart" role="img" aria-label="Meine Lernentwicklung: Lernversuche und Tagesleistung">
-    <h3>Meine Lernentwicklung</h3>
-    <div class="lernstand-chart-legend">
-      <span class="lernstand-chart-legend-item"><span class="lernstand-chart-legend-dot lernstand-chart-legend-dot-bar"></span>Lernversuche</span>
-      <span class="lernstand-chart-legend-item"><span class="lernstand-chart-legend-dot lernstand-chart-legend-dot-line"></span>Leistung</span>
-    </div>
-    <div class="lernstand-chart-scroll"><svg viewBox="0 0 ${chartWidth} ${chartHeight}" aria-hidden="true">${grid}<line x1="${chartLeft}" y1="${chartTop + chartAreaHeight}" x2="${chartWidth - chartRight}" y2="${chartTop + chartAreaHeight}" class="lernstand-chart-axis"/>${bars}${percentLabels}<polyline points="${linePoints}" class="lernstand-chart-line"/>${markers}</svg></div>
+  return `<div class="lernstand-attempt-chart" role="img" aria-label="Leistung pro Tag">
+    <h3>Leistung pro Tag</h3>
+    <div class="lernstand-chart-scroll"><svg viewBox="0 0 ${chartWidth} ${chartHeight}" aria-hidden="true">${grid}<line x1="${chartLeft}" y1="${chartTop + chartAreaHeight}" x2="${chartWidth - chartRight}" y2="${chartTop + chartAreaHeight}" class="lernstand-chart-axis"/><polyline points="${linePoints}" class="lernstand-chart-line"/>${markers}${points.map(({ day, center }) => {
+      const label = `${day.slice(8, 10)}.${day.slice(5, 7)}.`;
+      return `<text x="${center}" y="${chartHeight - 12}" class="lernstand-chart-x-label">${label}</text>`;
+    }).join('')}</svg></div>
   </div>`;
 }
 
@@ -229,7 +248,7 @@ function renderDevelopment(attempts) {
   });
   const entries = [...byDay.entries()].sort(([first], [second]) => first.localeCompare(second));
   if (!entries.length) return '<div class="result-list-empty">Noch keine Lernaktivität</div>';
-  return renderAttemptsChart(entries);
+  return `<div class="lernstand-development-grid">${renderAttemptsChart(entries)}${renderPerformanceChart(entries)}</div>`;
 }
 
 function renderSubject(subject, latest, catalog) {
