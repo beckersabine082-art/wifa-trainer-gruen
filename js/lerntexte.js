@@ -62,37 +62,45 @@ function lerntexteAudioTestKapitelMetadatenSetzen() {
   }
 }
 
+function lerntexteAudioTestEreignisseBinden() {
+  lerntexteAudioTestAudio.onended = function () {
+    lerntexteAudioProgressSet(100, "Audio-Test beendet");
+    lerntexteElement("lerntexteAudioStatus").textContent = "Test-Audio beendet.";
+    if (lerntexteAudioTestKapitelAktiv) {
+      lerntexteAudioAktiv = false;
+      lerntexteAudioPausiert = false;
+      lerntexteAudioSteuerungAktualisieren();
+      lerntexteAudioMediaSessionAktualisieren();
+    }
+  };
+  lerntexteAudioTestAudio.ontimeupdate = function () {
+    if (!lerntexteAudioTestAudio.duration || !isFinite(lerntexteAudioTestAudio.duration)) return;
+    const percent = (lerntexteAudioTestAudio.currentTime / lerntexteAudioTestAudio.duration) * 100;
+    const minsCurrent = Math.floor(lerntexteAudioTestAudio.currentTime / 60);
+    const secsCurrent = Math.floor(lerntexteAudioTestAudio.currentTime % 60);
+    const minsTotal = Math.floor(lerntexteAudioTestAudio.duration / 60);
+    const secsTotal = Math.floor(lerntexteAudioTestAudio.duration % 60);
+    const timeText = String(minsCurrent).padStart(2, "0") + ":" + String(secsCurrent).padStart(2, "0") + " / " + String(minsTotal).padStart(2, "0") + ":" + String(secsTotal).padStart(2, "0");
+    lerntexteAudioProgressSet(percent, timeText);
+  };
+}
+
 function lerntexteTestAudioQuelleSetzen(url, text, eintrag, istTestKapitel) {
   lerntexteAudioTestCurrentUrl = url;
   lerntexteAudioTestHash = lerntexteAudioHash(text);
   lerntexteAudioTestKapitelAktiv = istTestKapitel;
 
-  if (!lerntexteAudioTestAudio) {
+  const domAudio = document.getElementById("lerntexteAudioPlayer");
+  if (istTestKapitel && domAudio) {
+    lerntexteAudioTestAudio = domAudio;
+    lerntexteAudioTestAudio.preload = "auto";
+    lerntexteAudioTestEreignisseBinden();
+  } else if (!lerntexteAudioTestAudio || lerntexteAudioTestAudio === domAudio) {
     lerntexteAudioTestAudio = new Audio(url);
     lerntexteAudioTestAudio.preload = "auto";
-    lerntexteAudioTestAudio.onended = function () {
-      lerntexteAudioProgressSet(100, "Audio-Test beendet");
-      lerntexteElement("lerntexteAudioStatus").textContent = "Test-Audio beendet.";
-      if (lerntexteAudioTestKapitelAktiv) {
-        lerntexteAudioAktiv = false;
-        lerntexteAudioPausiert = false;
-        lerntexteAudioSteuerungAktualisieren();
-        lerntexteAudioMediaSessionAktualisieren();
-      }
-    };
-    lerntexteAudioTestAudio.ontimeupdate = function () {
-      if (!lerntexteAudioTestAudio.duration || !isFinite(lerntexteAudioTestAudio.duration)) return;
-      const percent = (lerntexteAudioTestAudio.currentTime / lerntexteAudioTestAudio.duration) * 100;
-      const minsCurrent = Math.floor(lerntexteAudioTestAudio.currentTime / 60);
-      const secsCurrent = Math.floor(lerntexteAudioTestAudio.currentTime % 60);
-      const minsTotal = Math.floor(lerntexteAudioTestAudio.duration / 60);
-      const secsTotal = Math.floor(lerntexteAudioTestAudio.duration % 60);
-      const timeText = String(minsCurrent).padStart(2, "0") + ":" + String(secsCurrent).padStart(2, "0") + " / " + String(minsTotal).padStart(2, "0") + ":" + String(secsTotal).padStart(2, "0");
-      lerntexteAudioProgressSet(percent, timeText);
-    };
-  } else {
-    lerntexteAudioTestAudio.src = url;
+    lerntexteAudioTestEreignisseBinden();
   }
+  lerntexteAudioTestAudio.src = url;
 
   lerntexteAudioTestAudio.play();
   if (istTestKapitel) lerntexteAudioTestKapitelMetadatenSetzen();
