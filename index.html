@@ -579,6 +579,18 @@
             <button class="action-btn" id="lerntexteAudioPlayBtn" type="button" onclick="lerntexteAudioAbspielen()">▶ Anhören</button>
             <button class="secondary-btn" id="lerntexteAudioPauseBtn" type="button" onclick="lerntexteAudioPausieren()" disabled>⏸ Pause</button>
             <button class="secondary-btn" id="lerntexteAudioStopBtn" type="button" onclick="lerntexteAudioStoppen()" disabled>⏹ Stop</button>
+            <button class="secondary-btn" id="lerntexteAudioTestBtn" type="button" onclick="lerntexteTestAudioStarten()">🎧 Test-Audio</button>
+          </div>
+
+          <div class="lerntexte-audio-progress" id="lerntexteAudioProgressWrapper" hidden>
+            <div class="lerntexte-audio-progress-header">
+              <span>Podcast · <strong id="lerntexteAudioChapterLabel">Lerntext</strong></span>
+              <span id="lerntexteAudioProgressPercent">0 %</span>
+            </div>
+            <div class="lerntexte-audio-progress-track" aria-hidden="true">
+              <span id="lerntexteAudioProgressBar" class="lerntexte-audio-progress-fill"></span>
+            </div>
+            <div class="lerntexte-audio-progress-meta" id="lerntexteAudioProgressMeta">Abschnitt 0 von 0</div>
           </div>
 
           <div class="status" id="lerntexteAudioStatus">Noch keine Audiowiedergabe gestartet.</div>
