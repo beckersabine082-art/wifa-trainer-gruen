@@ -958,12 +958,12 @@ Du bist ein strenger, fachlich genauer Korrektor für ein Lerntool.
 
 Deine Aufgabe:
 Prüfe zuerst, ob die Teilnehmerantwort die konkrete Frage beantwortet. Bewerte danach
-JEDES Bewertungskriterium einzeln anhand des fachlichen Inhalts der Teilnehmerantwort.
+JEDES Bewertungskriterium einzeln und unabhängig anhand des fachlichen Inhalts der gesamten Teilnehmerantwort.
 
 Die Stichpunkte sind Bewertungskriterien und keine Pflichtwörter. Ein Kriterium ist
-erfüllt, wenn die Antwort seine fachliche Aussage eindeutig wiedergibt. Anerkenne
-grammatische Varianten, geläufige Synonyme und klare Umschreibungen. Bei einer
-Erklärungs- oder Beschreibungsfrage genügt eine fachlich richtige Beschreibung auch
+erfüllt, wenn die Antwort seine fachliche Kernaussage eindeutig wiedergibt. Anerkenne
+grammatische Varianten, geläufige Synonyme, Alltagssprache und klare Umschreibungen.
+Bei einer Erklärungs- oder Beschreibungsfrage genügt eine fachlich richtige Beschreibung auch
 dann, wenn der Fachbegriff nicht verwendet wird. Eine Frage, die ausdrücklich nach
 einem Namen, einer Bezeichnung oder einem Fachbegriff fragt (zum Beispiel mit
 "Nennen Sie", "Wie heißt" oder "Welcher Fachbegriff"), verlangt dagegen die
@@ -986,17 +986,17 @@ ${userAnswer}
 Bewertungsregeln:
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
-- Prüfe Negationen ausdrücklich. "Kein/keine/keinen" und "nicht" dürfen einen positiven Anspruch nicht als negierten Anspruch erscheinen lassen.
-- Widersprüche und fachlich gegenteilige Aussagen zählen nicht als erfüllt: Wenn dieselbe Antwort ein Kriterium bestätigt und zugleich das Gegenteil behauptet, gilt das Kriterium als nicht erfüllt.
-- Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema.
-- Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
-- Ein Kriterium ist nur erkannt, wenn ein konkreter Bestandteil der Teilnehmerantwort es fachlich trägt.
-- Sinngemäße Antworten sind erlaubt, wenn sie dieselbe fachliche Kernaussage treffen; der exakte Wortlaut ist nicht erforderlich.
-- Leite aus einem Satz nicht automatisch mehrere Kriterien ab. Jedes Kriterium muss einzeln geprüft werden.
-- Allgemeine Aussagen zum Thema reichen nicht aus.
-- Es dürfen keine Kriterien erfunden werden.
-- Verwende ausschließlich die vorgegebenen Kriterien-IDs.
-- Wenn kein Kriterium eindeutig erfüllt ist, schreibe bei erkannten Kriterien nur "erfuellt": [].
+- Prüfe jedes Kriterium (K1...Kn) einzeln und unabhängig in der gesamten Teilnehmerantwort: Suche in der gesamten Antwort nach einer fachlich gleichwertigen Aussage und entscheide für jedes Kriterium eigenständig.
+- Inhalt vor Wortlaut: Ein Kriterium gilt als erfüllt, wenn der fachliche Inhalt eindeutig vorhanden ist – auch bei anderen Wörtern, Synonymen, veränderter Satzstellung, abweichendem Singular/Plural, Umschreibungen oder Alltagssprache statt Fachbuchbegriffen (z. B. gelten Aussagen wie "wertvoll für Kunden und Verbraucher", "Mehrwert für Kunden", "Kunden profitieren davon", "Vorteile für Kunden schaffen" oder "den Kunden etwas Wertvolles bieten" als Erfüllung des Kriteriums "Nutzen für Kunden").
+- Nicht überstreng auf bestimmte Einzelwörter bestehen: Wenn der fachliche Sinn eindeutig getroffen ist, darf ein Kriterium nicht abgelehnt werden, nur weil ein bestimmtes Wort (z. B. "Nutzen") nicht wörtlich vorkommt.
+- Kriterien nicht miteinander vermischen: Jedes Kriterium wird separat bewertet. Wenn eine Antwort den Inhalt eines Kriteriums (z. B. K3) erfüllt, darf dieser Inhalt nicht ignoriert werden, nur weil ein anderes Kriterium (z. B. K2) im selben Satz oder Kontext unvollständig ist.
+- Fachlich präzise bleiben (kein reines Keyword-Matching): Ein Kriterium ist nur erfüllt, wenn die Aussage tatsächlich fachlich dazu passt. Bloße Schlagwörter ohne den geforderten Sinnzusammenhang (z. B. nur das Wort "Kunden" ohne Nutzenbezug wie "Kunden zahlen den Preis") erfüllen das Kriterium nicht.
+- Prüfe Negationen und Gegenteile ausdrücklich: "Kein/nicht" oder fachlich gegenteilige Aussagen (z. B. "Kosten steigen" statt "Kosten sinken") dürfen kein positives Kriterium erfüllen.
+- Widersprüche beachten: Wenn die Antwort zu demselben Kriterium gleichzeitig eine richtige und eine fachlich gegenteilige Aussage trifft, gilt das Kriterium als nicht_erfuellt.
+- Keine zusätzlichen Anforderungen erfinden: Bewerte nur die tatsächlich vorgegebenen Kriterien. Verlange keine zusätzlichen Voraussetzungen oder Lehrbuchdetails, die nicht Teil des Kriteriums sind, und ziehe keine Punkte für fehlende Zusatzdetails ab, die nicht im Kriterium stehen.
+- Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema. Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
+- Verwende ausschließlich die vorgegebenen Kriterien-IDs. Erfinde keine neuen IDs.
+- Wenn kein Kriterium eindeutig erfüllt ist, gib "erfuellt": [] zurück.
 - Unsicherheitsformulierungen wie "ich glaube", "wahrscheinlich", "vielleicht" sind nur dann relevant, wenn sie den fachlichen Inhalt selbst entwerten. Sonst zählt der fachliche Inhalt normal.
 
 ${istDiagramm ? "- Bewerte bei DIAGRAMM zusätzlich die übermittelte Skizze auf Achsen, Kurven, Verläufe, Verschiebungen, Schnittpunkte und relevante Beschriftungen. Eine Skizze darf die schriftliche Antwort ergänzen oder ersetzen." : ""}
@@ -1984,11 +1984,11 @@ Du bist ein strenger, fachlich genauer Korrektor für eine Prüfungssimulation.
 
 Deine Aufgabe:
 Prüfe zuerst, ob die Teilnehmerantwort die konkrete Frage beantwortet. Bewerte danach
-JEDES Bewertungskriterium einzeln anhand des fachlichen Inhalts der Teilnehmerantwort.
+JEDES Bewertungskriterium einzeln und unabhängig anhand des fachlichen Inhalts der gesamten Teilnehmerantwort.
 
 Die Stichpunkte sind Bewertungskriterien und keine Pflichtwörter. Ein Kriterium ist
-erfüllt, wenn die Antwort seine fachliche Aussage eindeutig wiedergibt. Anerkenne
-grammatische Varianten, geläufige Synonyme und klare Umschreibungen.
+erfüllt, wenn die Antwort seine fachliche Kernaussage eindeutig wiedergibt. Anerkenne
+grammatische Varianten, geläufige Synonyme, Alltagssprache und klare Umschreibungen.
 
 Fragetyp:
 ${fragetyp}
@@ -2010,15 +2010,18 @@ ${antwort || "(keine schriftliche Ergänzung)"}
 Bewertungsregeln:
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
-- Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema.
-- Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
-- Ein Kriterium ist nur erkannt, wenn ein konkreter Bestandteil der Teilnehmerantwort es fachlich trägt.
-- Eine bloß allgemeine oder thematisch passende Aussage erfüllt kein Kriterium.
-- Prüfe Negationen ausdrücklich. "Kein/keine/keinen" und "nicht" dürfen einen positiven Anspruch nicht als negiert erscheinen lassen.
-- Widersprüche und fachlich gegenteilige Aussagen zählen nicht als erfüllt: Wenn dieselbe Antwort ein Kriterium bestätigt und zugleich das Gegenteil behauptet, gilt das Kriterium als nicht erfüllt.
+- Prüfe jedes Kriterium (K1...Kn) einzeln und unabhängig in der gesamten Teilnehmerantwort: Suche in der gesamten Antwort nach einer fachlich gleichwertigen Aussage und entscheide für jedes Kriterium eigenständig.
+- Inhalt vor Wortlaut: Ein Kriterium gilt als erfüllt, wenn der fachliche Inhalt eindeutig vorhanden ist – auch bei anderen Wörtern, Synonymen, veränderter Satzstellung, abweichendem Singular/Plural, Umschreibungen oder Alltagssprache statt Fachbuchbegriffen (z. B. gelten Aussagen wie "wertvoll für Kunden und Verbraucher", "Mehrwert für Kunden", "Kunden profitieren davon", "Vorteile für Kunden schaffen" oder "den Kunden etwas Wertvolles bieten" als Erfüllung des Kriteriums "Nutzen für Kunden").
+- Nicht überstreng auf bestimmte Einzelwörter bestehen: Wenn der fachliche Sinn eindeutig getroffen ist, darf ein Kriterium nicht abgelehnt werden, nur weil ein bestimmtes Wort (z. B. "Nutzen") nicht wörtlich vorkommt.
+- Kriterien nicht miteinander vermischen: Jedes Kriterium wird separat bewertet. Wenn eine Antwort den Inhalt eines Kriteriums erfüllt, darf dieser Inhalt nicht ignoriert werden, nur weil ein anderes Kriterium im selben Satz oder Kontext unvollständig ist.
+- Fachlich präzise bleiben (kein reines Keyword-Matching): Ein Kriterium ist nur erfüllt, wenn die Aussage tatsächlich fachlich dazu passt. Bloße Schlagwörter ohne den geforderten Sinnzusammenhang erfüllen kein Kriterium.
+- Prüfe Negationen und Gegenteile ausdrücklich: "Kein/nicht" oder fachlich gegenteilige Aussagen dürfen kein positives Kriterium erfüllen.
+- Widersprüche beachten: Wenn die Antwort zu demselben Kriterium gleichzeitig eine richtige und eine fachlich gegenteilige Aussage trifft, gilt das Kriterium als nicht_erfuellt.
+- Keine zusätzlichen Anforderungen erfinden: Bewerte nur die tatsächlich vorgegebenen Kriterien. Verlange keine zusätzlichen Voraussetzungen oder Lehrbuchdetails, die nicht Teil des Kriteriums sind.
+- Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema. Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
+- Verwende ausschließlich die vorgegebenen Kriterien-IDs. Erfinde keine neuen IDs.
+- Wenn kein Kriterium eindeutig erfüllt ist, gib "erfuellt": [] zurück.
 - Unsicherheitsformulierungen wie "ich glaube", "wahrscheinlich", "vielleicht" sind nur dann relevant, wenn sie den fachlichen Inhalt selbst entwerten. Sonst zählt der fachliche Inhalt normal.
-- Verwende ausschließlich die vorgegebenen Kriterien-IDs.
-- Erfinde keine neuen Kriterien.
 
 Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
 {
