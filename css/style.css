@@ -3451,3 +3451,169 @@ select:focus {
   font-weight: 700;
   color: #245c3a;
 }
+
+/* =========================================================
+   Circle Harbor Company Info (details/summary)
+   ========================================================= */
+
+.circle-harbor-info {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 0;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eadfff;
+  overflow: hidden;
+}
+
+.circle-harbor-info > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.circle-harbor-info > summary:hover {
+  background-color: #faf7ff;
+}
+
+.circle-harbor-info > summary:focus-visible {
+  outline: 2px solid #b794f6;
+  outline-offset: -2px;
+}
+
+.circle-harbor-summary-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.circle-harbor-summary-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.circle-harbor-summary-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.circle-harbor-summary-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #221344;
+}
+
+.circle-harbor-summary-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #5a4a80;
+  line-height: 1.4;
+}
+
+.circle-harbor-summary-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #4a3970;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.circle-harbor-info[open] > summary .circle-harbor-summary-arrow {
+  transform: rotate(180deg);
+}
+
+.circle-harbor-info > div {
+  padding: 0 16px 16px 16px;
+  border-top: 1px solid #eadfff;
+}
+
+.circle-harbor-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.circle-harbor-content h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #221344;
+}
+
+.circle-harbor-content p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #3d2d63;
+}
+
+.circle-harbor-content p + p {
+  margin-top: 10px;
+}
+
+/* Circle Harbor hint on homepage */
+.circle-harbor-hint {
+  background: linear-gradient(135deg, #f3ebff, #efe7ff);
+  border: 1px solid #d8c8f8;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(80, 45, 140, 0.08);
+}
+
+.circle-harbor-hint h3 {
+  margin: 0 0 8px 0;
+  font-size: 17px;
+  font-weight: bold;
+  color: #221344;
+}
+
+.circle-harbor-hint p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #3d2d63;
+}
+
+@media (max-width: 520px) {
+  .circle-harbor-info > summary {
+    padding: 14px;
+  }
+
+  .circle-harbor-info > div {
+    padding: 0 14px 14px 14px;
+  }
+
+  .circle-harbor-summary-title {
+    font-size: 15px;
+  }
+
+  .circle-harbor-summary-subtitle {
+    font-size: 12px;
+  }
+
+  .circle-harbor-hint {
+    padding: 14px;
+  }
+
+  .circle-harbor-hint h3 {
+    font-size: 16px;
+  }
+
+  .circle-harbor-hint p {
+    font-size: 14px;
+  }
+}
