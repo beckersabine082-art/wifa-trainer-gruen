@@ -481,6 +481,21 @@ function getMaxPunkteFromStichpunkte_(rawValue) {
   return liste.length > 0 ? liste.length : 10;
 }
 
+function getKriterienIdsFuerStichpunkte_(stichpunkteListe) {
+  return Array.isArray(stichpunkteListe)
+    ? stichpunkteListe.map(function(_, index) {
+        return "K" + (index + 1);
+      })
+    : [];
+}
+
+function normalizeKriterienId_(wert) {
+  return String(wert || "")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "");
+}
+
 function filterQuestionsByThema_(questions, thema) {
   const themaFilter = String(thema || "").trim();
 
@@ -683,6 +698,11 @@ function istKeineVerwertbareAntwort_(text) {
   if (ungueltig.includes(t)) return true;
   if (t.length < 4) return true;
 
+  const wortliste = t
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+
   const unsicherheitsPhrasen = [
     "vielleicht",
     "möglicherweise",
@@ -698,16 +718,10 @@ function istKeineVerwertbareAntwort_(text) {
     "weiss nicht so genau"
   ];
 
-  const hatUnsicherheit = unsicherheitsPhrasen.some(p => t.includes(p));
+  const nurUnsicherheit = unsicherheitsPhrasen.some(p => t === p || t.replace(/\s+/g, " ") === p)
+    || /^((ich\s+glaube|ich\s+denke|vielleicht|eventuell|möglicherweise|moeglicherweise|bin\s+mir\s+nicht\s+sicher|nicht\s+sicher|weiß\s+es\s+nicht\s+genau|weiss\s+es\s+nicht\s+genau|weiß\s+nicht\s+so\s+genau|weiss\s+nicht\s+so\s+genau)[\s,.;:-]*)+$/.test(t);
 
-  if (hatUnsicherheit) {
-    const wortliste = t
-      .replace(/[^\p{L}\p{N}\s]/gu, " ")
-      .split(/\s+/)
-      .filter(Boolean);
-
-    if (wortliste.length <= 10) return true;
-  }
+  if (nurUnsicherheit && wortliste.length <= 10) return true;
 
   const unpassendeWoerter = [
     "brudi", "digga", "joker", "lol", "haha"
@@ -716,6 +730,97 @@ function istKeineVerwertbareAntwort_(text) {
   if (unpassendeWoerter.some(w => t.includes(w))) return true;
 
   return false;
+}
+
+function parseKriterienErgebnis_(text, kriterienIds) {
+  const ids = Array.isArray(kriterienIds) ? kriterienIds.map(String) : [];
+  const validIdSet = new Set(ids.map(function(id) {
+    return normalizeKriterienId_(id);
+  }));
+
+  const dedupe = function(values) {
+    const result = [];
+    const seen = new Set();
+
+    values.forEach(function(value) {
+      const candidate = normalizeKriterienId_(value);
+      if (!candidate) return;
+      if (!validIdSet.has(candidate)) return;
+      const original = ids.find(function(id) {
+        return normalizeKriterienId_(id) === candidate;
+      });
+      if (!original || seen.has(original)) return;
+      seen.add(original);
+      result.push(original);
+    });
+
+    return result;
+  };
+
+  let parsed = {};
+  const rawText = String(text || "").trim();
+
+  if (rawText) {
+    try {
+      parsed = JSON.parse(rawText);
+    } catch (error) {
+      const codeBlockMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)```/i);
+      if (codeBlockMatch && codeBlockMatch[1]) {
+        try {
+          parsed = JSON.parse(codeBlockMatch[1]);
+        } catch (innerError) {
+          parsed = {};
+        }
+      }
+    }
+  }
+
+  const erfuellt = Array.isArray(parsed.erfuellt) ? parsed.erfuellt : Array.isArray(parsed.erfüllt) ? parsed.erfüllt : [];
+  const nichtErfuellt = Array.isArray(parsed.nicht_erfuellt) ? parsed.nicht_erfuellt : Array.isArray(parsed.nichtErfuellt) ? parsed.nichtErfuellt : [];
+
+  const fulfilledSet = new Set(dedupe(erfuellt));
+  const notFulfilledSet = new Set(dedupe(nichtErfuellt));
+
+  const conflicting = new Set(
+    [...fulfilledSet].filter(function(item) {
+      return notFulfilledSet.has(item);
+    })
+  );
+
+  conflicting.forEach(function(item) {
+    fulfilledSet.delete(item);
+    notFulfilledSet.add(item);
+  });
+
+  const erkannteIds = ids.filter(function(id) {
+    return fulfilledSet.has(id);
+  });
+  const fehlendeIds = ids.filter(function(id) {
+    return !fulfilledSet.has(id);
+  });
+
+  return {
+    erkannteIds: erkannteIds,
+    fehlendeIds: fehlendeIds,
+    erkannte: erkannteIds,
+    fehlende: fehlendeIds
+  };
+}
+
+function berechnePunkteAusKriterien_(erfuellt, anzahlKriterien, maxPunkte) {
+  const kriteriumAnzahl = Number(anzahlKriterien || 0);
+  const maxPunkteNum = Number(maxPunkte || 0);
+  const count = Number(erfuellt || 0);
+
+  if (kriteriumAnzahl <= 0 || maxPunkteNum <= 0) {
+    return 0;
+  }
+
+  const anteil = count / kriteriumAnzahl;
+  const berechnet = anteil * maxPunkteNum;
+  const gerundet = Math.round(berechnet);
+
+  return Math.max(0, Math.min(maxPunkteNum, gerundet));
 }
 
 function bewerteAntwortFrontend(payload) {
@@ -847,14 +952,15 @@ const speichereInSheet = payload?.speichereInSheet !== false;
       fehlende: []
     };
   }
+  const kriterienIds = getKriterienIdsFuerStichpunkte_(stichpunkteListe);
   const prompt = `
 Du bist ein strenger, fachlich genauer Korrektor für ein Lerntool.
 
 Deine Aufgabe:
 Prüfe zuerst, ob die Teilnehmerantwort die konkrete Frage beantwortet. Bewerte danach
-JEDEN Stichpunkt einzeln anhand des fachlichen Inhalts der Teilnehmerantwort.
+JEDES Bewertungskriterium einzeln anhand des fachlichen Inhalts der Teilnehmerantwort.
 
-Die Stichpunkte sind Bewertungskriterien und keine Pflichtwörter. Ein Stichpunkt ist
+Die Stichpunkte sind Bewertungskriterien und keine Pflichtwörter. Ein Kriterium ist
 erfüllt, wenn die Antwort seine fachliche Aussage eindeutig wiedergibt. Anerkenne
 grammatische Varianten, geläufige Synonyme und klare Umschreibungen. Bei einer
 Erklärungs- oder Beschreibungsfrage genügt eine fachlich richtige Beschreibung auch
@@ -869,58 +975,37 @@ ${frage}
 Musterlösung:
 ${muster}
 
-Vorgegebene Stichpunkte zur Bewertung:
-${stichpunkteListe.map(p => "- " + p).join("\n")}
+Bewertungskriterien:
+${stichpunkteListe.map(function(stichpunkt, index) {
+  return (index + 1) + ". " + kriterienIds[index] + ": " + stichpunkt;
+}).join("\n")}
 
 Teilnehmerantwort:
 ${userAnswer}
 
 Bewertungsregeln:
 - Bewerte ausschließlich die Teilnehmerantwort.
-- Musterlösung und Stichpunkte zählen NICHT als vom Teilnehmer genannt.
-- Berücksichtige die Frage als Kontext: Eine kurze Antwort wie "Nein, grundsätzlich nicht"
-  kann bei einer eindeutig passenden Ja/Nein-Frage eine vollständige Negation der
-  Frage aussagen. Verlange in diesem Fall keine Wiederholung von Fragewörtern.
-- Prüfe Negationen ausdrücklich. "Kein/keine/keinen" und "nicht" dürfen einen
-  positiven Anspruch nicht als negierten Anspruch erscheinen lassen. "Es gibt einen
-  gesetzlichen Anspruch" erfüllt daher nicht "kein gesetzlicher Anspruch"; eine
-  eindeutige Negation erfüllt ihn.
+- Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
+- Prüfe Negationen ausdrücklich. "Kein/keine/keinen" und "nicht" dürfen einen positiven Anspruch nicht als negierten Anspruch erscheinen lassen.
+- Widersprüche und fachlich gegenteilige Aussagen zählen nicht als erfüllt: Wenn dieselbe Antwort ein Kriterium bestätigt und zugleich das Gegenteil behauptet, gilt das Kriterium als nicht erfüllt.
 - Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema.
 - Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
-- Wenn die Antwort ein anderes Verfahren, Beispiel oder Konzept beschreibt und die Kernaussage der Musterlösung nicht trifft, ist sie falsch.
-- In diesem Fall dürfen keine Stichpunkte als erkannt aufgeführt werden.
-- Ein Stichpunkt ist nur erkannt, wenn ein konkreter Bestandteil der Teilnehmerantwort
-  ihn trägt. Eine bloß allgemeine oder thematisch passende Aussage erfüllt keinen
-  zusätzlichen Stichpunkt.
-- Sinngemäße Antworten sind erlaubt, wenn sie dieselbe fachliche Kernaussage treffen;
-  der exakte Wortlaut ist nicht erforderlich.
-- Rollen, Beziehungen oder Abläufe dürfen auch durch konkrete Beschreibungen statt
-  durch Fachbegriffe erfüllt sein, wenn aus dem Kontext eindeutig hervorgeht, wer
-  welche Rolle hat oder welcher Ablauf gemeint ist.
-- Leite aus einem Satz nicht automatisch mehrere Kriterien ab. Jedes Kriterium muss
-  einzeln inhaltlich gedeckt sein.
-- Bei Definitionen reicht eine fachlich richtige Kurzfassung, wenn der Kern eindeutig enthalten ist.
+- Ein Kriterium ist nur erkannt, wenn ein konkreter Bestandteil der Teilnehmerantwort es fachlich trägt.
+- Sinngemäße Antworten sind erlaubt, wenn sie dieselbe fachliche Kernaussage treffen; der exakte Wortlaut ist nicht erforderlich.
+- Leite aus einem Satz nicht automatisch mehrere Kriterien ab. Jedes Kriterium muss einzeln geprüft werden.
 - Allgemeine Aussagen zum Thema reichen nicht aus.
-- Es dürfen keine Stichpunkte erfunden werden.
-- Verwende ausschließlich Stichpunkte aus der vorgegebenen Liste.
-- Wenn kein Stichpunkt eindeutig enthalten ist, schreibe bei erkannten Stichpunkten nur "- keine".
+- Es dürfen keine Kriterien erfunden werden.
+- Verwende ausschließlich die vorgegebenen Kriterien-IDs.
+- Wenn kein Kriterium eindeutig erfüllt ist, schreibe bei erkannten Kriterien nur "erfuellt": [].
+- Unsicherheitsformulierungen wie "ich glaube", "wahrscheinlich", "vielleicht" sind nur dann relevant, wenn sie den fachlichen Inhalt selbst entwerten. Sonst zählt der fachliche Inhalt normal.
 
 ${istDiagramm ? "- Bewerte bei DIAGRAMM zusätzlich die übermittelte Skizze auf Achsen, Kurven, Verläufe, Verschiebungen, Schnittpunkte und relevante Beschriftungen. Eine Skizze darf die schriftliche Antwort ergänzen oder ersetzen." : ""}
 
-Arbeitsweise vor der Ausgabe (nicht ausgeben):
-1. Prüfe die Passung zur Frage.
-2. Entscheide für jeden Stichpunkt separat: eindeutig erfüllt oder nicht erfüllt.
-3. Prüfe bei jedem erfüllten Kriterium, ob die konkrete Aussage wirklich in der
-  Teilnehmerantwort steht und nicht nur aus Musterlösung oder Thema stammt.
-4. Gib bei erkannten Kriterien ausschließlich die unveränderten Stichpunkttexte aus.
-
-Gib das Ergebnis EXAKT in diesem Format zurück:
-
-Erkannte Stichpunkte:
-- ...
-
-Fehlende Stichpunkte:
-- ...
+Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
+{
+  "erfuellt": ["K1", "K3"],
+  "nicht_erfuellt": ["K2", "K4"]
+}
 `;
 
   const messages = [];
@@ -960,16 +1045,30 @@ Fehlende Stichpunkte:
   const result = JSON.parse(bodyText);
   const text = result?.choices?.[0]?.message?.content || "";
 
-  const erkannte = extractBulletList_(text, "Erkannte Stichpunkte:");
-  const fehlende = extractBulletList_(text, "Fehlende Stichpunkte:");
+  const kriterienAuswertung = parseKriterienErgebnis_(text, kriterienIds);
+  const erkannteIds = Array.isArray(kriterienAuswertung.erkannteIds) ? kriterienAuswertung.erkannteIds : [];
+  const fehlendeIds = Array.isArray(kriterienAuswertung.fehlendeIds) ? kriterienAuswertung.fehlendeIds : [];
 
-  const erkannteBereinigt = normalizeMatches_(erkannte, stichpunkteListe);
-  const fehlendeBereinigt = normalizeMatches_(fehlende, stichpunkteListe);
+  const erkannte = erkannteIds
+    .map(function(id) {
+      const index = kriterienIds.indexOf(id);
+      return index >= 0 ? stichpunkteListe[index] : id;
+    })
+    .filter(Boolean);
 
-  const uniqueErkannte = [...new Set(erkannteBereinigt)];
-  const uniqueFehlende = [...new Set(fehlendeBereinigt.filter(f => !uniqueErkannte.includes(f)))];
+  const fehlende = fehlendeIds
+    .map(function(id) {
+      const index = kriterienIds.indexOf(id);
+      return index >= 0 ? stichpunkteListe[index] : id;
+    })
+    .filter(Boolean);
 
-  const erreichtePunkte = uniqueErkannte.length;
+  const uniqueErkannte = [...new Set(erkannte)];
+  const uniqueFehlende = [...new Set(fehlende.filter(function(item) {
+    return !uniqueErkannte.includes(item);
+  }))];
+
+  const erreichtePunkte = berechnePunkteAusKriterien_(uniqueErkannte.length, stichpunkteListe.length, maxPunkte);
   const gesamtPunkte = maxPunkte;
 
   let ergebnisText = "";
@@ -1879,14 +1978,15 @@ function bewertePruefungFrontend(daten) {
       };
     }
 
-    const promptText = `
+    const kriterienIds = getKriterienIdsFuerStichpunkte_(stichpunkteListe);
+  const promptText = `
 Du bist ein strenger, fachlich genauer Korrektor für eine Prüfungssimulation.
 
 Deine Aufgabe:
 Prüfe zuerst, ob die Teilnehmerantwort die konkrete Frage beantwortet. Bewerte danach
-JEDEN Stichpunkt einzeln anhand des fachlichen Inhalts der Teilnehmerantwort.
+JEDES Bewertungskriterium einzeln anhand des fachlichen Inhalts der Teilnehmerantwort.
 
-Die Stichpunkte sind Bewertungskriterien und keine Pflichtwörter. Ein Stichpunkt ist
+Die Stichpunkte sind Bewertungskriterien und keine Pflichtwörter. Ein Kriterium ist
 erfüllt, wenn die Antwort seine fachliche Aussage eindeutig wiedergibt. Anerkenne
 grammatische Varianten, geläufige Synonyme und klare Umschreibungen.
 
@@ -1899,43 +1999,32 @@ ${frage}
 Musterlösung:
 ${muster}
 
-Vorgegebene Stichpunkte zur Bewertung:
-${stichpunkteListe.map(function(p) { return "- " + p; }).join("\n")}
+Bewertungskriterien:
+${stichpunkteListe.map(function(stichpunkt, index) {
+  return (index + 1) + ". " + kriterienIds[index] + ": " + stichpunkt;
+}).join("\n")}
 
 Teilnehmerantwort:
 ${antwort || "(keine schriftliche Ergänzung)"}
 
 Bewertungsregeln:
 - Bewerte ausschließlich die Teilnehmerantwort.
-- Musterlösung und Stichpunkte zählen NICHT als vom Teilnehmer genannt.
+- Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
 - Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema.
 - Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
-- Ein Stichpunkt ist nur erkannt, wenn ein konkreter Bestandteil der Teilnehmerantwort ihn trägt.
-- Eine bloß allgemeine oder thematisch passende Aussage erfüllt keinen Stichpunkt.
-- Prüfe bei jedem erfüllten Kriterium, ob die konkrete Aussage wirklich in der
-  Teilnehmerantwort steht und nicht nur aus Musterlösung oder Thema stammt.
-- Verwende ausschließlich Stichpunkte aus der vorgegebenen Liste.
-- Erfinde keine neuen Stichpunkte.
-- Wenn kein Stichpunkt eindeutig enthalten ist, schreibe bei erkannten Stichpunkten nur "- keine".
-
-Besonderheiten:
+- Ein Kriterium ist nur erkannt, wenn ein konkreter Bestandteil der Teilnehmerantwort es fachlich trägt.
+- Eine bloß allgemeine oder thematisch passende Aussage erfüllt kein Kriterium.
 - Prüfe Negationen ausdrücklich. "Kein/keine/keinen" und "nicht" dürfen einen positiven Anspruch nicht als negiert erscheinen lassen.
-${fragetyp === "diagramm" ? "- Bei Diagrammaufgaben zählen erkennbare Achsen, Kurven, Schnittpunkte, Hilfslinien und Beschriftungen auch ohne lange Textbeschreibung." : ""}
-- Bei Synonymen und sinngemäßen Formulierungen ist der exakte Wortlaut nicht erforderlich.
+- Widersprüche und fachlich gegenteilige Aussagen zählen nicht als erfüllt: Wenn dieselbe Antwort ein Kriterium bestätigt und zugleich das Gegenteil behauptet, gilt das Kriterium als nicht erfüllt.
+- Unsicherheitsformulierungen wie "ich glaube", "wahrscheinlich", "vielleicht" sind nur dann relevant, wenn sie den fachlichen Inhalt selbst entwerten. Sonst zählt der fachliche Inhalt normal.
+- Verwende ausschließlich die vorgegebenen Kriterien-IDs.
+- Erfinde keine neuen Kriterien.
 
-Arbeitsweise vor der Ausgabe (nicht ausgeben):
-1. Prüfe die Passung zur Frage.
-2. Entscheide für jeden Stichpunkt separat: eindeutig erfüllt oder nicht erfüllt.
-3. Prüfe bei jedem erfüllten Kriterium, ob die konkrete Aussage wirklich in der Teilnehmerantwort steht.
-4. Gib bei erkannten Kriterien ausschließlich die unveränderten Stichpunkttexte aus.
-
-Gib das Ergebnis EXAKT in diesem Format zurück:
-
-Erkannte Stichpunkte:
-- ...
-
-Fehlende Stichpunkte:
-- ...
+Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
+{
+  "erfuellt": ["K1", "K3"],
+  "nicht_erfuellt": ["K2", "K4"]
+}
 `;
 
 const messages = [];
@@ -1987,28 +2076,26 @@ const messages = [];
     const result = JSON.parse(bodyText);
     const text = result?.choices?.[0]?.message?.content || "";
 
-    const erkannte = extractBulletList_(text, "Erkannte Stichpunkte:");
-    const fehlende = extractBulletList_(text, "Fehlende Stichpunkte:");
+    const kriterienAuswertung = parseKriterienErgebnis_(text, kriterienIds);
+    const erkannteIds = Array.isArray(kriterienAuswertung.erkannteIds) ? kriterienAuswertung.erkannteIds : [];
+    const fehlendeIds = Array.isArray(kriterienAuswertung.fehlendeIds) ? kriterienAuswertung.fehlendeIds : [];
 
-    const erkannteBereinigt = normalizeMatches_(erkannte, stichpunkteListe);
-    const fehlendeBereinigt = normalizeMatches_(fehlende, stichpunkteListe);
+    const erkannte = erkannteIds.map(function(id) {
+      const index = kriterienIds.indexOf(id);
+      return index >= 0 ? stichpunkteListe[index] : id;
+    }).filter(Boolean);
 
-    const uniqueErkannte = [...new Set(erkannteBereinigt)];
-    const uniqueFehlende = [...new Set(fehlendeBereinigt.filter(function(f) {
+    const fehlende = fehlendeIds.map(function(id) {
+      const index = kriterienIds.indexOf(id);
+      return index >= 0 ? stichpunkteListe[index] : id;
+    }).filter(Boolean);
+
+    const uniqueErkannte = [...new Set(erkannte)];
+    const uniqueFehlende = [...new Set(fehlende.filter(function(f) {
       return !uniqueErkannte.includes(f);
     }))];
 
-    let erreichtePunkte = uniqueErkannte.length;
-
-if (uniqueErkannte.length === stichpunkteListe.length && stichpunkteListe.length > 0) {
-  erreichtePunkte = maxPunkte;
-} else if (stichpunkteListe.length > 0 && maxPunkte !== stichpunkteListe.length) {
-  erreichtePunkte = Math.round((uniqueErkannte.length / stichpunkteListe.length) * maxPunkte);
-}
-
-if (erreichtePunkte > maxPunkte) {
-  erreichtePunkte = maxPunkte;
-}
+    let erreichtePunkte = berechnePunkteAusKriterien_(uniqueErkannte.length, stichpunkteListe.length, maxPunkte);
 
     gesamtPunkte += erreichtePunkte;
 
