@@ -74,7 +74,40 @@ function doGet(e) {
   try {
     let result = {};
 
-    if (action === "subjects") {
+    if (action === "podcastAudioTest") {
+      const dryRun = String(e?.parameter?.dryRun || "").trim() === "1" || String(e?.parameter?.dryRun || "").trim().toLowerCase() === "true";
+
+      if (dryRun) {
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            success: true,
+            data: {
+              route: "podcastAudioTest",
+              dryRun: true,
+              ttsCalled: false
+            }
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const fach = String(e?.parameter?.fach || "").trim();
+      const titel = String(e?.parameter?.titel || "").trim();
+      const chapter = String(e?.parameter?.chapter || "").trim();
+      const text = String(e?.parameter?.text || "").trim();
+
+      if (!text) {
+        throw new Error("Kein Test-Text übergeben.");
+      }
+
+      const payload = generatePodcastAudioTestPayload_(fach, chapter, titel, text);
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: true,
+          data: payload
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+
+    } else if (action === "subjects") {
       result = {
         success: true,
         data: getFrontendSheetNames()
@@ -202,6 +235,61 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+function generatePodcastAudioTestPayload_(fach, chapter, titel, text) {
+  const normalizedText = String(text || "").trim();
+  if (!normalizedText) {
+    throw new Error("Kein Text für die Podcast-Test-Erzeugung vorhanden.");
+  }
+
+  // gpt-4o-mini-tts uses a 2000-token input limit. This PoC intentionally avoids
+  // a fake 4096-character limit and does not add chunking logic for the test text.
+  if (!OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY für TTS-Test fehlt.");
+  }
+
+  const response = UrlFetchApp.fetch("https://api.openai.com/v1/audio/speech", {
+    method: "post",
+    headers: {
+      "Authorization": "Bearer " + OPENAI_API_KEY,
+      "Content-Type": "application/json"
+    },
+    payload: JSON.stringify({
+      model: "gpt-4o-mini-tts",
+      voice: "alloy",
+      input: normalizedText,
+      response_format: "mp3",
+      instructions: "Sprich ruhig, klar und sachlich. Halte den fachlichen Inhalt exakt unverändert. Keine zusätzliche Interpretation oder Umformulierung."
+    }),
+    muteHttpExceptions: true
+  });
+
+  const statusCode = response.getResponseCode();
+  const headers = response.getAllHeaders ? response.getAllHeaders() : {};
+  const contentType = headers["Content-Type"] || headers["content-type"] || "audio/mpeg";
+
+  if (statusCode !== 200) {
+    const bodyText = response.getContentText();
+    throw new Error("OpenAI TTS-Fehler: " + statusCode + " - " + bodyText);
+  }
+
+  if (String(contentType).toLowerCase().indexOf("json") !== -1) {
+    const bodyText = response.getContentText();
+    throw new Error("OpenAI TTS gab keinen Audio-Stream zurück: " + bodyText);
+  }
+
+  const audioBytes = response.getContent();
+  const base64Audio = Utilities.base64Encode(audioBytes);
+
+  return {
+    fach: String(fach || ""),
+    chapter: String(chapter || ""),
+    titel: String(titel || ""),
+    mimeType: "audio/mpeg",
+    audioBase64: base64Audio,
+    byteLength: audioBytes.length
+  };
+}
+
 function getLernstandFrontend(nutzer) {
   const ss = getSpreadsheet_();
   const sheet = ss.getSheetByName("Lernstand");
