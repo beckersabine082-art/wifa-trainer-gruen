@@ -156,3 +156,42 @@ test('keine Stichpunkte vorhanden bleibt ohne Bewertung', () => {
 test('maxPunkte leer oder ungültig gibt 0', () => {
   assert.equal(context.berechnePunkteAusKriterien_(2, 4, 0), 0);
 });
+
+test('Bewertungsprompt enthält die Regel für generische Kriterien und alternative Beispiele', () => {
+  let capturedPayload = null;
+  context.UrlFetchApp.fetch = (url, options) => {
+    capturedPayload = JSON.parse(options.payload);
+    return {
+      getResponseCode: () => 200,
+      getContentText: () => JSON.stringify({ choices: [{ message: { content: '{"erfuellt":["K1","K2","K3","K4"],"nicht_erfuellt":[]}' } }] })
+    };
+  };
+
+  context.getQuestionById = () => ({
+    id: 'UF-0005',
+    row: 3,
+    thema: 'Unternehmensführung',
+    frage: 'Die Circle Harbor GmbH plant die Expansion in weitere EU-Staaten...',
+    musterloesung: 'Beispiel 1: Umweltschutz...',
+    stichpunkte: 'Unternehmensziel 1 fachlich plausibel;Zielkonflikt 1 zur Expansion nachvollziehbar erläutert;Unternehmensziel 2 fachlich plausibel;Zielkonflikt 2 zur Expansion nachvollziehbar erläutert',
+    fragetyp: 'text'
+  });
+
+  context.bewerteAntwortFrontend({
+    fach: 'Unternehmensführung',
+    frageId: 'UF-0005',
+    antwort: 'Das Ziel, die Region zu stärken...',
+    speichereInSheet: false
+  });
+
+  assert.ok(capturedPayload, 'UrlFetchApp.fetch wurde aufgerufen');
+  const promptText = capturedPayload.messages[0].content;
+  assert.ok(
+    promptText.includes('Musterlösung und Beispiele dienen als fachliche Referenz'),
+    'Prompt muss Regel zur Musterlösung als Referenz enthalten'
+  );
+  assert.ok(
+    promptText.includes('Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt'),
+    'Prompt muss regeln, dass alternative fachlich korrekte Beispiele zulässig sind'
+  );
+});

@@ -986,6 +986,7 @@ ${userAnswer}
 Bewertungsregeln:
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
+- Die Musterlösung und Beispiele dienen als fachliche Referenz. Bei offenen Aufgaben können auch andere fachlich korrekte Lösungen die Kriterien erfüllen. Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt, sofern das Bewertungskriterium allgemein formuliert ist.
 - Prüfe jedes Kriterium (K1...Kn) einzeln und unabhängig in der gesamten Teilnehmerantwort: Suche in der gesamten Antwort nach einer fachlich gleichwertigen Aussage und entscheide für jedes Kriterium eigenständig.
 - Inhalt vor Wortlaut: Ein Kriterium gilt als erfüllt, wenn der fachliche Inhalt eindeutig vorhanden ist – auch bei anderen Wörtern, Synonymen, veränderter Satzstellung, abweichendem Singular/Plural, Umschreibungen oder Alltagssprache statt Fachbuchbegriffen (z. B. gelten Aussagen wie "wertvoll für Kunden und Verbraucher", "Mehrwert für Kunden", "Kunden profitieren davon", "Vorteile für Kunden schaffen" oder "den Kunden etwas Wertvolles bieten" als Erfüllung des Kriteriums "Nutzen für Kunden").
 - Nicht überstreng auf bestimmte Einzelwörter bestehen: Wenn der fachliche Sinn eindeutig getroffen ist, darf ein Kriterium nicht abgelehnt werden, nur weil ein bestimmtes Wort (z. B. "Nutzen") nicht wörtlich vorkommt.
@@ -2010,6 +2011,7 @@ ${antwort || "(keine schriftliche Ergänzung)"}
 Bewertungsregeln:
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
+- Die Musterlösung und Beispiele dienen als fachliche Referenz. Bei offenen Aufgaben können auch andere fachlich korrekte Lösungen die Kriterien erfüllen. Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt, sofern das Bewertungskriterium allgemein formuliert ist.
 - Prüfe jedes Kriterium (K1...Kn) einzeln und unabhängig in der gesamten Teilnehmerantwort: Suche in der gesamten Antwort nach einer fachlich gleichwertigen Aussage und entscheide für jedes Kriterium eigenständig.
 - Inhalt vor Wortlaut: Ein Kriterium gilt als erfüllt, wenn der fachliche Inhalt eindeutig vorhanden ist – auch bei anderen Wörtern, Synonymen, veränderter Satzstellung, abweichendem Singular/Plural, Umschreibungen oder Alltagssprache statt Fachbuchbegriffen (z. B. gelten Aussagen wie "wertvoll für Kunden und Verbraucher", "Mehrwert für Kunden", "Kunden profitieren davon", "Vorteile für Kunden schaffen" oder "den Kunden etwas Wertvolles bieten" als Erfüllung des Kriteriums "Nutzen für Kunden").
 - Nicht überstreng auf bestimmte Einzelwörter bestehen: Wenn der fachliche Sinn eindeutig getroffen ist, darf ein Kriterium nicht abgelehnt werden, nur weil ein bestimmtes Wort (z. B. "Nutzen") nicht wörtlich vorkommt.
