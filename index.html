@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>WiFa Trainer</title>
-  <link rel="stylesheet" href="css/style.css?v=trainer-gapcss-v3">
+  <link rel="stylesheet" href="css/style.css?v=trainer-gapcss-v4">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -1386,6 +1386,18 @@
   </div>
 </div>
 
+<div id="trainerHintBubble" class="trainer-hint-bubble" hidden>
+  <div class="trainer-hint-header">
+    <button type="button" class="trainer-hint-close" onclick="schliesseTrainerHint()" aria-label="Tipp schließen">×</button>
+  </div>
+  <div class="trainer-hint-content">
+    <svg class="trainer-hint-bear" viewBox="0 0 150 120" aria-hidden="true"><use href="#kilianBearIllustration"></use></svg>
+    <div class="trainer-hint-speech-bubble">
+      <div id="trainerHintText">Der Tipp wird geladen...</div>
+    </div>
+  </div>
+</div>
+
 <button class="trainer-tipp-hinweis" id="trainerTippHinweis" type="button" onclick="fordereTrainerTippAn(event)" aria-label="Kilian-Tipp zur aktuellen Trainerfrage" hidden>
   <span class="trainer-tipp-gluehbirne" aria-hidden="true">💡</span>
   <span class="trainer-tipp-tooltip" role="tooltip">Hier kann Kilian dir zu dieser Frage einen kleinen Schubs geben.</span>
@@ -1512,10 +1524,10 @@
 <script src="js/main.js?v=nav-menu-v5"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
-<script src="js/trainer.js?v=trainer-diagramm-v3"></script>
+<script src="js/trainer.js?v=trainer-diagramm-v4"></script>
 <script src="js/bewertung.js?v=bewertung-diagramm-v3"></script>
 <script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
-<script src="js/wissensdatenbank.js?v=kilian-block-v1"></script>
+<script src="js/wissensdatenbank.js?v=kilian-block-v2"></script>
 <script src="js/lerntexte.js?v=lerntexte-v6"></script>
 <script src="js/pruefungssimulation.js?v=lernstand-pruefung-v3"></script>
 <script type="module" src="js/pruefungslernstand.js?v=lernstand-pruefung-v1"></script>

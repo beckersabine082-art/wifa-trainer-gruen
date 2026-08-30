@@ -490,3 +490,51 @@ function kilianBubbleAudioStoppen() {
     window.speechSynthesis.cancel();
   }
 }
+
+function schliesseTrainerHint() {
+  const hintBubble = document.getElementById("trainerHintBubble");
+  if (hintBubble) {
+    hintBubble.hidden = true;
+  }
+}
+
+async function zeigeTrainerHintBubble() {
+  const hintBubble = document.getElementById("trainerHintBubble");
+  const hintText = document.getElementById("trainerHintText");
+
+  if (!hintBubble || !hintText) return;
+
+  // Show bubble with loading state
+  hintBubble.hidden = false;
+  hintText.textContent = "Tipp wird geladen...";
+
+  try {
+    // Build the hint request message with context
+    const frageText = 
+      "Gib mir einen kleinen Tipp zu dieser Frage, ohne mir direkt die vollständige Lösung zu verraten.\n\n" +
+      "Kontext:\n" +
+      "Teilbereich: " + (typeof aktuellerTeilbereich !== 'undefined' ? aktuellerTeilbereich : '') + "\n" +
+      "Fach: " + (typeof aktuellesFach !== 'undefined' ? aktuellesFach : '') + "\n" +
+      "Thema: " + (typeof aktuellesThema !== 'undefined' ? aktuellesThema : '') + "\n" +
+      "Frage-ID: " + (typeof aktuelleFrageId !== 'undefined' ? aktuelleFrageId : '') + "\n" +
+      "Fragetext: " + (typeof aktuelleFrage !== 'undefined' ? aktuelleFrage : '');
+
+    // Fetch the hint from the API
+    const result = await apiPost("frageKilian", {
+      frage: frageText
+    });
+
+    if (!result.success) {
+      throw new Error(result.error || "Fehler bei der Anfrage.");
+    }
+
+    // Display the hint in the bubble
+    const antwort = result.data?.antwort || "Tipp konnte nicht geladen werden.";
+    hintText.textContent = antwort;
+
+  } catch (error) {
+    // Show error message in the bubble
+    hintText.textContent = "Der Tipp konnte gerade nicht geladen werden.";
+    console.error("Hint fetch error:", error);
+  }
+}

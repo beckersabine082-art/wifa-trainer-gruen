@@ -159,21 +159,11 @@ function fordereTrainerTippAn(event) {
 
     trainerTippTimerAbbrechen();
     trainerTippAngeboten = true;
-    const kilianInput = document.getElementById("kilianBubbleInput");
-    if (kilianInput) {
-      kilianInput.value =
-        "Gib mir einen kleinen Tipp zu dieser Frage, ohne mir direkt die vollständige Lösung zu verraten.\n\n" +
-        "Kontext:\n" +
-        "Teilbereich: " + aktuellerTeilbereich + "\n" +
-        "Fach: " + aktuellesFach + "\n" +
-        "Thema: " + aktuellesThema + "\n" +
-        "Frage-ID: " + aktuelleFrageId + "\n" +
-        "Fragetext: " + aktuelleFrage;
-    }
 
-      const kilianFenster = document.getElementById("kilianBubbleFenster");
-      if (kilianFenster) kilianFenster.style.display = "block";
-      if (typeof frageKilianBubble === "function") frageKilianBubble();
+    // Show small hint bubble instead of full Kilian chat
+    if (typeof zeigeTrainerHintBubble === "function") {
+      zeigeTrainerHintBubble();
+    }
   }
 
 function ergaenzeLeereTabellenAntwortfelder() {
@@ -214,6 +204,10 @@ function ergaenzeLeereTabellenAntwortfelder() {
 
 function resetFrageAnzeige() {
     trainerTippTimerAbbrechen();
+    // Close hint bubble when moving to another question
+    if (typeof schliesseTrainerHint === "function") {
+      schliesseTrainerHint();
+    }
     const antwortInput = document.getElementById("antwortInput");
   const diagrammCanvas = document.getElementById("skizze-normal");
     const resultBox = document.getElementById("resultBox");
