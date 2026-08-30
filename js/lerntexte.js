@@ -1,7 +1,5 @@
 // Ansicht "Lerntexte & Podcast"
 
-import { storage, ref, getDownloadURL } from './firebase-config.js';
-
 const lerntexteFaecher = [
   "Führung und Zusammenarbeit",
   "Rechnungswesen",
@@ -66,6 +64,7 @@ function lerntexteAudioTestKapitelMetadatenSetzen() {
 
 async function lerntexteAudioFirebaseUrlLaden() {
   try {
+    const { storage, ref, getDownloadURL } = await import('./firebase-config.js');
     const storageRef = ref(storage, "podcast/recht-rechtssubjekte-rechtsobjekte.mp3");
     const url = await getDownloadURL(storageRef);
     return url;
