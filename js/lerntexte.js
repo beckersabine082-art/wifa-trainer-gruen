@@ -1,5 +1,7 @@
 // Ansicht "Lerntexte & Podcast"
 
+import { storage, ref, getDownloadURL } from './firebase-config.js';
+
 const lerntexteFaecher = [
   "Führung und Zusammenarbeit",
   "Rechnungswesen",
@@ -62,6 +64,17 @@ function lerntexteAudioTestKapitelMetadatenSetzen() {
   }
 }
 
+async function lerntexteAudioFirebaseUrlLaden() {
+  try {
+    const storageRef = ref(storage, "podcast/recht-rechtssubjekte-rechtsobjekte.mp3");
+    const url = await getDownloadURL(storageRef);
+    return url;
+  } catch (error) {
+    console.error("Firebase Storage URL konnte nicht geladen werden:", error);
+    throw error;
+  }
+}
+
 function lerntexteAudioTestEreignisseBinden() {
   lerntexteAudioTestAudio.onended = function () {
     lerntexteAudioProgressSet(100, "Audio-Test beendet");
@@ -121,7 +134,7 @@ function lerntexteAudioHash(text) {
   return "audio-test-" + hash.toString(16);
 }
 
-function lerntexteTestAudioStarten() {
+async function lerntexteTestAudioStarten() {
   const einheiten = lerntexteAusgewaehlteEinheiten();
   if (!einheiten.length) {
     lerntexteElement("lerntexteAudioStatus").textContent = "Für den Test ist kein Kapitel ausgewählt.";
@@ -142,7 +155,12 @@ function lerntexteTestAudioStarten() {
 
   const istTestKapitel = lerntexteAudioTestKapitelFinden(einheiten) === eintrag;
   if (istTestKapitel) {
-    lerntexteTestAudioQuelleSetzen(lerntexteAudioTestStatischeQuelle, text, eintrag, true);
+    try {
+      const firebaseUrl = await lerntexteAudioFirebaseUrlLaden();
+      lerntexteTestAudioQuelleSetzen(firebaseUrl, text, eintrag, true);
+    } catch (error) {
+      lerntexteElement("lerntexteAudioStatus").textContent = "Firebase Storage konnte nicht geladen werden: " + error.message;
+    }
     return;
   }
 

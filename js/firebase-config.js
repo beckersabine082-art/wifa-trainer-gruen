@@ -24,6 +24,11 @@ import {
   query,
   orderBy
 } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+import {
+  getStorage,
+  ref,
+  getDownloadURL
+} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-storage.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCu8an6nozgp1NYLs7QqjRZou3gEegdG8s",
@@ -38,6 +43,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 auth.languageCode = 'de';
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 function getReturnUrl() {
   // Verwende lokal die aktuelle Origin, sonst die GitHub-Pages-URL
@@ -53,6 +59,9 @@ function getReturnUrl() {
 export {
   auth,
   db,
+  storage,
+  ref,
+  getDownloadURL,
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
