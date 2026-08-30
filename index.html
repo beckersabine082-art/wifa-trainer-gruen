@@ -466,6 +466,8 @@
           <div class="button-row">
             <button class="action-btn" id="btnAuswertungStarten" onclick="bewerteAntwort()">Auswertung starten</button>
             <button class="secondary-btn" onclick="naechsteFrage()">Nächste Frage</button>
+            <button class="secondary-btn" id="trainerVonVorneBtn" onclick="trainerVonVorne()">Von vorne</button>
+            <button class="secondary-btn" id="trainerShuffleBtn" onclick="trainerShuffleMix()">Shuffle Mix</button>
             <button class="secondary-btn" id="btnMusterloesungAnzeigen" onclick="zeigeMusterloesung()">Musterlösung anzeigen</button>
             <button class="secondary-btn" id="btnAntwortLeeren" onclick="antwortLeeren()">Antwort leeren</button>
           </div>
@@ -568,6 +570,8 @@
           <div class="quiz-actions">
             <button type="button" class="primary-btn" id="quizPruefenBtn">Antwort prüfen</button>
             <button type="button" class="secondary-btn" id="quizNaechsteBtn" hidden>Nächste Frage</button>
+            <button type="button" class="secondary-btn" id="quizVonVorneBtn">Von vorne</button>
+            <button type="button" class="secondary-btn" id="quizShuffleBtn">Shuffle Mix</button>
           </div>
           <div class="quiz-ergebnis" id="quizErgebnisBereich" hidden></div>
           <div class="quiz-session-stats" id="quizSessionStats">
@@ -1524,14 +1528,14 @@
 <script src="js/main.js?v=nav-menu-v5"></script>
 <script src="js/glossar.js"></script>
 <script src="js/formelsammlung.js"></script>
-<script src="js/trainer.js?v=trainer-diagramm-v4"></script>
+<script src="js/trainer.js?v=trainer-diagramm-v5"></script>
 <script src="js/bewertung.js?v=bewertung-diagramm-v3"></script>
 <script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
 <script src="js/wissensdatenbank.js?v=kilian-block-v2"></script>
 <script src="js/lerntexte.js?v=lerntexte-v6"></script>
 <script src="js/pruefungssimulation.js?v=lernstand-pruefung-v3"></script>
 <script type="module" src="js/pruefungslernstand.js?v=lernstand-pruefung-v1"></script>
-<script type="module" src="js/quiz.js?v=quiz-v2"></script>
+<script type="module" src="js/quiz.js?v=quiz-v3"></script>
 <script type="module" src="js/quizlernstand.js?v=quiz-v1"></script>
 <script src="js/linksammlung.js?v=gesetze1"></script>
 <script type="module" src="js/login.js?v=auth1"></script> </body>

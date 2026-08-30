@@ -23,8 +23,126 @@ let letzteAuswahl = null;
 let ladeToken = 0;
 let quizInteraktionenGebunden = false;
 let quizFach = '';
+let quizShuffleAktiv = false;
 
 const sitzungsStatistik = { richtig: 0, falsch: 0 };
+
+function quizProgressContext() {
+  return {
+    bereich: 'quiz',
+    fach: String(quizFach || '').trim() || '__ALL__',
+    auswahl: '__ALL__'
+  };
+}
+
+async function speichereQuizFortschritt(frageId) {
+  const user = currentVerifiedUser();
+  const safeFrageId = String(frageId || '').trim();
+
+  if (!user || !safeFrageId || quizShuffleAktiv) {
+    return false;
+  }
+
+  const context = quizProgressContext();
+  const result = await window.apiPost('saveProgress', {
+    nutzer: user.uid,
+    bereich: context.bereich,
+    fach: context.fach,
+    auswahl: context.auswahl,
+    frageId: safeFrageId
+  });
+
+  return Boolean(result && result.success);
+}
+
+async function ladeQuizFortschritt() {
+  const user = currentVerifiedUser();
+  if (!user) return null;
+
+  const context = quizProgressContext();
+  const result = await window.apiGet('getProgress', {
+    nutzer: user.uid,
+    bereich: context.bereich,
+    fach: context.fach,
+    auswahl: context.auswahl
+  });
+
+  if (!result || !result.success || !result.data || !result.data.letzteFrageId) {
+    return null;
+  }
+
+  const savedId = String(result.data.letzteFrageId || '').trim();
+  const pool = neuerFragenpool();
+  const matchIndex = pool.findIndex(item => String(item.frageId || item.quizKey || '').trim() === savedId);
+
+  if (matchIndex < 0) {
+    return null;
+  }
+
+  return matchIndex;
+}
+
+async function quizVonVorne() {
+  const pool = neuerFragenpool();
+  if (!pool.length) return;
+
+  const firstEntry = pool[0];
+  const firstId = String(firstEntry.frageId || '').trim();
+  if (!firstId) return;
+
+  quizShuffleAktiv = false;
+  const btn = document.getElementById('quizShuffleBtn');
+  if (btn) {
+    btn.classList.remove('active');
+    btn.textContent = 'Shuffle Mix';
+  }
+
+  const user = currentVerifiedUser();
+  if (user) {
+    const context = quizProgressContext();
+    const result = await window.apiPost('saveProgress', {
+      nutzer: user.uid,
+      bereich: context.bereich,
+      fach: context.fach,
+      auswahl: context.auswahl,
+      frageId: firstId
+    });
+
+    if (!result || !result.success) {
+      const status = document.getElementById('quizStatus');
+      if (status) {
+        status.textContent = 'Quiz-Fortschritt konnte nicht zurückgesetzt werden.';
+      }
+      return;
+    }
+  }
+
+  rundenNummer = 1;
+  fragenIndex = 0;
+  rundenReihenfolge = [...pool];
+  aktuellerKatalogEintrag = firstEntry;
+  aktuelleFrage = null;
+  antwortGespeichert = false;
+  letzteAuswahl = null;
+
+  await zeigeAktuelleFrage();
+}
+
+function quizShuffleMix() {
+  quizShuffleAktiv = !quizShuffleAktiv;
+  const btn = document.getElementById('quizShuffleBtn');
+  if (btn) {
+    btn.classList.toggle('active', quizShuffleAktiv);
+    btn.textContent = quizShuffleAktiv ? 'Shuffle Mix: AN' : 'Shuffle Mix';
+  }
+
+  const status = document.getElementById('quizStatus');
+  if (status) {
+    status.textContent = quizShuffleAktiv
+      ? 'Shuffle Mix aktiv – Reihenfolge bleibt nur in dieser Session lokal.'
+      : 'Shuffle Mix deaktiviert – Fortschritt wird wieder gespeichert.';
+  }
+}
 
 function currentVerifiedUser() {
   const user = auth.currentUser;
@@ -57,8 +175,9 @@ async function ladeKatalog() {
 }
 
 function neuerFragenpool() {
-  const gefiltert = quizFach ? katalog.filter(item => item.fach === quizFach) : katalog;
-  return [...new Map(gefiltert.map(item => [item.quizKey, item])).values()];
+  const pool = Array.isArray(katalog) ? katalog : [];
+  const gefiltert = quizFach ? pool.filter(item => String(item?.fach || '').trim() === String(quizFach || '').trim()) : pool;
+  return [...new Map(gefiltert.map(item => [String(item.quizKey || '').trim(), item])).values()].filter(Boolean);
 }
 
 function neueRunde() {
@@ -233,6 +352,9 @@ async function zeigeAktuelleFrage() {
     if (!result.success) throw new Error(result.error || 'Die Quizfrage konnte nicht geladen werden.');
     aktuelleFrage = result.data || {};
     renderFrage();
+    if (aktuelleFrage && String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim()) {
+      await speichereQuizFortschritt(String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim());
+    }
     if (status) status.textContent = '';
     if (karte) karte.hidden = false;
   } catch (error) {
@@ -350,10 +472,14 @@ function bindeQuizInteraktionen() {
   const naechsteBtn = document.getElementById('quizNaechsteBtn');
   const optionenContainer = document.getElementById('quizOptionen');
   const modus = document.getElementById('quizModus');
+  const shuffleBtn = document.getElementById('quizShuffleBtn');
+  const vonVorneBtn = document.getElementById('quizVonVorneBtn');
 
   if (pruefenBtn) pruefenBtn.addEventListener('click', pruefeAntwort);
   if (naechsteBtn) naechsteBtn.addEventListener('click', naechsteFrageHandler);
   if (modus) modus.addEventListener('change', wechsleQuizmodus);
+  if (shuffleBtn) shuffleBtn.addEventListener('click', quizShuffleMix);
+  if (vonVorneBtn) vonVorneBtn.addEventListener('click', quizVonVorne);
   if (optionenContainer) {
     optionenContainer.addEventListener('change', event => {
       if (!event.target || event.target.name !== 'quizOption') return;
@@ -397,6 +523,10 @@ export async function initialisiereQuiz() {
     }
     befuelleQuizModus();
     neueRunde();
+    const savedIndex = await ladeQuizFortschritt();
+    if (typeof savedIndex === 'number' && savedIndex >= 0 && savedIndex < rundenReihenfolge.length) {
+      fragenIndex = savedIndex;
+    }
     await zeigeAktuelleFrage();
   } catch (error) {
     status.textContent = `Quizkatalog konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
@@ -404,3 +534,4 @@ export async function initialisiereQuiz() {
 }
 
 window.initialisiereQuiz = initialisiereQuiz;
+window.quizVonVorne = quizVonVorne;

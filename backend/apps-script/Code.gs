@@ -63,6 +63,124 @@ function getSheet_() {
   return sheet;
 }
 
+function ensureNutzerFortschrittSheet_() {
+  const ss = getSpreadsheet_();
+  let sheet = ss.getSheetByName("NutzerFortschritt");
+
+  if (!sheet) {
+    sheet = ss.insertSheet("NutzerFortschritt");
+    sheet.appendRow([
+      "Nutzer",
+      "Bereich",
+      "Fach",
+      "Auswahl",
+      "Letzte Frage-ID",
+      "Aktualisiert"
+    ]);
+  }
+
+  return sheet;
+}
+
+function normalizeProgressSelection_(value) {
+  const normalized = String(value || "").trim();
+  return normalized ? normalized : "__ALL__";
+}
+
+function getProgressRowForKey_(sheet, nutzer, bereich, fach, auswahl) {
+  const values = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i] || [];
+
+    if (
+      String(row[0] || "").trim() === String(nutzer || "").trim() &&
+      String(row[1] || "").trim() === String(bereich || "").trim() &&
+      String(row[2] || "").trim() === String(fach || "").trim() &&
+      String(row[3] || "").trim() === String(auswahl || "").trim()
+    ) {
+      return {
+        rowIndex: i + 1,
+        data: {
+          nutzer: String(row[0] || "").trim(),
+          bereich: String(row[1] || "").trim(),
+          fach: String(row[2] || "").trim(),
+          auswahl: String(row[3] || "").trim(),
+          letzteFrageId: String(row[4] || "").trim(),
+          aktualisiert: row[5]
+        }
+      };
+    }
+  }
+
+  return null;
+}
+
+function getProgressForKey_(nutzer, bereich, fach, auswahl) {
+  const sheet = ensureNutzerFortschrittSheet_();
+  const row = getProgressRowForKey_(sheet, nutzer, bereich, fach, auswahl);
+
+  if (!row) {
+    return null;
+  }
+
+  return row.data;
+}
+
+function upsertProgressForKey_(nutzer, bereich, fach, auswahl, frageId) {
+  const sheet = ensureNutzerFortschrittSheet_();
+  const safeNutzer = String(nutzer || "").trim();
+  const safeBereich = String(bereich || "").trim();
+  const safeFach = String(fach || "").trim();
+  const safeAuswahl = normalizeProgressSelection_(auswahl);
+  const safeFrageId = String(frageId || "").trim();
+
+  if (!safeNutzer || !safeBereich || !safeFach || !safeFrageId) {
+    throw new Error("Nutzer, Bereich, Fach und Frage-ID sind für Fortschritt erforderlich.");
+  }
+
+  const existing = getProgressRowForKey_(sheet, safeNutzer, safeBereich, safeFach, safeAuswahl);
+
+  const timestamp = new Date();
+
+  if (existing) {
+    sheet.getRange(existing.rowIndex, 1, 1, 6).setValues([[
+      safeNutzer,
+      safeBereich,
+      safeFach,
+      safeAuswahl,
+      safeFrageId,
+      timestamp
+    ]]);
+    return {
+      nutzer: safeNutzer,
+      bereich: safeBereich,
+      fach: safeFach,
+      auswahl: safeAuswahl,
+      letzteFrageId: safeFrageId,
+      aktualisiert: timestamp
+    };
+  }
+
+  sheet.appendRow([
+    safeNutzer,
+    safeBereich,
+    safeFach,
+    safeAuswahl,
+    safeFrageId,
+    timestamp
+  ]);
+
+  return {
+    nutzer: safeNutzer,
+    bereich: safeBereich,
+    fach: safeFach,
+    auswahl: safeAuswahl,
+    letzteFrageId: safeFrageId,
+    aktualisiert: timestamp
+  };
+}
+
 function doGet(e) {
   const action = String(e?.parameter?.action || "").trim();
 
@@ -163,6 +281,34 @@ function doGet(e) {
         success: true,
         data: getQuestionById(fach, frageId)
       };
+
+    } else if (action === "getProgress") {
+      const nutzer = String(e?.parameter?.nutzer || "").trim();
+      const bereich = String(e?.parameter?.bereich || "").trim();
+      const fach = String(e?.parameter?.fach || "").trim();
+      const auswahl = normalizeProgressSelection_(e?.parameter?.auswahl);
+
+      if (!nutzer || !bereich || !fach) {
+        result = {
+          success: false,
+          error: "Nutzer, Bereich und Fach für getProgress erforderlich."
+        };
+      } else {
+        const progress = getProgressForKey_(nutzer, bereich, fach, auswahl);
+        result = {
+          success: true,
+          data: progress
+            ? {
+                nutzer: progress.nutzer,
+                bereich: progress.bereich,
+                fach: progress.fach,
+                auswahl: progress.auswahl,
+                letzteFrageId: progress.letzteFrageId,
+                aktualisiert: progress.aktualisiert
+              }
+            : null
+        };
+      }
 
     } else if (action === "getLernstand") {
       const nutzer = String(e?.parameter?.nutzer || "").trim();
@@ -381,6 +527,26 @@ function doPost(e) {
       result = {
         success: true
       };
+
+    } else if (action === "saveProgress") {
+      const nutzer = String(body.nutzer || "").trim();
+      const bereich = String(body.bereich || "").trim();
+      const fach = String(body.fach || "").trim();
+      const auswahl = normalizeProgressSelection_(body.auswahl);
+      const frageId = String(body.frageId || "").trim();
+
+      if (!nutzer || !bereich || !fach || !frageId) {
+        result = {
+          success: false,
+          error: "Nutzer, Bereich, Fach und Frage-ID für saveProgress erforderlich."
+        };
+      } else {
+        const saved = upsertProgressForKey_(nutzer, bereich, fach, auswahl, frageId);
+        result = {
+          success: true,
+          data: saved
+        };
+      }
 
     } else if (action === "frageKilian") {
   result = {

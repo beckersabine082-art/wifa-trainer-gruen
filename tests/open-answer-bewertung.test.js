@@ -195,3 +195,36 @@ test('Bewertungsprompt enthält die Regel für generische Kriterien und alternat
     'Prompt muss regeln, dass alternative fachlich korrekte Beispiele zulässig sind'
   );
 });
+
+test('fortschrittsspeicher normalisiert leere Auswahl auf __ALL__ und aktualisiert vorhandene Zeile', () => {
+  const fakeSheet = {
+    data: [[ 'Nutzer', 'Bereich', 'Fach', 'Auswahl', 'Letzte Frage-ID', 'Aktualisiert' ], [ 'uid-1', 'trainer', 'Recht', '__ALL__', 'Q-001', new Date('2024-01-01T00:00:00Z') ]],
+    getDataRange() {
+      return { getValues: () => this.data };
+    },
+    appendRow(row) {
+      this.data.push(row);
+    },
+    getRange(rowIndex, startCol, numRows, numCols) {
+      return {
+        setValues(values) {
+          const targetRow = rowIndex - 1;
+          if (targetRow >= 0 && targetRow < fakeSheet.data.length) {
+            fakeSheet.data[targetRow] = values[0];
+          }
+        }
+      };
+    }
+  };
+
+  context.getSpreadsheet_ = () => ({
+    getSheetByName: () => fakeSheet,
+    insertSheet: () => fakeSheet
+  });
+
+  assert.equal(context.normalizeProgressSelection_("   "), '__ALL__');
+  const updated = context.upsertProgressForKey_('uid-1', 'trainer', 'Recht', '', 'Q-999');
+  assert.equal(updated.auswahl, '__ALL__');
+  assert.equal(updated.letzteFrageId, 'Q-999');
+  assert.equal(fakeSheet.data[1][4], 'Q-999');
+});

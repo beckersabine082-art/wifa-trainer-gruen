@@ -102,6 +102,176 @@ function ermittleTeilbereich(fach) {
 let trainerTippTimer = null;
 let trainerTippFrageToken = 0;
 let trainerTippAngeboten = false;
+let trainerShuffleAktiv = false;
+let trainerProgressLoadToken = 0;
+
+function trainerProgressSelectionMatches(fach, thema) {
+  const expectedFach = String(fach || "").trim();
+  const expectedThema = String(thema || "").trim();
+  const currentFach = String(aktuellesFach || "").trim();
+  const currentThema = String(aktuellesThema || "").trim();
+
+  return currentFach === expectedFach && currentThema === expectedThema;
+}
+
+function aktuellerNutzerUid() {
+  try {
+    if (auth && auth.currentUser && auth.currentUser.uid) {
+      return String(auth.currentUser.uid).trim();
+    }
+  } catch (error) {}
+
+  const fallback = window.aktuellerNutzer;
+  return typeof fallback === "string" && fallback.trim() ? fallback.trim() : "";
+}
+
+function trainerResumeContext() {
+  return {
+    bereich: "trainer",
+    fach: String(aktuellesFach || "").trim(),
+    auswahl: String(aktuellesThema || "").trim() || "__ALL__"
+  };
+}
+
+async function speichereTrainerFortschritt(fach, thema, frageId) {
+  const userId = aktuellerNutzerUid();
+  const safeFach = String(fach || "").trim();
+  const safeThema = String(thema || "").trim();
+  const safeFrageId = String(frageId || "").trim();
+
+  if (!userId || !safeFach || !safeFrageId || trainerShuffleAktiv) {
+    return false;
+  }
+
+  const context = trainerResumeContext();
+  const result = await apiPost("saveProgress", {
+    nutzer: userId,
+    bereich: context.bereich,
+    fach: context.fach || safeFach,
+    auswahl: context.auswahl || safeThema || "__ALL__",
+    frageId: safeFrageId
+  });
+
+  return Boolean(result && result.success);
+}
+
+async function ladeTrainerFortschritt(fach, thema, requestToken = ++trainerProgressLoadToken) {
+  const userId = aktuellerNutzerUid();
+  const safeFach = String(fach || "").trim();
+  const safeThema = String(thema || "").trim();
+
+  if (!userId || !safeFach) {
+    return null;
+  }
+
+  const context = {
+    bereich: "trainer",
+    fach: safeFach,
+    auswahl: safeThema || "__ALL__"
+  };
+
+  try {
+    const result = await apiGet("getProgress", {
+      nutzer: userId,
+      bereich: context.bereich,
+      fach: context.fach,
+      auswahl: context.auswahl
+    });
+
+    if (requestToken !== trainerProgressLoadToken) {
+      return null;
+    }
+
+    if (!result || !result.success || !result.data || !result.data.letzteFrageId) {
+      return null;
+    }
+
+    if (!trainerProgressSelectionMatches(safeFach, safeThema)) {
+      return null;
+    }
+
+    const frageResult = await apiGet("questionById", {
+      fach: safeFach,
+      frageId: result.data.letzteFrageId
+    });
+
+    if (requestToken !== trainerProgressLoadToken) {
+      return null;
+    }
+
+    const frage = frageResult && frageResult.success ? frageResult.data : null;
+    const frageId = String(frage && frage.id ? frage.id : "").trim();
+    const themaMatch = String(frage && frage.thema ? frage.thema : "").trim();
+
+    if (frageId && (!safeThema || themaMatch === safeThema)) {
+      if (!trainerProgressSelectionMatches(safeFach, safeThema)) {
+        return null;
+      }
+      return frageId;
+    }
+  } catch (error) {
+    console.warn("Trainer-Fortschritt konnte nicht geladen werden:", error);
+  }
+
+  return null;
+}
+
+function trainerVonVorne() {
+  if (appIstBeschaeftigt) return;
+  if (!aktuellesFach || !aktuellesThema) {
+    alert("Bitte zuerst ein Fach und ein Thema auswählen.");
+    return;
+  }
+
+  trainerShuffleAktiv = false;
+  const shuffleBtn = document.getElementById("trainerShuffleBtn");
+  if (shuffleBtn) {
+    shuffleBtn.classList.remove("active");
+    shuffleBtn.textContent = "Shuffle Mix";
+  }
+
+  const context = trainerResumeContext();
+  const userId = aktuellerNutzerUid();
+  if (!userId) {
+    setzeStatus("Bitte melde dich an, um den Fortschritt zurückzusetzen.");
+    return;
+  }
+
+  apiGet("firstQuestion", { fach: context.fach, thema: context.auswahl === "__ALL__" ? aktuellesThema : context.auswahl })
+    .then(function(result) {
+      if (!result || !result.success || !result.data || !result.data.id) {
+        return;
+      }
+
+      const firstId = String(result.data.id || "").trim();
+      return apiPost("saveProgress", {
+        nutzer: userId,
+        bereich: context.bereich,
+        fach: context.fach,
+        auswahl: context.auswahl,
+        frageId: firstId
+      });
+    })
+    .then(function() {
+      ladeFrageAusFach(context.fach, context.auswahl === "__ALL__" ? aktuellesThema : context.auswahl, "");
+      setzeStatus("Fortschritt zurückgesetzt: Du startest wieder von vorne.");
+    })
+    .catch(function(error) {
+      setzeStatus("Fortschritt konnte nicht zurückgesetzt werden: " + (error.message || error));
+    });
+}
+
+function trainerShuffleMix() {
+  trainerShuffleAktiv = !trainerShuffleAktiv;
+  const btn = document.getElementById("trainerShuffleBtn");
+  if (btn) {
+    btn.classList.toggle("active", trainerShuffleAktiv);
+    btn.textContent = trainerShuffleAktiv ? "Shuffle Mix: AN" : "Shuffle Mix";
+  }
+  setzeStatus(trainerShuffleAktiv
+    ? "Shuffle Mix aktiv – dieser Verlauf bleibt nur in dieser Session lokal."
+    : "Shuffle Mix deaktiviert – Fortschritt wird wieder gespeichert.");
+}
 
 function trainerTippAusblenden() {
     const hinweis = document.getElementById("trainerTippHinweis");
@@ -554,6 +724,12 @@ function waehleFach(fach) {
         </div>
       `;
     }
+
+    if (String(daten.id || "").trim()) {
+      aktuelleFrageId = String(daten.id || "").trim();
+      speichereTrainerFortschritt(aktuellesFach, aktuellesThema, aktuelleFrageId);
+    }
+
     document.getElementById("anzeigeThema").textContent = aktuellesThema;
     starteTrainerTippTimer();
   }
@@ -634,7 +810,7 @@ if (daten.themaAbgeschlossen) {
     }
   }
 
-function starteThema() {
+async function starteThema() {
     if (appIstBeschaeftigt) return;
 
     const thema = document.getElementById("themaSelect").value;
@@ -655,9 +831,11 @@ function starteThema() {
     }
 
     aktuellesThema = thema;
-aktuelleFrageId = "";
-wiederholungsKontext = null;
-ladeFrageAusFach(aktuellesFach, aktuellesThema, "");
+    aktuelleFrageId = "";
+    wiederholungsKontext = null;
+
+    const gespeicherteFrageId = await ladeTrainerFortschritt(aktuellesFach, aktuellesThema);
+    ladeFrageAusFach(aktuellesFach, aktuellesThema, gespeicherteFrageId || "");
   }
 
 function naechsteFrage() {
