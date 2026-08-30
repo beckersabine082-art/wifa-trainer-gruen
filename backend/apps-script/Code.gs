@@ -647,6 +647,133 @@ function getMaxPunkteFromStichpunkte_(rawValue) {
   return liste.length > 0 ? liste.length : 10;
 }
 
+// German stopwords to ignore when extracting content
+function getGermanStopwords_() {
+  return new Set(['für', 'die', 'der', 'das', 'den', 'dem', 'des', 'ein', 'eine', 
+                  'und', 'oder', 'aber', 'in', 'an', 'auf', 'zu', 'von', 'mit', 'bei', 
+                  'ist', 'sind', 'wird', 'haben', 'hat']);
+}
+
+// Extract meaningful content words from text (remove stopwords, punctuation)
+function extractContentWords_(text) {
+  const stopwords = getGermanStopwords_();
+  const words = String(text || '')
+    .toLocaleLowerCase('de-DE')
+    .replace(/[^\w\s-äöüß]/g, '')
+    .split(/\s+/)
+    .filter(Boolean);
+  return words.filter(w => !stopwords.has(w) && w.length > 2);
+}
+
+// Simple German stem normalization: remove common inflection endings
+function normalizeGermanWord_(word) {
+  let w = String(word || '').toLocaleLowerCase('de-DE');
+  if (w.length < 4) return w;
+  // Remove common endings: -en, -e, -n, -r, -s
+  return w.replace(/(en|e|n|r|s)$/, '');
+}
+
+// Check if two words match considering German inflection
+function wordMatches_(answerWord, criterionWord) {
+  if (!answerWord || !criterionWord) return false;
+  const a = String(answerWord).toLocaleLowerCase('de-DE');
+  const c = String(criterionWord).toLocaleLowerCase('de-DE');
+  if (a === c) return true;
+  // Match on normalized stem if both are long enough
+  if (a.length >= 4 && c.length >= 4) {
+    return normalizeGermanWord_(a) === normalizeGermanWord_(c);
+  }
+  return false;
+}
+
+// Check for negation patterns near a word in text
+// Ignores "nicht nur" pattern as it's not a negation for "und X sondern auch"
+function hasNegationNear_(text, word) {
+  const lower = String(text || '').toLocaleLowerCase('de-DE');
+  const wordIdx = lower.indexOf(String(word).toLocaleLowerCase('de-DE'));
+  if (wordIdx === -1) return false;
+  
+  // Look in context window: 30 chars before and after
+  const start = Math.max(0, wordIdx - 30);
+  const end = Math.min(lower.length, wordIdx + word.length + 30);
+  const context = lower.substring(start, end);
+  
+  // Check for negation patterns
+  const hasNone = /keine?|kein[em]?|nicht/.test(context);
+  if (!hasNone) return false;
+  
+  // But exclude "nicht nur" as a negation
+  if (/nicht\s+nur/.test(context)) return false;
+  
+  return true;
+}
+
+// Sentence-local fallback: rescue a criterion only if all content words 
+// appear in the SAME sentence with no negation
+function fallbackErkenneLexikalischVerpassteKriterien_(userAnswer, stichpunkteListe, fehlendeIds, kriterienIds) {
+  const erkannteZusaetzlich = [];
+  
+  const answer = String(userAnswer || '');
+  // Split into sentences (simple: period, question mark, exclamation)
+  const sentences = answer.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+  
+  fehlendeIds = Array.isArray(fehlendeIds) ? fehlendeIds : [];
+  stichpunkteListe = Array.isArray(stichpunkteListe) ? stichpunkteListe : [];
+  kriterienIds = Array.isArray(kriterienIds) ? kriterienIds : [];
+  
+  fehlendeIds.forEach(function(fehlendId) {
+    const index = kriterienIds.indexOf(fehlendId);
+    if (index < 0 || index >= stichpunkteListe.length) return;
+    
+    const criterion = String(stichpunkteListe[index] || '');
+    const contentWords = extractContentWords_(criterion);
+    
+    if (contentWords.length === 0) return;
+    
+    // Try to find ALL content words in the SAME sentence
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i];
+      const sentenceWords = extractContentWords_(sentence);
+      
+      // Check if all criterion words appear in this sentence (with inflection matching)
+      let allFound = true;
+      for (let j = 0; j < contentWords.length; j++) {
+        let found = false;
+        for (let k = 0; k < sentenceWords.length; k++) {
+          if (wordMatches_(sentenceWords[k], contentWords[j])) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          allFound = false;
+          break;
+        }
+      }
+      
+      if (allFound) {
+        // All words found in this sentence. Check for negation.
+        let hasNegation = false;
+        for (let j = 0; j < contentWords.length; j++) {
+          if (hasNegationNear_(sentence, contentWords[j])) {
+            hasNegation = true;
+            break;
+          }
+        }
+        
+        if (!hasNegation) {
+          erkannteZusaetzlich.push(fehlendId);
+        }
+        break;  // Don't check other sentences once we found a match
+      }
+    }
+  });
+  
+  return {
+    erkannteZusaetzlich: erkannteZusaetzlich
+  };
+}
+
 function getKriterienIdsFuerStichpunkte_(stichpunkteListe) {
   return Array.isArray(stichpunkteListe)
     ? stichpunkteListe.map(function(_, index) {
@@ -1213,8 +1340,30 @@ Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
   const text = result?.choices?.[0]?.message?.content || "";
 
   const kriterienAuswertung = parseKriterienErgebnis_(text, kriterienIds);
-  const erkannteIds = Array.isArray(kriterienAuswertung.erkannteIds) ? kriterienAuswertung.erkannteIds : [];
-  const fehlendeIds = Array.isArray(kriterienAuswertung.fehlendeIds) ? kriterienAuswertung.fehlendeIds : [];
+  let erkannteIds = Array.isArray(kriterienAuswertung.erkannteIds) ? kriterienAuswertung.erkannteIds : [];
+  let fehlendeIds = Array.isArray(kriterienAuswertung.fehlendeIds) ? kriterienAuswertung.fehlendeIds : [];
+
+  // Wende Fallback-Erkennung für verpasste Kriterien an
+  const fallbackResult = fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkteListe,
+    fehlendeIds,
+    kriterienIds
+  );
+  
+  if (fallbackResult.erkannteZusaetzlich && fallbackResult.erkannteZusaetzlich.length > 0) {
+    // Addiere erkannte Kriterien hinzu
+    fallbackResult.erkannteZusaetzlich.forEach(function(id) {
+      if (!erkannteIds.includes(id)) {
+        erkannteIds.push(id);
+      }
+    });
+    
+    // Entferne sie aus fehlenden
+    fehlendeIds = fehlendeIds.filter(function(id) {
+      return !fallbackResult.erkannteZusaetzlich.includes(id);
+    });
+  }
 
   const erkannte = erkannteIds
     .map(function(id) {

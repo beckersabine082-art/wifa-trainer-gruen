@@ -228,3 +228,157 @@ test('fortschrittsspeicher normalisiert leere Auswahl auf __ALL__ und aktualisie
   assert.equal(updated.letzteFrageId, 'Q-999');
   assert.equal(fakeSheet.data[1][4], 'Q-999');
 });
+
+// =============================================================================
+// PERMANENT TEST SUITE: Sentence-local deterministic fallback
+// =============================================================================
+
+// UF-0003 Regression Test Part 1: Morphological variant "langfristigen Ziele"
+test('UF-0003 Regression Part 1: Fallback erkennt "langfristige Ziele" trotz Flexionsvariante "langfristigen Ziele"', () => {
+  const userAnswer = 'Vision ist zukunftsleittragende Gedanke und die Mission zeigt welche langfristigen Ziele das Unternehmen hat';
+  const stichpunkte = ['langfristige Ziele'];
+  const kriterienIds = ['K1'];
+  const aiResult = '{"erfuellt":[],"nicht_erfuellt":["K1"]}';
+  const aiParsed = context.parseKriterienErgebnis_(aiResult, kriterienIds);
+  
+  const withFallback = context.fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkte,
+    aiParsed.fehlendeIds,
+    kriterienIds
+  );
+  
+  assert.ok(
+    withFallback.erkannteZusaetzlich.includes('K1'),
+    'UF-0003-1 FAIL: Fallback sollte "langfristigen Ziele" erkennen'
+  );
+});
+
+// UF-0003 Regression Test Part 2: Phrase reordering "welche Nutzen die Gesellschaft haben"
+test('UF-0003 Regression Part 2: Fallback erkennt "Nutzen für Gesellschaft" in Phrase "welche Nutzen die Gesellschaft haben"', () => {
+  const userAnswer = 'welche Nutzen die Gesellschaft, Kunden, verbraucher und Kooperationspartner haben';
+  const stichpunkte = ['Nutzen für Gesellschaft'];
+  const kriterienIds = ['K1'];
+  const aiResult = '{"erfuellt":[],"nicht_erfuellt":["K1"]}';
+  const aiParsed = context.parseKriterienErgebnis_(aiResult, kriterienIds);
+  
+  const withFallback = context.fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkte,
+    aiParsed.fehlendeIds,
+    kriterienIds
+  );
+  
+  assert.ok(
+    withFallback.erkannteZusaetzlich.includes('K1'),
+    'UF-0003-2 FAIL: Fallback sollte "Nutzen" + "Gesellschaft" in selber Satz erkennen'
+  );
+});
+
+// EDGE CASE A: Separated contexts should NOT match
+test('EDGE-A: Nutzen und Gesellschaft in unterschiedlichen Sätzen – sollte NICHT erfüllt sein', () => {
+  const userAnswer = 'Die Gesellschaft verfolgt langfristige Ziele. Einen Nutzen bietet das Unternehmen jedoch nur seinen Kunden.';
+  const stichpunkte = ['Nutzen für Gesellschaft'];
+  const kriterienIds = ['K1'];
+  const aiResult = '{"erfuellt":[],"nicht_erfuellt":["K1"]}';
+  const aiParsed = context.parseKriterienErgebnis_(aiResult, kriterienIds);
+  
+  const withFallback = context.fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkte,
+    aiParsed.fehlendeIds,
+    kriterienIds
+  );
+  
+  assert.equal(
+    withFallback.erkannteZusaetzlich.length,
+    0,
+    'EDGE-A FAIL: Worte in verschiedenen Sätzen sollten NICHT zusammen erkannt werden'
+  );
+});
+
+// EDGE CASE B: "nicht nur...sondern auch" should NOT negate the criterion
+test('EDGE-B: "nicht nur...sondern auch" sollte Kriterium NICHT negieren', () => {
+  const userAnswer = 'Das Unternehmen schafft nicht nur Nutzen für Kunden, sondern auch für die Gesellschaft.';
+  const stichpunkte = ['Nutzen für Gesellschaft'];
+  const kriterienIds = ['K1'];
+  const aiResult = '{"erfuellt":[],"nicht_erfuellt":["K1"]}';
+  const aiParsed = context.parseKriterienErgebnis_(aiResult, kriterienIds);
+  
+  const withFallback = context.fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkte,
+    aiParsed.fehlendeIds,
+    kriterienIds
+  );
+  
+  assert.ok(
+    withFallback.erkannteZusaetzlich.includes('K1'),
+    'EDGE-B FAIL: "nicht nur...sondern auch" sollte als positive Aussage interpretiert werden'
+  );
+});
+
+// EDGE CASE C: Vague mention without concrete goals should NOT match
+test('EDGE-C: "langfristig" ohne "Ziele" sollte Kriterium NICHT erfüllen', () => {
+  const userAnswer = 'Langfristig möchte das Unternehmen wachsen, konkrete Ziele wurden jedoch nicht festgelegt.';
+  const stichpunkte = ['langfristige Ziele'];
+  const kriterienIds = ['K1'];
+  const aiResult = '{"erfuellt":[],"nicht_erfuellt":["K1"]}';
+  const aiParsed = context.parseKriterienErgebnis_(aiResult, kriterienIds);
+  
+  const withFallback = context.fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkte,
+    aiParsed.fehlendeIds,
+    kriterienIds
+  );
+  
+  assert.equal(
+    withFallback.erkannteZusaetzlich.length,
+    0,
+    'EDGE-C FAIL: "langfristig" allein ohne Ziele sollte NICHT erfüllt sein'
+  );
+});
+
+// EDGE CASE D: Grammatical inflection should still match
+test('EDGE-D: Grammatikfehler "langfristigen Ziele" sollte trotzdem erfüllt sein', () => {
+  const userAnswer = 'Das Unternehmen verfolgt langfristigen Ziele zur Expansion.';
+  const stichpunkte = ['langfristige Ziele'];
+  const kriterienIds = ['K1'];
+  const aiResult = '{"erfuellt":[],"nicht_erfuellt":["K1"]}';
+  const aiParsed = context.parseKriterienErgebnis_(aiResult, kriterienIds);
+  
+  const withFallback = context.fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkte,
+    aiParsed.fehlendeIds,
+    kriterienIds
+  );
+  
+  assert.ok(
+    withFallback.erkannteZusaetzlich.includes('K1'),
+    'EDGE-D FAIL: Flexionsvariante sollte erkannt werden'
+  );
+});
+
+// EDGE CASE E: Explicit negation should prevent matching
+test('EDGE-E: "keine Vorteile und kein Nutzen" sollte Kriterium NICHT erfüllen', () => {
+  const userAnswer = 'Für die Gesellschaft entstehen keine Vorteile und kein Nutzen.';
+  const stichpunkte = ['Nutzen für Gesellschaft'];
+  const kriterienIds = ['K1'];
+  const aiResult = '{"erfuellt":[],"nicht_erfuellt":["K1"]}';
+  const aiParsed = context.parseKriterienErgebnis_(aiResult, kriterienIds);
+  
+  const withFallback = context.fallbackErkenneLexikalischVerpassteKriterien_(
+    userAnswer,
+    stichpunkte,
+    aiParsed.fehlendeIds,
+    kriterienIds
+  );
+  
+  assert.equal(
+    withFallback.erkannteZusaetzlich.length,
+    0,
+    'EDGE-E FAIL: Negation "kein Nutzen" sollte Kriterium NICHT erfüllen'
+  );
+});
