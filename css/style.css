@@ -834,14 +834,10 @@ white-space: normal;
       bottom: 120px;
       right: 16px;
       z-index: 9997;
-      max-width: min(280px, calc(100vw - 32px));
-      background: #ffffff;
-      border: 1px solid #d8c8f8;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(80, 45, 140, 0.2);
-      padding: 12px;
+      max-width: min(320px, calc(100vw - 32px));
       display: flex;
-      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
       animation: hint-bubble-slide-in 300ms ease-out;
     }
 
@@ -850,24 +846,25 @@ white-space: normal;
     }
 
     .trainer-hint-header {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 8px;
+      display: none;
     }
 
     .trainer-hint-close {
+      position: absolute;
+      top: 6px;
+      right: 8px;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 20px;
+      font-size: 18px;
       color: #9a7bd1;
       padding: 0;
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 4px;
+      border-radius: 3px;
       transition: background 200ms;
     }
 
@@ -877,7 +874,7 @@ white-space: normal;
 
     .trainer-hint-content {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: flex-start;
     }
 
@@ -885,27 +882,29 @@ white-space: normal;
       width: 48px;
       height: 48px;
       flex-shrink: 0;
+      margin-top: 4px;
     }
 
     .trainer-hint-speech-bubble {
       flex: 1;
       background: #faf7ff;
-      border: 1px solid #eadfff;
-      border-radius: 12px;
-      padding: 10px 12px;
+      border: 1px solid #b794f6;
+      border-radius: 14px;
+      padding: 12px 14px;
       position: relative;
+      box-shadow: 0 3px 12px rgba(80, 45, 140, 0.12);
     }
 
     .trainer-hint-speech-bubble::before {
       content: "";
       position: absolute;
-      left: -6px;
-      top: 10px;
+      left: -7px;
+      top: 14px;
       width: 0;
       height: 0;
-      border-top: 6px solid transparent;
-      border-bottom: 6px solid transparent;
-      border-right: 8px solid #eadfff;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 7px solid #b794f6;
     }
 
     #trainerHintText {
@@ -913,6 +912,7 @@ white-space: normal;
       line-height: 1.5;
       color: #2d1f46;
       word-wrap: break-word;
+      padding-right: 24px;
     }
 
     @keyframes hint-bubble-slide-in {
@@ -930,6 +930,16 @@ white-space: normal;
       .trainer-hint-bubble {
         max-width: calc(100vw - 32px);
         bottom: 100px;
+      }
+      
+      .trainer-hint-bear {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .trainer-hint-speech-bubble {
+        font-size: 13px;
+        padding: 10px 12px;
       }
     }
 
