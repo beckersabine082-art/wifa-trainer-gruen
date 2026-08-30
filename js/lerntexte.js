@@ -39,13 +39,13 @@ const lerntexteAudioTestStatischeQuelle = "https://beckersabine082-art.github.io
 
 function lerntexteAudioTestKapitelFinden(einheiten) {
   if (lerntexteAktuellesFach !== "Recht") return null;
-  if (!lerntexteAktuellesKapitel) return null;
 
   const passendeEinheiten = (einheiten || []).filter(function (eintrag) {
-    return String(eintrag && eintrag.titel || "").trim() === "Rechtssubjekte und Rechtsobjekte";
+    // Prüfe auf hauptkapitel (z.B. "Rechtssubjekte und Rechtsobjekte")
+    return String(eintrag && eintrag.hauptkapitel || "").trim() === "Rechtssubjekte und Rechtsobjekte";
   });
 
-  return passendeEinheiten.length === 1
+  return passendeEinheiten.length >= 1
     ? passendeEinheiten[0]
     : null;
 }
@@ -64,16 +64,9 @@ function lerntexteAudioTestKapitelMetadatenSetzen() {
 
 async function lerntexteAudioFirebaseUrlLaden() {
   try {
-    console.log("Firebase Storage URL wird geladen...");
     const { storage, ref, getDownloadURL } = await import('./firebase-config.js');
-    console.log("Firebase-Module importiert erfolgreich");
-    
     const storageRef = ref(storage, "podcast/recht-rechtssubjekte-rechtsobjekte.mp3");
-    console.log("Storage-Referenz erstellt");
-    
     const url = await getDownloadURL(storageRef);
-    console.log("getDownloadURL erfolgreich - URL:", url);
-    
     return url;
   } catch (error) {
     console.error("Firebase Storage Error:", error.code, error.message, error);
@@ -105,32 +98,22 @@ function lerntexteAudioTestEreignisseBinden() {
 }
 
 function lerntexteTestAudioQuelleSetzen(url, text, eintrag, istTestKapitel) {
-  console.log("lerntexteTestAudioQuelleSetzen aufgerufen:", {url, istTestKapitel});
-  
   lerntexteAudioTestCurrentUrl = url;
   lerntexteAudioTestHash = lerntexteAudioHash(text);
   lerntexteAudioTestKapitelAktiv = istTestKapitel;
 
   const domAudio = document.getElementById("lerntexteAudioPlayer");
-  console.log("domAudio existiert:", !!domAudio);
-  
   if (istTestKapitel && domAudio) {
-    console.log("Test-Kapitel mit DOM-Audio-Element");
     lerntexteAudioTestAudio = domAudio;
     lerntexteAudioTestAudio.preload = "auto";
     lerntexteAudioTestEreignisseBinden();
   } else if (!lerntexteAudioTestAudio || lerntexteAudioTestAudio === domAudio) {
-    console.log("Neues Audio-Element wird erstellt");
     lerntexteAudioTestAudio = new Audio(url);
     lerntexteAudioTestAudio.preload = "auto";
     lerntexteAudioTestEreignisseBinden();
   }
-  
-  console.log("Audio src wird gesetzt auf:", url);
   lerntexteAudioTestAudio.src = url;
-  console.log("Audio src wurde gesetzt:", lerntexteAudioTestAudio.src);
 
-  console.log("Audio.play() wird aufgerufen");
   lerntexteAudioTestAudio.play();
   if (istTestKapitel) lerntexteAudioTestKapitelMetadatenSetzen();
   lerntexteElement("lerntexteAudioStatus").textContent = "Test-Audio läuft.";
@@ -172,19 +155,9 @@ async function lerntexteTestAudioStarten() {
   const testKapitelCandidate = lerntexteAudioTestKapitelFinden(einheiten);
   const istTestKapitel = testKapitelCandidate === eintrag;
   
-  console.log("DEBUG lerntexteTestAudioStarten:", {
-    fach: lerntexteAktuellesFach,
-    kapitel: lerntexteAktuellesKapitel,
-    eintragTitel: eintrag.titel,
-    testKapitelFound: testKapitelCandidate !== null,
-    istTestKapitel: istTestKapitel
-  });
-  
   if (istTestKapitel) {
     try {
-      console.log("Firebase-Audio wird versucht zu laden...");
       const firebaseUrl = await lerntexteAudioFirebaseUrlLaden();
-      console.log("Firebase-URL erfolgreich geladen:", firebaseUrl);
       lerntexteTestAudioQuelleSetzen(firebaseUrl, text, eintrag, true);
       return;
     } catch (error) {
