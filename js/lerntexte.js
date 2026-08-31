@@ -37,6 +37,44 @@ let lerntexteAudioTestHash = "";
 let lerntexteAudioTestKapitelAktiv = false;
 const lerntexteAudioTestStatischeQuelle = "https://beckersabine082-art.github.io/wifa-trainer-gruen/audio/podcast/recht-rechtssubjekte-rechtsobjekte.mp3";
 
+// Konvertiert einen Wert zu einem sicheren URL-Slug für Podcast-Dateipfade
+function lerntexteAudioSlug(wert) {
+  const text = String(wert || "").trim().toLowerCase();
+  
+  // Umlaute und ß ersetzen
+  let slug = text
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss");
+  
+  // Andere Diakritika entfernen (Akzente, etc.)
+  slug = slug.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  
+  // Alles außer a-z, 0-9 und Bindestriche durch Bindestrich ersetzen
+  slug = slug.replace(/[^a-z0-9\-]/g, "-");
+  
+  // Mehrfache Bindestriche zu einzelnen Bindestrichen zusammenfassen
+  slug = slug.replace(/\-{2,}/g, "-");
+  
+  // Bindestriche am Anfang und Ende entfernen
+  slug = slug.replace(/^\-+|\-+$/g, "");
+  
+  return slug;
+}
+
+// Erzeugt Firebase Storage-Pfad: podcast/<fach-slug>-<titel-slug>.mp3
+function lerntexteAudioFirebasePfad(fach, eintrag) {
+  if (!eintrag || !eintrag.titel) {
+    return "";
+  }
+  
+  const fachSlug = lerntexteAudioSlug(fach);
+  const titelSlug = lerntexteAudioSlug(eintrag.titel);
+  
+  return "podcast/" + fachSlug + "-" + titelSlug + ".mp3";
+}
+
 function lerntexteAudioTestKapitelFinden(einheiten) {
   if (lerntexteAktuellesFach !== "Recht") return null;
 
@@ -62,10 +100,13 @@ function lerntexteAudioTestKapitelMetadatenSetzen() {
   }
 }
 
-async function lerntexteAudioFirebaseUrlLaden() {
+async function lerntexteAudioFirebaseUrlLaden(eintrag) {
   try {
     const { storage, ref, getDownloadURL } = await import('./firebase-config.js');
-    const storageRef = ref(storage, "podcast/recht-rechtssubjekte-rechtsobjekte.mp3");
+    
+    // Verwende generalisierte Pfad-Funktion
+    const storagePath = lerntexteAudioFirebasePfad(lerntexteAktuellesFach, eintrag);
+    const storageRef = ref(storage, storagePath);
     const url = await getDownloadURL(storageRef);
     return url;
   } catch (error) {
@@ -157,7 +198,7 @@ async function lerntexteTestAudioStarten() {
   
   if (istTestKapitel) {
     try {
-      const firebaseUrl = await lerntexteAudioFirebaseUrlLaden();
+      const firebaseUrl = await lerntexteAudioFirebaseUrlLaden(eintrag);
       lerntexteTestAudioQuelleSetzen(firebaseUrl, text, eintrag, true);
       return;
     } catch (error) {
@@ -797,3 +838,5 @@ function lerntexteAudioPausieren() {
 window.initialisiereLerntexteAnsicht = initialisiereLerntexteAnsicht;
 window.lerntexteAudioStoppen = lerntexteAudioStoppen;
 window.lerntexteAudioAbspielen = lerntexteAudioAbspielen;
+window.lerntexteAudioSlug = lerntexteAudioSlug;
+window.lerntexteAudioFirebasePfad = lerntexteAudioFirebasePfad;
