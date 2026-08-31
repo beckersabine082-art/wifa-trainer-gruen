@@ -216,6 +216,165 @@ test('sync foundation require lädt keine OpenAI- oder Firebase-Clients', functi
   }
 });
 
+// ====== TASK 3: Canonical-TTS-Normalisierung ======
+
+const {
+  normalizeLerntextForTts,
+  tokenizeVisibleWords,
+  decodeHtmlEntities
+} = require('../tools/podcast-sync/normalize-lerntext.js');
+
+// Test A) Normaler Plaintext bleibt inhaltlich gleich
+test('TASK3-A: Normaler Plaintext bleibt inhaltlich gleich', function() {
+  const input = 'Das Unternehmen verfolgt langfristige Ziele.';
+  const norm = normalizeLerntextForTts(input);
+
+  const expectedWords = ['Das', 'Unternehmen', 'verfolgt', 'langfristige', 'Ziele'];
+  const actualWords = norm.words.map(function(w) { return w.text; });
+
+  assert.deepStrictEqual(actualWords, expectedWords, 'Wörter identisch');
+  assert.strictEqual(norm.wordCount, 5, 'wordCount exakt');
+});
+
+// Test B) podcastText ist irrelevant
+test('TASK3-B: podcastText ist irrelevant', function() {
+  const lerntext = 'AKTUELLER LERNTEXT';
+  const normA = normalizeLerntextForTts(lerntext);
+  
+  // Funktion nimmt nur lerntext, nicht entry-Objekt, aber testen dass zwei identische
+  // lerntexte same result liefern unabhängig von was daneben würde stehen
+  const normB = normalizeLerntextForTts(lerntext);
+
+  assert.strictEqual(normA.text, normB.text, 'text identisch');
+  assert.deepStrictEqual(normA.words, normB.words, 'words identisch');
+  
+  // Testen dass Hash immer gleich bleibt für gleichen lerntext
+  const hash1 = sha256Lerntext(lerntext);
+  const hash2 = sha256Lerntext(lerntext);
+  assert.strictEqual(hash1, hash2, 'Hash deterministisch');
+});
+
+// Test C) <br> ist kein Wort
+test('TASK3-C: <br> ist kein Wort', function() {
+  const input = 'Text. <br> Absatz.\n\nNeu.';
+  const norm = normalizeLerntextForTts(input);
+
+  const words = norm.words.map(function(w) { return w.text; });
+  assert.deepStrictEqual(words, ['Text', 'Absatz', 'Neu'], 'br ist kein Wort');
+  assert.strictEqual(norm.wordCount, 3, 'wordCount korrekt');
+  assert.ok(!norm.text.includes('<br>'), 'br-Tag entfernt aus text');
+});
+
+// Test D) HTML-Tags sind keine Wörter
+test('TASK3-D: HTML-Tags sind keine Wörter', function() {
+  const input = '<strong>Wichtig</strong>: Das ist <em>relevant</em>.';
+  const norm = normalizeLerntextForTts(input);
+
+  const words = norm.words.map(function(w) { return w.text; });
+  assert.deepStrictEqual(words, ['Wichtig', 'Das', 'ist', 'relevant'], 'keine Tags in words');
+  assert.strictEqual(norm.wordCount, 4, 'wordCount ohne Tags');
+});
+
+// Test E) HTML-Entities werden dekodiert
+test('TASK3-E: HTML-Entities werden dekodiert', function() {
+  const input = 'Forschung &amp; Entwicklung&nbsp;gehören zusammen.';
+  const norm = normalizeLerntextForTts(input);
+
+  assert.ok(!norm.text.includes('&amp;'), 'amp dekodiert');
+  assert.ok(!norm.text.includes('&nbsp;'), 'nbsp dekodiert');
+  assert.ok(norm.text.includes('&'), 'Ampersand im Text');
+  assert.ok(norm.text.includes('Entwicklung'), 'Wort erhalten');
+  
+  const words = norm.words.map(function(w) { return w.text; });
+  assert.deepStrictEqual(words, ['Forschung', 'Entwicklung', 'gehören', 'zusammen'], 'Entities als Text nicht als Wörter');
+  assert.strictEqual(norm.wordCount, 4, 'wordCount');
+});
+
+// Test E2) Numerische Entities
+test('TASK3-E2: Numerische Entities werden dekodiert', function() {
+  const input = '§&#160;1 ist relevant.';
+  const norm = normalizeLerntextForTts(input);
+
+  assert.ok(!norm.text.includes('&#160;'), 'numerische Entity dekodiert');
+  const words = norm.words.map(function(w) { return w.text; });
+  assert.deepStrictEqual(words, ['1', 'ist', 'relevant'], 'Zahl und Wörter');
+});
+
+// Test F) Deutsche Unicode-Wörter
+test('TASK3-F: Deutsche Unicode-Wörter (Umlaute, ß)', function() {
+  const input = 'Größe, Bücher, Übertragung und Straße.';
+  const norm = normalizeLerntextForTts(input);
+
+  const words = norm.words.map(function(w) { return w.text; });
+  assert.deepStrictEqual(words, ['Größe', 'Bücher', 'Übertragung', 'und', 'Straße'], 'Umlaute/ß erhalten');
+  assert.strictEqual(norm.wordCount, 5, 'wordCount');
+});
+
+// Test G) Bindestrich und Apostroph
+test('TASK3-G1: Bindestrich-Wort bleibt ein Wort', function() {
+  const input = 'Kosten-Nutzen-Analyse';
+  const norm = normalizeLerntextForTts(input);
+
+  const words = norm.words.map(function(w) { return w.text; });
+  assert.deepStrictEqual(words, ['Kosten-Nutzen-Analyse'], 'Bindestrich-Wort als ein Wort');
+  assert.strictEqual(norm.wordCount, 1, 'wordCount = 1');
+});
+
+test('TASK3-G2: Normales Apostroph und typografisches Apostroph', function() {
+  const input1 = "Manager's Aufgaben";
+  const input2 = "Manager's Aufgaben";
+  
+  const norm1 = normalizeLerntextForTts(input1);
+  const norm2 = normalizeLerntextForTts(input2);
+
+  const words1 = norm1.words.map(function(w) { return w.text; });
+  const words2 = norm2.words.map(function(w) { return w.text; });
+  
+  // Beide sollten Manager und Aufgaben als Wörter haben
+  assert.ok(words1.some(function(w) { return w.includes('Manager'); }), 'Manager in words1');
+  assert.ok(words2.some(function(w) { return w.includes('Manager'); }), 'Manager in words2');
+  assert.ok(words1.some(function(w) { return w.includes('Aufgaben'); }), 'Aufgaben in words1');
+  assert.ok(words2.some(function(w) { return w.includes('Aufgaben'); }), 'Aufgaben in words2');
+});
+
+// Test H) Keine Wortänderung durch reine Formatierung
+test('TASK3-H: Keine Wortänderung durch reine Formatierung', function() {
+  const plain = 'Das ist ein wichtiger Begriff.';
+  const formatted = '<p>Das ist ein <strong>wichtiger</strong> Begriff.</p>';
+  
+  const normPlain = normalizeLerntextForTts(plain);
+  const normFormatted = normalizeLerntextForTts(formatted);
+
+  const wordsPlain = normPlain.words.map(function(w) { return w.text; });
+  const wordsFormatted = normFormatted.words.map(function(w) { return w.text; });
+
+  assert.deepStrictEqual(wordsPlain, wordsFormatted, 'sichtbare Wortfolge identisch');
+  assert.strictEqual(normPlain.wordCount, normFormatted.wordCount, 'wordCount identisch');
+});
+
+// Test I) Whitespace-Normalisierung: Absatzstruktur erhalten
+test('TASK3-I: Whitespace-Normalisierung mit Absatzstruktur', function() {
+  const input = 'Erster Satz.   \n\n  Zweiter Satz.\n\nDritter Satz.';
+  const norm = normalizeLerntextForTts(input);
+
+  // Text sollte Absatzstruktur haben aber keine mehrfachen Leerzeilen
+  assert.ok(norm.text.includes('\n'), 'Zeilenumbruch erhalten');
+  assert.ok(!norm.text.includes('   '), 'Mehrfache Spaces gelöscht');
+  
+  const words = norm.words.map(function(w) { return w.text; });
+  assert.deepStrictEqual(words, ['Erster', 'Satz', 'Zweiter', 'Satz', 'Dritter', 'Satz'], 'alle Wörter');
+});
+
+// Test J) Word indices sind lückenlos und 0-basiert
+test('TASK3-J: Word indices sind 0-basiert und lückenlos', function() {
+  const input = 'Ein Zwei Drei Vier Fünf.';
+  const norm = normalizeLerntextForTts(input);
+
+  for (let i = 0; i < norm.words.length; i++) {
+    assert.strictEqual(norm.words[i].index, i, 'index korrekt für Wort ' + i);
+  }
+});
+
 process.on('exit', function() {
   console.log(`\n${passedCount}/${testCount} tests passed`);
 });
