@@ -139,7 +139,7 @@ test('REGRESSION: Vision/Mission question - "langfristigen Ziele" should match "
   console.log('- OpenAI failed to recognize semantic/grammatical variations despite detailed instructions');
   
   assert.equal(fehlende.length, 2, 'Both criteria incorrectly marked as missing (this is the regression)');
-  assert.deepEqual(fehlende, ['langfristige Ziele', 'Nutzen für Gesellschaft']);
+  assert.deepEqual(Array.from(fehlende), ['langfristige Ziele', 'Nutzen für Gesellschaft']);
 });
 
 test('Criterion ID normalization works correctly', () => {
@@ -157,7 +157,7 @@ test('Stichpunkte parsing splits correctly', () => {
   const liste = context.getStichpunkteListe_(raw);
   
   assert.equal(liste.length, 3);
-  assert.deepEqual(liste, ['Kriterium 1', 'Kriterium 2', 'Kriterium 3']);
+  assert.deepEqual(Array.from(liste), ['Kriterium 1', 'Kriterium 2', 'Kriterium 3']);
 });
 
 test('parseKriterienErgebnis respects only valid criterion IDs', () => {

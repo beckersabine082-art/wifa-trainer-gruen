@@ -151,6 +151,90 @@ function loadQuizScript() {
   return context;
 }
 
+function setQuizState(context, patch) {
+  context.__quizStatePatch = patch;
+
+  vm.runInContext(`
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'katalog')) {
+      katalog = __quizStatePatch.katalog;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'rundenReihenfolge')) {
+      rundenReihenfolge = __quizStatePatch.rundenReihenfolge;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'rundenNummer')) {
+      rundenNummer = __quizStatePatch.rundenNummer;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'fragenIndex')) {
+      fragenIndex = __quizStatePatch.fragenIndex;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'letzteFrageAlterRunde')) {
+      letzteFrageAlterRunde = __quizStatePatch.letzteFrageAlterRunde;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'aktuellerKatalogEintrag')) {
+      aktuellerKatalogEintrag = __quizStatePatch.aktuellerKatalogEintrag;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'aktuelleFrage')) {
+      aktuelleFrage = __quizStatePatch.aktuelleFrage;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'antwortGespeichert')) {
+      antwortGespeichert = __quizStatePatch.antwortGespeichert;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'letzteAuswahl')) {
+      letzteAuswahl = __quizStatePatch.letzteAuswahl;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'ladeToken')) {
+      ladeToken = __quizStatePatch.ladeToken;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'quizFach')) {
+      quizFach = __quizStatePatch.quizFach;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'quizShuffleAktiv')) {
+      quizShuffleAktiv = __quizStatePatch.quizShuffleAktiv;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(__quizStatePatch, 'sitzungsStatistik')) {
+      sitzungsStatistik.richtig = __quizStatePatch.sitzungsStatistik.richtig;
+      sitzungsStatistik.falsch = __quizStatePatch.sitzungsStatistik.falsch;
+    }
+  `, context);
+
+  delete context.__quizStatePatch;
+}
+
+function getQuizState(context) {
+  return vm.runInContext(`
+    ({
+      katalog,
+      rundenReihenfolge,
+      rundenNummer,
+      fragenIndex,
+      letzteFrageAlterRunde,
+      aktuellerKatalogEintrag,
+      aktuelleFrage,
+      antwortGespeichert,
+      letzteAuswahl,
+      ladeToken,
+      quizFach,
+      quizShuffleAktiv,
+      sitzungsStatistik: {
+        richtig: sitzungsStatistik.richtig,
+        falsch: sitzungsStatistik.falsch
+      }
+    })
+  `, context);
+}
+
 const backendSource = fs.readFileSync(path.join(__dirname, '../backend/apps-script/Code.gs'), 'utf8');
 const backendContext = {
   console,
@@ -308,18 +392,21 @@ test('stale trainer progress response is ignored when the selected topic changed
 
 test('Quiz Von vorne restores the first normal question and exits shuffle', async () => {
   const quizContext = loadQuizScript();
-  quizContext.katalog = [
+  const katalog = [
     { quizKey: 'q-1', fach: 'Recht', frageId: 'q-1', thema: 'Vertrag', part: 'WQ' },
     { quizKey: 'q-2', fach: 'Recht', frageId: 'q-2', thema: 'Vertrag', part: 'WQ' },
     { quizKey: 'q-3', fach: 'Recht', frageId: 'q-3', thema: 'Vertrag', part: 'WQ' }
   ];
-  quizContext.quizFach = 'Recht';
-  quizContext.quizShuffleAktiv = true;
-  quizContext.rundenReihenfolge = [...quizContext.katalog];
-  quizContext.fragenIndex = 2;
-  quizContext.aktuellerKatalogEintrag = quizContext.katalog[2];
-  quizContext.aktuelleFrage = { frageId: 'q-3', frage: 'Dritte Frage' };
-  quizContext.sitzungsStatistik = { richtig: 2, falsch: 1 };
+  setQuizState(quizContext, {
+    katalog,
+    quizFach: 'Recht',
+    quizShuffleAktiv: true,
+    rundenReihenfolge: [...katalog],
+    fragenIndex: 2,
+    aktuellerKatalogEintrag: katalog[2],
+    aktuelleFrage: { frageId: 'q-3', frage: 'Dritte Frage' },
+    sitzungsStatistik: { richtig: 2, falsch: 1 }
+  });
 
   quizContext.window.apiPost = async (action, payload) => {
     assert.equal(action, 'saveProgress');
@@ -329,20 +416,25 @@ test('Quiz Von vorne restores the first normal question and exits shuffle', asyn
 
   await quizContext.quizVonVorne();
 
-  assert.equal(quizContext.quizShuffleAktiv, false);
-  assert.equal(quizContext.fragenIndex, 0);
-  assert.equal(quizContext.aktuellerKatalogEintrag.quizKey, 'q-1');
-  assert.deepEqual(quizContext.sitzungsStatistik, { richtig: 2, falsch: 1 });
+  const state = getQuizState(quizContext);
+  assert.equal(state.quizShuffleAktiv, false);
+  assert.equal(state.fragenIndex, 0);
+  assert.equal(state.aktuellerKatalogEintrag.quizKey, 'q-1');
+  assert.equal(state.sitzungsStatistik.richtig, 2);
+  assert.equal(state.sitzungsStatistik.falsch, 1);
 });
 
 test('shuffle navigation still does not persist progress while the shuffle flag is active', async () => {
   const quizContext = loadQuizScript();
-  quizContext.quizFach = 'Recht';
-  quizContext.quizShuffleAktiv = true;
-  quizContext.katalog = [
+  const katalog = [
     { quizKey: 'q-1', fach: 'Recht', frageId: 'q-1', thema: 'Vertrag', part: 'WQ' },
     { quizKey: 'q-2', fach: 'Recht', frageId: 'q-2', thema: 'Vertrag', part: 'WQ' }
   ];
+  setQuizState(quizContext, {
+    quizFach: 'Recht',
+    quizShuffleAktiv: true,
+    katalog
+  });
 
   let posted = false;
   quizContext.window.apiPost = async () => {
