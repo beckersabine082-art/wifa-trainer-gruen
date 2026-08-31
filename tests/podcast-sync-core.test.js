@@ -1,11 +1,18 @@
 const assert = require('assert');
 const crypto = require('crypto');
+const Module = require('module');
 
 const {
   auditPilotEntry,
   countTtsTokens,
   sha256Lerntext
 } = require('../tools/podcast-sync/audit-pilot.js');
+
+function loadPodcastSyncFoundation() {
+  const modulePath = require.resolve('../tools/podcast-sync/index.js');
+  delete require.cache[modulePath];
+  return require(modulePath);
+}
 
 let testCount = 0;
 let passedCount = 0;
@@ -109,6 +116,104 @@ test('auditPilotEntry setzt canGenerateWithoutChunking anhand der 2000-Token-Gre
   assert.strictEqual(shortReport.canGenerateWithoutChunking, true);
   assert.ok(longReport.ttsTokenCount > 2000);
   assert.strictEqual(longReport.canGenerateWithoutChunking, false);
+});
+
+test('sync foundation liefert exakte Pilot-Konfiguration', function() {
+  const { PILOT_CONFIG } = loadPodcastSyncFoundation();
+
+  assert.deepStrictEqual(PILOT_CONFIG, {
+    pilotFach: 'Recht',
+    pilotTitel: 'Rechtssubjekte und Rechtsobjekte',
+    ttsModel: 'gpt-4o-mini-tts',
+    ttsVoice: 'alloy'
+  });
+});
+
+test('getPodcastSyncConfig liefert Kopie ohne externe Verbindung', function() {
+  const { PILOT_CONFIG, getPodcastSyncConfig } = loadPodcastSyncFoundation();
+  const config = getPodcastSyncConfig();
+
+  assert.deepStrictEqual(config, PILOT_CONFIG);
+  assert.notStrictEqual(config, PILOT_CONFIG);
+});
+
+test('requireOpenAiKey liest injiziertes env und validiert fehlende Werte', function() {
+  const { requireOpenAiKey } = loadPodcastSyncFoundation();
+
+  assert.strictEqual(requireOpenAiKey({ OPENAI_API_KEY: 'test-openai-key' }), 'test-openai-key');
+  assert.throws(function() {
+    requireOpenAiKey({ OPENAI_API_KEY: '   ' });
+  }, /OPENAI_API_KEY fehlt/);
+});
+
+test('requireFirebaseAdminConfig liest injiziertes env ohne Firebase-Initialisierung', function() {
+  const { requireFirebaseAdminConfig } = loadPodcastSyncFoundation();
+  const config = requireFirebaseAdminConfig({
+    FIREBASE_PROJECT_ID: 'project-1',
+    FIREBASE_CLIENT_EMAIL: 'client@example.test',
+    FIREBASE_PRIVATE_KEY: 'line1\\nline2',
+    FIREBASE_STORAGE_BUCKET: 'bucket.example'
+  });
+
+  assert.deepStrictEqual(config, {
+    projectId: 'project-1',
+    clientEmail: 'client@example.test',
+    privateKey: 'line1\nline2',
+    storageBucket: 'bucket.example'
+  });
+});
+
+test('requireFirebaseAdminConfig meldet fehlende Pflichtwerte klar', function() {
+  const { requireFirebaseAdminConfig } = loadPodcastSyncFoundation();
+
+  assert.throws(function() {
+    requireFirebaseAdminConfig({
+      FIREBASE_CLIENT_EMAIL: 'client@example.test',
+      FIREBASE_PRIVATE_KEY: 'line1',
+      FIREBASE_STORAGE_BUCKET: 'bucket.example'
+    });
+  }, /FIREBASE_PROJECT_ID fehlt/);
+  assert.throws(function() {
+    requireFirebaseAdminConfig({
+      FIREBASE_PROJECT_ID: 'project-1',
+      FIREBASE_PRIVATE_KEY: 'line1',
+      FIREBASE_STORAGE_BUCKET: 'bucket.example'
+    });
+  }, /FIREBASE_CLIENT_EMAIL fehlt/);
+  assert.throws(function() {
+    requireFirebaseAdminConfig({
+      FIREBASE_PROJECT_ID: 'project-1',
+      FIREBASE_CLIENT_EMAIL: 'client@example.test',
+      FIREBASE_STORAGE_BUCKET: 'bucket.example'
+    });
+  }, /FIREBASE_PRIVATE_KEY fehlt/);
+  assert.throws(function() {
+    requireFirebaseAdminConfig({
+      FIREBASE_PROJECT_ID: 'project-1',
+      FIREBASE_CLIENT_EMAIL: 'client@example.test',
+      FIREBASE_PRIVATE_KEY: 'line1'
+    });
+  }, /FIREBASE_STORAGE_BUCKET fehlt/);
+});
+
+test('sync foundation require lädt keine OpenAI- oder Firebase-Clients', function() {
+  const originalLoad = Module._load;
+  const loadedExternalClients = [];
+  Module._load = function(request) {
+    if (request === 'openai' || request === 'firebase-admin') {
+      loadedExternalClients.push(request);
+      throw new Error('Externer Client darf beim require nicht geladen werden: ' + request);
+    }
+    return originalLoad.apply(this, arguments);
+  };
+
+  try {
+    const foundation = loadPodcastSyncFoundation();
+    assert.strictEqual(typeof foundation.getPodcastSyncConfig, 'function');
+    assert.deepStrictEqual(loadedExternalClients, []);
+  } finally {
+    Module._load = originalLoad;
+  }
 });
 
 process.on('exit', function() {
