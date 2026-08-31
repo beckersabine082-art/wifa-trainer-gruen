@@ -16,6 +16,10 @@ Der Pilot fokussiert **ausschließlich** die Lerneinheit "Rechtssubjekte und Rec
 
 **Ablauf:** TDD. Jeder Task: Failing Test → Implementation → Pass → Regression → Commit.
 
+**TTS-Modell:** `gpt-4o-mini-tts` mit Pilotstimme `alloy`. Das TTS-Limit ist tokenbasiert: Vor jedem echten TTS-Aufruf wird die Tokenanzahl des normalisierten TTS-Texts bestimmt; erlaubt sind höchstens 2000 Input-Tokens. Zeichenlängen werden nur im Audit berichtet und sind keine API-Grenze.
+
+**Gemeinsame Wort-Tokenisierungsregel:** TTS-Normalisierung, Wort-Alignment und DOM-Karaoke verwenden dieselbe Regel: HTML-/Formatierungsmarker werden als Struktur behandelt, nicht als Wörter; sichtbarer Text wird HTML-dekodiert, an Unicode-Buchstaben/Zahlen in Wortläufen tokenisiert und Satzzeichen/Tags zählen nicht als Karaoke-Wörter.
+
 ---
 
 ## Grundarchitektur
@@ -48,12 +52,12 @@ Frontend Playback (js/lerntexte.js)
 ## TASK 1: Pilot-Daten-Audit
 
 **Files**
-- Modify: None (nur Test/Audit)
+- Create: `tools/podcast-sync/audit-pilot.js`
 - Test: `tests/podcast-sync-core.test.js` (neu)
 
 **Interfaces**
-- Consumes: `getLerntexte()` Struktur
-- Produces: Test-Report
+- Consumes: tatsächlicher `getLerntexte("Recht")` Datenbestand read-only über `loadLerntexteReadOnly({ fach })`
+- Produces: `auditPilotEntry()` → `{ fach, titel, foundCount, lerntextLength, ttsTokenCount, lerntextHash, canGenerateWithoutChunking, sourceUsed }`
 
 **TDD-Schritte**
 
@@ -62,27 +66,71 @@ Frontend Playback (js/lerntexte.js)
 ```javascript
 // tests/podcast-sync-core.test.js
 const assert = require('assert');
+const crypto = require('crypto');
+const { auditPilotEntry, countTtsTokens } = require('../tools/podcast-sync/audit-pilot.js');
 
-test('Pilot-Audit: Recht → Rechtssubjekte und Rechtsobjekte existiert', function() {
-  const entry = {
+let testCount = 0;
+let passedCount = 0;
+
+function test(name, fn) {
+  testCount++;
+  try {
+    fn();
+    passedCount++;
+    console.log('✓ ' + name);
+  } catch (error) {
+    console.log('✗ ' + name);
+    console.log('  Error: ' + error.message);
+    process.exitCode = 1;
+  }
+}
+
+test('Pilot-Audit: findet echte Pilot-Einheit exakt einmal', function() {
+  const lerntexte = [{
+    fach: "Recht",
     titel: "Rechtssubjekte und Rechtsobjekte",
-    lerntext: "PILOTTEXT MINDESTENS 500 ZEICHEN, NICHT LEER",
-    podcastText: "WIRD IGNORIERT"
-  };
-  
-  assert.ok(entry.lerntext.length >= 500, "lerntext zu kurz");
-  assert.ok(entry.lerntext.length > 0, "lerntext nicht leer");
+    lerntext: "Rechtssubjekte sind Träger von Rechten und Pflichten. Rechtsobjekte sind Gegenstände, auf die sich Rechte beziehen.",
+    podcastText: "Alter Podcasttext darf nicht verwendet werden"
+  }];
+
+  const report = auditPilotEntry({ lerntexte, fach: "Recht", titel: "Rechtssubjekte und Rechtsobjekte" });
+
+  assert.strictEqual(report.foundCount, 1, "Einheit genau einmal gefunden");
+  assert.ok(report.lerntextLength > 0, "echter lerntext vorhanden");
+  assert.strictEqual(report.sourceUsed, "lerntext", "nur lerntext als Quelle");
 });
 
-test('Pilot-Audit: podcastText ist NICHT die Quelle', function() {
-  const entry = {
-    lerntext: "CANONICAL",
-    podcastText: "WIRD IGNORIERT"
-  };
-  
-  // Test: nur lerntext wird für Audio/Sync verwendet
-  assert.notStrictEqual(entry.podcastText, entry.lerntext, "Text unterschiedlich");
-  assert.ok(entry.lerntext, "lerntext ist Canonical");
+test('Pilot-Audit: berichtet Zeichen, Tokens und SHA-256 aus lerntext', function() {
+  const lerntext = "AKTUELLER LERNTEXT mit konkretem Inhalt.";
+  const lerntexte = [{
+    fach: "Recht",
+    titel: "Rechtssubjekte und Rechtsobjekte",
+    lerntext,
+    podcastText: "ALTER PODCASTTEXT"
+  }];
+
+  const report = auditPilotEntry({ lerntexte, fach: "Recht", titel: "Rechtssubjekte und Rechtsobjekte" });
+  const expectedHash = crypto.createHash('sha256').update(lerntext, 'utf8').digest('hex');
+
+  assert.strictEqual(report.lerntextLength, lerntext.length, "tatsächliche Zeichenanzahl");
+  assert.strictEqual(report.ttsTokenCount, countTtsTokens(lerntext, "gpt-4o-mini-tts"), "tatsächliche Tokenanzahl");
+  assert.strictEqual(report.lerntextHash, expectedHash, "tatsächlicher SHA-256");
+  assert.ok(report.ttsTokenCount <= 2000 || report.canGenerateWithoutChunking === false, "Tokenlimit steuert Chunking-Entscheidung");
+});
+
+test('Pilot-Audit: podcastText beeinflusst Hash und TTS-Quelle nicht', function() {
+  const entryA = { fach: "Recht", titel: "Rechtssubjekte und Rechtsobjekte", lerntext: "AKTUELLER LERNTEXT", podcastText: "ALT" };
+  const entryB = { fach: "Recht", titel: "Rechtssubjekte und Rechtsobjekte", lerntext: "AKTUELLER LERNTEXT", podcastText: "NEU" };
+
+  const reportA = auditPilotEntry({ lerntexte: [entryA], fach: "Recht", titel: "Rechtssubjekte und Rechtsobjekte" });
+  const reportB = auditPilotEntry({ lerntexte: [entryB], fach: "Recht", titel: "Rechtssubjekte und Rechtsobjekte" });
+
+  assert.strictEqual(reportA.lerntextHash, reportB.lerntextHash, "gleicher SHA-256 trotz podcastText-Änderung");
+  assert.strictEqual(reportA.sourceUsed, "lerntext", "Audio-/Sync-Quelle ist lerntext");
+});
+
+process.on('exit', function() {
+  console.log(`\n${passedCount}/${testCount} tests passed`);
 });
 ```
 
@@ -92,11 +140,49 @@ test('Pilot-Audit: podcastText ist NICHT die Quelle', function() {
 node tests/podcast-sync-core.test.js
 ```
 
-**Expected FAIL:** Test-Framework nicht geladen
+**Expected FAIL:** `Cannot find module '../tools/podcast-sync/audit-pilot.js'` oder `auditPilotEntry is not defined`
 
-- [ ] Step 3: Test-Setup mit minimaler Funktion
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// tools/podcast-sync/audit-pilot.js
+const crypto = require('crypto');
+
+function countTtsTokens(text, model = "gpt-4o-mini-tts") {
+  if (model !== "gpt-4o-mini-tts") throw new Error("Unsupported TTS model");
+  // In der finalen Implementation über testbare Tokenizer-Abhängigkeit ersetzen.
+  return String(text || "").trim().split(/\s+/).filter(Boolean).length;
+}
+
+function auditPilotEntry({ lerntexte, fach, titel }) {
+  const matches = (lerntexte || []).filter(function(entry) {
+    return entry.fach === fach && entry.titel === titel;
+  });
+  if (matches.length !== 1) throw new Error("Pilot-Einheit muss exakt einmal gefunden werden");
+  const lerntext = String(matches[0].lerntext || "");
+  const ttsTokenCount = countTtsTokens(lerntext, "gpt-4o-mini-tts");
+  return {
+    fach,
+    titel,
+    foundCount: matches.length,
+    lerntextLength: lerntext.length,
+    ttsTokenCount,
+    lerntextHash: crypto.createHash('sha256').update(lerntext, 'utf8').digest('hex'),
+    canGenerateWithoutChunking: ttsTokenCount <= 2000,
+    sourceUsed: "lerntext"
+  };
+}
+
+module.exports = { auditPilotEntry, countTtsTokens };
+```
 
 - [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-sync-core.test.js
+```
+
+Expected: `3/3 tests passed`. Zusätzlich beim echten read-only Audit ausgeben: Einheit genau einmal gefunden, tatsächliche Zeichenanzahl, tatsächliche Tokenanzahl, tatsächlicher SHA-256, `canGenerateWithoutChunking`. Wenn `ttsTokenCount > 2000`, Pilot-TTS blockieren und zuerst Chunking planen.
 
 - [ ] Step 5: Regressionen
 
@@ -161,7 +247,73 @@ test('Sync: .env in .gitignore', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation wie Task 1
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-sync-core.test.js
+```
+
+**Expected FAIL:** `ENOENT: no such file or directory, open '.../tools/podcast-sync/index.js'`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignaturen
+
+```javascript
+// tools/podcast-sync/index.js
+const PILOT_CONFIG = {
+  pilotFach: "Recht",
+  pilotTitel: "Rechtssubjekte und Rechtsobjekte",
+  ttsModel: "gpt-4o-mini-tts",
+  ttsVoice: "alloy"
+};
+
+function requireOpenAiKey() {
+  if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY fehlt");
+  return process.env.OPENAI_API_KEY;
+}
+
+module.exports = { PILOT_CONFIG, requireOpenAiKey };
+```
+
+```json
+// tools/podcast-sync/package.json
+{
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "firebase-admin": "latest",
+    "openai": "latest",
+    "js-tiktoken": "latest"
+  }
+}
+```
+
+```bash
+# tools/podcast-sync/.env.example
+OPENAI_API_KEY=
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-sync-core.test.js
+```
+
+Expected: Pilot-Config, `process.env.OPENAI_API_KEY` und `.gitignore`-Eintrag werden gefunden.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -179,7 +331,7 @@ git commit -m "TASK 2: Podcast-Sync-Grundgerüst"
 
 **Interfaces**
 - Consumes: `lerntext` (String)
-- Produces: `normalizeLerntextForTts(text)` → `{text, wordCount}`
+- Produces: `normalizeLerntextForTts(text)` → `{text, words, wordCount}` mit gemeinsamer Wort-Tokenisierungsregel
 
 **TDD-Schritte**
 
@@ -188,34 +340,86 @@ git commit -m "TASK 2: Podcast-Sync-Grundgerüst"
 ```javascript
 test('normalize: lerntext nur, nie podcastText', function() {
   const entry = {
-    lerntext: "Das ist der echte Text mit Substanz.",
-    podcastText: "Das ist NICHT für TTS"
+    lerntext: "AKTUELLER LERNTEXT",
+    podcastText: "ALTER PODCASTTEXT"
   };
   
   const norm = normalizeLerntextForTts(entry.lerntext);
-  assert.ok(norm.text.includes("echte"), "lerntext Quelle");
-  assert.ok(!norm.text.includes("NICHT für TTS"), "podcastText ignoriert");
+  assert.strictEqual(norm.text, "AKTUELLER LERNTEXT", "Audio-/Sync-Quelle ist lerntext");
+  assert.ok(!norm.text.includes("ALTER PODCASTTEXT"), "podcastText ignoriert");
 });
 
 test('normalize: Änderung nur podcastText => kein Hash-Update', function() {
-  const v1 = normalizeLerntextForTts("Gleicher Lerntext".repeat(20));
-  const v2 = normalizeLerntextForTts("Gleicher Lerntext".repeat(20));
+  const entryA = { lerntext: "Gleicher Lerntext", podcastText: "ALT" };
+  const entryB = { lerntext: "Gleicher Lerntext", podcastText: "NEU" };
+  const v1 = normalizeLerntextForTts(entryA.lerntext);
+  const v2 = normalizeLerntextForTts(entryB.lerntext);
   
   assert.strictEqual(v1.text, v2.text, "identisch");
+  assert.strictEqual(sha256Lerntext(v1.text), sha256Lerntext(v2.text), "gleicher SHA-256, keine Regeneration");
 });
 
-test('normalize: Formatierung entfernen, Wörter erhalten', function() {
+test('normalize: Formatierungsmarker zählen nicht als Wörter', function() {
   const text = "Text. <br> Absatz.\n\nNeu.";
   const norm = normalizeLerntextForTts(text);
   
-  const origWords = text.split(/\s+/).filter(w => /\w/.test(w)).length;
-  const normWords = norm.text.split(/\s+/).filter(w => /\w/.test(w)).length;
-  
-  assert.strictEqual(origWords, normWords, "Wortanzahl gleich");
+  assert.deepStrictEqual(norm.words.map(w => w.text), ["Text", "Absatz", "Neu"], "nur sichtbare Wörter");
+  assert.strictEqual(norm.wordCount, 3, "br zählt nicht als Wort");
 });
 ```
 
-- [ ] Step 2-6: Implementation wie Task 1
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-sync-core.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../tools/podcast-sync/normalize-lerntext.js'` oder `normalizeLerntextForTts is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// tools/podcast-sync/normalize-lerntext.js
+function tokenizeVisibleWords(text) {
+  return String(text || "")
+    .replace(/<[^>]*>/g, " ")
+    .match(/[\p{L}\p{N}]+(?:[-'][\p{L}\p{N}]+)*/gu) || [];
+}
+
+function normalizeLerntextForTts(text) {
+  const normalized = String(text || "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = tokenizeVisibleWords(normalized).map(function(word, index) {
+    return { index, text: word };
+  });
+  return { text: normalized, words, wordCount: words.length };
+}
+
+module.exports = { normalizeLerntextForTts, tokenizeVisibleWords };
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-sync-core.test.js
+```
+
+Expected: Tests beweisen `lerntext` gewinnt gegen `podcastText`, `podcastText`-Änderungen ändern den Hash nicht, und `<br>` zählt nicht als Wort.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -267,7 +471,59 @@ test('paths: Umlaut-Handling', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-sync-core.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../tools/podcast-sync/hash-paths.js'` oder `sha256Lerntext is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// tools/podcast-sync/hash-paths.js
+const crypto = require('crypto');
+
+function slugify(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function sha256Lerntext(text) {
+  return crypto.createHash('sha256').update(String(text || ""), 'utf8').digest('hex');
+}
+
+function podcastPaths(fach, titel) {
+  const base = `podcast/${slugify(fach)}-${slugify(titel)}`;
+  return { mp3Path: `${base}.mp3`, jsonPath: `${base}.json` };
+}
+
+module.exports = { sha256Lerntext, podcastPaths, slugify };
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-sync-core.test.js
+```
+
+Expected: SHA-256 ist 64 Hex-Zeichen, Pfade entsprechen Pilot-Slug, Umlaute sind stabil.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -284,7 +540,7 @@ git commit -m "TASK 4: SHA-256 und Firebase-Pfade"
 - Test: `tests/podcast-tts-mock.test.js` (neu)
 
 **Interfaces**
-- Consumes: `{text, outputPath, openaiClient}`
+- Consumes: `{text, outputPath, openaiClient, countTtsTokens}`
 - Produces: `async generateTtsMp3()` → `{mp3Path, duration}`
 
 **TDD-Schritte**
@@ -294,22 +550,28 @@ git commit -m "TASK 4: SHA-256 und Firebase-Pfade"
 ```javascript
 // tests/podcast-tts-mock.test.js
 const assert = require('assert');
-const { generateTtsMp3, MAX_TTS_LENGTH } = require('../tools/podcast-sync/tts-generate.js');
+const { generateTtsMp3 } = require('../tools/podcast-sync/tts-generate.js');
 
-test('TTS: 4096-Zeichen Limit vor API', async function() {
-  const longText = "A".repeat(5000);
-  const mockClient = { audio: { speech: { create: async () => {} } } };
+test('TTS: blockiert mehr als 2000 Input-Tokens vor API', async function() {
+  let callMade = false;
+  const mockClient = { audio: { speech: { create: async () => { callMade = true; } } } };
   
   try {
-    await generateTtsMp3({ text: longText, outputPath: '/tmp/test.mp3', openaiClient: mockClient });
+    await generateTtsMp3({
+      text: "Tokenbasierter Grenzfall",
+      outputPath: '/tmp/test.mp3',
+      openaiClient: mockClient,
+      countTtsTokens: () => 2001
+    });
     assert.fail("sollte Fehler werfen");
   } catch (err) {
-    assert.ok(err.message.includes('4096'), "4096 limit");
+    assert.ok(err.message.includes('2000 Input-Tokens'), "Tokenlimit");
+    assert.strictEqual(callMade, false, "kein API-Aufruf");
   }
 });
 
-test('TTS: akzeptiert <= 4096 Zeichen', async function() {
-  const text = "Text ".repeat(100); // < 4096
+test('TTS: verwendet gpt-4o-mini-tts, alloy und normalisierten lerntext', async function() {
+  const text = "Normalisierter Lerntext";
   let callMade = false;
   
   const mockClient = {
@@ -317,27 +579,87 @@ test('TTS: akzeptiert <= 4096 Zeichen', async function() {
       speech: {
         create: async (params) => {
           callMade = true;
-          assert.strictEqual(params.model, "tts-1");
-          assert.strictEqual(params.voice, "nova");
+          assert.strictEqual(params.model, "gpt-4o-mini-tts");
+          assert.strictEqual(params.voice, "alloy");
           assert.strictEqual(params.input, text);
+          if (params.instructions) {
+            assert.ok(!params.instructions.includes("Zusatzinhalt"), "instructions steuern nur Sprechstil");
+          }
           return { arrayBuffer: async () => Buffer.from("mp3data") };
         }
       }
     }
   };
   
-  const result = await generateTtsMp3({ text, outputPath: '/tmp/test.mp3', openaiClient: mockClient });
+  const result = await generateTtsMp3({
+    text,
+    outputPath: '/tmp/test.mp3',
+    openaiClient: mockClient,
+    countTtsTokens: () => 3
+  });
   assert.ok(callMade, "API aufgerufen");
   assert.ok(result.mp3Path, "path zurück");
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-tts-mock.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../tools/podcast-sync/tts-generate.js'` oder falsches Modell/falsche Stimme
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// tools/podcast-sync/tts-generate.js
+const fs = require('fs');
+
+async function generateTtsMp3({ text, outputPath, openaiClient, countTtsTokens }) {
+  const tokenCount = countTtsTokens(text, "gpt-4o-mini-tts");
+  if (tokenCount > 2000) {
+    throw new Error(`TTS input exceeds 2000 Input-Tokens: ${tokenCount}`);
+  }
+  const response = await openaiClient.audio.speech.create({
+    model: "gpt-4o-mini-tts",
+    voice: "alloy",
+    input: text,
+    instructions: "Sachlich, ruhig und lernfreundlich sprechen; Inhalt nicht verändern."
+  });
+  const buffer = Buffer.from(await response.arrayBuffer());
+  fs.writeFileSync(outputPath, buffer);
+  return { mp3Path: outputPath, duration: null };
+}
+
+module.exports = { generateTtsMp3 };
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-tts-mock.test.js
+```
+
+Expected: Tokenlimit blockiert vor API, Mock sieht `gpt-4o-mini-tts`, `alloy` und exakt den normalisierten `lerntext`.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/podcast-sync-core.test.js
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
 git add tools/podcast-sync/tts-generate.js tests/podcast-tts-mock.test.js
-git commit -m "TASK 5: OpenAI TTS mit 4096-Limit"
+git commit -m "TASK 5: OpenAI TTS mit tokenbasiertem Limit"
 ```
 
 ---
@@ -404,7 +726,59 @@ test('Whisper: normalisierte Wort-Array', async function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-transcribe-mock.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../tools/podcast-sync/transcribe-words.js'` oder `transcribeWordTimestamps is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// tools/podcast-sync/transcribe-words.js
+const fs = require('fs');
+
+async function transcribeWordTimestamps({ mp3Path, openaiClient }) {
+  const result = await openaiClient.audio.transcriptions.create({
+    file: fs.createReadStream(mp3Path),
+    model: "whisper-1",
+    response_format: "verbose_json",
+    timestamp_granularities: ["word"],
+    language: "de"
+  });
+  return {
+    words: (result.words || []).map(function(word) {
+      return { wort: word.word, start: word.start, end: word.end };
+    })
+  };
+}
+
+module.exports = { transcribeWordTimestamps };
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-transcribe-mock.test.js
+```
+
+Expected: Mock sieht `whisper-1`, `verbose_json`, Wort-Zeitmarken und Sprache `de`.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/podcast-sync-core.test.js
+node tests/podcast-tts-mock.test.js
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -480,7 +854,71 @@ test('Alignment: Start/End monoton wachsend', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-word-alignment.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../tools/podcast-sync/align-words.js'` oder `alignTranscriptWordsToLerntext is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// tools/podcast-sync/align-words.js
+const { tokenizeVisibleWords } = require('./normalize-lerntext.js');
+
+function normalizeWord(word) {
+  return String(word || "").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+}
+
+function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
+  const lerntextWords = tokenizeVisibleWords(lerntext);
+  const wortZeitmarken = [];
+  let searchIndex = 0;
+  transcriptWords.forEach(function(transcriptWord) {
+    const wanted = normalizeWord(transcriptWord.wort);
+    while (searchIndex < lerntextWords.length && normalizeWord(lerntextWords[searchIndex]) !== wanted) {
+      searchIndex++;
+    }
+    if (searchIndex < lerntextWords.length) {
+      wortZeitmarken.push({
+        wortIndex: searchIndex,
+        wort: lerntextWords[searchIndex],
+        start: transcriptWord.start,
+        end: transcriptWord.end
+      });
+      searchIndex++;
+    }
+  });
+  return { wortZeitmarken };
+}
+
+module.exports = { alignTranscriptWordsToLerntext };
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-word-alignment.test.js
+```
+
+Expected: Alignment verwendet dieselbe sichtbare Wortregel wie TTS-Normalisierung; Satzzeichen/Formatierung erzeugen keine eigenen Wortindizes.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/podcast-sync-core.test.js
+node tests/podcast-tts-mock.test.js
+node tests/podcast-transcribe-mock.test.js
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -592,7 +1030,61 @@ test('Firebase: Custom Metadata mit lerntextHash auf MP3', async function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-firebase-mock.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../tools/podcast-sync/firebase-publish.js'` oder `publishToFirebase is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// tools/podcast-sync/firebase-publish.js
+const fs = require('fs');
+
+async function publishToFirebase({ mp3Path, jsonPath, lerntextHash, adminClient }) {
+  const bucket = adminClient.storage().bucket();
+  const mp3StoragePath = 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3';
+  const jsonStoragePath = 'podcast/recht-rechtssubjekte-und-rechtsobjekte.json';
+
+  await bucket.file(mp3StoragePath).save(fs.readFileSync(mp3Path), {
+    metadata: { lerntextHash }
+  });
+  await bucket.file(jsonStoragePath).save(fs.readFileSync(jsonPath), {
+    metadata: { contentType: 'application/json' }
+  });
+
+  return { success: true, mp3Url: mp3StoragePath, jsonUrl: jsonStoragePath };
+}
+
+module.exports = { publishToFirebase };
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-firebase-mock.test.js
+```
+
+Expected: MP3 wird vor JSON gespeichert, JSON ist Commit-Marker, MP3 trägt `lerntextHash` als Custom Metadata.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/podcast-sync-core.test.js
+node tests/podcast-tts-mock.test.js
+node tests/podcast-transcribe-mock.test.js
+node tests/podcast-word-alignment.test.js
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -641,7 +1133,47 @@ test('Backend: Content-Type text/plain charset utf-8, nicht application/json', f
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-progress.test.js
+```
+
+**Expected FAIL:** `GET endpoint` oder `SAVE endpoint`, weil `Code.gs` die neuen Actions noch nicht enthält
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// backend/apps-script/Code.gs - geplante Ergänzungen
+function ensurePodcastFortschrittSheet_() { /* Sheet anlegen/finden */ }
+function getPodcastProgress(nutzer, fach) { return []; }
+function savePodcastProgress(state) { return { success: true }; }
+
+// doGet(e): action === "getPodcastProgress"
+// doPost(e): action === "savePodcastProgress"
+// Antwort-Konvention bleibt text/plain;charset=utf-8 über JSON.stringify(payload)
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-progress.test.js
+```
+
+Expected: `getPodcastProgress`, `savePodcastProgress` und `text/plain;charset=utf-8` sind im Apps-Script-Code nachweisbar.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/learning-progress-resume.test.js
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -680,7 +1212,50 @@ test('Frontend API: lerntextePodcastFortschrittSpeichern(state)', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/podcast-progress.test.js
+```
+
+**Expected FAIL:** `load function` oder `save function`, weil `js/api.js` die Wrapper noch nicht exportiert
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// js/api.js - geplante Ergänzungen
+async function lerntextePodcastFortschrittLaden(fach) {
+  return apiGet('getPodcastProgress', { fach: fach });
+}
+
+async function lerntextePodcastFortschrittSpeichern(state) {
+  return apiPost('savePodcastProgress', state);
+}
+
+window.lerntextePodcastFortschrittLaden = lerntextePodcastFortschrittLaden;
+window.lerntextePodcastFortschrittSpeichern = lerntextePodcastFortschrittSpeichern;
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/podcast-progress.test.js
+```
+
+Expected: Wrapper sind vorhanden und rufen die neuen Backend-Actions über bestehende API-Konventionen auf.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/learning-progress-resume.test.js
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -734,7 +1309,45 @@ test('Hash-Validierung: JSON-Hash unterschiedlich → false', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../js/podcast-hash-validate.js'` oder `lerntexteAudioVersionIstSynchron is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// js/podcast-hash-validate.js
+function lerntexteAudioVersionIstSynchron(currentHash, jsonHash, mp3Hash) {
+  return Boolean(currentHash && jsonHash && mp3Hash && currentHash === jsonHash && jsonHash === mp3Hash);
+}
+
+if (typeof module !== 'undefined') module.exports = { lerntexteAudioVersionIstSynchron };
+if (typeof window !== 'undefined') window.lerntexteAudioVersionIstSynchron = lerntexteAudioVersionIstSynchron;
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+Expected: Playback wird nur erlaubt, wenn current/json/mp3 Hash identisch sind.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -787,9 +1400,60 @@ test('DOM-Tokenisierung: Absätze bleiben', function() {
   
   assert.ok(tokens.words.length >= 4, "alle Wörter");
 });
+
+test('DOM-Tokenisierung: Formatierungsmarker zählen nicht als Wörter', function() {
+  const html = "Text. <br> Absatz.";
+  const tokens = lerntexteDomTokenisieren(html);
+  assert.deepStrictEqual(tokens.words.map(w => w.text), ["Text", "Absatz"], "br ist kein Wort");
+});
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../js/podcast-dom-tokenize.js'` oder `lerntexteDomTokenisieren is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// js/podcast-dom-tokenize.js
+function tokenizeVisibleWords(text) {
+  return String(text || "").replace(/<[^>]*>/g, " ").match(/[\p{L}\p{N}]+(?:[-'][\p{L}\p{N}]+)*/gu) || [];
+}
+
+function lerntexteDomTokenisieren(html) {
+  const words = tokenizeVisibleWords(html).map(function(word, index) {
+    return { wortIndex: index, text: word, element: null };
+  });
+  return { words, preservesFormatting: /<[^>]+>/.test(String(html || "")) };
+}
+
+if (typeof module !== 'undefined') module.exports = { lerntexteDomTokenisieren, tokenizeVisibleWords };
+if (typeof window !== 'undefined') window.lerntexteDomTokenisieren = lerntexteDomTokenisieren;
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+Expected: Wortindizes sind stabil, Formatierung/Absätze bleiben erhalten, HTML-Tags zählen nicht als Wörter.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -864,7 +1528,54 @@ test('Time-to-Word: Binäre Suche-Performance', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../js/podcast-time-to-word.js'` oder `findWordIndexAtTime is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// js/podcast-time-to-word.js
+function findWordIndexAtTime(wortZeitmarken, currentTime) {
+  let left = 0;
+  let right = wortZeitmarken.length - 1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const current = wortZeitmarken[mid];
+    if (currentTime < current.start) right = mid - 1;
+    else if (currentTime >= current.end) left = mid + 1;
+    else return current.wortIndex;
+  }
+  return -1;
+}
+
+if (typeof module !== 'undefined') module.exports = { findWordIndexAtTime };
+if (typeof window !== 'undefined') window.findWordIndexAtTime = findWordIndexAtTime;
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+Expected: Mapping findet Wortindizes über Zeitmarken und bleibt bei großen Arrays performant.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -964,7 +1675,62 @@ test('Playback: COMPLETED bei naturlichem Ende', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+**Expected FAIL:** `lerntextePodcastStoppen is not defined` oder eine Playback-Funktion setzt falsches Verhalten um
+
+- [ ] Step 3: Minimale Implementation/Funktionssignaturen
+
+```javascript
+// js/lerntexte.js - geplante Pilot-Ergänzungen
+function lerntextePodcastStoppen(audio) {
+  audio.pause();
+}
+
+async function lerntextePodcastPausieren(audio, saveProgress) {
+  audio.pause();
+  await saveProgress({ sekundenPosition: audio.currentTime });
+}
+
+async function lerntextePodcastFortsetzen(audio, resumeState, currentHash) {
+  if (resumeState && resumeState.lerntextHash === currentHash) {
+    audio.currentTime = resumeState.sekundenPosition;
+  }
+}
+
+async function lerntextePodcastVonVorne(audio) {
+  audio.currentTime = 0;
+}
+
+function lerntextePodcastAbspielen(audio, saveProgress) {
+  audio.onended = function() { saveProgress({ status: 'completed' }); };
+  return audio.play();
+}
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+Expected: Stop/Pause erhalten Position, Resume benötigt passenden `lerntextHash`, VonVorne startet bei 0, natürliches Ende wird abgeschlossen gespeichert.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
@@ -1016,7 +1782,53 @@ test('Visibility: Kein Auto-Scroll', function() {
 });
 ```
 
-- [ ] Step 2-6: Implementation
+- [ ] Step 2: Test ausführen (FAIL)
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+**Expected FAIL:** `Cannot find module '../js/podcast-visibility-sync.js'` oder `setupVisibilitySyncHandlers is not defined`
+
+- [ ] Step 3: Minimale Implementation/Funktionssignatur
+
+```javascript
+// js/podcast-visibility-sync.js
+function setupVisibilitySyncHandlers(audio, resync) {
+  function syncFromAudio() {
+    if (!document.hidden) resync(audio.currentTime);
+  }
+  document.addEventListener('visibilitychange', syncFromAudio);
+  window.addEventListener('pageshow', syncFromAudio);
+  return function cleanup() {
+    document.removeEventListener('visibilitychange', syncFromAudio);
+    window.removeEventListener('pageshow', syncFromAudio);
+  };
+}
+
+if (typeof module !== 'undefined') module.exports = { setupVisibilitySyncHandlers };
+if (typeof window !== 'undefined') window.setupVisibilitySyncHandlers = setupVisibilitySyncHandlers;
+```
+
+- [ ] Step 4: Test PASS
+
+```bash
+node tests/lerntexte-karaoke.test.js
+```
+
+Expected: Re-Sync liest `audio.currentTime` nach Rückkehr; kein `scrollTo` und kein `scrollIntoView`.
+
+- [ ] Step 5: Regressionen
+
+```bash
+node tests/lerntexte-audio-path.test.js
+node tests/lerntexte-audio-playlist.test.js
+node tests/lerntexte-audio-ui.test.js
+```
+
+Expected: Alle PASS.
+
+- [ ] Step 6: Commit
 
 **Commit:**
 ```bash
