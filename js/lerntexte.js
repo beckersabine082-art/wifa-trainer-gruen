@@ -42,7 +42,7 @@ function lerntexteAudioTestKapitelFinden(einheiten) {
 
   const passendeEinheiten = (einheiten || []).filter(function (eintrag) {
     // Prüfe auf hauptkapitel (z.B. "Rechtssubjekte und Rechtsobjekte")
-    return String(eintrag && eintrag.hauptkapitel || "").trim() === "Rechtssubjekte und Rechtsobjekte";
+    return String(eintrag && eintrag.titel || "").trim() === "Rechtssubjekte und Rechtsobjekte";
   });
 
   return passendeEinheiten.length >= 1
@@ -654,21 +654,6 @@ function lerntexteAudioStoppen(status) {
 }
 
 function lerntexteAudioAbspielen() {
-  const diagnoseEinheiten = typeof lerntexteAusgewaehlteEinheiten === "function" ? lerntexteAusgewaehlteEinheiten() : [];
-  const ersteEinheit = Array.isArray(diagnoseEinheiten) && diagnoseEinheiten.length ? diagnoseEinheiten[0] : null;
-  const statusEl = lerntexteElement("lerntexteAudioStatus");
-  if (statusEl) {
-    statusEl.innerHTML = [
-      "DIAGNOSE: lerntexteAktuellesFach=" + String(lerntexteAktuellesFach || ""),
-      "DIAGNOSE: lerntexteAktuellesKapitel=" + String(lerntexteAktuellesKapitel || ""),
-      "DIAGNOSE: einheiten.length=" + String(Array.isArray(diagnoseEinheiten) ? diagnoseEinheiten.length : 0),
-      "DIAGNOSE: einheiten[0].hauptkapitel=" + String(ersteEinheit && ersteEinheit.hauptkapitel !== undefined ? ersteEinheit.hauptkapitel : ""),
-      "DIAGNOSE: einheiten[0].hauptkapitelNr=" + String(ersteEinheit && ersteEinheit.hauptkapitelNr !== undefined ? ersteEinheit.hauptkapitelNr : ""),
-      "DIAGNOSE: einheiten[0].titel=" + String(ersteEinheit && ersteEinheit.titel !== undefined ? ersteEinheit.titel : "")
-    ].join("<br>");
-  }
-  return;
-
   if (lerntexteAudioPausiert) {
     if (lerntexteAudioTestKapitelAktiv && lerntexteAudioTestAudio) {
       lerntexteAudioTestAudio.play();
