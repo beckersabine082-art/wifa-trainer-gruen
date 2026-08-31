@@ -35,6 +35,9 @@ let lerntexteAudioTestAudio = null;
 let lerntexteAudioTestCurrentUrl = "";
 let lerntexteAudioTestHash = "";
 let lerntexteAudioTestKapitelAktiv = false;
+let lerntexteAudioPlaylist = [];
+let lerntexteAudioPlaylistIndex = 0;
+let lerntexteAudioQuelle = "";
 const lerntexteAudioTestStatischeQuelle = "https://beckersabine082-art.github.io/wifa-trainer-gruen/audio/podcast/recht-rechtssubjekte-rechtsobjekte.mp3";
 
 // Konvertiert einen Wert zu einem sicheren URL-Slug für Podcast-Dateipfade
@@ -163,6 +166,37 @@ function lerntexteTestAudioQuelleSetzen(url, text, eintrag, istTestKapitel) {
 
 function lerntexteElement(id) {
   return document.getElementById(id);
+}
+
+function lerntexteAudioTextFuerEintrag(eintrag) {
+  const directText = eintrag && eintrag.podcastText ? String(eintrag.podcastText).trim() : "";
+  if (directText) {
+    return directText;
+  }
+
+  const fallbackText = eintrag && eintrag.lerntext ? String(eintrag.lerntext).trim() : "";
+  return fallbackText;
+}
+
+function lerntexteAudioPlaylistErstellen(einheiten) {
+  const playlist = [];
+  const liste = Array.isArray(einheiten) ? einheiten : [];
+
+  liste.forEach(function (eintrag) {
+    const text = lerntexteAudioTextFuerEintrag(eintrag);
+    if (!text) {
+      return;
+    }
+
+    playlist.push({
+      eintrag: eintrag,
+      titel: eintrag && eintrag.titel ? String(eintrag.titel) : "Lerneinheit",
+      text: text,
+      fach: String(lerntexteAktuellesFach || "")
+    });
+  });
+
+  return playlist;
 }
 
 function lerntexteAudioHash(text) {
@@ -352,14 +386,24 @@ function lerntexteAudioProgressAktualisieren() {
 function lerntexteAudioMediaSessionAktualisieren() {
   if (!("mediaSession" in navigator)) return;
 
+  let title = "Lerntext";
+  if (lerntexteAudioPlaylist.length && lerntexteAudioPlaylistIndex >= 0 && lerntexteAudioPlaylistIndex < lerntexteAudioPlaylist.length) {
+    const currentItem = lerntexteAudioPlaylist[lerntexteAudioPlaylistIndex];
+    if (currentItem && currentItem.titel) {
+      title = currentItem.titel;
+    }
+  }
+
   const chapterLabel = lerntexteElement("lerntexteAudioChapterLabel");
-  const title = chapterLabel && chapterLabel.textContent ? chapterLabel.textContent : "Lerntext";
+  if (chapterLabel && chapterLabel.textContent) {
+    title = chapterLabel.textContent;
+  }
 
   if ("MediaMetadata" in window) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: title,
-      artist: "WiFa Trainer",
-      album: "Lerntexte"
+      artist: lerntexteAktuellesFach || "WiFa Trainer",
+      album: "WiFa Trainer"
     });
   }
 
@@ -658,10 +702,137 @@ function lerntexteAnzeigen() {
   });
 }
 
+function lerntexteAudioPlaylistWeiter() {
+  if (!lerntexteAudioPlaylist.length) {
+    lerntexteAudioStoppen("Alle Lerneinheiten wurden abgespielt.");
+    return;
+  }
+
+  if (lerntexteAudioPlaylistIndex >= lerntexteAudioPlaylist.length) {
+    lerntexteAudioStoppen("Alle Lerneinheiten wurden abgespielt.");
+    return;
+  }
+
+  const total = lerntexteAudioPlaylist.length;
+  const currentItem = lerntexteAudioPlaylist[lerntexteAudioPlaylistIndex];
+  const title = currentItem && currentItem.titel ? currentItem.titel : "Lerneinheit";
+  const statusText = "Audio läuft: " + (lerntexteAudioPlaylistIndex + 1) + " von " + total + " – " + title;
+
+  if (lerntexteElement("lerntexteAudioStatus")) {
+    lerntexteElement("lerntexteAudioStatus").textContent = statusText;
+  }
+
+  const chapterLabel = lerntexteElement("lerntexteAudioChapterLabel");
+  if (chapterLabel) {
+    chapterLabel.textContent = title;
+  }
+
+  lerntexteAudioProgressSet(0, "0:00 / 0:00");
+  lerntexteAudioMediaSessionAktualisieren();
+
+  async function startFirebaseTry() {
+    const domAudio = document.getElementById("lerntexteAudioPlayer");
+
+    try {
+      const url = await lerntexteAudioFirebaseUrlLaden(currentItem.eintrag);
+      lerntexteAudioQuelle = "firebase";
+      if (domAudio) {
+        domAudio.src = url;
+        domAudio.load();
+        domAudio.onended = function () {
+          if (!lerntexteAudioAktiv || lerntexteAudioPausiert) return;
+          lerntexteAudioPlaylistIndex += 1;
+          lerntexteAudioPlaylistWeiter();
+        };
+        domAudio.ontimeupdate = function () {
+          if (!domAudio.duration || !isFinite(domAudio.duration)) return;
+          const percent = (domAudio.currentTime / domAudio.duration) * 100;
+          const minsCurrent = Math.floor(domAudio.currentTime / 60);
+          const secsCurrent = Math.floor(domAudio.currentTime % 60);
+          const minsTotal = Math.floor(domAudio.duration / 60);
+          const secsTotal = Math.floor(domAudio.duration % 60);
+          const timeText = String(minsCurrent).padStart(2, "0") + ":" + String(secsCurrent).padStart(2, "0") + " / " + String(minsTotal).padStart(2, "0") + ":" + String(secsTotal).padStart(2, "0");
+          lerntexteAudioProgressSet(percent, timeText);
+        };
+        domAudio.play();
+      }
+      return;
+    } catch (error) {
+      const reasonCode = error && error.code ? error.code : "";
+      if (reasonCode === "storage/object-not-found") {
+        lerntexteAudioQuelle = "speechSynthesis";
+        const generation = ++lerntexteAudioGeneration;
+        lerntexteAudioAktiv = true;
+        lerntexteAudioPausiert = false;
+        lerntexteAudioChunks = [currentItem.text];
+        lerntexteAudioChunkIndex = 0;
+        lerntexteAudioProgressTotal = currentItem.text.length;
+        lerntexteAudioProgressCompleted = 0;
+        lerntexteAudioProgressCurrent = 0;
+        lerntexteAudioCurrentChunkLength = currentItem.text.length;
+        lerntexteAudioProgressAktualisieren();
+        lerntexteAudioSteuerungAktualisieren();
+
+        if (!("speechSynthesis" in window)) {
+          lerntexteElement("lerntexteAudioStatus").textContent = "Dein Browser unterstützt die Vorlesefunktion leider nicht.";
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(currentItem.text);
+        utterance.lang = "de-DE";
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        lerntexteAudioCurrentUtterance = utterance;
+
+        utterance.onstart = function () {
+          if (generation !== lerntexteAudioGeneration) return;
+          lerntexteAudioAktiv = true;
+          lerntexteAudioPausiert = false;
+          lerntexteElement("lerntexteAudioStatus").textContent = "Audio läuft: " + (lerntexteAudioPlaylistIndex + 1) + " von " + total + " – " + title;
+          lerntexteAudioSteuerungAktualisieren();
+          lerntexteAudioMediaSessionAktualisieren();
+        };
+
+        utterance.onboundary = function (event) {
+          if (generation !== lerntexteAudioGeneration || !lerntexteAudioAktiv) return;
+          const nextProgress = typeof event.charIndex === "number" ? event.charIndex : 0;
+          lerntexteAudioProgressCurrent = Math.max(0, Math.min(lerntexteAudioCurrentChunkLength, nextProgress));
+          lerntexteAudioProgressAktualisieren();
+        };
+
+        utterance.onend = function () {
+          if (generation !== lerntexteAudioGeneration || !lerntexteAudioAktiv) return;
+          lerntexteAudioPlaylistIndex += 1;
+          lerntexteAudioPlaylistWeiter();
+        };
+
+        utterance.onerror = function () {
+          if (generation === lerntexteAudioGeneration) {
+            lerntexteAudioStoppen("Audio konnte nicht abgespielt werden.");
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
+        return;
+      }
+
+      const errorMessage = error && error.message ? error.message : "Unbekannter Fehler";
+      lerntexteAudioStoppen("Audio konnte nicht geladen werden.");
+      lerntexteElement("lerntexteAudioStatus").textContent = "Audio konnte nicht geladen werden: " + errorMessage;
+    }
+  }
+
+  startFirebaseTry();
+}
+
 function lerntexteAudioStoppen(status) {
   lerntexteAudioGeneration++;
   lerntexteAudioAktiv = false;
   lerntexteAudioPausiert = false;
+  lerntexteAudioQuelle = "";
+  lerntexteAudioPlaylist = [];
+  lerntexteAudioPlaylistIndex = 0;
   lerntexteAudioChunks = [];
   lerntexteAudioChunkIndex = 0;
   lerntexteAudioProgressCompleted = 0;
@@ -673,35 +844,40 @@ function lerntexteAudioStoppen(status) {
     window.speechSynthesis.cancel();
   }
 
+  const player = document.getElementById("lerntexteAudioPlayer");
+  if (player) {
+    player.pause();
+    player.currentTime = 0;
+    player.onended = null;
+    player.ontimeupdate = null;
+  }
+
   if (lerntexteAudioTestKapitelAktiv && lerntexteAudioTestAudio) {
     lerntexteAudioTestAudio.pause();
     lerntexteAudioTestAudio.currentTime = 0;
     lerntexteAudioTestKapitelAktiv = false;
   }
 
-
   if (lerntexteElement("lerntexteAudioStatus")) {
     lerntexteElement("lerntexteAudioStatus").textContent = status || "Audio gestoppt.";
   }
 
-  if (status && status.toLowerCase().indexOf("vorgelesen") !== -1) {
-    lerntexteAudioProgressSet(100, "Abschnitt " + Math.max(1, lerntexteAudioChunks.length || 1) + " von " + Math.max(1, lerntexteAudioChunks.length || 1));
-  } else {
-    lerntexteAudioProgressZuruecksetzen();
-  }
-
+  lerntexteAudioProgressZuruecksetzen();
   lerntexteAudioSteuerungAktualisieren();
   lerntexteAudioMediaSessionAktualisieren();
 }
 
 function lerntexteAudioAbspielen() {
   if (lerntexteAudioPausiert) {
-    if (lerntexteAudioTestKapitelAktiv && lerntexteAudioTestAudio) {
-      lerntexteAudioTestAudio.play();
-      lerntexteElement("lerntexteAudioStatus").textContent = "Audio läuft.";
-      return;
+    if (lerntexteAudioQuelle === "firebase") {
+      const player = document.getElementById("lerntexteAudioPlayer");
+      if (player) {
+        player.play();
+      }
+    } else if (lerntexteAudioQuelle === "speechSynthesis" && "speechSynthesis" in window) {
+      window.speechSynthesis.resume();
     }
-    if ("speechSynthesis" in window) window.speechSynthesis.resume();
+
     lerntexteAudioPausiert = false;
     lerntexteAudioSteuerungAktualisieren();
     lerntexteElement("lerntexteAudioStatus").textContent = "Audio läuft.";
@@ -715,45 +891,20 @@ function lerntexteAudioAbspielen() {
     return;
   }
 
-  const testKapitel = lerntexteAudioTestKapitelFinden(einheiten);
-  if (testKapitel) {
-    lerntexteTestAudioStarten();
-    lerntexteAudioAktiv = true;
-    lerntexteAudioPausiert = false;
-    lerntexteAudioProgressSet(0, "00:00 / 00:00");
-    lerntexteAudioSteuerungAktualisieren();
-    lerntexteAudioTestKapitelMetadatenSetzen();
-    lerntexteAudioMediaSessionAktualisieren();
-    return;
-  }
-
-  if (!("speechSynthesis" in window)) {
-    lerntexteElement("lerntexteAudioStatus").textContent = "Dein Browser unterstützt die Vorlesefunktion leider nicht.";
-    return;
-  }
-
-  const chunks = lerntexteAbschnitteFuerEinheiten(einheiten);
-  if (!chunks.length) {
+  const playlist = lerntexteAudioPlaylistErstellen(einheiten);
+  if (!playlist.length) {
     lerntexteElement("lerntexteAudioStatus").textContent = "Für diesen Abschnitt sind keine Vorlesetexte verfügbar.";
     return;
   }
 
-  const generation = ++lerntexteAudioGeneration;
   lerntexteAudioAktiv = true;
   lerntexteAudioPausiert = false;
-  lerntexteAudioChunks = chunks;
-  lerntexteAudioChunkIndex = 0;
-  lerntexteAudioProgressTotal = chunks.reduce(function (sum, chunk) {
-    return sum + String(chunk || "").length;
-  }, 0);
-  lerntexteAudioProgressCompleted = 0;
-  lerntexteAudioProgressCurrent = 0;
-  lerntexteAudioCurrentChunkLength = 0;
-  lerntexteAudioProgressAktualisieren();
+  lerntexteAudioPlaylist = playlist;
+  lerntexteAudioPlaylistIndex = 0;
+  lerntexteAudioQuelle = "";
+  lerntexteAudioProgressSet(0, "0:00 / 0:00");
   lerntexteAudioSteuerungAktualisieren();
-  lerntexteAudioMediaSessionAktualisieren();
-
-  lerntexteSprechen(chunks, 0, generation);
+  lerntexteAudioPlaylistWeiter();
 }
 
 function lerntexteSprechen(chunks, index, generation) {
@@ -822,14 +973,16 @@ function lerntexteSprechen(chunks, index, generation) {
 function lerntexteAudioPausieren() {
   if (!lerntexteAudioAktiv || lerntexteAudioPausiert) return;
   lerntexteAudioPausiert = true;
-  if (lerntexteAudioTestKapitelAktiv && lerntexteAudioTestAudio) {
-    lerntexteAudioTestAudio.pause();
-    lerntexteElement("lerntexteAudioStatus").textContent = "Audio pausiert.";
-    lerntexteAudioSteuerungAktualisieren();
-    lerntexteAudioMediaSessionAktualisieren();
-    return;
+
+  if (lerntexteAudioQuelle === "firebase") {
+    const player = document.getElementById("lerntexteAudioPlayer");
+    if (player) {
+      player.pause();
+    }
+  } else if ("speechSynthesis" in window) {
+    window.speechSynthesis.pause();
   }
-  if ("speechSynthesis" in window) window.speechSynthesis.pause();
+
   lerntexteElement("lerntexteAudioStatus").textContent = "Audio pausiert.";
   lerntexteAudioSteuerungAktualisieren();
   lerntexteAudioMediaSessionAktualisieren();
@@ -840,3 +993,5 @@ window.lerntexteAudioStoppen = lerntexteAudioStoppen;
 window.lerntexteAudioAbspielen = lerntexteAudioAbspielen;
 window.lerntexteAudioSlug = lerntexteAudioSlug;
 window.lerntexteAudioFirebasePfad = lerntexteAudioFirebasePfad;
+window.lerntexteAudioTextFuerEintrag = lerntexteAudioTextFuerEintrag;
+window.lerntexteAudioPlaylistErstellen = lerntexteAudioPlaylistErstellen;
