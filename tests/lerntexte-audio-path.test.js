@@ -103,9 +103,9 @@ test('lerntexteAudioFirebasePfad should exist', function() {
 });
 
 test('should generate correct path for Recht subject', function() {
-  const eintrag = { titel: 'Rechtssubjekte Rechtsobjekte' };
+  const eintrag = { titel: 'Rechtssubjekte und Rechtsobjekte' };
   const result = lerntexteAudioFirebasePfad('Recht', eintrag);
-  assert.strictEqual(result, 'podcast/recht-rechtssubjekte-rechtsobjekte.mp3');
+  assert.strictEqual(result, 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3');
 });
 
 test('should handle umlauts in subject', function() {
