@@ -654,14 +654,14 @@ function lerntexteAudioStoppen(status) {
 }
 
 function lerntexteAudioAbspielen() {
-  const einheiten = typeof lerntexteAusgewaehlteEinheiten === "function" ? lerntexteAusgewaehlteEinheiten() : [];
-  const ersteEinheit = Array.isArray(einheiten) && einheiten.length ? einheiten[0] : null;
+  const diagnoseEinheiten = typeof lerntexteAusgewaehlteEinheiten === "function" ? lerntexteAusgewaehlteEinheiten() : [];
+  const ersteEinheit = Array.isArray(diagnoseEinheiten) && diagnoseEinheiten.length ? diagnoseEinheiten[0] : null;
   const statusEl = lerntexteElement("lerntexteAudioStatus");
   if (statusEl) {
     statusEl.innerHTML = [
       "DIAGNOSE: lerntexteAktuellesFach=" + String(lerntexteAktuellesFach || ""),
       "DIAGNOSE: lerntexteAktuellesKapitel=" + String(lerntexteAktuellesKapitel || ""),
-      "DIAGNOSE: einheiten.length=" + String(Array.isArray(einheiten) ? einheiten.length : 0),
+      "DIAGNOSE: einheiten.length=" + String(Array.isArray(diagnoseEinheiten) ? diagnoseEinheiten.length : 0),
       "DIAGNOSE: einheiten[0].hauptkapitel=" + String(ersteEinheit && ersteEinheit.hauptkapitel !== undefined ? ersteEinheit.hauptkapitel : ""),
       "DIAGNOSE: einheiten[0].hauptkapitelNr=" + String(ersteEinheit && ersteEinheit.hauptkapitelNr !== undefined ? ersteEinheit.hauptkapitelNr : ""),
       "DIAGNOSE: einheiten[0].titel=" + String(ersteEinheit && ersteEinheit.titel !== undefined ? ersteEinheit.titel : "")
