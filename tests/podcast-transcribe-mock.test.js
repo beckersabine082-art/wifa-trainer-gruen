@@ -18,6 +18,18 @@ function createFakeMp3() {
   return fakeMp3Path;
 }
 
+async function consumeReadStream(stream) {
+  if (!stream || typeof stream[Symbol.asyncIterator] !== 'function') {
+    return;
+  }
+
+  for await (const chunk of stream) {
+    // Der Inhalt ist für den Mock irrelevant; wir lesen den Stream bis zum Ende,
+    // damit er sauber geschlossen wird, bevor der temporäre Testordner entfernt wird.
+    void chunk;
+  }
+}
+
 /**
  * Mock OpenAI Client für Tests
  */
@@ -32,6 +44,7 @@ function createMockOpenAiClient(mockResponse) {
           assert.strictEqual(params.language, 'de', 'language must be "de"');
           assert.ok(params.file, 'file parameter must be present');
           assert.ok(typeof params.file.read === 'function', 'file must be a readable stream');
+          await consumeReadStream(params.file);
           return mockResponse;
         }
       }
@@ -66,18 +79,13 @@ async function testB_FileIsReadStream() {
         transcriptions: {
           create: async function(params) {
             receivedStream = params.file;
-            // Close stream immediately after checking it
-            receivedStream.destroy();
+            await consumeReadStream(params.file);
             return { words: [] };
           }
         }
       }
     };
-    try {
-      await transcribeWordTimestamps({ mp3Path: fakeMp3, openaiClient: mockClient });
-    } catch (e) {
-      // Stream error is expected due to destruction
-    }
+    await transcribeWordTimestamps({ mp3Path: fakeMp3, openaiClient: mockClient });
     assert.ok(receivedStream, 'file parameter must be passed to API');
     assert.ok(typeof receivedStream.read === 'function', 'file must be a readable stream');
   } finally {
@@ -185,7 +193,8 @@ async function testI_MissingWordsReturnsEmpty() {
     const mockClient = {
       audio: {
         transcriptions: {
-          create: async function() {
+          create: async function(params) {
+            await consumeReadStream(params.file);
             return { text: 'transcription' };
           }
         }
