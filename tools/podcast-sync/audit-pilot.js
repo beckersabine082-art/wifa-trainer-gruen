@@ -1,5 +1,5 @@
-const crypto = require('crypto');
 const { getEncoding } = require('js-tiktoken');
+const { sha256Lerntext } = require('./hash-paths.js');
 
 let o200kEncoding;
 
@@ -12,10 +12,6 @@ function getTtsEncoding() {
 
 function countTtsTokens(text) {
   return getTtsEncoding().encode(String(text || '')).length;
-}
-
-function sha256Lerntext(text) {
-  return crypto.createHash('sha256').update(String(text || ''), 'utf8').digest('hex');
 }
 
 function auditPilotEntry({ lerntexte, fach, titel }) {

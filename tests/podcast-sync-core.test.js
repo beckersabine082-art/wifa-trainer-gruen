@@ -375,6 +375,129 @@ test('TASK3-J: Word indices sind 0-basiert und lückenlos', function() {
   }
 });
 
+// ====== TASK 4: SHA-256 und Firebase-Pfade ======
+
+const hashPaths = require('../tools/podcast-sync/hash-paths.js');
+const {
+  sha256Lerntext: sha256FromPaths,
+  podcastSlug,
+  podcastPaths
+} = hashPaths;
+
+// Test A) ECHTER SHA-256
+test('TASK4-A: SHA-256 ist echte SHA-256 Implementierung', function() {
+  const hash = sha256FromPaths('Test');
+
+  assert.strictEqual(hash.length, 64, 'exakt 64 Hex-Zeichen');
+  assert.match(hash, /^[a-f0-9]{64}$/, 'nur Hex-Zeichen');
+
+  const expected = crypto.createHash('sha256').update('Test', 'utf8').digest('hex');
+  assert.strictEqual(hash, expected, 'identisch mit crypto Referenzwert');
+});
+
+// Test B) RAW-LERNTEXT IST HASHQUELLE
+test('TASK4-B: SHA-256 hasht raw lerntext, nicht normalized', function() {
+  const raw = '<strong>Text</strong>';
+  const normalized = 'Text';
+
+  const hashRaw = sha256FromPaths(raw);
+  const hashNorm = sha256FromPaths(normalized);
+
+  assert.notStrictEqual(hashRaw, hashNorm, 'unterschiedliche Hashes');
+  assert.strictEqual(hashRaw.length, 64, 'raw hat 64 Zeichen');
+  assert.strictEqual(hashNorm.length, 64, 'normalized hat 64 Zeichen');
+});
+
+// Test C) PODCASTTEXT IRRELEVANT
+test('TASK4-C: podcastText beeinflusst SHA-256 nicht', function() {
+  const lerntext = 'Kanonischer Text';
+  const hash1 = sha256FromPaths(lerntext);
+  const hash2 = sha256FromPaths(lerntext);
+
+  assert.strictEqual(hash1, hash2, 'deterministische Ausgabe');
+});
+
+// Test D) AUDIT VERWENDET GEMEINSAME FUNKTION
+test('TASK4-D: audit-pilot importiert sha256Lerntext von hash-paths', function() {
+  const auditModule = require('../tools/podcast-sync/audit-pilot.js');
+  
+  assert.strictEqual(
+    auditModule.sha256Lerntext,
+    sha256FromPaths,
+    'exakt dieselbe Funktionsreferenz'
+  );
+});
+
+// Test E) PILOT-PFADE
+test('TASK4-E: Pilot-Pfade sind korrekt', function() {
+  const paths = podcastPaths('Recht', 'Rechtssubjekte und Rechtsobjekte');
+
+  assert.strictEqual(
+    paths.mp3Path,
+    'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3',
+    'mp3Path korrekt'
+  );
+  assert.strictEqual(
+    paths.jsonPath,
+    'podcast/recht-rechtssubjekte-und-rechtsobjekte.json',
+    'jsonPath korrekt'
+  );
+});
+
+// Test F) UMLAUTE UND ß
+test('TASK4-F: Umlaute und ß in Pfaden', function() {
+  const paths = podcastPaths('Bücher', 'Größe');
+
+  assert.ok(paths.mp3Path.includes('buecher'), 'Bücher → buecher');
+  assert.ok(paths.mp3Path.includes('groesse'), 'Größe → groesse');
+  assert.strictEqual(paths.jsonPath, 'podcast/buecher-groesse.json', 'JSON hat gleichen base slug');
+});
+
+// Test G) Ä Ö Ü
+test('TASK4-G: Großbuchstaben-Umlaute', function() {
+  const slug = podcastSlug('Änderung Ökonomie Übertragung');
+
+  assert.strictEqual(slug, 'aenderung-oekonomie-uebertragung', 'Großbuchstaben-Umlaute korrekt');
+});
+
+// Test H) DIAKRITISCHE ZEICHEN
+test('TASK4-H: Andere diakritische Zeichen (Akzente)', function() {
+  const slug = podcastSlug('Café Résumé');
+
+  assert.strictEqual(slug, 'cafe-resume', 'Akzente entfernt, NFD normalisiert');
+});
+
+// Test I) PUNKTUATION UND MEHRFACH-TRENNER
+test('TASK4-I: Punktuation und mehrfache Trenner', function() {
+  const slug = podcastSlug('  Recht: Vertrag / Angebot & Annahme  ');
+
+  assert.strictEqual(
+    slug,
+    'recht-vertrag-angebot-annahme',
+    'Punktuation entfernt, keine doppelten/führenden/nachfolgenden Bindestriche'
+  );
+  assert.ok(!slug.includes('--'), 'keine doppelten Bindestriche');
+  assert.ok(!slug.startsWith('-'), 'keine führenden Bindestriche');
+  assert.ok(!slug.endsWith('-'), 'keine nachfolgenden Bindestriche');
+});
+
+// Test J) DETERMINISMUS
+test('TASK4-J: Deterministische Pfade', function() {
+  const input1 = 'Test Fach';
+  const input2 = 'Test Kapitel';
+  
+  const paths1 = podcastPaths(input1, input2);
+  const paths2 = podcastPaths(input1, input2);
+
+  assert.strictEqual(paths1.mp3Path, paths2.mp3Path, 'mp3Path deterministisch');
+  assert.strictEqual(paths1.jsonPath, paths2.jsonPath, 'jsonPath deterministisch');
+  
+  const baseSlug1 = paths1.mp3Path.replace(/^podcast\//, '').replace(/\.mp3$/, '');
+  const baseSlug2 = paths1.jsonPath.replace(/^podcast\//, '').replace(/\.json$/, '');
+  
+  assert.strictEqual(baseSlug1, baseSlug2, 'mp3/json haben gleichen base slug');
+});
+
 process.on('exit', function() {
   console.log(`\n${passedCount}/${testCount} tests passed`);
 });
