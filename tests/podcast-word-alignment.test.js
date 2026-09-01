@@ -129,9 +129,60 @@ test('G: start/end werden exakt übernommen', function() {
   ]);
 });
 
-// H) MONOTONIE
+function assertInvalidTimestamp(whisperWord) {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('Rechtssubjekte und Rechtsobjekte', [whisperWord]);
+  }, function(error) {
+    return !!error && /Transcript-Index\s*0/i.test(error.message)
+      && /Rechtssubjekte/i.test(error.message)
+      && /(start|end)/i.test(error.message)
+      && /(ungültig|invalid)/i.test(error.message);
+  });
+}
 
-test('H: Wortindizes und Zeitwerte laufen monoton', function() {
+// H) INVALID TIMESTAMPS
+
+test('H1: NaN start wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: Number.NaN, end: 1 });
+});
+
+test('H2: Infinity end wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: 0, end: Infinity });
+});
+
+test('H3: String start wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: '1.5', end: 2 });
+});
+
+test('H4: String end wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: 1, end: '2' });
+});
+
+test('H5: end < start bleibt ein klarer Fehler', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('Rechtssubjekte und Rechtsobjekte', [{ wort: 'Rechtssubjekte', start: 2, end: 1 }]);
+  }, /Transcript-Index\s*0|start\/end|end\s*<\s*start|inkonsistent/i);
+});
+
+test('H6: gültige Dezimalwerte werden exakt beibehalten', function() {
+  const lerntext = 'Rechtssubjekte und Rechtsobjekte';
+  const transcriptWords = [
+    { wort: 'Rechtssubjekte', start: 1.234567, end: 2.345678 },
+    { wort: 'und', start: 2.345678, end: 3.456789 },
+    { wort: 'Rechtsobjekte', start: 3.456789, end: 4.567891 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => ({ start: item.start, end: item.end })), [
+    { start: 1.234567, end: 2.345678 },
+    { start: 2.345678, end: 3.456789 },
+    { start: 3.456789, end: 4.567891 }
+  ]);
+});
+
+// I) MONOTONIE
+
+test('I: Wortindizes und Zeitwerte laufen monoton', function() {
   const lerntext = 'Rechtssubjekte und Rechtsobjekte';
   const transcriptWords = [
     { wort: 'Rechtssubjekte', start: 0, end: 1 },
@@ -145,7 +196,7 @@ test('H: Wortindizes und Zeitwerte laufen monoton', function() {
   assert.ok(result.wortZeitmarken.every(entry => entry.start <= entry.end));
 });
 
-// I) LEERE INPUTS
+// J) LEERE INPUTS
 
 test('I: Leere Lerntexte und leere transcriptWords Arrays sind klare Fehler', function() {
   assert.throws(function() {
@@ -157,9 +208,9 @@ test('I: Leere Lerntexte und leere transcriptWords Arrays sind klare Fehler', fu
   }, /transcriptWords|leer/i);
 });
 
-// J) NICHT MATCHBARES WORT
+// K) NICHT MATCHBARES WORT
 
-test('J: Nicht matchbares Whisper-Wort blockiert Alignment mit Transcript-Index', function() {
+test('K: Nicht matchbares Whisper-Wort blockiert Alignment mit Transcript-Index', function() {
   const lerntext = 'Rechtssubjekte und';
   const transcriptWords = [
     { wort: 'Rechtssubjekte', start: 0, end: 1 },
@@ -171,4 +222,4 @@ test('J: Nicht matchbares Whisper-Wort blockiert Alignment mit Transcript-Index'
   }, /Transcript-Index|1|definitely-unknown/i);
 });
 
-console.log('Total tests: 10');
+console.log('Total tests: 16');

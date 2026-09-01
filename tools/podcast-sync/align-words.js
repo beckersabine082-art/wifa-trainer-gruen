@@ -80,18 +80,30 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
     const end = whisperWord.end;
 
     if (
-      typeof start !== 'undefined' &&
-      typeof end !== 'undefined' &&
-      Number(start) > Number(end)
+      typeof start !== 'number' ||
+      !Number.isFinite(start) ||
+      typeof end !== 'number' ||
+      !Number.isFinite(end) ||
+      end < start
     ) {
-      throw new Error('Transcript-Index ' + transcriptIndex + ': start/end inkonsistent');
+      throw new Error(
+        'Ungültige Zeitmarke bei Transcript-Index ' +
+          transcriptIndex +
+          ' für "' +
+          rawWord +
+          '": start=' +
+          start +
+          ', end=' +
+          end +
+          ' ungültig'
+      );
     }
 
-    if (Number.isFinite(start) && start < lastStart) {
+    if (start < lastStart) {
       throw new Error('Transcript-Index ' + transcriptIndex + ': start läuft rückwärts');
     }
 
-    if (Number.isFinite(end) && Number.isFinite(lastEnd) && end < lastEnd) {
+    if (end < lastEnd) {
       throw new Error('Transcript-Index ' + transcriptIndex + ': end läuft rückwärts');
     }
 
