@@ -66,6 +66,7 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
   }
 
   const wortZeitmarken = [];
+  const deterministischeMatches = [];
   let lerntextIndex = 0;
   let lastStart = Number.NEGATIVE_INFINITY;
   let lastEnd = Number.NEGATIVE_INFINITY;
@@ -91,6 +92,7 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
     let matchStart = whisperWord.start;
     let matchEnd = whisperWord.end;
     let lastConsumedIndex = transcriptIndex;
+    let bridged = false;
 
     validateWordTimestamp(transcriptIndex, rawWord, whisperWord);
 
@@ -132,6 +134,41 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
       }
     }
 
+    if (matchIndex === -1 && tokenized.length === 1 && lerntextIndex >= 2 &&
+        deterministischeMatches[lerntextIndex - 1] && deterministischeMatches[lerntextIndex - 2] &&
+        lerntextIndex + 2 < kanonischeWorte.length) {
+      const followingVisibleWords = [];
+
+      for (let candidateIndex = transcriptIndex + 1; candidateIndex < transcriptWords.length && followingVisibleWords.length < 2; candidateIndex++) {
+        const candidateItem = transcriptWords[candidateIndex];
+        if (!candidateItem || typeof candidateItem !== 'object') {
+          throw new Error('Transcript-Index ' + candidateIndex + ': Whisper-Wort ungültig');
+        }
+
+        const candidateRawWord = String(candidateItem.wort ?? candidateItem.word ?? '');
+        const candidateTokenized = tokenizeForAlignment(candidateRawWord);
+        if (candidateTokenized.length === 0) {
+          continue;
+        }
+
+        followingVisibleWords.push({
+          word: candidateItem,
+          key: comparisonKey(candidateTokenized.join(''))
+        });
+      }
+
+      if (followingVisibleWords.length === 2 &&
+          followingVisibleWords[0].key === comparisonKey(kanonischeWorte[lerntextIndex + 1]) &&
+          followingVisibleWords[1].key === comparisonKey(kanonischeWorte[lerntextIndex + 2])) {
+        matchIndex = lerntextIndex;
+        matchWord = kanonischeWorte[matchIndex];
+        matchStart = whisperWord.start;
+        matchEnd = whisperWord.end;
+        lastConsumedIndex = transcriptIndex;
+        bridged = true;
+      }
+    }
+
     if (matchIndex === -1) {
       throw new Error(
         'Transcript-Index ' + transcriptIndex + ': Whisper-Wort nicht deterministisch im Lerntext gefunden: ' + rawWord
@@ -153,6 +190,8 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
       end: matchEnd
     });
 
+    deterministischeMatches[matchIndex] = !bridged &&
+      (comparisonKey(kanonischeWorte[lerntextIndex]) === directKey || lastConsumedIndex !== transcriptIndex);
     lastStart = Number(matchStart);
     lastEnd = Number(matchEnd);
     lerntextIndex += 1;

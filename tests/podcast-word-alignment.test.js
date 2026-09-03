@@ -288,4 +288,99 @@ test('N: Rechtssubjekt vs Rechtsobjekt bleibt ein echter Fehler und darf nicht f
   }, /Transcript-Index|Rechtsobjekt|Rechtssubjekt/i);
 });
 
-console.log('Total tests: 20');
+test('O: Ein einzelner abweichender Whisper-Token wird zwischen 2+2 exakten Ankern kanonisch gebridged', function() {
+  const lerntext = 'eine natürliche Person und damit Rechtssubjekt Juristische Personen sind';
+  const transcriptWords = [
+    { wort: 'eine', start: 0, end: 0.2 },
+    { wort: 'natürliche', start: 0.2, end: 0.5 },
+    { wort: 'Person', start: 0.5, end: 0.8 },
+    { wort: 'und', start: 0.8, end: 1.0 },
+    { wort: 'damit', start: 1.0, end: 1.2 },
+    { wort: 'Rechtsobjekt', start: 1.2, end: 1.8 },
+    { wort: 'Juristische', start: 1.8, end: 2.2 },
+    { wort: 'Personen', start: 2.2, end: 2.5 },
+    { wort: 'sind', start: 2.5, end: 2.8 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken[5], {
+    wortIndex: 5,
+    wort: 'Rechtssubjekt',
+    start: 1.2,
+    end: 1.8
+  });
+});
+
+test('P: Eine sichere Folgeanker reicht nicht für eine Bridge', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A B Ziel D', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'B', start: 1, end: 2 },
+      { wort: 'Falsch', start: 2, end: 3 },
+      { wort: 'D', start: 3, end: 4 }
+    ]);
+  }, /Transcript-Index|Falsch/i);
+});
+
+test('Q: Ein sicherer vorheriger Anker reicht nicht für eine Bridge', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A Ziel C D', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'Falsch', start: 1, end: 2 },
+      { wort: 'C', start: 2, end: 3 },
+      { wort: 'D', start: 3, end: 4 }
+    ]);
+  }, /Transcript-Index|Falsch/i);
+});
+
+test('R: Zwei aufeinanderfolgende unbekannte Wörter werden nicht gebridged', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A B C D E F', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'B', start: 1, end: 2 },
+      { wort: 'X', start: 2, end: 3 },
+      { wort: 'Y', start: 3, end: 4 },
+      { wort: 'E', start: 4, end: 5 },
+      { wort: 'F', start: 5, end: 6 }
+    ]);
+  }, /Transcript-Index|X/i);
+});
+
+test('S: Falsche Folgeanker verhindern eine Bridge', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A B C D E', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'B', start: 1, end: 2 },
+      { wort: 'X', start: 2, end: 3 },
+      { wort: 'D', start: 3, end: 4 },
+      { wort: 'F', start: 4, end: 5 }
+    ]);
+  }, /Transcript-Index|X/i);
+});
+
+test('T: Eine Bridge übernimmt die exakten Zeiten des einzelnen Whisper-Worts', function() {
+  const result = alignTranscriptWordsToLerntext('A B Ziel C D', [
+    { wort: 'A', start: 0.1, end: 0.2 },
+    { wort: 'B', start: 0.2, end: 0.3 },
+    { wort: 'abweichend', start: 4.125, end: 7.875 },
+    { wort: 'C', start: 7.875, end: 8.1 },
+    { wort: 'D', start: 8.1, end: 8.4 }
+  ]);
+
+  assert.deepStrictEqual(result.wortZeitmarken[2], {
+    wortIndex: 2,
+    wort: 'Ziel',
+    start: 4.125,
+    end: 7.875
+  });
+});
+
+test('U: Ein nicht abgesicherter einzelner Fehler bleibt blockiert', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('Rechtssubjekt', [
+      { wort: 'Rechtsobjekt', start: 0, end: 1 }
+    ]);
+  }, /Transcript-Index|Rechtsobjekt|Rechtssubjekt/i);
+});
+
+console.log('Total tests: 27');
