@@ -34,9 +34,11 @@ function createFixtureFiles() {
 
 function createMockClient(options) {
   const calls = [];
+  let storageCalls = 0;
   const settings = options || {};
   const client = {
     storage: function() {
+      storageCalls++;
       return {
         bucket: function() {
           return {
@@ -55,7 +57,7 @@ function createMockClient(options) {
       };
     }
   };
-  return { client, calls };
+  return { client, calls, getStorageCalls: function() { return storageCalls; } };
 }
 
 (async function() {
@@ -87,8 +89,12 @@ function createMockClient(options) {
       adminClient: mock.client
     });
 
-    assert.deepStrictEqual(mock.calls[0].saveOptions.metadata, {
-      lerntextHash: 'sha256-unchanged'
+    assert.deepStrictEqual(mock.calls[0].saveOptions, {
+      metadata: {
+        metadata: {
+          lerntextHash: 'sha256-unchanged'
+        }
+      }
     });
   });
 
@@ -180,7 +186,7 @@ function createMockClient(options) {
     assert.strictEqual(mock.calls[1].storagePath, pilotJsonPath);
   });
 
-  await test('Firebase: fehlende Datei wird vor Firebase-Aufruf abgelehnt', async function() {
+  await test('Firebase: fehlender MP3-Pfad wird vor storage() abgelehnt', async function() {
     const files = createFixtureFiles();
     const mock = createMockClient();
     fs.unlinkSync(files.mp3Path);
@@ -194,10 +200,29 @@ function createMockClient(options) {
       });
     }, /MP3-Datei nicht gefunden/);
 
+    assert.strictEqual(mock.getStorageCalls(), 0);
     assert.strictEqual(mock.calls.length, 0);
   });
 
-  await test('Firebase: leerer lerntextHash wird abgelehnt', async function() {
+  await test('Firebase: fehlender JSON-Pfad wird vor storage() abgelehnt', async function() {
+    const files = createFixtureFiles();
+    const mock = createMockClient();
+    fs.unlinkSync(files.jsonPath);
+
+    await assert.rejects(function() {
+      return publishToFirebase({
+        mp3Path: files.mp3Path,
+        jsonPath: files.jsonPath,
+        lerntextHash: 'hash-8',
+        adminClient: mock.client
+      });
+    }, /JSON-Datei nicht gefunden/);
+
+    assert.strictEqual(mock.getStorageCalls(), 0);
+    assert.strictEqual(mock.calls.length, 0);
+  });
+
+  await test('Firebase: leerer lerntextHash wird vor storage() abgelehnt', async function() {
     const files = createFixtureFiles();
     const mock = createMockClient();
 
@@ -205,11 +230,12 @@ function createMockClient(options) {
       return publishToFirebase({
         mp3Path: files.mp3Path,
         jsonPath: files.jsonPath,
-        lerntextHash: '  ',
+        lerntextHash: '',
         adminClient: mock.client
       });
     }, /lerntextHash darf nicht leer sein/);
 
+    assert.strictEqual(mock.getStorageCalls(), 0);
     assert.strictEqual(mock.calls.length, 0);
   });
 

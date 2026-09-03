@@ -23,7 +23,9 @@ async function publishToFirebase({ mp3Path, jsonPath, lerntextHash, adminClient 
   const jsonData = fs.readFileSync(jsonPath);
 
   await bucket.file(MP3_STORAGE_PATH).save(mp3Data, {
-    metadata: { lerntextHash }
+    metadata: {
+      metadata: { lerntextHash }
+    }
   });
   await bucket.file(JSON_STORAGE_PATH).save(jsonData, {
     metadata: { contentType: 'application/json' }
