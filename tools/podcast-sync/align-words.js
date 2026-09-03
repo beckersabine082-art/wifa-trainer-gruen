@@ -1,9 +1,10 @@
 const { tokenizeVisibleWords, decodeHtmlEntities } = require('./normalize-lerntext.js');
 
-function normalizeComparableWord(word) {
+function comparisonKey(word) {
   return String(word || '')
     .normalize('NFC')
-    .toLocaleLowerCase('de-DE');
+    .toLocaleLowerCase('de-DE')
+    .replace(/-/g, '');
 }
 
 function prepareTextForTokenize(text) {
@@ -25,6 +26,31 @@ function tokenizeForAlignment(text) {
   return tokenizeVisibleWords(prepared.normalize('NFC'));
 }
 
+function validateWordTimestamp(transcriptIndex, rawWord, whisperWord) {
+  const start = whisperWord.start;
+  const end = whisperWord.end;
+
+  if (
+    typeof start !== 'number' ||
+    !Number.isFinite(start) ||
+    typeof end !== 'number' ||
+    !Number.isFinite(end) ||
+    end < start
+  ) {
+    throw new Error(
+      'Ungültige Zeitmarke bei Transcript-Index ' +
+        transcriptIndex +
+        ' für "' +
+        rawWord +
+        '": start=' +
+        start +
+        ', end=' +
+        end +
+        ' ungültig'
+    );
+  }
+}
+
 function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
   if (typeof lerntext !== 'string' || lerntext.trim() === '') {
     throw new Error('lerntext leer');
@@ -44,7 +70,7 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
   let lastStart = Number.NEGATIVE_INFINITY;
   let lastEnd = Number.NEGATIVE_INFINITY;
 
-  for (let transcriptIndex = 0; transcriptIndex < transcriptWords.length; transcriptIndex++) {
+  for (let transcriptIndex = 0; transcriptIndex < transcriptWords.length; ) {
     const whisperWord = transcriptWords[transcriptIndex];
 
     if (!whisperWord || typeof whisperWord !== 'object') {
@@ -55,18 +81,54 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
     const tokenized = tokenizeForAlignment(rawWord);
 
     if (tokenized.length === 0) {
-      throw new Error(
-        'Transcript-Index ' + transcriptIndex + ': Whisper-Wort nicht tokenisierbar: ' + JSON.stringify(rawWord)
-      );
+      transcriptIndex += 1;
+      continue;
     }
 
+    const directKey = comparisonKey(tokenized.join(''));
     let matchIndex = -1;
-    const targetKey = normalizeComparableWord(tokenized[0]);
+    let matchWord = null;
+    let matchStart = whisperWord.start;
+    let matchEnd = whisperWord.end;
+    let lastConsumedIndex = transcriptIndex;
 
-    for (; lerntextIndex < kanonischeWorte.length; lerntextIndex++) {
-      if (normalizeComparableWord(kanonischeWorte[lerntextIndex]) === targetKey) {
-        matchIndex = lerntextIndex;
-        break;
+    validateWordTimestamp(transcriptIndex, rawWord, whisperWord);
+
+    if (lerntextIndex < kanonischeWorte.length && comparisonKey(kanonischeWorte[lerntextIndex]) === directKey) {
+      matchIndex = lerntextIndex;
+      matchWord = kanonischeWorte[matchIndex];
+    } else {
+      let mergedText = directKey;
+      let visibleWordCount = tokenized.length;
+      let mergedStart = whisperWord.start;
+      let mergedEnd = whisperWord.end;
+
+      for (let candidateIndex = transcriptIndex + 1; candidateIndex < transcriptWords.length && visibleWordCount < 3; candidateIndex++) {
+        const candidateItem = transcriptWords[candidateIndex];
+        if (!candidateItem || typeof candidateItem !== 'object') {
+          throw new Error('Transcript-Index ' + candidateIndex + ': Whisper-Wort ungültig');
+        }
+
+        const candidateRawWord = String(candidateItem.wort ?? candidateItem.word ?? '');
+        const candidateTokenized = tokenizeForAlignment(candidateRawWord);
+
+        if (candidateTokenized.length === 0) {
+          continue;
+        }
+
+        validateWordTimestamp(candidateIndex, candidateRawWord, candidateItem);
+        mergedText += comparisonKey(candidateTokenized.join(''));
+        visibleWordCount += candidateTokenized.length;
+        lastConsumedIndex = candidateIndex;
+        mergedEnd = candidateItem.end;
+
+        if (lerntextIndex < kanonischeWorte.length && comparisonKey(kanonischeWorte[lerntextIndex]) === mergedText) {
+          matchIndex = lerntextIndex;
+          matchWord = kanonischeWorte[matchIndex];
+          matchStart = mergedStart;
+          matchEnd = mergedEnd;
+          break;
+        }
       }
     }
 
@@ -76,48 +138,25 @@ function alignTranscriptWordsToLerntext(lerntext, transcriptWords) {
       );
     }
 
-    const start = whisperWord.start;
-    const end = whisperWord.end;
-
-    if (
-      typeof start !== 'number' ||
-      !Number.isFinite(start) ||
-      typeof end !== 'number' ||
-      !Number.isFinite(end) ||
-      end < start
-    ) {
-      throw new Error(
-        'Ungültige Zeitmarke bei Transcript-Index ' +
-          transcriptIndex +
-          ' für "' +
-          rawWord +
-          '": start=' +
-          start +
-          ', end=' +
-          end +
-          ' ungültig'
-      );
-    }
-
-    if (start < lastStart) {
+    if (matchStart < lastStart) {
       throw new Error('Transcript-Index ' + transcriptIndex + ': start läuft rückwärts');
     }
 
-    if (end < lastEnd) {
+    if (matchEnd < lastEnd) {
       throw new Error('Transcript-Index ' + transcriptIndex + ': end läuft rückwärts');
     }
 
-    const matchWord = kanonischeWorte[matchIndex];
     wortZeitmarken.push({
       wortIndex: matchIndex,
       wort: matchWord,
-      start: start,
-      end: end
+      start: matchStart,
+      end: matchEnd
     });
 
-    lastStart = Number.isFinite(start) ? Number(start) : lastStart;
-    lastEnd = Number.isFinite(end) ? Number(end) : lastEnd;
+    lastStart = Number(matchStart);
+    lastEnd = Number(matchEnd);
     lerntextIndex += 1;
+    transcriptIndex = lastConsumedIndex + 1;
   }
 
   return { wortZeitmarken };

@@ -222,4 +222,70 @@ test('K: Nicht matchbares Whisper-Wort blockiert Alignment mit Transcript-Index'
   }, /Transcript-Index|1|definitely-unknown/i);
 });
 
-console.log('Total tests: 16');
+test('L: Standalone-Satzzeichen werden ignoriert und dürfen keine Word-Metadaten erzeugen', function() {
+  const lerntext = 'Paragraph 90a gilt';
+  const transcriptWords = [
+    { wort: 'Paragraph', start: 0, end: 1 },
+    { wort: '§', start: 1, end: 1.1 },
+    { wort: '90', start: 1.1, end: 1.5 },
+    { wort: 'A', start: 1.5, end: 1.7 },
+    { wort: 'gilt', start: 1.7, end: 2 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wort), ['Paragraph', '90a', 'gilt']);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wortIndex), [0, 1, 2]);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => ({ start: item.start, end: item.end })), [
+    { start: 0, end: 1 },
+    { start: 1.1, end: 1.7 },
+    { start: 1.7, end: 2 }
+  ]);
+});
+
+test('M1: öffentlich-rechtliche wird aus zwei Whisper-Wörtern als ein Lerntextwort aligned', function() {
+  const lerntext = 'öffentlich-rechtliche Körperschaft';
+  const transcriptWords = [
+    { wort: 'öffentlich', start: 0, end: 0.8 },
+    { wort: 'rechtliche', start: 0.8, end: 1.5 },
+    { wort: 'Körperschaft', start: 1.5, end: 2 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.strictEqual(result.wortZeitmarken.length, 2);
+  assert.deepStrictEqual(result.wortZeitmarken[0], {
+    wortIndex: 0,
+    wort: 'öffentlich-rechtliche',
+    start: 0,
+    end: 1.5
+  });
+});
+
+test('M2: 90a wird aus 90 + A als ein Lerntextwort aligned', function() {
+  const lerntext = '90a BGB';
+  const transcriptWords = [
+    { wort: '90', start: 0, end: 0.4 },
+    { wort: 'A', start: 0.4, end: 0.6 },
+    { wort: 'BGB', start: 0.6, end: 1 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken[0], {
+    wortIndex: 0,
+    wort: '90a',
+    start: 0,
+    end: 0.6
+  });
+});
+
+test('N: Rechtssubjekt vs Rechtsobjekt bleibt ein echter Fehler und darf nicht fuzzy gematcht werden', function() {
+  const lerntext = 'Rechtssubjekt';
+  const transcriptWords = [
+    { wort: 'Rechtsobjekt', start: 0, end: 1 }
+  ];
+
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  }, /Transcript-Index|Rechtsobjekt|Rechtssubjekt/i);
+});
+
+console.log('Total tests: 20');
