@@ -12,12 +12,13 @@ function requireNonEmptyString(value, fieldName) {
 
 function validateUpdatedAt(updatedAt) {
   requireNonEmptyString(updatedAt, 'updatedAt');
-  if (!Number.isFinite(Date.parse(updatedAt))) {
+  const isoUtcMillisPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+  if (!isoUtcMillisPattern.test(updatedAt) || new Date(updatedAt).toISOString() !== updatedAt) {
     throw new Error('updatedAt muss ein gültiges ISO-Datum sein');
   }
 }
 
-function validateManifestShape(manifest) {
+function validateManifestStructure(manifest) {
   if (!manifest || typeof manifest !== 'object') {
     throw new Error('Manifest ungültig');
   }
@@ -27,7 +28,7 @@ function validateManifestShape(manifest) {
   requireNonEmptyString(manifest.mp3Path, 'mp3Path');
   requireNonEmptyString(manifest.jsonPath, 'jsonPath');
   validateUpdatedAt(manifest.updatedAt);
-  if (!Array.isArray(manifest.wortZeitmarken)) {
+  if (!Array.isArray(manifest.wortZeitmarken) || manifest.wortZeitmarken.length === 0) {
     throw new Error('wortZeitmarken muss ein Array sein');
   }
   manifest.wortZeitmarken.forEach(function(mark, index) {
@@ -108,7 +109,7 @@ function buildPodcastManifest({ fach, titel, lerntext, lerntextHash, wortZeitmar
 
 function writePodcastManifest({ outputPath, manifest }) {
   requireNonEmptyString(outputPath, 'outputPath');
-  validateManifestShape(manifest);
+  validateManifestStructure(manifest);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, JSON.stringify(manifest, null, 2), 'utf8');
   return outputPath;

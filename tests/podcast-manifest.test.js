@@ -58,9 +58,10 @@ test('gültiges Manifest enthält alle erwarteten Daten', function() {
   assert.deepStrictEqual(manifest.wortZeitmarken, validMarks);
 });
 
-test('podcastText wird nicht benötigt', function() {
-  const manifest = buildPodcastManifest(validInput());
+test('podcastText wird ignoriert und nicht gespeichert', function() {
+  const manifest = buildPodcastManifest(validInput({ podcastText: 'ALTER PODCASTTEXT' }));
   assert.strictEqual(manifest.podcastText, undefined);
+  assert.strictEqual(JSON.stringify(manifest).includes('ALTER PODCASTTEXT'), false);
 });
 
 test('falscher lerntextHash wird blockiert', function() {
@@ -99,6 +100,15 @@ test('updatedAt muss ein nichtleeres gültiges ISO-Datum sein', function() {
   assert.strictEqual(buildPodcastManifest(validInput()).updatedAt, updatedAt);
   assertBuildFails({ updatedAt: '' }, 'leeres updatedAt');
   assertBuildFails({ updatedAt: 'kein Datum' }, 'ungültiges updatedAt');
+  [
+    'September 3, 2026',
+    '2026/09/03',
+    '2026-09-03',
+    '2026-09-03T08:00:00Z',
+    '2026-09-03T10:00:00+02:00'
+  ].forEach(function(value) {
+    assertBuildFails({ updatedAt: value }, 'Nicht-ISO updatedAt: ' + value);
+  });
 });
 
 test('Input-Zeitmarken werden nicht mutiert', function() {
@@ -115,6 +125,44 @@ test('writePodcastManifest schreibt parsebares UTF-8 JSON', function() {
     const result = writePodcastManifest({ outputPath, manifest });
     assert.strictEqual(result, outputPath);
     assert.deepStrictEqual(JSON.parse(fs.readFileSync(outputPath, 'utf8')), manifest);
+  } finally {
+    fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+  }
+});
+
+test('writePodcastManifest validiert die vollständige Struktur vor dem Schreiben', function() {
+  const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-manifest-invalid-'));
+  fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+  const outputPath = path.join(temporaryDirectory, 'nested', 'manifest.json');
+  const validManifest = buildPodcastManifest(validInput());
+  const invalidManifests = [
+    undefined,
+    Object.assign({}, validManifest, { fach: '' }),
+    Object.assign({}, validManifest, { titel: '' }),
+    Object.assign({}, validManifest, { lerntextHash: '' }),
+    Object.assign({}, validManifest, { mp3Path: '' }),
+    Object.assign({}, validManifest, { jsonPath: '' }),
+    Object.assign({}, validManifest, { wortZeitmarken: 'not-an-array' }),
+    Object.assign({}, validManifest, { wortZeitmarken: [] }),
+    Object.assign({}, validManifest, { updatedAt: '2026-09-03' }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return Object.assign({}, mark, { wortIndex: index === 1 ? 2 : mark.wortIndex }); }) }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return index === 0 ? Object.assign({}, mark, { start: '0' }) : Object.assign({}, mark); }) }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return index === 0 ? Object.assign({}, mark, { end: '0.8' }) : Object.assign({}, mark); }) }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return index === 0 ? Object.assign({}, mark, { start: NaN }) : Object.assign({}, mark); }) }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return index === 0 ? Object.assign({}, mark, { end: Infinity }) : Object.assign({}, mark); }) }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return index === 0 ? Object.assign({}, mark, { end: -1 }) : Object.assign({}, mark); }) }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return index === 2 ? Object.assign({}, mark, { start: 0.7 }) : Object.assign({}, mark); }) }),
+    Object.assign({}, validManifest, { wortZeitmarken: validMarks.map(function(mark, index) { return index === 1 ? Object.assign({}, mark, { end: 0.7 }) : Object.assign({}, mark); }) })
+  ];
+
+  try {
+    invalidManifests.forEach(function(manifest) {
+      assert.throws(function() {
+        writePodcastManifest({ outputPath, manifest });
+      });
+    });
+    assert.strictEqual(fs.existsSync(temporaryDirectory), false);
+    assert.strictEqual(fs.existsSync(outputPath), false);
   } finally {
     fs.rmSync(temporaryDirectory, { recursive: true, force: true });
   }
