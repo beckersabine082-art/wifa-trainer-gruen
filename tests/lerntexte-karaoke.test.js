@@ -7,6 +7,13 @@ const test = require('node:test');
 const { lerntexteAudioVersionIstSynchron } = require('../js/podcast-hash-validate.js');
 const { lerntexteDomTokenisieren } = require('../js/podcast-dom-tokenize.js');
 const { findWordIndexAtTime } = require('../js/podcast-time-to-word.js');
+const {
+  lerntextePodcastAbspielen,
+  lerntextePodcastPausieren,
+  lerntextePodcastStoppen,
+  lerntextePodcastFortsetzen,
+  lerntextePodcastVonVorne
+} = require('../js/lerntexte.js');
 
 class MockTextNode {
   constructor(ownerDocument, data) {
@@ -489,4 +496,675 @@ test('Time-to-Word: Browser-Export exponiert window.findWordIndexAtTime', () => 
   vm.runInNewContext(source, context);
 
   assert.equal(typeof context.window.findWordIndexAtTime, 'function');
+});
+
+// ============================================================
+// TASK 14: Pilot Playback Tests
+// ============================================================
+
+// Test 1: Stop pausiert Audio
+test('Pilot Playback: Stop ruft pause() auf', () => {
+  let pauseCalled = false;
+  const mockAudio = {
+    currentTime: 42.5,
+    pause() { pauseCalled = true; }
+  };
+  const mockSaveProgress = async () => {};
+  
+  lerntextePodcastStoppen(mockAudio, mockSaveProgress, {});
+  
+  assert.strictEqual(pauseCalled, true, 'pause() wurde aufgerufen');
+});
+
+// Test 2: Stop erhält currentTime
+test('Pilot Playback: Stop behält currentTime', () => {
+  const mockAudio = {
+    currentTime: 42.5,
+    pause() {}
+  };
+  const mockSaveProgress = async () => {};
+  
+  lerntextePodcastStoppen(mockAudio, mockSaveProgress, {});
+  
+  assert.strictEqual(mockAudio.currentTime, 42.5, 'currentTime bleibt unverändert');
+});
+
+// Test 3: Stop speichert aktuelle Position
+test('Pilot Playback: Stop speichert aktuelle Position', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 42.5,
+    pause() {}
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte und Rechtsobjekte',
+    firebasePfad: 'podcast/recht-rechtssubjekte.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  await lerntextePodcastStoppen(mockAudio, mockSaveProgress, baseState);
+  
+  assert.ok(savedState, 'saveProgress wurde aufgerufen');
+  assert.strictEqual(savedState.sekundenPosition, 42.5, 'Position gespeichert');
+});
+
+// Test 4: Stop speichert completed false
+test('Pilot Playback: Stop speichert completed false', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 42.5,
+    pause() {}
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  await lerntextePodcastStoppen(mockAudio, mockSaveProgress, baseState);
+  
+  assert.ok(savedState, 'saveProgress wurde aufgerufen');
+  assert.strictEqual(savedState.completed, false, 'completed ist false');
+});
+
+// Test 5: Pause ruft pause() auf
+test('Pilot Playback: Pause ruft pause() auf', () => {
+  let pauseCalled = false;
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() { pauseCalled = true; }
+  };
+  const mockSaveProgress = async () => {};
+  
+  lerntextePodcastPausieren(mockAudio, mockSaveProgress, {});
+  
+  assert.strictEqual(pauseCalled, true, 'pause() wurde aufgerufen');
+});
+
+// Test 6: Pause behält currentTime
+test('Pilot Playback: Pause behält currentTime', () => {
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() {}
+  };
+  const mockSaveProgress = async () => {};
+  
+  lerntextePodcastPausieren(mockAudio, mockSaveProgress, {});
+  
+  assert.strictEqual(mockAudio.currentTime, 30.0, 'currentTime bleibt unverändert');
+});
+
+// Test 7: Pause speichert aktuelle Position
+test('Pilot Playback: Pause speichert aktuelle Position', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() {}
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  await lerntextePodcastPausieren(mockAudio, mockSaveProgress, baseState);
+  
+  assert.ok(savedState, 'saveProgress wurde aufgerufen');
+  assert.strictEqual(savedState.sekundenPosition, 30.0, 'Position gespeichert');
+});
+
+// Test 8: Pause speichert completed false
+test('Pilot Playback: Pause speichert completed false', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() {}
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  await lerntextePodcastPausieren(mockAudio, mockSaveProgress, baseState);
+  
+  assert.ok(savedState, 'saveProgress wurde aufgerufen');
+  assert.strictEqual(savedState.completed, false, 'completed ist false');
+});
+
+// Test 9: Pause mutiert Basisstate nicht
+test('Pilot Playback: Pause mutiert Basisstate nicht', async () => {
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() {}
+  };
+  const mockSaveProgress = async () => {};
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  const originalState = JSON.parse(JSON.stringify(baseState));
+  
+  await lerntextePodcastPausieren(mockAudio, mockSaveProgress, baseState);
+  
+  assert.deepStrictEqual(baseState, originalState, 'Basisstate nicht mutiert');
+});
+
+// Test 10: Stop mutiert Basisstate nicht
+test('Pilot Playback: Stop mutiert Basisstate nicht', async () => {
+  const mockAudio = {
+    currentTime: 42.5,
+    pause() {}
+  };
+  const mockSaveProgress = async () => {};
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  const originalState = JSON.parse(JSON.stringify(baseState));
+  
+  await lerntextePodcastStoppen(mockAudio, mockSaveProgress, baseState);
+  
+  assert.deepStrictEqual(baseState, originalState, 'Basisstate nicht mutiert');
+});
+
+// Test 11: Resume mit passendem Hash setzt Position
+test('Pilot Playback: Resume mit passendem Hash setzt Position', () => {
+  const currentHash = 'abc123';
+  const resumeState = {
+    lerntextHash: 'abc123',
+    sekundenPosition: 20.5
+  };
+  const mockAudio = {
+    currentTime: 0
+  };
+  
+  lerntextePodcastFortsetzen(mockAudio, resumeState, currentHash);
+  
+  assert.strictEqual(mockAudio.currentTime, 20.5, 'Position wiederhergestellt');
+});
+
+// Test 12: Resume mit Hash-Mismatch setzt Position NICHT
+test('Pilot Playback: Resume mit Hash-Mismatch setzt Position NICHT', () => {
+  const currentHash = 'abc123';
+  const resumeState = {
+    lerntextHash: 'different',
+    sekundenPosition: 20.5
+  };
+  const mockAudio = {
+    currentTime: 0
+  };
+  
+  lerntextePodcastFortsetzen(mockAudio, resumeState, currentHash);
+  
+  assert.strictEqual(mockAudio.currentTime, 0, 'Position nicht gesetzt bei Hash-Mismatch');
+});
+
+// Test 13: Resume mit completed true setzt Position NICHT
+test('Pilot Playback: Resume completed true setzt Position NICHT', () => {
+  const currentHash = 'abc123';
+  const resumeState = {
+    lerntextHash: 'abc123',
+    sekundenPosition: 20.5,
+    completed: true
+  };
+  const mockAudio = {
+    currentTime: 0
+  };
+  
+  lerntextePodcastFortsetzen(mockAudio, resumeState, currentHash);
+  
+  assert.strictEqual(mockAudio.currentTime, 0, 'Position nicht gesetzt bei completed=true');
+});
+
+// Test 14: Resume mit ungültiger SekundenPosition setzt Position NICHT
+test('Pilot Playback: Resume mit ungültiger SekundenPosition setzt Position NICHT', () => {
+  const currentHash = 'abc123';
+  
+  // Test mit negativ
+  let mockAudio = { currentTime: 0 };
+  lerntextePodcastFortsetzen(mockAudio, {
+    lerntextHash: 'abc123',
+    sekundenPosition: -1
+  }, currentHash);
+  assert.strictEqual(mockAudio.currentTime, 0, 'negative Position nicht gesetzt');
+  
+  // Test mit NaN
+  mockAudio = { currentTime: 0 };
+  lerntextePodcastFortsetzen(mockAudio, {
+    lerntextHash: 'abc123',
+    sekundenPosition: NaN
+  }, currentHash);
+  assert.strictEqual(mockAudio.currentTime, 0, 'NaN Position nicht gesetzt');
+  
+  // Test mit Infinity
+  mockAudio = { currentTime: 0 };
+  lerntextePodcastFortsetzen(mockAudio, {
+    lerntextHash: 'abc123',
+    sekundenPosition: Infinity
+  }, currentHash);
+  assert.strictEqual(mockAudio.currentTime, 0, 'Infinity Position nicht gesetzt');
+  
+  // Test mit undefined
+  mockAudio = { currentTime: 0 };
+  lerntextePodcastFortsetzen(mockAudio, {
+    lerntextHash: 'abc123',
+    sekundenPosition: undefined
+  }, currentHash);
+  assert.strictEqual(mockAudio.currentTime, 0, 'undefined Position nicht gesetzt');
+});
+
+// Test 15: Resume akzeptiert Position 0
+test('Pilot Playback: Resume akzeptiert Position 0', () => {
+  const currentHash = 'abc123';
+  const resumeState = {
+    lerntextHash: 'abc123',
+    sekundenPosition: 0
+  };
+  const mockAudio = {
+    currentTime: 42.5
+  };
+  
+  lerntextePodcastFortsetzen(mockAudio, resumeState, currentHash);
+  
+  assert.strictEqual(mockAudio.currentTime, 0, 'Position 0 wird akzeptiert');
+});
+
+// Test 16: VonVorne setzt Position 0
+test('Pilot Playback: VonVorne setzt Position 0', () => {
+  const mockAudio = {
+    currentTime: 42.5
+  };
+  
+  lerntextePodcastVonVorne(mockAudio);
+  
+  assert.strictEqual(mockAudio.currentTime, 0, 'currentTime auf 0 gesetzt');
+});
+
+// Test 17: VonVorne löscht keinen Progress-State
+test('Pilot Playback: VonVorne löscht keinen Progress-State', () => {
+  const mockAudio = {
+    currentTime: 42.5
+  };
+  
+  // VonVorne sollte keine Argumente für Progress-Löschung haben
+  // Es ist nur eine Audio-Steuerfunktion
+  lerntextePodcastVonVorne(mockAudio);
+  
+  assert.strictEqual(mockAudio.currentTime, 0, 'VonVorne funktioniert korrekt');
+});
+
+// Test 18: Abspielen ruft play() auf
+test('Pilot Playback: Abspielen ruft play() auf', () => {
+  let playCalled = false;
+  const mockAudio = {
+    onended: null,
+    play() {
+      playCalled = true;
+      return Promise.resolve();
+    }
+  };
+  const mockSaveProgress = async () => {};
+  
+  lerntextePodcastAbspielen(mockAudio, mockSaveProgress, {});
+  
+  assert.strictEqual(playCalled, true, 'play() wurde aufgerufen');
+});
+
+// Test 19: Abspielen gibt play()-Promise unverändert zurück
+test('Pilot Playback: Abspielen gibt play()-Promise unverändert zurück', () => {
+  const playResult = Promise.resolve('playing');
+  const mockAudio = {
+    onended: null,
+    play() { return playResult; }
+  };
+  const mockSaveProgress = async () => {};
+  
+  const returned = lerntextePodcastAbspielen(mockAudio, mockSaveProgress, {});
+  
+  assert.strictEqual(returned, playResult, 'play()-Promise wird unverändert zurückgegeben');
+});
+
+// Test 20: Natürliches Ende registriert onended
+test('Pilot Playback: Natürliches Ende registriert onended', () => {
+  const mockAudio = {
+    onended: null,
+    play() { return Promise.resolve(); }
+  };
+  const mockSaveProgress = async () => {};
+  
+  lerntextePodcastAbspielen(mockAudio, mockSaveProgress, {});
+  
+  assert.ok(typeof mockAudio.onended === 'function', 'onended ist eine Funktion');
+});
+
+// Test 21: Natürliches Ende speichert completed true
+test('Pilot Playback: Natürliches Ende speichert completed true', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 138.12,
+    onended: null,
+    play() { return Promise.resolve(); }
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  lerntextePodcastAbspielen(mockAudio, mockSaveProgress, baseState);
+  
+  assert.ok(typeof mockAudio.onended === 'function', 'onended registriert');
+  
+  // Aufrufen des onended handlers
+  await mockAudio.onended();
+  
+  assert.ok(savedState, 'saveProgress wurde aufgerufen');
+  assert.strictEqual(savedState.completed, true, 'completed = true bei natürlichem Ende');
+});
+
+// Test 22: Natürliches Ende speichert aktuelle SekundenPosition
+test('Pilot Playback: Natürliches Ende speichert aktuelle SekundenPosition', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 138.12,
+    onended: null,
+    play() { return Promise.resolve(); }
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  lerntextePodcastAbspielen(mockAudio, mockSaveProgress, baseState);
+  await mockAudio.onended();
+  
+  assert.ok(savedState, 'saveProgress wurde aufgerufen');
+  assert.strictEqual(savedState.sekundenPosition, 138.12, 'sekundenPosition = audio.currentTime');
+});
+
+// Test 23: Natürliches Ende erhält Basisfelder
+test('Pilot Playback: Natürliches Ende erhält Basisfelder', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 138.12,
+    onended: null,
+    play() { return Promise.resolve(); }
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  lerntextePodcastAbspielen(mockAudio, mockSaveProgress, baseState);
+  await mockAudio.onended();
+  
+  assert.ok(savedState, 'saveProgress wurde aufgerufen');
+  assert.strictEqual(savedState.nutzer, 'uid-123', 'nutzer erhalten');
+  assert.strictEqual(savedState.fach, 'Recht', 'fach erhalten');
+  assert.strictEqual(savedState.einheit, 'Rechtssubjekte', 'einheit erhalten');
+  assert.strictEqual(savedState.firebasePfad, 'podcast/recht.mp3', 'firebasePfad erhalten');
+  assert.strictEqual(savedState.lerntextHash, 'abc123', 'lerntextHash erhalten');
+});
+
+// Test 24: Natürliches Ende mutiert Basisstate nicht
+test('Pilot Playback: Natürliches Ende mutiert Basisstate nicht', () => {
+  const mockAudio = {
+    currentTime: 138.12,
+    onended: null,
+    play() { return Promise.resolve(); }
+  };
+  const mockSaveProgress = async () => {};
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  const originalState = JSON.parse(JSON.stringify(baseState));
+  
+  lerntextePodcastAbspielen(mockAudio, mockSaveProgress, baseState);
+  
+  assert.deepStrictEqual(baseState, originalState, 'Basisstate nicht mutiert');
+});
+
+// Test 25: Pause-Save-Fehler wird propagiert
+test('Pilot Playback: Pause-Save-Fehler wird propagiert', async () => {
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() {}
+  };
+  const mockSaveProgress = async () => {
+    throw new Error('Save failed');
+  };
+  const baseState = {};
+  
+  try {
+    await lerntextePodcastPausieren(mockAudio, mockSaveProgress, baseState);
+    assert.fail('Fehler hätte propagiert werden sollen');
+  } catch (error) {
+    assert.strictEqual(error.message, 'Save failed', 'Fehler wird propagiert');
+  }
+});
+
+// Test 26: Stop-Save-Fehler wird propagiert
+test('Pilot Playback: Stop-Save-Fehler wird propagiert', async () => {
+  const mockAudio = {
+    currentTime: 42.5,
+    pause() {}
+  };
+  const mockSaveProgress = async () => {
+    throw new Error('Save failed');
+  };
+  const baseState = {};
+  
+  try {
+    await lerntextePodcastStoppen(mockAudio, mockSaveProgress, baseState);
+    assert.fail('Fehler hätte propagiert werden sollen');
+  } catch (error) {
+    assert.strictEqual(error.message, 'Save failed', 'Fehler wird propagiert');
+  }
+});
+
+// Test 27: onended-Save-Fehler ist beobachtbar
+test('Pilot Playback: onended-Save-Fehler ist beobachtbar', async () => {
+  const mockAudio = {
+    currentTime: 138.12,
+    onended: null,
+    play() { return Promise.resolve(); }
+  };
+  const mockSaveProgress = async () => {
+    throw new Error('Save failed');
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  lerntextePodcastAbspielen(mockAudio, mockSaveProgress, baseState);
+  
+  try {
+    await mockAudio.onended();
+    assert.fail('Fehler hätte propagiert werden sollen');
+  } catch (error) {
+    assert.strictEqual(error.message, 'Save failed', 'Fehler ist beobachtbar');
+  }
+});
+
+// Test 28: Kein TASK-14-Helper fügt aktualisiert hinzu
+test('Pilot Playback: Kein TASK-14-Helper fügt aktualisiert hinzu', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() {}
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 0,
+    wortIndex: 0,
+    completed: false
+  };
+  
+  await lerntextePodcastPausieren(mockAudio, mockSaveProgress, baseState);
+  
+  assert.ok(!('aktualisiert' in savedState), 'aktualisiert nicht hinzugefügt');
+  assert.ok(!('timestamp' in savedState), 'timestamp nicht hinzugefügt');
+  assert.ok(!('updatedAt' in savedState), 'updatedAt nicht hinzugefügt');
+});
+
+// Additional boundary tests for Resume
+test('Pilot Playback: Resume mit null resumeState setzt Position NICHT', () => {
+  const currentHash = 'abc123';
+  const mockAudio = { currentTime: 0 };
+  
+  lerntextePodcastFortsetzen(mockAudio, null, currentHash);
+  
+  assert.strictEqual(mockAudio.currentTime, 0, 'Position nicht gesetzt bei null resumeState');
+});
+
+test('Pilot Playback: Resume mit undefined resumeState setzt Position NICHT', () => {
+  const currentHash = 'abc123';
+  const mockAudio = { currentTime: 0 };
+  
+  lerntextePodcastFortsetzen(mockAudio, undefined, currentHash);
+  
+  assert.strictEqual(mockAudio.currentTime, 0, 'Position nicht gesetzt bei undefined resumeState');
+});
+
+// Test that Pause and Stop preserve other fields
+test('Pilot Playback: Pause erhält wortIndex aus Basisstate', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 30.0,
+    pause() {}
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 10,
+    wortIndex: 25,
+    completed: false
+  };
+  
+  await lerntextePodcastPausieren(mockAudio, mockSaveProgress, baseState);
+  
+  assert.strictEqual(savedState.wortIndex, 25, 'wortIndex beibehalten');
+});
+
+test('Pilot Playback: Stop erhält wortIndex aus Basisstate', async () => {
+  let savedState = null;
+  const mockAudio = {
+    currentTime: 42.5,
+    pause() {}
+  };
+  const mockSaveProgress = async (state) => {
+    savedState = state;
+  };
+  const baseState = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte',
+    firebasePfad: 'podcast/recht.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 10,
+    wortIndex: 30,
+    completed: false
+  };
+  
+  await lerntextePodcastStoppen(mockAudio, mockSaveProgress, baseState);
+  
+  assert.strictEqual(savedState.wortIndex, 30, 'wortIndex beibehalten');
 });

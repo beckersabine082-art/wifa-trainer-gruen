@@ -988,10 +988,83 @@ function lerntexteAudioPausieren() {
   lerntexteAudioMediaSessionAktualisieren();
 }
 
-window.initialisiereLerntexteAnsicht = initialisiereLerntexteAnsicht;
-window.lerntexteAudioStoppen = lerntexteAudioStoppen;
-window.lerntexteAudioAbspielen = lerntexteAudioAbspielen;
-window.lerntexteAudioSlug = lerntexteAudioSlug;
-window.lerntexteAudioFirebasePfad = lerntexteAudioFirebasePfad;
-window.lerntexteAudioTextFuerEintrag = lerntexteAudioTextFuerEintrag;
-window.lerntexteAudioPlaylistErstellen = lerntexteAudioPlaylistErstellen;
+// ============================================================
+// TASK 14: Pilot Playback Helper Functions
+// ============================================================
+
+// Plays audio and registers an onended handler for natural completion
+function lerntextePodcastAbspielen(audio, saveProgress, progressState) {
+  audio.onended = function() {
+    const newState = Object.assign({}, progressState, {
+      sekundenPosition: audio.currentTime,
+      completed: true
+    });
+    return saveProgress(newState);
+  };
+  return audio.play();
+}
+
+// Pauses audio and saves progress
+async function lerntextePodcastPausieren(audio, saveProgress, progressState) {
+  audio.pause();
+  const newState = Object.assign({}, progressState, {
+    sekundenPosition: audio.currentTime,
+    completed: false
+  });
+  return saveProgress(newState);
+}
+
+// Stops audio and saves progress (without resetting currentTime)
+async function lerntextePodcastStoppen(audio, saveProgress, progressState) {
+  audio.pause();
+  const newState = Object.assign({}, progressState, {
+    sekundenPosition: audio.currentTime,
+    completed: false
+  });
+  return saveProgress(newState);
+}
+
+// Resumes audio from saved position if hash matches
+function lerntextePodcastFortsetzen(audio, resumeState, currentHash) {
+  if (!resumeState) return;
+  if (resumeState.lerntextHash !== currentHash) return;
+  if (resumeState.completed === true) return;
+  
+  const position = resumeState.sekundenPosition;
+  if (typeof position !== 'number' || !isFinite(position) || position < 0) return;
+  
+  audio.currentTime = position;
+}
+
+// Plays from the beginning (von vorne)
+function lerntextePodcastVonVorne(audio) {
+  audio.currentTime = 0;
+}
+
+// ============================================================
+// Browser Window Exports
+// ============================================================
+
+if (typeof window !== 'undefined') {
+  window.initialisiereLerntexteAnsicht = initialisiereLerntexteAnsicht;
+  window.lerntexteAudioStoppen = lerntexteAudioStoppen;
+  window.lerntexteAudioAbspielen = lerntexteAudioAbspielen;
+  window.lerntexteAudioSlug = lerntexteAudioSlug;
+  window.lerntexteAudioFirebasePfad = lerntexteAudioFirebasePfad;
+  window.lerntexteAudioTextFuerEintrag = lerntexteAudioTextFuerEintrag;
+  window.lerntexteAudioPlaylistErstellen = lerntexteAudioPlaylistErstellen;
+}
+
+// ============================================================
+// Node.js/CommonJS Exports for Testing
+// ============================================================
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    lerntextePodcastAbspielen,
+    lerntextePodcastPausieren,
+    lerntextePodcastStoppen,
+    lerntextePodcastFortsetzen,
+    lerntextePodcastVonVorne
+  };
+}
