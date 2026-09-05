@@ -6,6 +6,7 @@ const test = require('node:test');
 
 const { lerntexteAudioVersionIstSynchron } = require('../js/podcast-hash-validate.js');
 const { lerntexteDomTokenisieren } = require('../js/podcast-dom-tokenize.js');
+const { findWordIndexAtTime } = require('../js/podcast-time-to-word.js');
 
 class MockTextNode {
   constructor(ownerDocument, data) {
@@ -329,4 +330,163 @@ test('DOM-Tokenisierung: realistischer Lerntext bleibt fachlich unverändert', (
   lerntexteDomTokenisieren(root);
 
   assert.strictEqual(root.textContent, before);
+});
+
+// TASK 13: currentTime → Wortindex Mapping
+test('Time-to-Word: Wort am Anfang (t=0.5 => 0)', () => {
+  const timestamps = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, 0.5);
+  assert.strictEqual(idx, 0, 'Wort 0 gefunden');
+});
+
+test('Time-to-Word: Grenze gehört nächstem Wort (start <= t < end)', () => {
+  const timestamps = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, 1.0);
+  assert.strictEqual(idx, 1, 'Grenze gehört nächstem Wort (t=1.0 => 1)');
+});
+
+test('Time-to-Word: Wort in Mitte (t=2.5 => 2)', () => {
+  const timestamps = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 },
+    { wortIndex: 2, start: 2, end: 3 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, 2.5);
+  assert.strictEqual(idx, 2, 'Wort 2 gefunden');
+});
+
+test('Time-to-Word: Vor erstem Wort => -1', () => {
+  const timestamps = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, -0.5);
+  assert.strictEqual(idx, -1, 'Zeit vor erstem Wort');
+});
+
+test('Time-to-Word: Nach letztem Wort => -1', () => {
+  const timestamps = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, 2.5);
+  assert.strictEqual(idx, -1, 'Zeit nach letztem Wort');
+});
+
+test('Time-to-Word: Lücke in Daten => -1', () => {
+  const timestamps = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1.5, end: 2 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, 1.25);
+  assert.strictEqual(idx, -1, 'Zeit liegt in Lücke (1.0 bis 1.5)');
+});
+
+test('Time-to-Word: Wortindex-Feld nicht Array-Position (100, 200)', () => {
+  const timestamps = [
+    { wortIndex: 100, start: 0, end: 1 },
+    { wortIndex: 200, start: 1, end: 2 }
+  ];
+
+  const idx0 = findWordIndexAtTime(timestamps, 0.5);
+  const idx1 = findWordIndexAtTime(timestamps, 1.5);
+  assert.strictEqual(idx0, 100, 'wortIndex ist 100, nicht Position 0');
+  assert.strictEqual(idx1, 200, 'wortIndex ist 200, nicht Position 1');
+});
+
+test('Time-to-Word: Binäre Suche (1000 Marker, t=500.5 => 500)', () => {
+  const timestamps = [];
+  for (let i = 0; i < 1000; i++) {
+    timestamps.push({
+      wortIndex: i,
+      start: i,
+      end: i + 1
+    });
+  }
+
+  const idx = findWordIndexAtTime(timestamps, 500.5);
+  assert.strictEqual(idx, 500, 'binäre Suche findet Marker 500 in 1000 Elementen');
+});
+
+test('Time-to-Word: Realistischer Pilot-Wert (t=19.5 => 36)', () => {
+  const timestamps = [
+    { wortIndex: 36, start: 19.040000915527344, end: 19.760000228881836 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, 19.5);
+  assert.strictEqual(idx, 36, 'Pilot-Wert bei t=19.5');
+});
+
+test('Time-to-Word: Pilot-Grenze ausgeschlossen (t=19.760000228881836 => -1)', () => {
+  const timestamps = [
+    { wortIndex: 36, start: 19.040000915527344, end: 19.760000228881836 }
+  ];
+
+  const idx = findWordIndexAtTime(timestamps, 19.760000228881836);
+  assert.strictEqual(idx, -1, 'Grenze am end ist ausgeschlossen (end nicht inklusiv)');
+});
+
+test('Time-to-Word: Ungültig - wortZeitmarken ist kein Array => -1', () => {
+  assert.strictEqual(findWordIndexAtTime(null, 0.5), -1);
+  assert.strictEqual(findWordIndexAtTime(undefined, 0.5), -1);
+  assert.strictEqual(findWordIndexAtTime({}, 0.5), -1);
+  assert.strictEqual(findWordIndexAtTime('not-array', 0.5), -1);
+});
+
+test('Time-to-Word: Ungültig - leeres Array => -1', () => {
+  assert.strictEqual(findWordIndexAtTime([], 0.5), -1);
+});
+
+test('Time-to-Word: Ungültig - currentTime ist kein Number => -1', () => {
+  const timestamps = [{ wortIndex: 0, start: 0, end: 1 }];
+  assert.strictEqual(findWordIndexAtTime(timestamps, null), -1);
+  assert.strictEqual(findWordIndexAtTime(timestamps, undefined), -1);
+  assert.strictEqual(findWordIndexAtTime(timestamps, 'not-number'), -1);
+});
+
+test('Time-to-Word: Ungültig - currentTime ist NaN => -1', () => {
+  const timestamps = [{ wortIndex: 0, start: 0, end: 1 }];
+  assert.strictEqual(findWordIndexAtTime(timestamps, NaN), -1);
+});
+
+test('Time-to-Word: Ungültig - currentTime ist Infinity => -1', () => {
+  const timestamps = [{ wortIndex: 0, start: 0, end: 1 }];
+  assert.strictEqual(findWordIndexAtTime(timestamps, Infinity), -1);
+  assert.strictEqual(findWordIndexAtTime(timestamps, -Infinity), -1);
+});
+
+test('Time-to-Word: Input nicht mutiert', () => {
+  const timestamps = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 }
+  ];
+  const original = JSON.stringify(timestamps);
+
+  findWordIndexAtTime(timestamps, 0.5);
+
+  assert.strictEqual(JSON.stringify(timestamps), original, 'Array nicht mutiert');
+});
+
+test('Time-to-Word: CommonJS exportiert findWordIndexAtTime', () => {
+  assert.equal(typeof findWordIndexAtTime, 'function');
+});
+
+test('Time-to-Word: Browser-Export exponiert window.findWordIndexAtTime', () => {
+  const source = fs.readFileSync(path.join(__dirname, '../js/podcast-time-to-word.js'), 'utf8');
+  const context = { window: {} };
+  vm.runInNewContext(source, context);
+
+  assert.equal(typeof context.window.findWordIndexAtTime, 'function');
 });
