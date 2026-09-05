@@ -13,10 +13,13 @@ function createSheet(name, rows = []) {
   return {
     name,
     rows,
+    appendRowCalls: 0,
+    setValuesCalls: 0,
     getName() {
       return this.name;
     },
     appendRow(row) {
+      this.appendRowCalls += 1;
       this.rows.push(row.slice());
     },
     getDataRange() {
@@ -26,6 +29,7 @@ function createSheet(name, rows = []) {
       const thisSheet = this;
       return {
         setValues(values) {
+          thisSheet.setValuesCalls += 1;
           for (let rowOffset = 0; rowOffset < rowCount; rowOffset++) {
             thisSheet.rows[rowIndex - 1 + rowOffset] = values[rowOffset].slice(0, columnCount);
           }
@@ -158,15 +162,25 @@ test('PodcastFortschritt sheet, header, filtering, upsert and validation', () =>
 
   const invalid = [
     ['nutzer', ''], ['fach', ''], ['einheit', ''], ['firebasePfad', ''], ['lerntextHash', ''],
+    ['nutzer', 123], ['fach', {}], ['einheit', []], ['firebasePfad', 123], ['lerntextHash', false],
     ['sekundenPosition', '12.5'], ['sekundenPosition', NaN], ['sekundenPosition', Infinity],
-    ['sekundenPosition', -1], ['wortIndex', '4'], ['wortIndex', 1.5], ['wortIndex', -1],
-    ['completed', 'true']
+    ['sekundenPosition', -1], ['wortIndex', '4'], ['wortIndex', NaN], ['wortIndex', Infinity],
+    ['wortIndex', 1.5], ['wortIndex', -1], ['completed', 'true'], ['completed', 1]
   ];
   for (const [field, value] of invalid) {
     const before = sheet.rows.length;
+    const appendRowCallsBefore = sheet.appendRowCalls;
+    const setValuesCallsBefore = sheet.setValuesCalls;
     assert.throws(() => context.savePodcastProgress(validState({ [field]: value })), /erforderlich|ungültig|muss|number|boolean/i, field);
     assert.equal(sheet.rows.length, before, `invalid ${field} wrote a row`);
+    assert.equal(sheet.appendRowCalls, appendRowCallsBefore, `invalid ${field} called appendRow`);
+    assert.equal(sheet.setValuesCalls, setValuesCallsBefore, `invalid ${field} called setValues`);
   }
+
+  const clientTimestamp = '1900-01-01T00:00:00.000Z';
+  context.savePodcastProgress(validState({ aktualisiert: clientTimestamp }));
+  assert.notEqual(sheet.rows[1][8], clientTimestamp);
+  assert.ok(sheet.rows[1][8] instanceof Date);
 });
 
 test('Podcast GET and POST routes expose PodcastFortschritt actions', () => {
