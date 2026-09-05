@@ -23,6 +23,7 @@ function createApi() {
     Object,
     Error,
     Promise,
+    window: {},
     fetch: async (url, options) => {
       calls.push({ url: String(url), options });
       const response = responses.shift();
@@ -235,8 +236,13 @@ test('Frontend load wrapper passes explicit user and subject through unchanged',
   api.responses.push({ ok: true, json: async () => response });
 
   assert.equal(typeof api.context.lerntextePodcastFortschrittLaden, 'function');
+  assert.equal(typeof api.context.window.lerntextePodcastFortschrittLaden, 'function');
   assert.strictEqual(
-    await api.context.lerntextePodcastFortschrittLaden('uid-123', 'Recht'),
+    api.context.window.lerntextePodcastFortschrittLaden,
+    api.context.lerntextePodcastFortschrittLaden
+  );
+  assert.strictEqual(
+    await api.context.window.lerntextePodcastFortschrittLaden('uid-123', 'Recht'),
     response
   );
 
@@ -253,27 +259,32 @@ test('Frontend load wrapper passes explicit user and subject through unchanged',
 });
 
 test('Frontend load wrapper validates input and propagates API errors', async () => {
-  const invalidInputs = [
-    [undefined, 'Recht'],
-    ['   ', 'Recht'],
-    ['uid-123', undefined],
-    ['uid-123', '   ']
-  ];
+  const invalidNutzer = [undefined, null, '', '   ', 123];
+  const invalidFach = [undefined, null, '', '   ', 123];
 
-  for (const [nutzer, fach] of invalidInputs) {
+  for (const nutzer of invalidNutzer) {
     const api = createApi();
     await assert.rejects(
-      api.context.lerntextePodcastFortschrittLaden(nutzer, fach),
+      api.context.window.lerntextePodcastFortschrittLaden(nutzer, 'Recht'),
       /erforderlich|ungültig|leer/i
     );
-    assert.equal(api.calls.length, 0);
+    assert.equal(api.calls.length, 0, `invalid nutzer ${String(nutzer)} made a request`);
+  }
+
+  for (const fach of invalidFach) {
+    const api = createApi();
+    await assert.rejects(
+      api.context.window.lerntextePodcastFortschrittLaden('uid-123', fach),
+      /erforderlich|ungültig|leer/i
+    );
+    assert.equal(api.calls.length, 0, `invalid fach ${String(fach)} made a request`);
   }
 
   const api = createApi();
   const failure = new Error('load failed');
   api.responses.push(failure);
   await assert.rejects(
-    api.context.lerntextePodcastFortschrittLaden('uid-123', 'Recht'),
+    api.context.window.lerntextePodcastFortschrittLaden('uid-123', 'Recht'),
     failure
   );
 });
@@ -295,8 +306,13 @@ test('Frontend save wrapper passes state unchanged and returns the API response'
   api.responses.push({ ok: true, json: async () => response });
 
   assert.equal(typeof api.context.lerntextePodcastFortschrittSpeichern, 'function');
+  assert.equal(typeof api.context.window.lerntextePodcastFortschrittSpeichern, 'function');
   assert.strictEqual(
-    await api.context.lerntextePodcastFortschrittSpeichern(state),
+    api.context.window.lerntextePodcastFortschrittSpeichern,
+    api.context.lerntextePodcastFortschrittSpeichern
+  );
+  assert.strictEqual(
+    await api.context.window.lerntextePodcastFortschrittSpeichern(state),
     response
   );
 
@@ -316,23 +332,24 @@ test('Frontend save wrapper validates state and propagates API errors', async ()
     undefined,
     {},
     { nutzer: '' },
-    { nutzer: '   ' }
+    { nutzer: '   ' },
+    validState({ nutzer: 123 })
   ];
 
   for (const state of invalidStates) {
     const api = createApi();
     await assert.rejects(
-      api.context.lerntextePodcastFortschrittSpeichern(state),
+      api.context.window.lerntextePodcastFortschrittSpeichern(state),
       /erforderlich|ungültig|Objekt|leer/i
     );
-    assert.equal(api.calls.length, 0);
+    assert.equal(api.calls.length, 0, 'invalid state made a request');
   }
 
   const api = createApi();
   const failure = new Error('save failed');
   api.responses.push(failure);
   await assert.rejects(
-    api.context.lerntextePodcastFortschrittSpeichern({ nutzer: 'uid-123' }),
+    api.context.window.lerntextePodcastFortschrittSpeichern({ nutzer: 'uid-123' }),
     failure
   );
 });
