@@ -38,6 +38,38 @@ async function apiPost(action, payload = {}) {
     return await response.json();
   }
 
+async function lerntextePodcastFortschrittLaden(nutzer, fach) {
+  if (typeof nutzer !== "string" || !nutzer.trim()) {
+    throw new Error("Nutzer ist für Podcast-Fortschritt erforderlich.");
+  }
+
+  if (typeof fach !== "string" || !fach.trim()) {
+    throw new Error("Fach ist für Podcast-Fortschritt erforderlich.");
+  }
+
+  return await apiGet("getPodcastProgress", {
+    nutzer,
+    fach
+  });
+}
+
+async function lerntextePodcastFortschrittSpeichern(state) {
+  if (!state || typeof state !== "object" || Array.isArray(state)) {
+    throw new Error("Podcast-Fortschritt muss als Objekt übergeben werden.");
+  }
+
+  if (typeof state.nutzer !== "string" || !state.nutzer.trim()) {
+    throw new Error("Nutzer ist für Podcast-Fortschritt erforderlich.");
+  }
+
+  return await apiPost("savePodcastProgress", state);
+}
+
+if (typeof window !== "undefined") {
+  window.lerntextePodcastFortschrittLaden = lerntextePodcastFortschrittLaden;
+  window.lerntextePodcastFortschrittSpeichern = lerntextePodcastFortschrittSpeichern;
+}
+
 async function bewertePruefungsAntworten(daten) {
 
   const response = await fetch(API_BASE_URL, {

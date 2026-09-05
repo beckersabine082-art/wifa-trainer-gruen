@@ -8,6 +8,36 @@ const source = fs.readFileSync(
   path.join(__dirname, '../backend/apps-script/Code.gs'),
   'utf8'
 );
+const apiSource = fs.readFileSync(
+  path.join(__dirname, '../js/api.js'),
+  'utf8'
+);
+
+function createApi() {
+  const calls = [];
+  const responses = [];
+  const context = {
+    URL,
+    URLSearchParams,
+    JSON,
+    Object,
+    Error,
+    Promise,
+    fetch: async (url, options) => {
+      calls.push({ url: String(url), options });
+      const response = responses.shift();
+      if (response instanceof Error) {
+        throw response;
+      }
+      return response;
+    }
+  };
+
+  vm.createContext(context);
+  vm.runInContext(apiSource, context);
+
+  return { context, calls, responses };
+}
 
 function createSheet(name, rows = []) {
   return {
@@ -197,4 +227,112 @@ test('Podcast GET and POST routes expose PodcastFortschritt actions', () => {
   const loaded = backend.response('get', { action: 'getPodcastProgress', nutzer: 'uid-1', fach: 'Recht' });
   assert.equal(loaded.data.length, 1);
   assert.equal(loaded.data[0].lerntextHash, state.lerntextHash);
+});
+
+test('Frontend load wrapper passes explicit user and subject through unchanged', async () => {
+  const api = createApi();
+  const response = { success: true, data: [{ fach: 'Recht' }] };
+  api.responses.push({ ok: true, json: async () => response });
+
+  assert.equal(typeof api.context.lerntextePodcastFortschrittLaden, 'function');
+  assert.strictEqual(
+    await api.context.lerntextePodcastFortschrittLaden('uid-123', 'Recht'),
+    response
+  );
+
+  assert.equal(api.calls.length, 1);
+  const requestUrl = new URL(api.calls[0].url);
+  assert.equal(requestUrl.searchParams.get('action'), 'getPodcastProgress');
+  assert.deepEqual(
+    {
+      nutzer: requestUrl.searchParams.get('nutzer'),
+      fach: requestUrl.searchParams.get('fach')
+    },
+    { nutzer: 'uid-123', fach: 'Recht' }
+  );
+});
+
+test('Frontend load wrapper validates input and propagates API errors', async () => {
+  const invalidInputs = [
+    [undefined, 'Recht'],
+    ['   ', 'Recht'],
+    ['uid-123', undefined],
+    ['uid-123', '   ']
+  ];
+
+  for (const [nutzer, fach] of invalidInputs) {
+    const api = createApi();
+    await assert.rejects(
+      api.context.lerntextePodcastFortschrittLaden(nutzer, fach),
+      /erforderlich|ungültig|leer/i
+    );
+    assert.equal(api.calls.length, 0);
+  }
+
+  const api = createApi();
+  const failure = new Error('load failed');
+  api.responses.push(failure);
+  await assert.rejects(
+    api.context.lerntextePodcastFortschrittLaden('uid-123', 'Recht'),
+    failure
+  );
+});
+
+test('Frontend save wrapper passes state unchanged and returns the API response', async () => {
+  const api = createApi();
+  const state = {
+    nutzer: 'uid-123',
+    fach: 'Recht',
+    einheit: 'Rechtssubjekte und Rechtsobjekte',
+    firebasePfad: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3',
+    lerntextHash: 'abc123',
+    sekundenPosition: 19.04,
+    wortIndex: 36,
+    completed: false
+  };
+  const originalState = JSON.parse(JSON.stringify(state));
+  const response = { success: true, data: { ...state } };
+  api.responses.push({ ok: true, json: async () => response });
+
+  assert.equal(typeof api.context.lerntextePodcastFortschrittSpeichern, 'function');
+  assert.strictEqual(
+    await api.context.lerntextePodcastFortschrittSpeichern(state),
+    response
+  );
+
+  assert.equal(api.calls.length, 1);
+  assert.equal(api.calls[0].options.method, 'POST');
+  assert.deepEqual(JSON.parse(api.calls[0].options.body), {
+    action: 'savePodcastProgress',
+    ...originalState
+  });
+  assert.deepEqual(state, originalState);
+  assert.equal(JSON.parse(api.calls[0].options.body).aktualisiert, undefined);
+});
+
+test('Frontend save wrapper validates state and propagates API errors', async () => {
+  const invalidStates = [
+    null,
+    undefined,
+    {},
+    { nutzer: '' },
+    { nutzer: '   ' }
+  ];
+
+  for (const state of invalidStates) {
+    const api = createApi();
+    await assert.rejects(
+      api.context.lerntextePodcastFortschrittSpeichern(state),
+      /erforderlich|ungültig|Objekt|leer/i
+    );
+    assert.equal(api.calls.length, 0);
+  }
+
+  const api = createApi();
+  const failure = new Error('save failed');
+  api.responses.push(failure);
+  await assert.rejects(
+    api.context.lerntextePodcastFortschrittSpeichern({ nutzer: 'uid-123' }),
+    failure
+  );
 });
