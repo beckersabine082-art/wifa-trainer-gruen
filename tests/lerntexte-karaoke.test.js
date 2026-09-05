@@ -14,6 +14,7 @@ const {
   lerntextePodcastFortsetzen,
   lerntextePodcastVonVorne
 } = require('../js/lerntexte.js');
+const { setupVisibilitySyncHandlers } = require('../js/podcast-visibility-sync.js');
 
 class MockTextNode {
   constructor(ownerDocument, data) {
@@ -1167,4 +1168,218 @@ test('Pilot Playback: Stop erhält wortIndex aus Basisstate', async () => {
   await lerntextePodcastStoppen(mockAudio, mockSaveProgress, baseState);
   
   assert.strictEqual(savedState.wortIndex, 30, 'wortIndex beibehalten');
+});
+
+class MockEventTarget {
+  constructor() {
+    this.listeners = {};
+  }
+
+  addEventListener(type, listener) {
+    if (!this.listeners[type]) this.listeners[type] = [];
+    if (!this.listeners[type].includes(listener)) this.listeners[type].push(listener);
+  }
+
+  removeEventListener(type, listener) {
+    if (!this.listeners[type]) return;
+    this.listeners[type] = this.listeners[type].filter(fn => fn !== listener);
+  }
+
+  dispatchEvent(event) {
+    const handlers = this.listeners[event.type] || [];
+    handlers.slice().forEach(handler => handler.call(this, event));
+    return true;
+  }
+}
+
+test('TASK 15: setup registriert visibilitychange und pageshow genau einmal', () => {
+  const previousDocument = globalThis.document;
+  const previousWindow = globalThis.window;
+  const mockDocument = new MockEventTarget();
+  const mockWindow = new MockEventTarget();
+  mockDocument.hidden = true;
+  globalThis.document = mockDocument;
+  globalThis.window = mockWindow;
+
+  try {
+    const calls = [];
+    const audio = { currentTime: 10 };
+    const resync = time => calls.push(time);
+
+    const cleanup = setupVisibilitySyncHandlers(audio, resync);
+
+    assert.strictEqual(mockDocument.listeners.visibilitychange.length, 1, 'visibilitychange Listener registriert');
+    assert.strictEqual(mockWindow.listeners.pageshow.length, 1, 'pageshow Listener registriert');
+    assert.deepStrictEqual(calls, [], 'setup ruft resync nicht sofort auf');
+
+    cleanup();
+    assert.strictEqual(mockDocument.listeners.visibilitychange.length, 0, 'visibilitychange Listener entfernt');
+    assert.strictEqual(mockWindow.listeners.pageshow.length, 0, 'pageshow Listener entfernt');
+  } finally {
+    globalThis.document = previousDocument;
+    globalThis.window = previousWindow;
+  }
+});
+
+test('TASK 15: visibilitychange hidden=false ruft resync mit aktuellem currentTime auf', () => {
+  const previousDocument = globalThis.document;
+  const previousWindow = globalThis.window;
+  const mockDocument = new MockEventTarget();
+  const mockWindow = new MockEventTarget();
+  mockDocument.hidden = true;
+  globalThis.document = mockDocument;
+  globalThis.window = mockWindow;
+
+  try {
+    const audio = { currentTime: 10 };
+    const calls = [];
+    setupVisibilitySyncHandlers(audio, value => calls.push(value));
+
+    audio.currentTime = 25.5;
+    mockDocument.hidden = false;
+    mockDocument.dispatchEvent({ type: 'visibilitychange' });
+
+    assert.deepStrictEqual(calls, [25.5], 'visibilitychange liest aktuellen currentTime-Wert');
+  } finally {
+    globalThis.document = previousDocument;
+    globalThis.window = previousWindow;
+  }
+});
+
+test('TASK 15: visibilitychange hidden=true blockiert resync', () => {
+  const previousDocument = globalThis.document;
+  const previousWindow = globalThis.window;
+  const mockDocument = new MockEventTarget();
+  const mockWindow = new MockEventTarget();
+  mockDocument.hidden = true;
+  globalThis.document = mockDocument;
+  globalThis.window = mockWindow;
+
+  try {
+    const audio = { currentTime: 42 };
+    const calls = [];
+    setupVisibilitySyncHandlers(audio, value => calls.push(value));
+
+    mockDocument.hidden = true;
+    mockDocument.dispatchEvent({ type: 'visibilitychange' });
+
+    assert.deepStrictEqual(calls, [], 'hidden=true ruft resync nicht auf');
+  } finally {
+    globalThis.document = previousDocument;
+    globalThis.window = previousWindow;
+  }
+});
+
+test('TASK 15: pageshow ruft resync mit aktuellem currentTime auf', () => {
+  const previousDocument = globalThis.document;
+  const previousWindow = globalThis.window;
+  const mockDocument = new MockEventTarget();
+  const mockWindow = new MockEventTarget();
+  mockDocument.hidden = true;
+  globalThis.document = mockDocument;
+  globalThis.window = mockWindow;
+
+  try {
+    const audio = { currentTime: 10 };
+    const calls = [];
+    setupVisibilitySyncHandlers(audio, value => calls.push(value));
+
+    audio.currentTime = 40;
+    mockWindow.dispatchEvent({ type: 'pageshow' });
+
+    assert.deepStrictEqual(calls, [40], 'pageshow liest aktuellen currentTime-Wert');
+  } finally {
+    globalThis.document = previousDocument;
+    globalThis.window = previousWindow;
+  }
+});
+
+test('TASK 15: resync pro Event genau einmal und cleanup entfernt Listener', () => {
+  const previousDocument = globalThis.document;
+  const previousWindow = globalThis.window;
+  const mockDocument = new MockEventTarget();
+  const mockWindow = new MockEventTarget();
+  mockDocument.hidden = true;
+  globalThis.document = mockDocument;
+  globalThis.window = mockWindow;
+
+  try {
+    const audio = { currentTime: 0 };
+    const calls = [];
+    const cleanup = setupVisibilitySyncHandlers(audio, value => calls.push(value));
+
+    audio.currentTime = 1;
+    mockDocument.hidden = false;
+    mockDocument.dispatchEvent({ type: 'visibilitychange' });
+    audio.currentTime = 2;
+    mockWindow.dispatchEvent({ type: 'pageshow' });
+
+    assert.deepStrictEqual(calls, [1, 2], 'resync pro Event genau einmal');
+
+    cleanup();
+    mockDocument.hidden = false;
+    mockDocument.dispatchEvent({ type: 'visibilitychange' });
+    mockWindow.dispatchEvent({ type: 'pageshow' });
+
+    assert.deepStrictEqual(calls, [1, 2], 'cleanup verhindert weitere resync-Aufrufe');
+  } finally {
+    globalThis.document = previousDocument;
+    globalThis.window = previousWindow;
+  }
+});
+
+test('TASK 15: Helper verändert audio nicht und ruft keine Audio-Steuerfunktionen auf', () => {
+  const previousDocument = globalThis.document;
+  const previousWindow = globalThis.window;
+  const mockDocument = new MockEventTarget();
+  const mockWindow = new MockEventTarget();
+  mockDocument.hidden = true;
+  globalThis.document = mockDocument;
+  globalThis.window = mockWindow;
+
+  try {
+    const audio = {
+      currentTime: 12.5,
+      play() { throw new Error('play() darf nicht aufgerufen werden'); },
+      pause() { throw new Error('pause() darf nicht aufgerufen werden'); }
+    };
+    const resync = () => {};
+
+    setupVisibilitySyncHandlers(audio, resync);
+
+    audio.currentTime = 15.75;
+    mockDocument.hidden = false;
+    mockDocument.dispatchEvent({ type: 'visibilitychange' });
+    mockWindow.dispatchEvent({ type: 'pageshow' });
+
+    assert.strictEqual(audio.currentTime, 15.75, 'audio.currentTime bleibt unverändert');
+  } finally {
+    globalThis.document = previousDocument;
+    globalThis.window = previousWindow;
+  }
+});
+
+test('TASK 15: Kein Auto-Scroll und keine DOM-/Hash-/Karaoke-Duplizierung im Helper', () => {
+  const code = fs.readFileSync(path.join(__dirname, '../js/podcast-visibility-sync.js'), 'utf8');
+  assert.ok(!code.includes('scrollTo'), 'kein scrollTo');
+  assert.ok(!code.includes('scrollBy'), 'kein scrollBy');
+  assert.ok(!code.includes('scrollIntoView'), 'kein scrollIntoView');
+  assert.ok(!code.includes('findWordIndexAtTime'), 'keine findWordIndexAtTime-Duplizierung');
+  assert.ok(!code.includes('lerntextHash'), 'keine Hash-Logik');
+  assert.ok(!code.includes('classList'), 'keine Highlight-Klassen-Logik');
+  assert.ok(!code.includes('audio.play'), 'kein play() im Helper');
+  assert.ok(!code.includes('audio.pause'), 'kein pause() im Helper');
+});
+
+test('TASK 15: CommonJS und Browser Export vorhanden', () => {
+  assert.equal(typeof setupVisibilitySyncHandlers, 'function', 'CommonJS Export vorhanden');
+
+  const context = {
+    window: {},
+    document: { addEventListener() {}, removeEventListener() {} },
+    console
+  };
+  const source = fs.readFileSync(path.join(__dirname, '../js/podcast-visibility-sync.js'), 'utf8');
+  vm.runInNewContext(source, context);
+  assert.equal(typeof context.window.setupVisibilitySyncHandlers, 'function', 'Browser-Export vorhanden');
 });
