@@ -1,0 +1,386 @@
+const assert = require('assert');
+
+const { alignTranscriptWordsToLerntext } = require('../tools/podcast-sync/align-words.js');
+
+function test(name, fn) {
+  try {
+    fn();
+    console.log('✓ ' + name);
+  } catch (error) {
+    console.log('✗ ' + name);
+    console.log('  Error: ' + error.message);
+    process.exitCode = 1;
+  }
+}
+
+// A) EXAKTE WORTREIHENFOLGE
+
+test('A: exakte Wortreihenfolge wird 1:1 aligned', function() {
+  const lerntext = 'Rechtssubjekte und Rechtsobjekte sind wichtig.';
+  const transcriptWords = [
+    { wort: 'Rechtssubjekte', start: 0, end: 1 },
+    { wort: 'und', start: 1, end: 1.5 },
+    { wort: 'Rechtsobjekte', start: 1.5, end: 2.5 },
+    { wort: 'sind', start: 2.5, end: 3 },
+    { wort: 'wichtig', start: 3, end: 4 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+
+  assert.strictEqual(result.wortZeitmarken.length, 5);
+  assert.deepStrictEqual(result.wortZeitmarken[0], {
+    wortIndex: 0,
+    wort: 'Rechtssubjekte',
+    start: 0,
+    end: 1
+  });
+  assert.strictEqual(result.wortZeitmarken[result.wortZeitmarken.length - 1].wortIndex, 4);
+});
+
+// B) SATZZEICHEN
+
+test('B: Satzzeichen sind keine Wörter und dürfen nicht aus dem Alignment fallen', function() {
+  const lerntext = 'Rechtssubjekte. Rechtsobjekte, Sicherheiten!';
+  const transcriptWords = [
+    { wort: 'Rechtssubjekte', start: 0, end: 1 },
+    { wort: 'Rechtsobjekte', start: 1.5, end: 2.5 },
+    { wort: 'Sicherheiten', start: 2.8, end: 3.7 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wortIndex), [0, 1, 2]);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wort), ['Rechtssubjekte', 'Rechtsobjekte', 'Sicherheiten']);
+});
+
+// C) HTML / FORMATIERUNG
+
+test('C: HTML-Tags und br erzeugen keine Word-Metadaten', function() {
+  const lerntext = '<strong>Kernidee</strong><br>Rechtssubjekte und Rechtsobjekte';
+  const transcriptWords = [
+    { wort: 'Kernidee', start: 0, end: 1 },
+    { wort: 'Rechtssubjekte', start: 1, end: 2 },
+    { wort: 'und', start: 2, end: 2.5 },
+    { wort: 'Rechtsobjekte', start: 2.5, end: 3.5 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wort), ['Kernidee', 'Rechtssubjekte', 'und', 'Rechtsobjekte']);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wortIndex), [0, 1, 2, 3]);
+});
+
+// D) CASE
+
+test('D: Case-Unterschiede verhindern kein Alignment, aber Lerntextwort bleibt kanonisch', function() {
+  const lerntext = 'Unternehmen Recht';
+  const transcriptWords = [
+    { wort: 'unternehmen', start: 0, end: 1 },
+    { wort: 'recht', start: 1, end: 2 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wort), ['Unternehmen', 'Recht']);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wortIndex), [0, 1]);
+});
+
+// E) UMLAUTE / UNICODE
+
+test('E: Unicode/Umlaute und NFC/NFD-Normalisierung werden korrekt behandelt', function() {
+  const lerntext = 'Änderung Größe Bücher';
+  const transcriptWords = [
+    { wort: 'A\u0308nderung', start: 0, end: 1 },
+    { wort: 'Gro\u0308ße', start: 1, end: 2 },
+    { wort: 'Bu\u0308cher', start: 2, end: 3 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wort), ['Änderung', 'Größe', 'Bücher']);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wortIndex), [0, 1, 2]);
+});
+
+// F) BINDSTRICH / APOSTROPH
+
+test('F: Bindestrich und Apostroph innerhalb von Wörtern bleiben Teil des Wortes', function() {
+  const lerntext = "Manager's Kosten-Nutzen-Analyse";
+  const transcriptWords = [
+    { wort: "Manager's", start: 0, end: 1 },
+    { wort: 'Kosten-Nutzen-Analyse', start: 1, end: 2 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wort), ["Manager's", 'Kosten-Nutzen-Analyse']);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wortIndex), [0, 1]);
+});
+
+// G) ZEITEN
+
+test('G: start/end werden exakt übernommen', function() {
+  const lerntext = 'Rechtssubjekte und Rechtsobjekte';
+  const transcriptWords = [
+    { wort: 'Rechtssubjekte', start: 1.25, end: 2.5 },
+    { wort: 'und', start: 2.5, end: 2.75 },
+    { wort: 'Rechtsobjekte', start: 3.125, end: 4.875 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => ({ start: item.start, end: item.end })), [
+    { start: 1.25, end: 2.5 },
+    { start: 2.5, end: 2.75 },
+    { start: 3.125, end: 4.875 }
+  ]);
+});
+
+function assertInvalidTimestamp(whisperWord) {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('Rechtssubjekte und Rechtsobjekte', [whisperWord]);
+  }, function(error) {
+    return !!error && /Transcript-Index\s*0/i.test(error.message)
+      && /Rechtssubjekte/i.test(error.message)
+      && /(start|end)/i.test(error.message)
+      && /(ungültig|invalid)/i.test(error.message);
+  });
+}
+
+// H) INVALID TIMESTAMPS
+
+test('H1: NaN start wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: Number.NaN, end: 1 });
+});
+
+test('H2: Infinity end wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: 0, end: Infinity });
+});
+
+test('H3: String start wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: '1.5', end: 2 });
+});
+
+test('H4: String end wird als ungültige Zeitmarke verworfen', function() {
+  assertInvalidTimestamp({ wort: 'Rechtssubjekte', start: 1, end: '2' });
+});
+
+test('H5: end < start bleibt ein klarer Fehler', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('Rechtssubjekte und Rechtsobjekte', [{ wort: 'Rechtssubjekte', start: 2, end: 1 }]);
+  }, /Transcript-Index\s*0|start\/end|end\s*<\s*start|inkonsistent/i);
+});
+
+test('H6: gültige Dezimalwerte werden exakt beibehalten', function() {
+  const lerntext = 'Rechtssubjekte und Rechtsobjekte';
+  const transcriptWords = [
+    { wort: 'Rechtssubjekte', start: 1.234567, end: 2.345678 },
+    { wort: 'und', start: 2.345678, end: 3.456789 },
+    { wort: 'Rechtsobjekte', start: 3.456789, end: 4.567891 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => ({ start: item.start, end: item.end })), [
+    { start: 1.234567, end: 2.345678 },
+    { start: 2.345678, end: 3.456789 },
+    { start: 3.456789, end: 4.567891 }
+  ]);
+});
+
+// I) MONOTONIE
+
+test('I: Wortindizes und Zeitwerte laufen monoton', function() {
+  const lerntext = 'Rechtssubjekte und Rechtsobjekte';
+  const transcriptWords = [
+    { wort: 'Rechtssubjekte', start: 0, end: 1 },
+    { wort: 'und', start: 1, end: 2 },
+    { wort: 'Rechtsobjekte', start: 2, end: 3 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.ok(result.wortZeitmarken.every((entry, index, arr) => index === 0 || arr[index - 1].wortIndex < entry.wortIndex));
+  assert.ok(result.wortZeitmarken.every((entry, index, arr) => index === 0 || arr[index - 1].end <= entry.start || arr[index - 1].end <= entry.end));
+  assert.ok(result.wortZeitmarken.every(entry => entry.start <= entry.end));
+});
+
+// J) LEERE INPUTS
+
+test('I: Leere Lerntexte und leere transcriptWords Arrays sind klare Fehler', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('', [{ wort: 'abc', start: 0, end: 1 }]);
+  }, /lerntext|leer/i);
+
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('Rechtssubjekte und', []);
+  }, /transcriptWords|leer/i);
+});
+
+// K) NICHT MATCHBARES WORT
+
+test('K: Nicht matchbares Whisper-Wort blockiert Alignment mit Transcript-Index', function() {
+  const lerntext = 'Rechtssubjekte und';
+  const transcriptWords = [
+    { wort: 'Rechtssubjekte', start: 0, end: 1 },
+    { wort: 'definitely-unknown', start: 1, end: 2 }
+  ];
+
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  }, /Transcript-Index|1|definitely-unknown/i);
+});
+
+test('L: Standalone-Satzzeichen werden ignoriert und dürfen keine Word-Metadaten erzeugen', function() {
+  const lerntext = 'Paragraph 90a gilt';
+  const transcriptWords = [
+    { wort: 'Paragraph', start: 0, end: 1 },
+    { wort: '§', start: 1, end: 1.1 },
+    { wort: '90', start: 1.1, end: 1.5 },
+    { wort: 'A', start: 1.5, end: 1.7 },
+    { wort: 'gilt', start: 1.7, end: 2 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wort), ['Paragraph', '90a', 'gilt']);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => item.wortIndex), [0, 1, 2]);
+  assert.deepStrictEqual(result.wortZeitmarken.map(item => ({ start: item.start, end: item.end })), [
+    { start: 0, end: 1 },
+    { start: 1.1, end: 1.7 },
+    { start: 1.7, end: 2 }
+  ]);
+});
+
+test('M1: öffentlich-rechtliche wird aus zwei Whisper-Wörtern als ein Lerntextwort aligned', function() {
+  const lerntext = 'öffentlich-rechtliche Körperschaft';
+  const transcriptWords = [
+    { wort: 'öffentlich', start: 0, end: 0.8 },
+    { wort: 'rechtliche', start: 0.8, end: 1.5 },
+    { wort: 'Körperschaft', start: 1.5, end: 2 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.strictEqual(result.wortZeitmarken.length, 2);
+  assert.deepStrictEqual(result.wortZeitmarken[0], {
+    wortIndex: 0,
+    wort: 'öffentlich-rechtliche',
+    start: 0,
+    end: 1.5
+  });
+});
+
+test('M2: 90a wird aus 90 + A als ein Lerntextwort aligned', function() {
+  const lerntext = '90a BGB';
+  const transcriptWords = [
+    { wort: '90', start: 0, end: 0.4 },
+    { wort: 'A', start: 0.4, end: 0.6 },
+    { wort: 'BGB', start: 0.6, end: 1 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken[0], {
+    wortIndex: 0,
+    wort: '90a',
+    start: 0,
+    end: 0.6
+  });
+});
+
+test('N: Rechtssubjekt vs Rechtsobjekt bleibt ein echter Fehler und darf nicht fuzzy gematcht werden', function() {
+  const lerntext = 'Rechtssubjekt';
+  const transcriptWords = [
+    { wort: 'Rechtsobjekt', start: 0, end: 1 }
+  ];
+
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  }, /Transcript-Index|Rechtsobjekt|Rechtssubjekt/i);
+});
+
+test('O: Ein einzelner abweichender Whisper-Token wird zwischen 2+2 exakten Ankern kanonisch gebridged', function() {
+  const lerntext = 'eine natürliche Person und damit Rechtssubjekt Juristische Personen sind';
+  const transcriptWords = [
+    { wort: 'eine', start: 0, end: 0.2 },
+    { wort: 'natürliche', start: 0.2, end: 0.5 },
+    { wort: 'Person', start: 0.5, end: 0.8 },
+    { wort: 'und', start: 0.8, end: 1.0 },
+    { wort: 'damit', start: 1.0, end: 1.2 },
+    { wort: 'Rechtsobjekt', start: 1.2, end: 1.8 },
+    { wort: 'Juristische', start: 1.8, end: 2.2 },
+    { wort: 'Personen', start: 2.2, end: 2.5 },
+    { wort: 'sind', start: 2.5, end: 2.8 }
+  ];
+
+  const result = alignTranscriptWordsToLerntext(lerntext, transcriptWords);
+  assert.deepStrictEqual(result.wortZeitmarken[5], {
+    wortIndex: 5,
+    wort: 'Rechtssubjekt',
+    start: 1.2,
+    end: 1.8
+  });
+});
+
+test('P: Eine sichere Folgeanker reicht nicht für eine Bridge', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A B Ziel D', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'B', start: 1, end: 2 },
+      { wort: 'Falsch', start: 2, end: 3 },
+      { wort: 'D', start: 3, end: 4 }
+    ]);
+  }, /Transcript-Index|Falsch/i);
+});
+
+test('Q: Ein sicherer vorheriger Anker reicht nicht für eine Bridge', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A Ziel C D', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'Falsch', start: 1, end: 2 },
+      { wort: 'C', start: 2, end: 3 },
+      { wort: 'D', start: 3, end: 4 }
+    ]);
+  }, /Transcript-Index|Falsch/i);
+});
+
+test('R: Zwei aufeinanderfolgende unbekannte Wörter werden nicht gebridged', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A B C D E F', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'B', start: 1, end: 2 },
+      { wort: 'X', start: 2, end: 3 },
+      { wort: 'Y', start: 3, end: 4 },
+      { wort: 'E', start: 4, end: 5 },
+      { wort: 'F', start: 5, end: 6 }
+    ]);
+  }, /Transcript-Index|X/i);
+});
+
+test('S: Falsche Folgeanker verhindern eine Bridge', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('A B C D E', [
+      { wort: 'A', start: 0, end: 1 },
+      { wort: 'B', start: 1, end: 2 },
+      { wort: 'X', start: 2, end: 3 },
+      { wort: 'D', start: 3, end: 4 },
+      { wort: 'F', start: 4, end: 5 }
+    ]);
+  }, /Transcript-Index|X/i);
+});
+
+test('T: Eine Bridge übernimmt die exakten Zeiten des einzelnen Whisper-Worts', function() {
+  const result = alignTranscriptWordsToLerntext('A B Ziel C D', [
+    { wort: 'A', start: 0.1, end: 0.2 },
+    { wort: 'B', start: 0.2, end: 0.3 },
+    { wort: 'abweichend', start: 4.125, end: 7.875 },
+    { wort: 'C', start: 7.875, end: 8.1 },
+    { wort: 'D', start: 8.1, end: 8.4 }
+  ]);
+
+  assert.deepStrictEqual(result.wortZeitmarken[2], {
+    wortIndex: 2,
+    wort: 'Ziel',
+    start: 4.125,
+    end: 7.875
+  });
+});
+
+test('U: Ein nicht abgesicherter einzelner Fehler bleibt blockiert', function() {
+  assert.throws(function() {
+    alignTranscriptWordsToLerntext('Rechtssubjekt', [
+      { wort: 'Rechtsobjekt', start: 0, end: 1 }
+    ]);
+  }, /Transcript-Index|Rechtsobjekt|Rechtssubjekt/i);
+});
+
+console.log('Total tests: 27');

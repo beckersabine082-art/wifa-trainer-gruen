@@ -82,6 +82,126 @@ function ensureNutzerFortschrittSheet_() {
   return sheet;
 }
 
+function ensurePodcastFortschrittSheet_() {
+  const ss = getSpreadsheet_();
+  let sheet = ss.getSheetByName("PodcastFortschritt");
+
+  if (!sheet) {
+    sheet = ss.insertSheet("PodcastFortschritt");
+    sheet.appendRow([
+      "Nutzer",
+      "Fach",
+      "Einheit",
+      "FirebasePfad",
+      "LerntextHash",
+      "SekundenPosition",
+      "WortIndex",
+      "Completed",
+      "Aktualisiert"
+    ]);
+  }
+
+  return sheet;
+}
+
+function validatePodcastProgressState_(state) {
+  if (!state || typeof state !== "object") {
+    throw new Error("Podcast-Fortschritt muss als Objekt übergeben werden.");
+  }
+
+  ["nutzer", "fach", "einheit", "firebasePfad", "lerntextHash"].forEach(function(field) {
+    if (typeof state[field] !== "string" || !state[field].trim()) {
+      throw new Error(field + " ist für Podcast-Fortschritt erforderlich.");
+    }
+  });
+
+  if (typeof state.sekundenPosition !== "number" || !Number.isFinite(state.sekundenPosition) || state.sekundenPosition < 0) {
+    throw new Error("SekundenPosition muss eine endliche Zahl >= 0 sein.");
+  }
+
+  if (typeof state.wortIndex !== "number" || !Number.isFinite(state.wortIndex) || !Number.isInteger(state.wortIndex) || state.wortIndex < 0) {
+    throw new Error("WortIndex muss eine ganze Zahl >= 0 sein.");
+  }
+
+  if (typeof state.completed !== "boolean") {
+    throw new Error("Completed muss boolean sein.");
+  }
+}
+
+function podcastProgressDataFromRow_(row) {
+  return {
+    nutzer: row[0],
+    fach: row[1],
+    einheit: row[2],
+    firebasePfad: row[3],
+    lerntextHash: row[4],
+    sekundenPosition: row[5],
+    wortIndex: row[6],
+    completed: row[7],
+    aktualisiert: row[8]
+  };
+}
+
+function getPodcastProgress(nutzer, fach) {
+  if (typeof nutzer !== "string" || !nutzer.trim()) {
+    throw new Error("Nutzer ist für getPodcastProgress erforderlich.");
+  }
+
+  if (typeof fach !== "string" || !fach.trim()) {
+    throw new Error("Fach ist für getPodcastProgress erforderlich.");
+  }
+
+  const values = ensurePodcastFortschrittSheet_().getDataRange().getValues();
+  const result = [];
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i] || [];
+
+    if (row[0] === nutzer && row[1] === fach) {
+      result.push(podcastProgressDataFromRow_(row));
+    }
+  }
+
+  return result;
+}
+
+function savePodcastProgress(state) {
+  validatePodcastProgressState_(state);
+
+  const sheet = ensurePodcastFortschrittSheet_();
+  const values = sheet.getDataRange().getValues();
+  let existingRowIndex = -1;
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i] || [];
+
+    if (row[0] === state.nutzer && row[3] === state.firebasePfad) {
+      existingRowIndex = i + 1;
+      break;
+    }
+  }
+
+  const row = [
+    state.nutzer,
+    state.fach,
+    state.einheit,
+    state.firebasePfad,
+    state.lerntextHash,
+    state.sekundenPosition,
+    state.wortIndex,
+    state.completed,
+    new Date()
+  ];
+
+  if (existingRowIndex > 0) {
+    sheet.getRange(existingRowIndex, 1, 1, row.length).setValues([row]);
+  } else {
+    sheet.appendRow(row);
+  }
+
+  return podcastProgressDataFromRow_(row);
+}
+
 function normalizeProgressSelection_(value) {
   const normalized = String(value || "").trim();
   return normalized ? normalized : "__ALL__";
@@ -307,6 +427,22 @@ function doGet(e) {
                 aktualisiert: progress.aktualisiert
               }
             : null
+        };
+      }
+
+    } else if (action === "getPodcastProgress") {
+      const nutzer = String(e?.parameter?.nutzer || "").trim();
+      const fach = String(e?.parameter?.fach || "").trim();
+
+      if (!nutzer || !fach) {
+        result = {
+          success: false,
+          error: "Nutzer und Fach für getPodcastProgress erforderlich."
+        };
+      } else {
+        result = {
+          success: true,
+          data: getPodcastProgress(nutzer, fach)
         };
       }
 
@@ -547,6 +683,23 @@ function doPost(e) {
           data: saved
         };
       }
+
+    } else if (action === "savePodcastProgress") {
+      const state = {
+        nutzer: body.nutzer,
+        fach: body.fach,
+        einheit: body.einheit,
+        firebasePfad: body.firebasePfad,
+        lerntextHash: body.lerntextHash,
+        sekundenPosition: body.sekundenPosition,
+        wortIndex: body.wortIndex,
+        completed: body.completed
+      };
+
+      result = {
+        success: true,
+        data: savePodcastProgress(state)
+      };
 
     } else if (action === "frageKilian") {
   result = {
