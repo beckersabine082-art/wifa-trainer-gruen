@@ -865,7 +865,7 @@ function lerntexteAudioSteuerungAktualisieren() {
       playBtn.classList.remove("secondary-btn");
       playBtn.classList.add("action-btn");
     } else if (lerntexteAudioPausiert) {
-      playBtn.textContent = "▶ Wiedergabe läuft";
+      playBtn.textContent = "▶ Wiedergabe";
       playBtn.disabled = true;
       playBtn.classList.remove("action-btn");
       playBtn.classList.add("secondary-btn");
