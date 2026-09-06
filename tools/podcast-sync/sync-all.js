@@ -75,8 +75,13 @@ async function loadLerntexteReadOnly({ apiUrl, fetchImpl = globalThis.fetch } = 
   }
 
   const subjects = await fetchAction('subjects');
+  const podcastSubjects = Array.from(new Set([
+    ...subjects,
+    'Betriebliches Rechnungswesen und Controlling',
+    'Investition und Finanzierung'
+  ]));
   const lerntexte = [];
-  for (const subject of subjects) {
+  for (const subject of podcastSubjects) {
     const fach = typeof subject === 'string' ? subject : subject && (subject.fach || subject.name || subject.subject);
     if (typeof fach !== 'string' || !fach.trim()) throw new Error('Fach-Antwort ist ungültig');
     const entries = await fetchAction('getLerntexte', fach);

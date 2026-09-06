@@ -16,20 +16,28 @@ test('lädt Lerntexte sequenziell über subjects für jedes Fach', async () => {
       const url = new URL(requestUrl);
       calls.push({ action: url.searchParams.get('action'), fach: url.searchParams.get('fach') });
       if (url.searchParams.get('action') === 'subjects') {
-        return { ok: true, json: async () => ({ success: true, data: ['Recht', 'Steuern'] }) };
+        return { ok: true, json: async () => ({ success: true, data: ['Recht', 'Finance Controlling'] }) };
       }
       if (url.searchParams.get('fach') === 'Recht') {
         return { ok: true, json: async () => ({ success: true, data: [{ titel: 'R1' }, { titel: 'R2' }] }) };
       }
-      return { ok: true, json: async () => ({ success: true, data: [{ titel: 'S1' }] }) };
+      if (url.searchParams.get('fach') === 'Finance Controlling') {
+        return { ok: true, json: async () => ({ success: true, data: [] }) };
+      }
+      if (url.searchParams.get('fach') === 'Betriebliches Rechnungswesen und Controlling') {
+        return { ok: true, json: async () => ({ success: true, data: [{ titel: 'B1' }, { titel: 'B2' }] }) };
+      }
+      return { ok: true, json: async () => ({ success: true, data: [{ titel: 'I1' }, { titel: 'I2' }, { titel: 'I3' }] }) };
     }
   });
 
-  assert.equal(result.length, 3);
+  assert.equal(result.length, 7);
   assert.deepEqual(calls, [
     { action: 'subjects', fach: null },
     { action: 'getLerntexte', fach: 'Recht' },
-    { action: 'getLerntexte', fach: 'Steuern' }
+    { action: 'getLerntexte', fach: 'Finance Controlling' },
+    { action: 'getLerntexte', fach: 'Betriebliches Rechnungswesen und Controlling' },
+    { action: 'getLerntexte', fach: 'Investition und Finanzierung' }
   ]);
 });
 
