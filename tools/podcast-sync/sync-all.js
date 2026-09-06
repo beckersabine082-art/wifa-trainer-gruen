@@ -159,12 +159,16 @@ async function syncAll({ lerntexte, adminClient, openaiClient, tempDir = fs.mkdt
 module.exports = { MAX_TTS_TOKENS, loadLerntexteReadOnly, validateEntries, inspectAll, dryRunBlocksLiveSync, syncAll };
 
 async function createAdminClient() {
-  const admin = require('firebase-admin');
+  const { initializeApp, getApps, getApp, cert } = require('firebase-admin/app');
   const { getStorage } = require('firebase-admin/storage');
   const { requireFirebaseAdminConfig } = require('./index.js');
   const config = requireFirebaseAdminConfig();
-  const app = admin.apps.length ? admin.app() : admin.initializeApp({
-    credential: admin.credential.cert(config),
+  const app = getApps().length ? getApp() : initializeApp({
+    credential: cert({
+      projectId: config.projectId,
+      clientEmail: config.clientEmail,
+      privateKey: config.privateKey
+    }),
     storageBucket: config.storageBucket
   });
   return {
