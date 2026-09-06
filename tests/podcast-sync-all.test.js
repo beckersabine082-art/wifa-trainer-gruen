@@ -12,7 +12,8 @@ function fakeBucket(files) {
     file(storagePath) {
       return {
         async exists() { return [Boolean(files[storagePath])]; },
-        async getMetadata() { return [{ metadata: { lerntextHash: files[storagePath].hash } }]; }
+        async getMetadata() { return [{ metadata: { lerntextHash: files[storagePath].hash } }]; },
+        async download() { return [Buffer.from(JSON.stringify(files[storagePath].json), 'utf8')]; }
       };
     }
   };
@@ -32,10 +33,23 @@ test('gültiger vorhandener Hash wird als VALID/SKIP erkannt', async () => {
     lerntexte: [{ fach: 'Recht', titel: 'Einheit', lerntext }],
     bucket: fakeBucket({
       [paths.mp3Path]: { hash: sha256Lerntext(lerntext) },
-      [paths.jsonPath]: { hash: sha256Lerntext(lerntext) }
+      [paths.jsonPath]: { json: { lerntextHash: sha256Lerntext(lerntext) } }
     })
   });
   assert.equal(result.reports[0].status, 'VALID/SKIP');
+});
+
+test('aktueller MP3-Hash mit altem JSON-Hash wird als SYNC_NEEDED erkannt', async () => {
+  const lerntext = 'Ein kanonischer Text.';
+  const paths = podcastPaths('Recht', 'Einheit');
+  const result = await inspectAll({
+    lerntexte: [{ fach: 'Recht', titel: 'Einheit', lerntext }],
+    bucket: fakeBucket({
+      [paths.mp3Path]: { hash: sha256Lerntext(lerntext) },
+      [paths.jsonPath]: { json: { lerntextHash: sha256Lerntext('Alt.') } }
+    })
+  });
+  assert.equal(result.reports[0].status, 'SYNC_NEEDED');
 });
 
 test('geänderter Hash wird als SYNC_NEEDED erkannt', async () => {

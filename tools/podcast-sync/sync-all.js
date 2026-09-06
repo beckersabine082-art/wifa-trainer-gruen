@@ -68,23 +68,34 @@ async function loadLerntexteReadOnly({ apiUrl, fetchImpl = globalThis.fetch } = 
 }
 
 async function readFirebaseAssetState({ bucket, report }) {
-  if (!bucket || typeof bucket.file !== 'function') return { mp3Exists: false, jsonExists: false, mp3Hash: '' };
+  if (!bucket || typeof bucket.file !== 'function') return { mp3Exists: false, jsonExists: false, mp3Hash: '', jsonHash: '' };
   const mp3File = bucket.file(report.mp3Path);
   const jsonFile = bucket.file(report.jsonPath);
   const [mp3Exists, jsonExists] = await Promise.all([mp3File.exists(), jsonFile.exists()]);
   let mp3Hash = '';
+  let jsonHash = '';
   if (mp3Exists[0] && typeof mp3File.getMetadata === 'function') {
     const metadata = await mp3File.getMetadata();
     mp3Hash = String(metadata[0] && metadata[0].metadata && metadata[0].metadata.lerntextHash || '');
   }
-  return { mp3Exists: Boolean(mp3Exists[0]), jsonExists: Boolean(jsonExists[0]), mp3Hash };
+  if (jsonExists[0] && typeof jsonFile.download === 'function') {
+    try {
+      const downloaded = await jsonFile.download();
+      const manifest = JSON.parse(downloaded[0].toString('utf8'));
+      jsonHash = String(manifest && manifest.lerntextHash || '');
+    } catch (error) {
+      jsonHash = '';
+    }
+  }
+  return { mp3Exists: Boolean(mp3Exists[0]), jsonExists: Boolean(jsonExists[0]), mp3Hash, jsonHash };
 }
 
 function reportStatus(report, assetState) {
-  report.assetState = assetState || { mp3Exists: false, jsonExists: false, mp3Hash: '' };
+  report.assetState = assetState || { mp3Exists: false, jsonExists: false, mp3Hash: '', jsonHash: '' };
   report.status = report.lerntext.trim() && report.ttsTokenCount <= MAX_TTS_TOKENS
     && report.assetState.mp3Exists && report.assetState.jsonExists
-    && report.assetState.mp3Hash === report.lerntextHash ? 'VALID/SKIP' : (report.status || 'SYNC_NEEDED');
+    && report.assetState.mp3Hash === report.lerntextHash
+    && report.assetState.jsonHash === report.lerntextHash ? 'VALID/SKIP' : (report.status || 'SYNC_NEEDED');
   return report;
 }
 
@@ -149,13 +160,18 @@ module.exports = { MAX_TTS_TOKENS, loadLerntexteReadOnly, validateEntries, inspe
 
 async function createAdminClient() {
   const admin = require('firebase-admin');
+  const { getStorage } = require('firebase-admin/storage');
   const { requireFirebaseAdminConfig } = require('./index.js');
   const config = requireFirebaseAdminConfig();
   const app = admin.apps.length ? admin.app() : admin.initializeApp({
     credential: admin.credential.cert(config),
     storageBucket: config.storageBucket
   });
-  return app;
+  return {
+    storage() {
+      return getStorage(app);
+    }
+  };
 }
 
 async function runCli(argv = process.argv.slice(2)) {
