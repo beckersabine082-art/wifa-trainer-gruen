@@ -240,22 +240,26 @@ function createBlock2Context() {
 
   const status = new MockElement(null, 'div');
   const chapterLabel = new MockElement(null, 'strong');
+  const playButton = new MockElement(null, 'button');
+  playButton.className = 'action-btn';
   const pauseButton = new MockElement(null, 'button');
   const stopButton = new MockElement(null, 'button');
   const resumeButton = new MockElement(null, 'button');
+  resumeButton.className = 'secondary-btn';
   const restartButton = new MockElement(null, 'button');
   const elements = {
     lerntexteInhaltBereich: root,
     lerntexteAudioPlayer: audio,
     lerntexteAudioStatus: status,
     lerntexteAudioChapterLabel: chapterLabel,
+    lerntexteAudioPlayBtn: playButton,
     lerntexteAudioPauseBtn: pauseButton,
     lerntexteAudioStopBtn: stopButton,
     lerntextePilotResumeBtn: resumeButton,
     lerntextePilotRestartBtn: restartButton
   };
   const document = new EventDocument(elements);
-  [root, audio, status, chapterLabel, pauseButton, stopButton, resumeButton, restartButton]
+  [root, audio, status, chapterLabel, playButton, pauseButton, stopButton, resumeButton, restartButton]
     .forEach(element => { element.ownerDocument = document; });
   const eventWindow = new EventWindow();
   const expectedHash = createHash('sha256').update('abc def ghi', 'utf8').digest('hex');
@@ -381,6 +385,49 @@ test('TASK 16 Block 2: realer Renderpfad tokenisiert nur den Pilot und erhält F
   assert.strictEqual(legacyRoot.querySelectorAll('[data-word-index]').length, 0);
 });
 
+test('TASK 16 Block 2: Karaoke markiert Wort 0 als spoken und active', async () => {
+  const { context, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  audio.currentTime = 0.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+
+  const word = root.querySelector('[data-word-index="0"]');
+  assert.strictEqual(word.classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(word.classList.contains('podcast-word-active'), true);
+});
+
+test('TASK 16 Block 2: Karaoke markiert bis zur aktuellen Position kumulativ', async () => {
+  const { context, root, audio, manifest } = createBlock2Context();
+  const pilot = block2PilotEntry();
+  context.window.__renderEntries([pilot], 'Recht');
+  manifest.wortZeitmarken = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 },
+    { wortIndex: 2, start: 2, end: 3 }
+  ];
+
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="0"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-spoken'), false);
+
+  audio.currentTime = 2.5;
+  audio.dispatchEvent({ type: 'seeked' });
+  assert.strictEqual(root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(root.querySelectorAll('.podcast-word-spoken').length, 3);
+
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  assert.strictEqual(root.querySelector('[data-word-index="0"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-spoken'), false);
+});
+
 test('TASK 16 Block 2: realer Pilotstart synchronisiert timeupdate, seeked und Gaps', async () => {
   const { context, root, audio, manifest } = createBlock2Context();
   const pilot = block2PilotEntry();
@@ -424,10 +471,13 @@ test('TASK 16 Block 2: Visibility, pageshow und Cleanup verwenden den echten Ses
   document.hidden = false;
   document.dispatchEvent({ type: 'visibilitychange' });
   assert.strictEqual(textRoot.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(textRoot.querySelector('[data-word-index="0"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(textRoot.querySelector('[data-word-index="1"]').classList.contains('podcast-word-spoken'), true);
 
   audio.currentTime = 2.5;
   eventWindow.dispatchEvent({ type: 'pageshow' });
   assert.strictEqual(textRoot.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(textRoot.querySelectorAll('.podcast-word-spoken').length, 3);
 
   const oldTimeupdateHandlers = new Set(audio.listeners.timeupdate);
   await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
@@ -438,6 +488,28 @@ test('TASK 16 Block 2: Visibility, pageshow und Cleanup verwenden den echten Ses
   assert.strictEqual(textRoot.querySelectorAll('.podcast-word-active').length, 1);
   assert.strictEqual((document.listeners.visibilitychange || new Set()).size, 1);
   assert.strictEqual((eventWindow.listeners.pageshow || new Set()).size, 1);
+});
+
+test('TASK 16 Block 3: Pause und Fortsetzen wechseln Hervorhebung der Steuerung', async () => {
+  const fixture = createBlock2Context();
+  configureBlock3Progress(fixture, []);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  const playButton = fixture.document.getElementById('lerntexteAudioPlayBtn');
+  const resumeButton = fixture.document.getElementById('lerntextePilotResumeBtn');
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+  assert.strictEqual(playButton.classList.contains('action-btn'), false);
+  assert.strictEqual(resumeButton.classList.contains('action-btn'), true);
+
+  await resumeButton.onclick();
+  assert.strictEqual(playButton.classList.contains('action-btn'), true);
+  assert.strictEqual(resumeButton.classList.contains('action-btn'), false);
+});
+
+test('TASK 16 UI: sichtbarer Podcast-Stop-Button ist entfernt', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  assert.strictEqual(html.includes('id="lerntexteAudioStopBtn"'), false);
 });
 
 test('TASK 16 Block 2 Coverage: Pilot-Root und alte Session werden bei echtem Rerender verworfen', async () => {
@@ -533,7 +605,7 @@ test('TASK 16 Block 2 Coverage: erneuter Pilotstart erzeugt keine doppelte Handl
   const originalAdd = target.classList.add;
   let additions = 0;
   target.classList.add = function (...names) {
-    additions += 1;
+    if (names.includes('podcast-word-active')) additions += 1;
     return originalAdd.apply(this, names);
   };
 

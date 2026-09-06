@@ -360,14 +360,31 @@ function resyncPilotHighlight(time, textRoot, manifest) {
   }
 
   if (typeof window !== 'undefined' && typeof window.findWordIndexAtTime === 'function') {
-    const index = window.findWordIndexAtTime(manifest.wortZeitmarken, Number(time));
+    const currentTime = Number(time);
+    const index = window.findWordIndexAtTime(manifest.wortZeitmarken, currentTime);
     const elements = textRoot.querySelectorAll ? textRoot.querySelectorAll('[data-word-index]') : [];
     elements.forEach(function (element) {
+      element.classList.remove('podcast-word-spoken');
       element.classList.remove('podcast-word-active');
     });
 
+    let reachedIndex = -1;
+    manifest.wortZeitmarken.forEach(function (mark) {
+      if (mark && typeof mark.wortIndex === 'number' && Number(mark.start) <= currentTime) {
+        reachedIndex = Math.max(reachedIndex, mark.wortIndex);
+      }
+    });
+
+    if (reachedIndex >= 0) {
+      elements.forEach(function (element) {
+        if (Number(element.getAttribute('data-word-index')) <= reachedIndex) {
+          element.classList.add('podcast-word-spoken');
+        }
+      });
+      lerntextePilotLastValidWordIndex = reachedIndex;
+    }
+
     if (index >= 0) {
-      lerntextePilotLastValidWordIndex = index;
       const activeWord = textRoot.querySelector ? textRoot.querySelector('[data-word-index="' + String(index) + '"]') : null;
       if (activeWord) {
         activeWord.classList.add('podcast-word-active');
@@ -497,6 +514,7 @@ async function lerntextePilotFortsetzen() {
   resyncPilotHighlight(lerntextePilotAudio.currentTime);
   lerntexteAudioAktiv = true;
   lerntexteAudioPausiert = false;
+  lerntexteAudioSteuerungAktualisieren();
   try {
     await lerntextePilotAudio.play();
   } catch (error) {
@@ -510,6 +528,7 @@ async function lerntextePilotVonVorne() {
   resyncPilotHighlight(lerntextePilotAudio.currentTime);
   lerntexteAudioAktiv = true;
   lerntexteAudioPausiert = false;
+  lerntexteAudioSteuerungAktualisieren();
   try {
     await lerntextePilotAudio.play();
   } catch (error) {
@@ -523,6 +542,7 @@ async function lerntextePilotPausieren() {
     return lerntextePilotProgressSpeichern(false);
   }, lerntextePilotSaveState(false));
   lerntexteAudioPausiert = true;
+  lerntexteAudioSteuerungAktualisieren();
   if (saved !== false) {
     lerntexteElement('lerntexteAudioStatus').textContent = 'Audio pausiert.';
   }
@@ -836,18 +856,24 @@ function lerntexteTestAudioStoppen() {
 function lerntexteAudioSteuerungAktualisieren() {
   const playBtn = lerntexteElement("lerntexteAudioPlayBtn");
   const pauseBtn = lerntexteElement("lerntexteAudioPauseBtn");
-  const stopBtn = lerntexteElement("lerntexteAudioStopBtn");
+  const resumeBtn = lerntexteElement("lerntextePilotResumeBtn");
 
   if (playBtn) {
     if (lerntexteAudioAktiv && !lerntexteAudioPausiert) {
       playBtn.textContent = "▶ Wiedergabe läuft";
       playBtn.disabled = true;
+      playBtn.classList.remove("secondary-btn");
+      playBtn.classList.add("action-btn");
     } else if (lerntexteAudioPausiert) {
-      playBtn.textContent = "▶ Fortsetzen";
-      playBtn.disabled = false;
+      playBtn.textContent = "▶ Wiedergabe läuft";
+      playBtn.disabled = true;
+      playBtn.classList.remove("action-btn");
+      playBtn.classList.add("secondary-btn");
     } else {
       playBtn.textContent = "▶ Anhören";
       playBtn.disabled = false;
+      playBtn.classList.remove("secondary-btn");
+      playBtn.classList.add("action-btn");
     }
   }
 
@@ -855,8 +881,9 @@ function lerntexteAudioSteuerungAktualisieren() {
     pauseBtn.disabled = !(lerntexteAudioAktiv && !lerntexteAudioPausiert);
   }
 
-  if (stopBtn) {
-    stopBtn.disabled = !lerntexteAudioAktiv;
+  if (resumeBtn) {
+    resumeBtn.classList.remove(lerntexteAudioPausiert ? "secondary-btn" : "action-btn");
+    resumeBtn.classList.add(lerntexteAudioPausiert ? "action-btn" : "secondary-btn");
   }
 }
 
