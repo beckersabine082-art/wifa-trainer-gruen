@@ -17,6 +17,17 @@ function entryIdentity(entry) {
   return String(entry && entry.fach || '').trim() + ' / ' + String(entry && entry.titel || '').trim();
 }
 
+function selectOnlyLerntext(lerntexte, only) {
+  if (only === null) return lerntexte;
+  const selected = lerntexte.filter(entry => entryIdentity(entry) === only);
+  if (selected.length === 0) throw new Error('Einheit nicht gefunden: ' + only);
+  return selected;
+}
+
+function formatFailedReport(report) {
+  return 'FAILED: ' + (report.identity || report) + ' | ERROR: ' + (report.error || 'unknown');
+}
+
 function validateEntries(lerntexte) {
   const reports = [];
   const collisions = [];
@@ -179,7 +190,7 @@ async function syncAll({ lerntexte, adminClient, openaiClient, tempDir = fs.mkdt
   return { inspection, generated, failed };
 }
 
-module.exports = { MAX_TTS_TOKENS, loadLerntexteReadOnly, validateEntries, inspectAll, dryRunBlocksLiveSync, syncAll };
+module.exports = { MAX_TTS_TOKENS, loadLerntexteReadOnly, validateEntries, inspectAll, dryRunBlocksLiveSync, syncAll, selectOnlyLerntext, formatFailedReport, runCli };
 
 async function createAdminClient() {
   const { initializeApp, getApps, getApp, cert } = require('firebase-admin/app');
@@ -203,11 +214,14 @@ async function createAdminClient() {
 
 async function runCli(argv = process.argv.slice(2)) {
   const dryRun = argv.includes('--dry-run');
+  const onlyIndex = argv.indexOf('--only');
+  const only = onlyIndex === -1 ? null : String(argv[onlyIndex + 1] || '').trim();
   const lerntexte = await loadLerntexteReadOnly();
+  const selectedLerntexte = selectOnlyLerntext(lerntexte, only);
   const adminClient = await createAdminClient();
 
   if (dryRun) {
-    const inspection = await inspectAll({ lerntexte, bucket: adminClient.storage().bucket() });
+    const inspection = await inspectAll({ lerntexte: selectedLerntexte, bucket: adminClient.storage().bucket() });
     Object.entries(inspection.summary).forEach(function ([key, value]) { console.log(key + ': ' + value); });
     inspection.reports.filter(report => ['EMPTY', 'OVER_2000_TOKENS', 'PATH_COLLISION'].includes(report.status))
       .forEach(report => console.log(report.status + ': ' + report.identity));
@@ -218,7 +232,7 @@ async function runCli(argv = process.argv.slice(2)) {
   const OpenAI = require('openai');
   const { requireOpenAiKey } = require('./index.js');
   const result = await syncAll({
-    lerntexte,
+    lerntexte: selectedLerntexte,
     adminClient,
     openaiClient: new OpenAI({ apiKey: requireOpenAiKey() })
   });
@@ -226,7 +240,7 @@ async function runCli(argv = process.argv.slice(2)) {
   console.log('SKIPPED: ' + result.inspection.summary['VALID/SKIP']);
   console.log('GENERATED: ' + result.generated.length);
   console.log('FAILED: ' + result.failed.length);
-  result.failed.forEach(report => console.log('FAILED: ' + (report.identity || report)));
+  result.failed.forEach(report => console.log(formatFailedReport(report)));
   if (result.failed.length) process.exitCode = 1;
   return result;
 }

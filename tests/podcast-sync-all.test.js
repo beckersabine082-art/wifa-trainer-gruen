@@ -5,7 +5,9 @@ const {
   loadLerntexteReadOnly,
   inspectAll,
   dryRunBlocksLiveSync,
-  syncAll
+  syncAll,
+  selectOnlyLerntext,
+  formatFailedReport
 } = require('../tools/podcast-sync/sync-all.js');
 
 test('lädt Lerntexte sequenziell über subjects für jedes Fach', async () => {
@@ -127,4 +129,20 @@ test('blockierter Live-Sync ruft keine Erzeuger auf', async () => {
   });
   assert.equal(called, false);
   assert.equal(result.inspection.summary.EMPTY, 1);
+});
+
+test('--only filtert exakt eine Einheit', () => {
+  const lerntexte = [
+    { fach: 'Recht', titel: 'A', lerntext: 'A.' },
+    { fach: 'Recht', titel: 'B', lerntext: 'B.' }
+  ];
+  assert.deepEqual(selectOnlyLerntext(lerntexte, 'Recht / B'), [lerntexte[1]]);
+  assert.throws(() => selectOnlyLerntext(lerntexte, 'Recht / C'), /Einheit nicht gefunden/);
+});
+
+test('FAILED-Ausgabe enthält error.message', () => {
+  assert.equal(
+    formatFailedReport({ identity: 'Recht / Einheit', error: 'Transkription fehlgeschlagen' }),
+    'FAILED: Recht / Einheit | ERROR: Transkription fehlgeschlagen'
+  );
 });
