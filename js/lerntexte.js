@@ -48,15 +48,11 @@ let lerntextePilotEntry = null;
 let lerntextePilotResumeState = null;
 let lerntextePilotCompletedState = null;
 let lerntextePilotLastValidWordIndex = 0;
+let lerntextePilotTextRoots = {};
 const lerntexteAudioTestStatischeQuelle = "https://beckersabine082-art.github.io/wifa-trainer-gruen/audio/podcast/recht-rechtssubjekte-rechtsobjekte.mp3";
 
-const PILOT_FACH = "Recht";
-const PILOT_TITEL = "Rechtssubjekte und Rechtsobjekte";
-const PILOT_MP3_PATH = "podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3";
-const PILOT_JSON_PATH = "podcast/recht-rechtssubjekte-und-rechtsobjekte.json";
-
 function lerntexteIstPilotEinheit(fach, titel) {
-  return String(fach || "") === PILOT_FACH && String(titel || "") === PILOT_TITEL;
+  return String(fach || "").trim() !== "" && String(titel || "").trim() !== "";
 }
 
 function lerntextePilotTextFuerEintrag(eintrag) {
@@ -65,7 +61,7 @@ function lerntextePilotTextFuerEintrag(eintrag) {
   return lerntext;
 }
 
-async function lerntextePilotHash(text, podcastText) {
+async function lerntextePilotHash(text) {
   const source = String(text == null ? "" : text);
 
   if (typeof require === 'function') {
@@ -95,13 +91,16 @@ async function lerntextePilotHash(text, podcastText) {
   return fallback.length === 64 ? fallback : fallback;
 }
 
-async function lerntextePilotManifest() {
-  const currentHash = await lerntextePilotHash('');
+async function lerntextePilotManifest(eintrag) {
+  const fach = String(eintrag && eintrag.fach || lerntexteAktuellesFach || "");
+  const titel = String(eintrag && eintrag.titel || "");
+  const paths = lerntextePodcastPfade(fach, eintrag);
+  const currentHash = await lerntextePilotHash(lerntextePilotTextFuerEintrag(eintrag));
   return {
-    fach: PILOT_FACH,
-    titel: PILOT_TITEL,
-    mp3Path: PILOT_MP3_PATH,
-    jsonPath: PILOT_JSON_PATH,
+    fach: fach,
+    titel: titel,
+    mp3Path: paths.mp3Path,
+    jsonPath: paths.jsonPath,
     lerntextHash: currentHash,
     wortZeitmarken: []
   };
@@ -115,19 +114,21 @@ function lerntextePilotStatus(text) {
   }
 }
 
-async function lerntextePilotAssetsLaden() {
+async function lerntextePilotAssetsLaden(eintrag) {
+  const fach = String(eintrag && eintrag.fach || lerntexteAktuellesFach || "");
+  const paths = lerntextePodcastPfade(fach, eintrag);
   if (typeof window !== 'undefined' && window.lerntextePilotDependencies) {
     const dependencies = window.lerntextePilotDependencies;
     return {
-      manifest: await dependencies.loadManifest(PILOT_JSON_PATH),
-      mp3Metadata: await dependencies.loadMetadata(PILOT_MP3_PATH),
-      mp3Url: await dependencies.loadMp3Url(PILOT_MP3_PATH)
+      manifest: await dependencies.loadManifest(paths.jsonPath),
+      mp3Metadata: await dependencies.loadMetadata(paths.mp3Path),
+      mp3Url: await dependencies.loadMp3Url(paths.mp3Path)
     };
   }
 
   const firebase = await import('./firebase-config.js');
-  const storageRef = firebase.ref(firebase.storage, PILOT_MP3_PATH);
-  const jsonRef = firebase.ref(firebase.storage, PILOT_JSON_PATH);
+  const storageRef = firebase.ref(firebase.storage, paths.mp3Path);
+  const jsonRef = firebase.ref(firebase.storage, paths.jsonPath);
   const storageModule = await import('https://www.gstatic.com/firebasejs/12.17.1/firebase-storage.js');
   const manifestUrl = await firebase.getDownloadURL(jsonRef);
   const manifestResponse = await fetch(manifestUrl);
@@ -179,11 +180,12 @@ async function lerntextePilotAssetValidieren(eintrag, manifest, mp3Metadata) {
     return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
   }
 
-  if (typeof manifest.mp3Path !== 'string' || manifest.mp3Path !== PILOT_MP3_PATH) {
+  const paths = lerntextePodcastPfade(eintrag.fach, eintrag);
+  if (typeof manifest.mp3Path !== 'string' || manifest.mp3Path !== paths.mp3Path) {
     return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
   }
 
-  if (typeof manifest.jsonPath !== 'string' || manifest.jsonPath !== PILOT_JSON_PATH) {
+  if (typeof manifest.jsonPath !== 'string' || manifest.jsonPath !== paths.jsonPath) {
     return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
   }
 
@@ -404,17 +406,18 @@ async function lerntextePilotFortschrittLaden(uid) {
   }
 
   if (typeof window !== 'undefined' && typeof window.lerntextePodcastFortschrittLaden === 'function') {
-    const result = await window.lerntextePodcastFortschrittLaden(uid, PILOT_FACH);
+    const result = await window.lerntextePodcastFortschrittLaden(uid, lerntextePilotEntry && lerntextePilotEntry.fach || lerntexteAktuellesFach);
+    const currentPath = lerntextePodcastPfade(lerntextePilotEntry && lerntextePilotEntry.fach || lerntexteAktuellesFach, lerntextePilotEntry).mp3Path;
     if (Array.isArray(result)) {
       return result.filter(function (entry) {
-        return entry && entry.firebasePfad === PILOT_MP3_PATH;
+        return entry && entry.firebasePfad === currentPath;
       });
     }
     if (!result || !Array.isArray(result.data)) {
       return [];
     }
     return result.data.filter(function (entry) {
-      return entry && entry.firebasePfad === PILOT_MP3_PATH;
+      return entry && entry.firebasePfad === currentPath;
     });
   }
 
@@ -450,9 +453,9 @@ async function lerntextePilotProgressLaden(eintrag, currentHash) {
     const matchingEntries = entries.filter(function (entry) {
       return entry
         && entry.nutzer === lerntextePilotUid
-        && entry.fach === PILOT_FACH
-        && entry.einheit === PILOT_TITEL
-        && entry.firebasePfad === PILOT_MP3_PATH
+        && entry.fach === lerntextePilotEntry.fach
+        && entry.einheit === lerntextePilotEntry.titel
+        && entry.firebasePfad === lerntextePodcastPfade(lerntextePilotEntry.fach, lerntextePilotEntry).mp3Path
         && entry.lerntextHash === currentHash;
     });
     matchingEntries.forEach(function (entry) {
@@ -477,9 +480,9 @@ function lerntextePilotSaveState(completed) {
     : 0;
   return {
     nutzer: lerntextePilotUid,
-    fach: PILOT_FACH,
-    einheit: PILOT_TITEL,
-    firebasePfad: PILOT_MP3_PATH,
+    fach: lerntextePilotEntry && lerntextePilotEntry.fach || lerntexteAktuellesFach,
+    einheit: lerntextePilotEntry && lerntextePilotEntry.titel || "",
+    firebasePfad: lerntextePodcastPfade(lerntextePilotEntry && lerntextePilotEntry.fach || lerntexteAktuellesFach, lerntextePilotEntry).mp3Path,
     lerntextHash: lerntextePilotCurrentHash,
     sekundenPosition: position,
     wortIndex: Math.max(0, Number(lerntextePilotLastValidWordIndex) || 0),
@@ -618,6 +621,14 @@ function lerntexteAudioFirebasePfad(fach, eintrag) {
   return "podcast/" + fachSlug + "-" + titelSlug + ".mp3";
 }
 
+function lerntextePodcastPfade(fach, eintrag) {
+  const mp3Path = lerntexteAudioFirebasePfad(fach, eintrag);
+  return {
+    mp3Path: mp3Path,
+    jsonPath: mp3Path.replace(/\.mp3$/, ".json")
+  };
+}
+
 function lerntexteAudioTestKapitelFinden(einheiten) {
   if (lerntexteAktuellesFach !== "Recht") return null;
 
@@ -713,17 +724,7 @@ function lerntexteElement(id) {
 }
 
 function lerntexteAudioTextFuerEintrag(eintrag) {
-  if (eintrag && lerntexteIstPilotEinheit(eintrag.fach, eintrag.titel)) {
-    return lerntextePilotTextFuerEintrag(eintrag).trim();
-  }
-
-  const directText = eintrag && eintrag.podcastText ? String(eintrag.podcastText).trim() : "";
-  if (directText) {
-    return directText;
-  }
-
-  const fallbackText = eintrag && eintrag.lerntext ? String(eintrag.lerntext).trim() : "";
-  return fallbackText;
+  return lerntextePilotTextFuerEintrag(eintrag).trim();
 }
 
 function lerntexteAudioPlaylistErstellen(einheiten) {
@@ -740,7 +741,8 @@ function lerntexteAudioPlaylistErstellen(einheiten) {
       eintrag: eintrag,
       titel: eintrag && eintrag.titel ? String(eintrag.titel) : "Lerneinheit",
       text: text,
-      fach: String(lerntexteAktuellesFach || "")
+      fach: String(eintrag && eintrag.fach || lerntexteAktuellesFach || ""),
+      textRoot: lerntextePilotTextRoots[String(eintrag && eintrag.fach || lerntexteAktuellesFach || "") + "\u0000" + String(eintrag && eintrag.titel || "")] || null
     });
   });
 
@@ -766,10 +768,10 @@ async function lerntexteTestAudioStarten() {
   const eintrag = lerntexteAudioTestKapitelFinden(einheiten) || einheiten
     .slice()
     .sort(function (a, b) {
-      return String(b.podcastText || b.lerntext || "").length - String(a.podcastText || a.lerntext || "").length;
+      return String(b.lerntext || "").length - String(a.lerntext || "").length;
     })[0];
 
-  const text = String((eintrag && (eintrag.podcastText || eintrag.lerntext)) || "").trim();
+  const text = String((eintrag && eintrag.lerntext) || "").trim();
   if (!text) {
     lerntexteElement("lerntexteAudioStatus").textContent = "Für den Test gibt es keinen Podcast-Text.";
     return;
@@ -1138,7 +1140,7 @@ function lerntexteAbschnitteFuerEinheiten(einheiten) {
   const chunks = [];
 
   einheiten.forEach(function (eintrag) {
-    const textQuelle = String((eintrag.podcastText && eintrag.podcastText.trim()) || (eintrag.lerntext || "")).trim();
+    const textQuelle = String(eintrag.lerntext || "").trim();
     if (!textQuelle) {
       return;
     }
@@ -1223,6 +1225,7 @@ function lerntexteAnzeigen() {
   lerntextePilotKaraokeAufraeumen();
   const bereich = lerntexteElement("lerntexteInhaltBereich");
   bereich.innerHTML = "";
+  lerntextePilotTextRoots = {};
 
   const einheiten = lerntexteAusgewaehlteEinheiten();
   if (!einheiten.length) return;
@@ -1256,7 +1259,7 @@ function lerntexteAnzeigen() {
       && typeof window !== 'undefined'
       && typeof window.lerntexteDomTokenisieren === 'function') {
       window.lerntexteDomTokenisieren(text);
-      lerntextePilotTextRoot = text;
+      lerntextePilotTextRoots[String(eintrag.fach) + "\u0000" + String(eintrag.titel)] = text;
     }
 
     block.appendChild(titel);
@@ -1286,8 +1289,6 @@ function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
   const title = currentItem && currentItem.titel ? currentItem.titel : "Lerneinheit";
   const statusText = "Audio läuft: " + (lerntexteAudioPlaylistIndex + 1) + " von " + total + " – " + title;
 
-  const isPilot = currentItem && currentItem.eintrag && lerntexteIstPilotEinheit(currentItem.eintrag.fach, currentItem.eintrag.titel);
-
   if (lerntexteElement("lerntexteAudioStatus")) {
     lerntexteElement("lerntexteAudioStatus").textContent = statusText;
   }
@@ -1302,112 +1303,20 @@ function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
 
   async function startFirebaseTry() {
     const domAudio = document.getElementById("lerntexteAudioPlayer");
-
-    if (isPilot) {
-      try {
-        const assets = await lerntextePilotAssetsLaden();
-        const validation = await lerntextePilotAssetValidieren(currentItem.eintrag, assets.manifest, assets.mp3Metadata);
-        if (!validation.valid || !domAudio) {
-          lerntextePilotStatus(validation.reason || 'Podcast muss aktualisiert werden.');
-          return false;
-        }
-
-        domAudio.src = assets.mp3Url;
-        domAudio.load();
-        return await lerntextePilotAudioStartenValidiert(currentItem.eintrag, assets.manifest, assets.mp3Metadata, null, validation);
-      } catch (error) {
-        lerntextePilotStatus('Podcast konnte nicht geladen werden.');
+    try {
+      if (!domAudio) return false;
+      lerntextePilotTextRoot = currentItem.textRoot || lerntextePilotTextRoots[String(currentItem.eintrag.fach) + "\u0000" + String(currentItem.eintrag.titel)] || null;
+      const assets = await lerntextePilotAssetsLaden(currentItem.eintrag);
+      const validation = await lerntextePilotAssetValidieren(currentItem.eintrag, assets.manifest, assets.mp3Metadata);
+      if (!validation.valid) {
+        lerntextePilotStatus(validation.reason || 'Podcast muss aktualisiert werden.');
         return false;
       }
-    }
-
-    try {
-      const url = await lerntexteAudioFirebaseUrlLaden(currentItem.eintrag);
-      lerntexteAudioQuelle = "firebase";
-      if (domAudio) {
-        domAudio.src = url;
-        domAudio.load();
-        domAudio.onended = function () {
-          if (!lerntexteAudioAktiv || lerntexteAudioPausiert) return;
-          lerntexteAudioPlaylistIndex += 1;
-          lerntexteAudioPlaylistWeiter();
-        };
-        domAudio.ontimeupdate = function () {
-          if (!domAudio.duration || !isFinite(domAudio.duration)) return;
-          const percent = (domAudio.currentTime / domAudio.duration) * 100;
-          const minsCurrent = Math.floor(domAudio.currentTime / 60);
-          const secsCurrent = Math.floor(domAudio.currentTime % 60);
-          const minsTotal = Math.floor(domAudio.duration / 60);
-          const secsTotal = Math.floor(domAudio.duration % 60);
-          const timeText = String(minsCurrent).padStart(2, "0") + ":" + String(secsCurrent).padStart(2, "0") + " / " + String(minsTotal).padStart(2, "0") + ":" + String(secsTotal).padStart(2, "0");
-          lerntexteAudioProgressSet(percent, timeText);
-        };
-        domAudio.play();
-      }
-      return;
+      domAudio.src = assets.mp3Url;
+      domAudio.load();
+      return await lerntextePilotAudioStartenValidiert(currentItem.eintrag, assets.manifest, assets.mp3Metadata, null, validation);
     } catch (error) {
-      const reasonCode = error && error.code ? error.code : "";
-      if (reasonCode === "storage/object-not-found") {
-        lerntexteAudioQuelle = "speechSynthesis";
-        const generation = ++lerntexteAudioGeneration;
-        lerntexteAudioAktiv = true;
-        lerntexteAudioPausiert = false;
-        lerntexteAudioChunks = [currentItem.text];
-        lerntexteAudioChunkIndex = 0;
-        lerntexteAudioProgressTotal = currentItem.text.length;
-        lerntexteAudioProgressCompleted = 0;
-        lerntexteAudioProgressCurrent = 0;
-        lerntexteAudioCurrentChunkLength = currentItem.text.length;
-        lerntexteAudioProgressAktualisieren();
-        lerntexteAudioSteuerungAktualisieren();
-
-        if (!("speechSynthesis" in window)) {
-          lerntexteElement("lerntexteAudioStatus").textContent = "Dein Browser unterstützt die Vorlesefunktion leider nicht.";
-          return;
-        }
-
-        const utterance = new SpeechSynthesisUtterance(currentItem.text);
-        utterance.lang = "de-DE";
-        utterance.rate = 1;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-        lerntexteAudioCurrentUtterance = utterance;
-
-        utterance.onstart = function () {
-          if (generation !== lerntexteAudioGeneration) return;
-          lerntexteAudioAktiv = true;
-          lerntexteAudioPausiert = false;
-          lerntexteElement("lerntexteAudioStatus").textContent = "Audio läuft: " + (lerntexteAudioPlaylistIndex + 1) + " von " + total + " – " + title;
-          lerntexteAudioSteuerungAktualisieren();
-          lerntexteAudioMediaSessionAktualisieren();
-        };
-
-        utterance.onboundary = function (event) {
-          if (generation !== lerntexteAudioGeneration || !lerntexteAudioAktiv) return;
-          const nextProgress = typeof event.charIndex === "number" ? event.charIndex : 0;
-          lerntexteAudioProgressCurrent = Math.max(0, Math.min(lerntexteAudioCurrentChunkLength, nextProgress));
-          lerntexteAudioProgressAktualisieren();
-        };
-
-        utterance.onend = function () {
-          if (generation !== lerntexteAudioGeneration || !lerntexteAudioAktiv) return;
-          lerntexteAudioPlaylistIndex += 1;
-          lerntexteAudioPlaylistWeiter();
-        };
-
-        utterance.onerror = function () {
-          if (generation === lerntexteAudioGeneration) {
-            lerntexteAudioStoppen("Audio konnte nicht abgespielt werden.");
-          }
-        };
-
-        window.speechSynthesis.speak(utterance);
-        return;
-      }
-
-      const errorMessage = error && error.message ? error.message : "Unbekannter Fehler";
-      lerntexteAudioStoppen("Audio konnte nicht geladen werden.");
-      lerntexteElement("lerntexteAudioStatus").textContent = "Audio konnte nicht geladen werden: " + errorMessage;
+      lerntextePilotStatus(error && error.message ? error.message : "Podcast konnte nicht geladen werden.");
     }
   }
 
