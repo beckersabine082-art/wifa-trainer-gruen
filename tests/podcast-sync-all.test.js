@@ -2,10 +2,36 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const { sha256Lerntext, podcastPaths } = require('../tools/podcast-sync/hash-paths.js');
 const {
+  loadLerntexteReadOnly,
   inspectAll,
   dryRunBlocksLiveSync,
   syncAll
 } = require('../tools/podcast-sync/sync-all.js');
+
+test('lädt Lerntexte sequenziell über subjects für jedes Fach', async () => {
+  const calls = [];
+  const result = await loadLerntexteReadOnly({
+    apiUrl: 'https://example.test/exec?existing=1&action=wrong',
+    fetchImpl: async requestUrl => {
+      const url = new URL(requestUrl);
+      calls.push({ action: url.searchParams.get('action'), fach: url.searchParams.get('fach') });
+      if (url.searchParams.get('action') === 'subjects') {
+        return { ok: true, json: async () => ({ success: true, data: ['Recht', 'Steuern'] }) };
+      }
+      if (url.searchParams.get('fach') === 'Recht') {
+        return { ok: true, json: async () => ({ success: true, data: [{ titel: 'R1' }, { titel: 'R2' }] }) };
+      }
+      return { ok: true, json: async () => ({ success: true, data: [{ titel: 'S1' }] }) };
+    }
+  });
+
+  assert.equal(result.length, 3);
+  assert.deepEqual(calls, [
+    { action: 'subjects', fach: null },
+    { action: 'getLerntexte', fach: 'Recht' },
+    { action: 'getLerntexte', fach: 'Steuern' }
+  ]);
+});
 
 function fakeBucket(files) {
   return {

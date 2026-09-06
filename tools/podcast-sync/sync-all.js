@@ -57,14 +57,32 @@ function validateEntries(lerntexte) {
 }
 
 async function loadLerntexteReadOnly({ apiUrl, fetchImpl = globalThis.fetch } = {}) {
-  const url = String(apiUrl || process.env.PODCAST_LERNTEXTE_API_URL || '').trim();
-  if (!url) throw new Error('PODCAST_LERNTEXTE_API_URL fehlt');
+  const baseUrl = String(apiUrl || process.env.PODCAST_LERNTEXTE_API_URL || '').trim();
+  if (!baseUrl) throw new Error('PODCAST_LERNTEXTE_API_URL fehlt');
   if (typeof fetchImpl !== 'function') throw new Error('fetch fehlt');
-  const response = await fetchImpl(url, { method: 'GET' });
-  if (!response.ok) throw new Error('Lerntexte konnten nicht geladen werden: HTTP ' + response.status);
-  const result = await response.json();
-  if (!result || !Array.isArray(result.data)) throw new Error('Lerntexte-Antwort ist ungültig');
-  return result.data.slice();
+
+  async function fetchAction(action, fach) {
+    const url = new URL(baseUrl);
+    url.searchParams.set('action', action);
+    if (fach !== undefined) url.searchParams.set('fach', fach);
+    const response = await fetchImpl(url.toString(), { method: 'GET' });
+    if (!response.ok) throw new Error(action + '-Lerntexte konnten nicht geladen werden: HTTP ' + response.status);
+    const result = await response.json();
+    if (!result || result.success === false || !Array.isArray(result.data)) {
+      throw new Error(action + '-Antwort ist ungültig');
+    }
+    return result.data;
+  }
+
+  const subjects = await fetchAction('subjects');
+  const lerntexte = [];
+  for (const subject of subjects) {
+    const fach = typeof subject === 'string' ? subject : subject && (subject.fach || subject.name || subject.subject);
+    if (typeof fach !== 'string' || !fach.trim()) throw new Error('Fach-Antwort ist ungültig');
+    const entries = await fetchAction('getLerntexte', fach);
+    lerntexte.push(...entries);
+  }
+  return lerntexte;
 }
 
 async function readFirebaseAssetState({ bucket, report }) {
