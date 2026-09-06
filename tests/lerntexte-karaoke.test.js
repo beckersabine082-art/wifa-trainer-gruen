@@ -42,6 +42,25 @@ class MockElement {
     this.attributes = {};
     this.parentNode = null;
     this.dataset = {};
+    this.style = {};
+    this.hidden = false;
+    this.classList = {
+      add: (...names) => names.forEach(name => this._addClass(name)),
+      remove: (...names) => names.forEach(name => this._removeClass(name)),
+      contains: name => this._classNames().includes(name)
+    };
+  }
+
+  _classNames() {
+    return String(this.className || '').split(/\s+/).filter(Boolean);
+  }
+
+  _addClass(name) {
+    this.className = [...new Set([...this._classNames(), name])].join(' ');
+  }
+
+  _removeClass(name) {
+    this.className = this._classNames().filter(existing => existing !== name).join(' ');
   }
 
   appendChild(node) {
@@ -73,6 +92,60 @@ class MockElement {
   get textContent() {
     return this.childNodes.map(node => node.textContent).join('');
   }
+
+  set textContent(value) {
+    this.childNodes = [];
+    if (String(value || '')) this.appendChild(this.ownerDocument.createTextNode(value));
+  }
+
+  set innerHTML(value) {
+    this.childNodes = [];
+    const source = String(value || '');
+    const tokens = source.match(/<\/?[a-z0-9-]+[^>]*>|[^<]+/gi) || [];
+    const stack = [this];
+    tokens.forEach(token => {
+      if (token.startsWith('</')) {
+        if (stack.length > 1) stack.pop();
+        return;
+      }
+
+      if (token.startsWith('<')) {
+        const tagMatch = token.match(/^<([a-z0-9-]+)/i);
+        if (!tagMatch) return;
+        const child = this.ownerDocument.createElement(tagMatch[1]);
+        stack[stack.length - 1].appendChild(child);
+        if (!token.endsWith('/>') && !['br', 'hr', 'img'].includes(tagMatch[1].toLowerCase())) stack.push(child);
+        return;
+      }
+
+      stack[stack.length - 1].appendChild(this.ownerDocument.createTextNode(token));
+    });
+  }
+
+  querySelectorAll(selector) {
+    const matches = [];
+    const visit = node => {
+      if (node.nodeType !== 1) return;
+      const dataIndex = selector.match(/^\[data-word-index="(\d+)"\]$/);
+      const matchesSelector = selector === '[data-word-index]'
+        ? node.getAttribute('data-word-index') !== null
+        : dataIndex
+          ? node.getAttribute('data-word-index') === dataIndex[1]
+          : selector.startsWith('.')
+            ? node.classList.contains(selector.slice(1))
+            : selector === '.lerntexte-text'
+              ? node.classList.contains('lerntexte-text')
+              : node.tagName.toLowerCase() === selector.toLowerCase();
+      if (matchesSelector) matches.push(node);
+      node.childNodes.forEach(visit);
+    };
+    this.childNodes.forEach(visit);
+    return matches;
+  }
+
+  querySelector(selector) {
+    return this.querySelectorAll(selector)[0] || null;
+  }
 }
 
 class MockDocumentFragment extends MockElement {
@@ -94,6 +167,170 @@ class MockDocument {
   createDocumentFragment() {
     return new MockDocumentFragment(this);
   }
+}
+
+class EventDocument extends MockDocument {
+  constructor(elements = {}) {
+    super();
+    this.elements = elements;
+    this.hidden = false;
+    this.listeners = {};
+  }
+
+  getElementById(id) {
+    return this.elements[id] || null;
+  }
+
+  addEventListener(type, listener) {
+    (this.listeners[type] ||= new Set()).add(listener);
+  }
+
+  removeEventListener(type, listener) {
+    if (this.listeners[type]) this.listeners[type].delete(listener);
+  }
+
+  dispatchEvent(event) {
+    for (const listener of this.listeners[event.type] || []) listener(event);
+  }
+}
+
+class EventWindow {
+  constructor() {
+    this.listeners = {};
+  }
+
+  addEventListener(type, listener) {
+    (this.listeners[type] ||= new Set()).add(listener);
+  }
+
+  removeEventListener(type, listener) {
+    if (this.listeners[type]) this.listeners[type].delete(listener);
+  }
+
+  dispatchEvent(event) {
+    for (const listener of this.listeners[event.type] || []) listener(event);
+  }
+}
+
+function createBlock2Context() {
+  const sourceFiles = [
+    '../js/podcast-dom-tokenize.js',
+    '../js/podcast-time-to-word.js',
+    '../js/podcast-visibility-sync.js',
+    '../js/lerntexte.js'
+  ];
+  const root = new MockElement(null, 'div');
+  const audio = new MockElement(null, 'audio');
+  audio.currentTime = 0;
+  audio.src = '';
+  audio.duration = 120;
+  audio.listeners = {};
+  audio.addEventListener = function (type, listener) {
+    (this.listeners[type] ||= new Set()).add(listener);
+  };
+  audio.removeEventListener = function (type, listener) {
+    if (this.listeners[type]) this.listeners[type].delete(listener);
+  };
+  audio.dispatchEvent = function (event) {
+    for (const listener of this.listeners[event.type] || []) listener(event);
+  };
+  audio.load = function () {};
+  audio.pause = function () { this.paused = true; };
+  audio.play = function () { return Promise.resolve(); };
+
+  const status = new MockElement(null, 'div');
+  const chapterLabel = new MockElement(null, 'strong');
+  const pauseButton = new MockElement(null, 'button');
+  const stopButton = new MockElement(null, 'button');
+  const resumeButton = new MockElement(null, 'button');
+  const restartButton = new MockElement(null, 'button');
+  const elements = {
+    lerntexteInhaltBereich: root,
+    lerntexteAudioPlayer: audio,
+    lerntexteAudioStatus: status,
+    lerntexteAudioChapterLabel: chapterLabel,
+    lerntexteAudioPauseBtn: pauseButton,
+    lerntexteAudioStopBtn: stopButton,
+    lerntextePilotResumeBtn: resumeButton,
+    lerntextePilotRestartBtn: restartButton
+  };
+  const document = new EventDocument(elements);
+  [root, audio, status, chapterLabel, pauseButton, stopButton, resumeButton, restartButton]
+    .forEach(element => { element.ownerDocument = document; });
+  const eventWindow = new EventWindow();
+  const expectedHash = createHash('sha256').update('abc def ghi', 'utf8').digest('hex');
+  const digestBytes = Uint8Array.from(expectedHash.match(/../g), byte => parseInt(byte, 16));
+  const manifest = {
+    lerntextHash: expectedHash,
+    mp3Path: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3',
+    jsonPath: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.json',
+    wortZeitmarken: [
+      { wortIndex: 0, start: 0, end: 1 },
+      { wortIndex: 1, start: 1, end: 2 },
+      { wortIndex: 2, start: 2, end: 3 }
+    ]
+  };
+  eventWindow.crypto = { subtle: { async digest() { return digestBytes.buffer; } } };
+  eventWindow.lerntexteAudioVersionIstSynchron = (current, json, mp3) => current === json && json === mp3;
+  eventWindow.lerntextePilotDependencies = {
+    loadManifest: async () => manifest,
+    loadMetadata: async () => ({ customMetadata: { lerntextHash: expectedHash } }),
+    loadMp3Url: async () => 'https://example.test/pilot.mp3'
+  };
+  eventWindow.speechSynthesis = { speak() {} };
+
+  const context = {
+    window: eventWindow,
+    document,
+    navigator: {},
+    escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    },
+    Promise,
+    TextEncoder,
+    Uint8Array,
+    ArrayBuffer,
+    isFinite,
+    console
+  };
+  const source = sourceFiles.map(file => fs.readFileSync(path.join(__dirname, file), 'utf8')).join('\n')
+    + '\nwindow.__renderEntries = function(entries, fach) {'
+    + 'lerntexteDaten = entries; lerntexteAktuellesFach = fach; lerntexteAktuellesKapitel = ""; lerntexteAnzeigen();'
+    + '};';
+  vm.runInNewContext(source, context);
+  return { context, document, eventWindow, root, audio, status, manifest };
+}
+
+function block2PilotEntry() {
+  return {
+    fach: 'Recht',
+    titel: 'Rechtssubjekte und Rechtsobjekte',
+    lerntext: 'abc def ghi'
+  };
+}
+
+function block2PlaylistItem(entry = block2PilotEntry()) {
+  return { eintrag: entry, titel: entry.titel, text: entry.lerntext };
+}
+
+function configureBlock3Progress(fixture, progressData, uid = 'user-123') {
+  const loadCalls = [];
+  const saveCalls = [];
+  fixture.eventWindow.aktuellerNutzer = uid;
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async (user, fach) => {
+    loadCalls.push([user, fach]);
+    return { data: progressData };
+  };
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = async state => {
+    saveCalls.push(state);
+    return { success: true };
+  };
+  return { loadCalls, saveCalls };
 }
 
 function element(document, tagName, ...children) {
@@ -121,6 +358,544 @@ function descendants(root) {
 function wordSpans(root) {
   return descendants(root).filter(node => node.tagName === 'SPAN' && node.getAttribute('data-word-index') !== null);
 }
+
+test('TASK 16 Block 2: realer Renderpfad tokenisiert nur den Pilot und erhält Formatierung', () => {
+  const { context, root } = createBlock2Context();
+  const pilot = Object.assign({}, block2PilotEntry(), {
+    lerntext: 'Weitere Wörter.\nHINWEIS: Zweiter Absatz.'
+  });
+
+  context.window.__renderEntries([pilot], 'Recht');
+
+  const textRoot = root.querySelector('.lerntexte-text');
+  assert.ok(textRoot);
+  assert.ok(textRoot.querySelector('p'));
+  assert.ok(textRoot.querySelector('strong'));
+  assert.ok(textRoot.querySelector('[data-word-index="0"]'));
+  assert.strictEqual(textRoot.textContent.includes('Weitere Wörter.'), true);
+
+  root.childNodes = [];
+  context.window.__renderEntries([Object.assign({}, pilot, { titel: 'Vertragsarten' })], 'Recht');
+  const legacyRoot = root.querySelector('.lerntexte-text');
+  assert.ok(legacyRoot);
+  assert.strictEqual(legacyRoot.querySelectorAll('[data-word-index]').length, 0);
+});
+
+test('TASK 16 Block 2: realer Pilotstart synchronisiert timeupdate, seeked und Gaps', async () => {
+  const { context, root, audio, manifest } = createBlock2Context();
+  const pilot = block2PilotEntry();
+  context.window.__renderEntries([pilot], 'Recht');
+  manifest.wortZeitmarken = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 },
+    { wortIndex: 2, start: 2, end: 3 }
+  ];
+
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="0"]').classList.contains('podcast-word-active'), false);
+
+  audio.currentTime = 2.5;
+  audio.dispatchEvent({ type: 'seeked' });
+  assert.strictEqual(root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+
+  manifest.wortZeitmarken = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1.5, end: 2 }
+  ];
+  audio.currentTime = 1.25;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  assert.strictEqual(root.querySelectorAll('.podcast-word-active').length, 0);
+});
+
+test('TASK 16 Block 2: Visibility, pageshow und Cleanup verwenden den echten Session-Lifecycle', async () => {
+  const { context, document, eventWindow, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  const textRoot = root.querySelector('.lerntexte-text');
+
+  audio.currentTime = 1.5;
+  document.hidden = true;
+  document.dispatchEvent({ type: 'visibilitychange' });
+  assert.strictEqual(textRoot.querySelector('[data-word-index="0"]').classList.contains('podcast-word-active'), true);
+
+  document.hidden = false;
+  document.dispatchEvent({ type: 'visibilitychange' });
+  assert.strictEqual(textRoot.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+
+  audio.currentTime = 2.5;
+  eventWindow.dispatchEvent({ type: 'pageshow' });
+  assert.strictEqual(textRoot.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+
+  const oldTimeupdateHandlers = new Set(audio.listeners.timeupdate);
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  for (const element of textRoot.querySelectorAll('.podcast-word-active')) element.classList.remove('podcast-word-active');
+  for (const handler of oldTimeupdateHandlers) assert.strictEqual(audio.listeners.timeupdate.has(handler), false);
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  assert.strictEqual(textRoot.querySelectorAll('.podcast-word-active').length, 1);
+  assert.strictEqual((document.listeners.visibilitychange || new Set()).size, 1);
+  assert.strictEqual((eventWindow.listeners.pageshow || new Set()).size, 1);
+});
+
+test('TASK 16 Block 2 Coverage: Pilot-Root und alte Session werden bei echtem Rerender verworfen', async () => {
+  const { context, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  const oldRoot = root.querySelector('.lerntexte-text');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  const oldText = oldRoot.textContent;
+  const oldActiveCount = oldRoot.querySelectorAll('.podcast-word-active').length;
+
+  context.window.__renderEntries([{
+    fach: 'Recht',
+    titel: 'Vertragsarten',
+    lerntext: 'Legacy Text'
+  }], 'Recht');
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+
+  assert.strictEqual(oldRoot.textContent, oldText);
+  assert.strictEqual(oldRoot.querySelectorAll('.podcast-word-active').length, oldActiveCount);
+  assert.strictEqual(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length, 0);
+});
+
+test('TASK 16 Block 2 Coverage: initialer Resync nutzt die aktuelle Startposition', async () => {
+  const { context, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  audio.currentTime = 1.5;
+
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+});
+
+test('TASK 16 Block 2 Coverage: seeked cleanup deaktiviert alte Handlerwirkung', async () => {
+  const { context, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  const textRoot = root.querySelector('.lerntexte-text');
+
+  audio.currentTime = 2.5;
+  audio.dispatchEvent({ type: 'seeked' });
+  assert.strictEqual(textRoot.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+
+  audio.dispatchEvent({ type: 'ended' });
+  for (const element of textRoot.querySelectorAll('.podcast-word-active')) element.classList.remove('podcast-word-active');
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'seeked' });
+  assert.strictEqual(textRoot.querySelectorAll('.podcast-word-active').length, 0);
+});
+
+test('TASK 16 Block 2 Coverage: visibilitychange cleanup deaktiviert alte Handlerwirkung', async () => {
+  const { context, document, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  const textRoot = root.querySelector('.lerntexte-text');
+
+  document.hidden = false;
+  audio.currentTime = 1.5;
+  document.dispatchEvent({ type: 'visibilitychange' });
+  assert.strictEqual(textRoot.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+
+  audio.dispatchEvent({ type: 'ended' });
+  for (const element of textRoot.querySelectorAll('.podcast-word-active')) element.classList.remove('podcast-word-active');
+  audio.currentTime = 2.5;
+  document.dispatchEvent({ type: 'visibilitychange' });
+  assert.strictEqual(textRoot.querySelectorAll('.podcast-word-active').length, 0);
+});
+
+test('TASK 16 Block 2 Coverage: pageshow cleanup deaktiviert alte Handlerwirkung', async () => {
+  const { context, eventWindow, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  const textRoot = root.querySelector('.lerntexte-text');
+
+  audio.currentTime = 2.5;
+  eventWindow.dispatchEvent({ type: 'pageshow' });
+  assert.strictEqual(textRoot.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+
+  audio.dispatchEvent({ type: 'ended' });
+  for (const element of textRoot.querySelectorAll('.podcast-word-active')) element.classList.remove('podcast-word-active');
+  audio.currentTime = 1.5;
+  eventWindow.dispatchEvent({ type: 'pageshow' });
+  assert.strictEqual(textRoot.querySelectorAll('.podcast-word-active').length, 0);
+});
+
+test('TASK 16 Block 2 Coverage: erneuter Pilotstart erzeugt keine doppelte Handlerwirkung', async () => {
+  const { context, document, eventWindow, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  const textRoot = root.querySelector('.lerntexte-text');
+  const target = textRoot.querySelector('[data-word-index="1"]');
+  const originalAdd = target.classList.add;
+  let additions = 0;
+  target.classList.add = function (...names) {
+    additions += 1;
+    return originalAdd.apply(this, names);
+  };
+
+  const assertSingleResync = dispatch => {
+    for (const element of textRoot.querySelectorAll('.podcast-word-active')) element.classList.remove('podcast-word-active');
+    additions = 0;
+    dispatch();
+    assert.strictEqual(additions, 1);
+  };
+
+  audio.currentTime = 1.5;
+  assertSingleResync(() => audio.dispatchEvent({ type: 'timeupdate' }));
+  assertSingleResync(() => audio.dispatchEvent({ type: 'seeked' }));
+  document.hidden = false;
+  assertSingleResync(() => document.dispatchEvent({ type: 'visibilitychange' }));
+  assertSingleResync(() => eventWindow.dispatchEvent({ type: 'pageshow' }));
+});
+
+test('TASK 16 Block 2 Coverage: natürliches Pilot-Ende bereinigt alle Karaoke-Listener', async () => {
+  const { context, document, eventWindow, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  const textRoot = root.querySelector('.lerntexte-text');
+
+  audio.dispatchEvent({ type: 'ended' });
+  for (const element of textRoot.querySelectorAll('.podcast-word-active')) element.classList.remove('podcast-word-active');
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  audio.dispatchEvent({ type: 'seeked' });
+  document.hidden = false;
+  document.dispatchEvent({ type: 'visibilitychange' });
+  eventWindow.dispatchEvent({ type: 'pageshow' });
+
+  assert.strictEqual(textRoot.querySelectorAll('.podcast-word-active').length, 0);
+  assert.strictEqual((document.listeners.visibilitychange || new Set()).size, 0);
+  assert.strictEqual((eventWindow.listeners.pageshow || new Set()).size, 0);
+});
+
+test('TASK 16 Block 3: Pilot lädt Progress erst nach Asset-Gate und Fortsetzen matched exakt', async () => {
+  const fixture = createBlock2Context();
+  const progress = configureBlock3Progress(fixture, [
+    { nutzer: 'other', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte', firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 11, wortIndex: 1, completed: false },
+    { nutzer: 'user-123', fach: 'Recht', einheit: 'Andere Einheit', firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 12, wortIndex: 1, completed: false },
+    { nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte', firebasePfad: 'podcast/anderes.mp3', lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 13, wortIndex: 1, completed: false },
+    { nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte', firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 30, wortIndex: 1, completed: false }
+  ]);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  let playCount = 0;
+  fixture.audio.play = () => { playCount += 1; return Promise.resolve(); };
+
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  assert.deepStrictEqual(progress.loadCalls, [['user-123', 'Recht']]);
+  assert.strictEqual(fixture.audio.currentTime, 0);
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+  assert.strictEqual(fixture.audio.currentTime, 30);
+  assert.strictEqual(playCount, 2);
+});
+
+test('TASK 16 Block 3: alter Hash wird ignoriert und Sekunde 0 bleibt gültiger Resume-State', async () => {
+  const fixture = createBlock2Context();
+  configureBlock3Progress(fixture, [
+    { nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte', firebasePfad: fixture.manifest.mp3Path, lerntextHash: 'old-hash', sekundenPosition: 30, wortIndex: 2, completed: false },
+    { nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte', firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 0, wortIndex: 0, completed: false }
+  ]);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+
+  assert.strictEqual(fixture.audio.currentTime, 0);
+});
+
+test('TASK 16 Block 3: Pilot Pause und Stop speichern Position ohne Reset', async () => {
+  const fixture = createBlock2Context();
+  const progress = configureBlock3Progress(fixture, []);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  fixture.audio.currentTime = 12.5;
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+  assert.strictEqual(fixture.audio.currentTime, 12.5);
+  assert.strictEqual(progress.saveCalls.at(-1).sekundenPosition, 12.5);
+  assert.strictEqual(progress.saveCalls.at(-1).completed, false);
+
+  fixture.audio.currentTime = 15;
+  await fixture.document.getElementById('lerntexteAudioStopBtn').onclick();
+  assert.strictEqual(fixture.audio.currentTime, 15);
+  assert.strictEqual(progress.saveCalls.at(-1).sekundenPosition, 15);
+  assert.strictEqual(progress.saveCalls.at(-1).completed, false);
+});
+
+test('TASK 16 Block 3: Gap speichert den letzten gültigen Wortindex statt -1', async () => {
+  const fixture = createBlock2Context();
+  const progress = configureBlock3Progress(fixture, []);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  fixture.manifest.wortZeitmarken = [
+    { wortIndex: 7, start: 0, end: 1 },
+    { wortIndex: 8, start: 2, end: 3 }
+  ];
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  fixture.audio.currentTime = 0.5;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+  fixture.audio.currentTime = 1.5;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+
+  assert.strictEqual(progress.saveCalls.at(-1).wortIndex, 7);
+  assert.notStrictEqual(progress.saveCalls.at(-1).wortIndex, -1);
+});
+
+test('TASK 16 Block 3: Von vorne setzt 0, resynct sofort und löscht keinen Progress', async () => {
+  const fixture = createBlock2Context();
+  const progress = configureBlock3Progress(fixture, [
+    { nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte', firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 30, wortIndex: 2, completed: false }
+  ]);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  fixture.audio.currentTime = 2.5;
+  await fixture.document.getElementById('lerntextePilotRestartBtn').onclick();
+
+  assert.strictEqual(fixture.audio.currentTime, 0);
+  assert.strictEqual(progress.saveCalls.length, 0);
+});
+
+test('TASK 16 Block 3: natürlicher Abschluss speichert vor Playlist-Weiterschaltung', async () => {
+  const fixture = createBlock2Context();
+  let resolveSave;
+  let saveStarted = false;
+  let legacyLoadStarted = false;
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => ({ data: [] });
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = state => {
+    saveStarted = state.completed === true;
+    return new Promise(resolve => { resolveSave = resolve; });
+  };
+  fixture.eventWindow.lerntexteAudioDependencies = {
+    loadUrl: async () => {
+      legacyLoadStarted = true;
+      return 'https://example.test/legacy.mp3';
+    }
+  };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([
+    block2PlaylistItem(),
+    block2PlaylistItem({ fach: 'Recht', titel: 'Vertragsarten', lerntext: 'Legacy Text' })
+  ], 0);
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  await Promise.resolve();
+
+  assert.strictEqual(saveStarted, true);
+  assert.strictEqual(legacyLoadStarted, false);
+  resolveSave({ success: true });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.strictEqual(legacyLoadStarted, true);
+});
+
+test('TASK 16 Block 2 Coverage: Nicht-Pilot erhält keine Karaoke-Listener', async () => {
+  const { context, document, eventWindow, root, audio } = createBlock2Context();
+  context.SpeechSynthesisUtterance = function () {};
+  context.window.lerntexteAudioDependencies = {
+    loadUrl: async () => { throw Object.assign(new Error('missing'), { code: 'storage/object-not-found' }); }
+  };
+  const legacy = { fach: 'Recht', titel: 'Vertragsarten', lerntext: 'Legacy Text' };
+  context.window.__renderEntries([legacy], 'Recht');
+
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(legacy)], 0);
+
+  assert.strictEqual(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length, 0);
+  assert.strictEqual((audio.listeners.timeupdate || new Set()).size, 0);
+  assert.strictEqual((audio.listeners.seeked || new Set()).size, 0);
+  assert.strictEqual((document.listeners.visibilitychange || new Set()).size, 0);
+  assert.strictEqual((eventWindow.listeners.pageshow || new Set()).size, 0);
+});
+
+test('TASK 16 Block 2 Coverage: Mixed Playlist räumt Pilot vor Legacy auf', async () => {
+  const { context, document, eventWindow, root, audio } = createBlock2Context();
+  context.SpeechSynthesisUtterance = function () {};
+  context.window.lerntexteAudioDependencies = {
+    loadUrl: async () => { throw Object.assign(new Error('missing'), { code: 'storage/object-not-found' }); }
+  };
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  audio.dispatchEvent({ type: 'ended' });
+
+  const legacy = { fach: 'Recht', titel: 'Vertragsarten', lerntext: 'Legacy Text' };
+  context.window.__renderEntries([legacy], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(legacy)], 0);
+
+  assert.strictEqual(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length, 0);
+  assert.strictEqual(audio.listeners.timeupdate.size, 0);
+  assert.strictEqual(audio.listeners.seeked.size, 0);
+  assert.strictEqual((document.listeners.visibilitychange || new Set()).size, 0);
+  assert.strictEqual((eventWindow.listeners.pageshow || new Set()).size, 0);
+});
+
+test('TASK 16 Block 3 Coverage: Pilot bleibt ohne Auth sicher nutzbar', async () => {
+  const fixture = createBlock2Context();
+  let loadCalls = 0;
+  let saveCalls = 0;
+  fixture.eventWindow.aktuellerNutzer = null;
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => { loadCalls += 1; return { data: [] }; };
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = async () => { saveCalls += 1; };
+  fixture.eventWindow.__renderEntries([block2PilotEntry()], 'Recht');
+
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  assert.strictEqual(loadCalls, 0);
+  assert.strictEqual(saveCalls, 0);
+  assert.strictEqual(fixture.audio.currentTime, 0);
+});
+
+test('TASK 16 Block 3 Coverage: Hash-Mismatch lädt keinen Progress', async () => {
+  const fixture = createBlock2Context();
+  let loadCalls = 0;
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => { loadCalls += 1; return { data: [] }; };
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = async () => {};
+  fixture.eventWindow.lerntexteAudioVersionIstSynchron = () => false;
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  assert.strictEqual(loadCalls, 0);
+  assert.strictEqual(fixture.audio.src, '');
+});
+
+test('TASK 16 Block 3 Coverage: alter Hash wird weder gelöscht noch überschrieben', async () => {
+  const fixture = createBlock2Context();
+  const progress = configureBlock3Progress(fixture, [{
+    nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte',
+    firebasePfad: fixture.manifest.mp3Path, lerntextHash: 'old-hash', sekundenPosition: 30, wortIndex: 2, completed: false
+  }]);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+
+  assert.strictEqual(fixture.audio.currentTime, 0);
+  assert.strictEqual(progress.saveCalls.length, 0);
+});
+
+test('TASK 16 Block 3 Coverage: Fortsetzen resynct Karaoke sofort ohne Event', async () => {
+  const fixture = createBlock2Context();
+  configureBlock3Progress(fixture, [{
+    nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte',
+    firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 2.5, wortIndex: 2, completed: false
+  }]);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+
+  assert.strictEqual(fixture.audio.currentTime, 2.5);
+  assert.strictEqual(fixture.root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+});
+
+test('TASK 16 Block 3 Coverage: completed Resume überspringt Pilot zur nächsten Einheit', async () => {
+  const fixture = createBlock2Context();
+  let playCount = 0;
+  let legacyStarted = false;
+  configureBlock3Progress(fixture, [{
+    nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte',
+    firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 30, wortIndex: 2, completed: true
+  }]);
+  fixture.eventWindow.lerntexteAudioDependencies = {
+    loadUrl: async () => { legacyStarted = true; return 'https://example.test/legacy.mp3'; }
+  };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  fixture.audio.play = () => { playCount += 1; return Promise.resolve(); };
+  const legacy = { fach: 'Recht', titel: 'Vertragsarten', lerntext: 'Legacy Text' };
+
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(), block2PlaylistItem(legacy)], 0);
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+
+  assert.strictEqual(legacyStarted, true);
+  assert.strictEqual(playCount, 2);
+  assert.strictEqual(fixture.audio.currentTime, 0);
+});
+
+test('TASK 16 Block 3 Coverage: completed Resume ohne nächste Einheit zeigt Status', async () => {
+  const fixture = createBlock2Context();
+  configureBlock3Progress(fixture, [{
+    nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte',
+    firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 30, wortIndex: 2, completed: true
+  }]);
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+
+  assert.match(fixture.status.textContent, /abgeschlossen|Von vorne/i);
+  assert.strictEqual(fixture.audio.currentTime, 0);
+});
+
+test('TASK 16 Block 3 Coverage: Save-Fehler bei Pause bleibt sicher', async () => {
+  const fixture = createBlock2Context();
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => ({ data: [] });
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = async () => { throw new Error('save failed'); };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  fixture.audio.currentTime = 12.5;
+
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+
+  assert.strictEqual(fixture.audio.currentTime, 12.5);
+  assert.strictEqual(fixture.context.window.speechSynthesis.speakCalled, undefined);
+  assert.match(fixture.status.textContent, /Fortschritt|save/i);
+});
+
+test('TASK 16 Block 3 Coverage: Save-Fehler bei Stop bleibt sicher', async () => {
+  const fixture = createBlock2Context();
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => ({ data: [] });
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = async () => { throw new Error('save failed'); };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  fixture.audio.currentTime = 15;
+
+  fixture.document.getElementById('lerntexteAudioStopBtn').onclick();
+  await new Promise(resolve => setImmediate(resolve));
+
+  assert.strictEqual(fixture.audio.currentTime, 15);
+  assert.strictEqual(fixture.context.window.speechSynthesis.speakCalled, undefined);
+  assert.match(fixture.status.textContent, /Fortschritt|save/i);
+});
+
+test('TASK 16 Block 3 Coverage: Load-Fehler lässt Pilot normal von vorne laufen', async () => {
+  const fixture = createBlock2Context();
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => { throw new Error('load failed'); };
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = async () => {};
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  assert.strictEqual(fixture.audio.currentTime, 0);
+  assert.strictEqual(fixture.context.window.speechSynthesis.speakCalled, undefined);
+});
+
+test('TASK 16 Block 3 Coverage: Nicht-Pilot verwendet keine Progress-API', async () => {
+  const fixture = createBlock2Context();
+  let loadCalls = 0;
+  let saveCalls = 0;
+  fixture.context.SpeechSynthesisUtterance = function () {};
+  fixture.eventWindow.speechSynthesis.pause = () => {};
+  fixture.eventWindow.speechSynthesis.resume = () => {};
+  fixture.eventWindow.speechSynthesis.cancel = () => {};
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => { loadCalls += 1; return { data: [] }; };
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = async () => { saveCalls += 1; };
+  fixture.eventWindow.lerntexteAudioDependencies = {
+    loadUrl: async () => { throw Object.assign(new Error('missing'), { code: 'storage/object-not-found' }); }
+  };
+  const legacy = { fach: 'Recht', titel: 'Vertragsarten', lerntext: 'Legacy Text' };
+  fixture.context.window.__renderEntries([legacy], 'Recht');
+
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(legacy)], 0);
+  await fixture.context.lerntexteAudioPausieren();
+  fixture.context.lerntexteAudioStoppen();
+
+  assert.strictEqual(loadCalls, 0);
+  assert.strictEqual(saveCalls, 0);
+});
 
 const hash = '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08';
 
@@ -978,6 +1753,474 @@ test('Pilot Playback: Natürliches Ende erhält Basisfelder', async () => {
   assert.strictEqual(savedState.lerntextHash, 'abc123', 'lerntextHash erhalten');
 });
 
+// ============================================================
+// TASK 16 phase A pilot integration tests
+// ============================================================
+
+const { createHash } = require('node:crypto');
+
+function readBrowserScriptOrder() {
+  const source = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
+  return [...source.matchAll(/<script\s+src="([^"]+)"/g)].map(match => match[1].split('?')[0]);
+}
+
+function createBrowserPilotContext({ manifest, metadata, digestBytes, validator } = {}) {
+  const source = [
+    '../js/podcast-time-to-word.js',
+    '../js/podcast-visibility-sync.js',
+    '../js/lerntexte.js'
+  ].map(file => fs.readFileSync(path.join(__dirname, file), 'utf8')).join('\n');
+  const calls = [];
+  const status = { textContent: '' };
+  const audio = {
+    currentTime: 0,
+    src: '',
+    listeners: {},
+    addEventListener(type, listener) {
+      (this.listeners[type] ||= new Set()).add(listener);
+    },
+    removeEventListener(type, listener) {
+      if (this.listeners[type]) this.listeners[type].delete(listener);
+    },
+    dispatchEvent(event) {
+      for (const listener of this.listeners[event.type] || []) listener(event);
+    },
+    load() {},
+    play() {
+      calls.push('play');
+      return Promise.resolve();
+    }
+  };
+  const fakeDigestBytes = digestBytes || Uint8Array.from({ length: 32 }, (_, index) => index);
+  const listeners = {};
+  const addListener = (type, listener) => (listeners[type] ||= new Set()).add(listener);
+  const removeListener = (type, listener) => listeners[type] && listeners[type].delete(listener);
+  const context = {
+    Promise,
+    TextEncoder,
+    Uint8Array,
+    ArrayBuffer,
+    isFinite,
+    navigator: {},
+    document: {
+      addEventListener: addListener,
+      removeEventListener: removeListener,
+      getElementById(id) {
+        if (id === 'lerntexteAudioPlayer') return audio;
+        if (id === 'lerntexteAudioStatus') return status;
+        return null;
+      }
+    },
+    window: {
+      addEventListener: addListener,
+      removeEventListener: removeListener,
+      crypto: {
+        subtle: {
+          async digest() {
+            calls.push('digest');
+            return fakeDigestBytes.buffer;
+          }
+        }
+      },
+      lerntextePilotDependencies: {
+        loadManifest: async () => { calls.push('manifest'); return manifest; },
+        loadMetadata: async () => { calls.push('metadata'); return metadata; },
+        loadMp3Url: async () => { calls.push('mp3-url'); return 'https://example.test/pilot.mp3'; }
+      },
+      lerntexteAudioVersionIstSynchron: validator || ((currentHash, jsonHash, mp3Hash) => {
+        calls.push('hash');
+        return currentHash === jsonHash && jsonHash === mp3Hash;
+      }),
+      speechSynthesis: { speak() { calls.push('speech'); } }
+    }
+  };
+
+  vm.runInNewContext(source, context);
+  return { context, calls, status, audio };
+}
+
+function browserPilotEntry() {
+  return {
+    fach: 'Recht',
+    titel: 'Rechtssubjekte und Rechtsobjekte',
+    lerntext: 'abc'
+  };
+}
+
+function browserPilotManifest(hash, overrides = {}) {
+  return Object.assign({
+    lerntextHash: hash,
+    mp3Path: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3',
+    jsonPath: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.json',
+    wortZeitmarken: []
+  }, overrides);
+}
+
+test('Pilot Integration: exakter Fach/Titel match für Recht – Rechtssubjekte und Rechtsobjekte', () => {
+  const { lerntexteIstPilotEinheit } = require('../js/lerntexte.js');
+
+  assert.strictEqual(lerntexteIstPilotEinheit('Recht', 'Rechtssubjekte und Rechtsobjekte'), true);
+  assert.strictEqual(lerntexteIstPilotEinheit('Recht', 'Rechtsobjekte'), false);
+  assert.strictEqual(lerntexteIstPilotEinheit('Steuern', 'Rechtssubjekte und Rechtsobjekte'), false);
+  assert.strictEqual(lerntexteIstPilotEinheit('Recht', 'Rechtssubjekte und Rechtsobjekte '), false);
+});
+
+test('Pilot Integration: SHA-256 basiert nur auf rohem lerntext und ignoriert podcastText', async () => {
+  const { lerntextePilotHash } = require('../js/lerntexte.js');
+  const plain = 'Rechtssubjekte sind Träger von Rechten und Pflichten.';
+  const expected = createHash('sha256').update(plain, 'utf8').digest('hex');
+
+  assert.strictEqual(await lerntextePilotHash(plain), expected);
+  assert.strictEqual(await lerntextePilotHash(plain, 'anderer podcastText'), expected);
+  assert.notStrictEqual(await lerntextePilotHash(plain, 'anderer podcastText'), createHash('sha256').update('anderer podcastText', 'utf8').digest('hex'));
+});
+
+test('Pilot Integration: Browser-WebCrypto liefert für abc den bekannten SHA-256-String', async () => {
+  const expected = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad';
+  const digestBytes = Uint8Array.from(expected.match(/../g), byte => parseInt(byte, 16));
+  const { context } = createBrowserPilotContext({ digestBytes });
+
+  const result = await context.window.lerntextePilotHash('abc');
+
+  assert.equal(typeof result, 'string');
+  assert.match(result, /^[0-9a-f]{64}$/);
+  assert.strictEqual(result, expected);
+});
+
+test('Pilot Integration: Helper-Scripts vor lerntexte.js geladen', () => {
+  const order = readBrowserScriptOrder();
+  const indexLerntexte = order.indexOf('js/lerntexte.js');
+  assert.notStrictEqual(indexLerntexte, -1, 'lerntexte.js vorhanden');
+  assert.ok(indexLerntexte > order.indexOf('js/podcast-hash-validate.js'), 'hash-helper vor lerntexte.js');
+  assert.ok(indexLerntexte > order.indexOf('js/podcast-dom-tokenize.js'), 'tokenizer-helper vor lerntexte.js');
+  assert.ok(indexLerntexte > order.indexOf('js/podcast-time-to-word.js'), 'time-to-word-helper vor lerntexte.js');
+  assert.ok(indexLerntexte > order.indexOf('js/podcast-visibility-sync.js'), 'visibility-helper vor lerntexte.js');
+});
+
+test('Pilot Integration: realer Playlist-Flow lädt Assets und gated play über Triple-Hash', async () => {
+  const { lerntexteAudioPlaylistWeiter } = require('../js/lerntexte.js');
+  assert.equal(typeof lerntexteAudioPlaylistWeiter, 'function', 'realer Playlist-Einstieg muss testbar sein');
+
+  const originalDocument = global.document;
+  const originalWindow = global.window;
+  const originalSpeechSynth = global.speechSynthesis;
+  const calls = [];
+  const audio = {
+    currentTime: 0,
+    duration: 120,
+    listeners: {},
+    addEventListener(type, listener) {
+      (this.listeners[type] ||= new Set()).add(listener);
+    },
+    removeEventListener(type, listener) {
+      if (this.listeners[type]) this.listeners[type].delete(listener);
+    },
+    play() {
+      calls.push('play');
+      return Promise.resolve();
+    },
+    load() {}
+  };
+  const status = { textContent: '' };
+  const currentHash = createHash('sha256').update('Pilot lerntext', 'utf8').digest('hex');
+  const manifest = {
+    lerntextHash: currentHash,
+    mp3Path: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3',
+    jsonPath: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.json',
+    wortZeitmarken: []
+  };
+
+  global.window = {
+    lerntextePilotDependencies: {
+      loadManifest() {
+        calls.push('manifest');
+        return Promise.resolve(manifest);
+      },
+      loadMetadata() {
+        calls.push('metadata');
+        return Promise.resolve({ customMetadata: { lerntextHash: currentHash } });
+      },
+      loadMp3Url() {
+        calls.push('mp3-url');
+        return Promise.resolve('https://example.test/pilot.mp3');
+      }
+    },
+    lerntexteAudioVersionIstSynchron(currentHash, jsonHash, mp3Hash) {
+      calls.push('hash');
+      return currentHash === jsonHash && jsonHash === mp3Hash;
+    },
+    speechSynthesis: { speak() { calls.push('speech'); } }
+  };
+  global.document = {
+    getElementById(id) {
+      if (id === 'lerntexteAudioPlayer') return audio;
+      if (id === 'lerntexteAudioStatus') return status;
+      return null;
+    }
+  };
+  global.speechSynthesis = global.window.speechSynthesis;
+
+  try {
+    await lerntexteAudioPlaylistWeiter([{
+      eintrag: {
+        fach: 'Recht',
+        titel: 'Rechtssubjekte und Rechtsobjekte',
+        lerntext: 'Pilot lerntext'
+      },
+      titel: 'Rechtssubjekte und Rechtsobjekte',
+      text: 'Pilot lerntext'
+    }], 0);
+
+    assert.deepStrictEqual(calls.slice(0, 5), ['manifest', 'metadata', 'mp3-url', 'hash', 'play'], status.textContent);
+    assert.strictEqual(audio.src, 'https://example.test/pilot.mp3');
+    assert.strictEqual(calls.includes('speech'), false);
+  } finally {
+    global.document = originalDocument;
+    global.window = originalWindow;
+    global.speechSynthesis = originalSpeechSynth;
+  }
+});
+
+test('Pilot Integration: realer Playlist-Flow blockiert bei Hash-Mismatch play und speech', async () => {
+  const { lerntexteAudioPlaylistWeiter } = require('../js/lerntexte.js');
+  const originalDocument = global.document;
+  const originalWindow = global.window;
+  const originalSpeechSynth = global.speechSynthesis;
+  let playCalled = false;
+  let speechCalled = false;
+  const status = { textContent: '' };
+  const audio = { load() {}, play() { playCalled = true; return Promise.resolve(); } };
+  const manifest = {
+    lerntextHash: 'manifest-hash',
+    mp3Path: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3',
+    jsonPath: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.json',
+    wortZeitmarken: []
+  };
+
+  global.window = {
+    lerntextePilotDependencies: {
+      loadManifest: async () => manifest,
+      loadMetadata: async () => ({ customMetadata: { lerntextHash: 'different' } }),
+      loadMp3Url: async () => 'https://example.test/pilot.mp3'
+    },
+    lerntexteAudioVersionIstSynchron: () => false,
+    speechSynthesis: { speak() { speechCalled = true; } }
+  };
+  global.document = {
+    getElementById(id) {
+      if (id === 'lerntexteAudioPlayer') return audio;
+      if (id === 'lerntexteAudioStatus') return status;
+      return null;
+    }
+  };
+  global.speechSynthesis = global.window.speechSynthesis;
+
+  try {
+    await lerntexteAudioPlaylistWeiter([{
+      eintrag: { fach: 'Recht', titel: 'Rechtssubjekte und Rechtsobjekte', lerntext: 'Pilot lerntext' },
+      titel: 'Rechtssubjekte und Rechtsobjekte',
+      text: 'Pilot lerntext'
+    }], 0);
+
+    assert.strictEqual(playCalled, false);
+    assert.strictEqual(speechCalled, false);
+    assert.strictEqual(status.textContent, 'Podcast muss aktualisiert werden.');
+  } finally {
+    global.document = originalDocument;
+    global.window = originalWindow;
+    global.speechSynthesis = originalSpeechSynth;
+  }
+});
+
+test('Pilot Integration: realer Playlist-Flow blockiert bei Asset-Fehler speech', async () => {
+  const { lerntexteAudioPlaylistWeiter } = require('../js/lerntexte.js');
+  const originalDocument = global.document;
+  const originalWindow = global.window;
+  const originalSpeechSynth = global.speechSynthesis;
+  let playCalled = false;
+  let speechCalled = false;
+  const status = { textContent: '' };
+  const audio = { load() {}, play() { playCalled = true; return Promise.resolve(); } };
+  global.window = {
+    lerntextePilotDependencies: {
+      loadManifest: async () => { throw Object.assign(new Error('missing'), { code: 'storage/object-not-found' }); },
+      loadMetadata: async () => ({ customMetadata: { lerntextHash: 'unused' } }),
+      loadMp3Url: async () => 'https://example.test/pilot.mp3'
+    },
+    speechSynthesis: { speak() { speechCalled = true; } }
+  };
+  global.document = {
+    getElementById(id) {
+      if (id === 'lerntexteAudioPlayer') return audio;
+      if (id === 'lerntexteAudioStatus') return status;
+      return null;
+    }
+  };
+  global.speechSynthesis = global.window.speechSynthesis;
+
+  try {
+    await lerntexteAudioPlaylistWeiter([{
+      eintrag: { fach: 'Recht', titel: 'Rechtssubjekte und Rechtsobjekte', lerntext: 'Pilot lerntext' },
+      titel: 'Rechtssubjekte und Rechtsobjekte',
+      text: 'Pilot lerntext'
+    }], 0);
+
+    assert.strictEqual(playCalled, false);
+    assert.strictEqual(speechCalled, false);
+    assert.strictEqual(status.textContent, 'Podcast konnte nicht geladen werden.');
+  } finally {
+    global.document = originalDocument;
+    global.window = originalWindow;
+    global.speechSynthesis = originalSpeechSynth;
+  }
+});
+
+test('Pilot Integration: Nicht-Pilot behält Speech-Fallback bei object-not-found', async () => {
+  const { lerntexteAudioPlaylistWeiter } = require('../js/lerntexte.js');
+  const originalDocument = global.document;
+  const originalWindow = global.window;
+  const originalSpeechSynth = global.speechSynthesis;
+  const originalUtterance = global.SpeechSynthesisUtterance;
+  let speechCalled = false;
+  const audio = { load() {}, play() { throw new Error('Audio darf im Fallback nicht spielen'); } };
+  global.window = {
+    lerntexteAudioDependencies: {
+      loadUrl: async () => { throw Object.assign(new Error('missing'), { code: 'storage/object-not-found' }); }
+    },
+    speechSynthesis: { speak() { speechCalled = true; } }
+  };
+  global.SpeechSynthesisUtterance = function () {};
+  global.document = {
+    getElementById(id) {
+      if (id === 'lerntexteAudioPlayer') return audio;
+      return null;
+    }
+  };
+  global.speechSynthesis = global.window.speechSynthesis;
+
+  try {
+    await lerntexteAudioPlaylistWeiter([{
+      eintrag: { fach: 'Recht', titel: 'Andere Rechtseinheit', lerntext: 'Legacy lerntext' },
+      titel: 'Andere Rechtseinheit',
+      text: 'Legacy lerntext'
+    }], 0);
+
+    assert.strictEqual(speechCalled, true);
+  } finally {
+    global.document = originalDocument;
+    global.window = originalWindow;
+    global.speechSynthesis = originalSpeechSynth;
+    global.SpeechSynthesisUtterance = originalUtterance;
+  }
+});
+
+test('Pilot Integration: Triple-Hash-Mismatch blockiert play und speech', async () => {
+  const { lerntextePilotAudioStarten } = require('../js/lerntexte.js');
+  const originalDocument = global.document;
+  const originalWindow = global.window;
+  const originalSpeechSynth = global.speechSynthesis;
+  let playCalled = false;
+  let speechCalled = false;
+
+  const audio = {
+    currentTime: 12,
+    src: '',
+    play() {
+      playCalled = true;
+      return Promise.resolve();
+    }
+  };
+
+  global.window = { speechSynthesis: { speak() { speechCalled = true; } } };
+  global.document = {
+    getElementById(id) {
+      if (id === 'lerntexteAudioPlayer') return audio;
+      return null;
+    }
+  };
+  global.speechSynthesis = global.window.speechSynthesis;
+
+  try {
+    await lerntextePilotAudioStarten({
+      fach: 'Recht',
+      titel: 'Rechtssubjekte und Rechtsobjekte',
+      lerntext: 'Rechtssubjekte sind Träger von Rechten und Pflichten.',
+      firebasePfad: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3'
+    }, {
+      lerntextHash: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      mp3Path: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3',
+      jsonPath: 'podcast/recht-rechtssubjekte-und-rechtsobjekte.json',
+      wortZeitmarken: [{ wortIndex: 0, start: 0, end: 1 }]
+    }, {
+      customMetadata: { lerntextHash: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' }
+    }, { currentTime: 12 });
+
+    assert.strictEqual(playCalled, false, 'play() darf bei Hash-Mismatch nicht aufgerufen werden');
+    assert.strictEqual(speechCalled, false, 'speechSynthesis.speak() darf bei Pilot-Fehler nicht aufgerufen werden');
+  } finally {
+    global.document = originalDocument;
+    global.window = originalWindow;
+    global.speechSynthesis = originalSpeechSynth;
+  }
+});
+
+test('Pilot Integration: Pilot-Asset-Fehler blockiert speechSynthesis', async () => {
+  const { lerntextePilotAudioStarten } = require('../js/lerntexte.js');
+  const originalDocument = global.document;
+  const originalWindow = global.window;
+  const originalSpeechSynth = global.speechSynthesis;
+  let speechCalled = false;
+  let statusText = '';
+
+  const audio = {
+    currentTime: 5,
+    src: '',
+    listeners: {},
+    addEventListener(type, listener) {
+      (this.listeners[type] ||= new Set()).add(listener);
+    },
+    removeEventListener(type, listener) {
+      if (this.listeners[type]) this.listeners[type].delete(listener);
+    },
+    listeners: {},
+    addEventListener(type, listener) {
+      (this.listeners[type] ||= new Set()).add(listener);
+    },
+    removeEventListener(type, listener) {
+      if (this.listeners[type]) this.listeners[type].delete(listener);
+    },
+    dispatchEvent(event) {
+      for (const listener of this.listeners[event.type] || []) listener(event);
+    },
+    play() { return Promise.resolve(); }
+  };
+
+  global.window = { speechSynthesis: { speak() { speechCalled = true; } } };
+  global.document = {
+    getElementById(id) {
+      if (id === 'lerntexteAudioPlayer') return audio;
+      if (id === 'lerntexteAudioStatus') return { textContent: '' };
+      return null;
+    }
+  };
+  global.speechSynthesis = global.window.speechSynthesis;
+
+  try {
+    await lerntextePilotAudioStarten({
+      fach: 'Recht',
+      titel: 'Rechtssubjekte und Rechtsobjekte',
+      lerntext: 'Rechtssubjekte sind Träger von Rechten und Pflichten.'
+    }, null, null, { currentTime: 5 });
+
+    assert.strictEqual(speechCalled, false, 'speechSynthesis.speak() darf bei Asset-Fehler nicht aufgerufen werden');
+    assert.ok(global.document.getElementById('lerntexteAudioStatus') !== null, 'Status-Element muss existieren');
+  } finally {
+    global.document = originalDocument;
+    global.window = originalWindow;
+    global.speechSynthesis = originalSpeechSynth;
+  }
+});
+
 // Test 24: Natürliches Ende mutiert Basisstate nicht
 test('Pilot Playback: Natürliches Ende mutiert Basisstate nicht', () => {
   const mockAudio = {
@@ -1382,4 +2625,113 @@ test('TASK 15: CommonJS und Browser Export vorhanden', () => {
   const source = fs.readFileSync(path.join(__dirname, '../js/podcast-visibility-sync.js'), 'utf8');
   vm.runInNewContext(source, context);
   assert.equal(typeof context.window.setupVisibilitySyncHandlers, 'function', 'Browser-Export vorhanden');
+});
+
+test('Pilot Integration: Browser-WebCrypto validiert den realen Playlist-Flow vor play', async () => {
+  const expected = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad';
+  const digestBytes = Uint8Array.from(expected.match(/../g), byte => parseInt(byte, 16));
+  const { context, calls, audio } = createBrowserPilotContext({
+    digestBytes,
+    manifest: browserPilotManifest(expected),
+    metadata: { customMetadata: { lerntextHash: expected } },
+    validator(currentHash, jsonHash, mp3Hash) {
+      calls.push('hash');
+      assert.equal(typeof currentHash, 'string');
+      return currentHash === jsonHash && jsonHash === mp3Hash;
+    }
+  });
+
+  await context.window.lerntexteAudioPlaylistWeiter([{
+    eintrag: browserPilotEntry(),
+    titel: browserPilotEntry().titel,
+    text: 'abc'
+  }], 0);
+
+  assert.deepStrictEqual(calls, ['manifest', 'metadata', 'mp3-url', 'digest', 'hash', 'play']);
+  assert.strictEqual(audio.src, 'https://example.test/pilot.mp3');
+  assert.strictEqual(calls.includes('speech'), false);
+});
+
+for (const [name, overrides] of [
+  ['falschem MP3-Pfad', { mp3Path: 'podcast/anderes.mp3' }],
+  ['fehlenden Wortzeitmarken', { wortZeitmarken: undefined }],
+  ['fehlendem Metadata-Hash', null]
+]) {
+  test(`Pilot Integration: Browser-Schemafehler ${name} blockiert play und speech`, async () => {
+    const expected = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad';
+    const digestBytes = Uint8Array.from(expected.match(/../g), byte => parseInt(byte, 16));
+    const { context, calls, status, audio } = createBrowserPilotContext({
+      digestBytes,
+      manifest: browserPilotManifest(expected, overrides || {}),
+      metadata: overrides === null ? {} : { customMetadata: { lerntextHash: expected } }
+    });
+
+    await context.window.lerntexteAudioPlaylistWeiter([{
+      eintrag: browserPilotEntry(),
+      titel: browserPilotEntry().titel,
+      text: 'abc'
+    }], 0);
+
+    assert.strictEqual(calls.includes('play'), false);
+    assert.strictEqual(calls.includes('speech'), false);
+    assert.ok(status.textContent.length > 0);
+    assert.strictEqual(audio.src, '');
+  });
+}
+
+test('Pilot Integration: öffentliche Audio-API ignoriert ungeprüften validationOverride', async () => {
+  const { lerntextePilotAudioStarten } = require('../js/lerntexte.js');
+  const originalDocument = global.document;
+  const originalWindow = global.window;
+  let playCalled = false;
+  const audio = {
+    play() {
+      playCalled = true;
+      return Promise.resolve();
+    }
+  };
+
+  global.window = { speechSynthesis: { speak() {} } };
+  global.document = {
+    getElementById(id) {
+      if (id === 'lerntexteAudioPlayer') return audio;
+      return null;
+    }
+  };
+
+  try {
+    await lerntextePilotAudioStarten(
+      browserPilotEntry(),
+      browserPilotManifest('manifest-hash'),
+      { customMetadata: { lerntextHash: 'metadata-hash' } },
+      null,
+      { valid: true, currentHash: 'gefälscht' }
+    );
+
+    assert.strictEqual(playCalled, false);
+  } finally {
+    global.document = originalDocument;
+    global.window = originalWindow;
+  }
+});
+
+test('Pilot Integration: realer Playlist-Flow blockiert falschen Manifest-jsonPath', async () => {
+  const expected = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad';
+  const digestBytes = Uint8Array.from(expected.match(/../g), byte => parseInt(byte, 16));
+  const { context, calls, status, audio } = createBrowserPilotContext({
+    digestBytes,
+    manifest: browserPilotManifest(expected, { jsonPath: 'podcast/falsch.json' }),
+    metadata: { customMetadata: { lerntextHash: expected } }
+  });
+
+  await context.window.lerntexteAudioPlaylistWeiter([{
+    eintrag: browserPilotEntry(),
+    titel: browserPilotEntry().titel,
+    text: 'abc'
+  }], 0);
+
+  assert.strictEqual(calls.includes('play'), false);
+  assert.strictEqual(calls.includes('speech'), false);
+  assert.ok(status.textContent.length > 0);
+  assert.strictEqual(audio.src, '');
 });

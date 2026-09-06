@@ -611,6 +611,8 @@
             <button class="action-btn" id="lerntexteAudioPlayBtn" type="button" onclick="lerntexteAudioAbspielen()">▶ Anhören</button>
             <button class="secondary-btn" id="lerntexteAudioPauseBtn" type="button" onclick="lerntexteAudioPausieren()" disabled>⏸ Pause</button>
             <button class="secondary-btn" id="lerntexteAudioStopBtn" type="button" onclick="lerntexteAudioStoppen()" disabled>⏹ Stop</button>
+            <button class="secondary-btn" id="lerntextePilotResumeBtn" type="button" hidden>Fortsetzen</button>
+            <button class="secondary-btn" id="lerntextePilotRestartBtn" type="button" hidden>Von vorne abspielen</button>
           </div>
 
           <audio id="lerntexteAudioPlayer" preload="metadata" src="https://beckersabine082-art.github.io/wifa-trainer-gruen/audio/podcast/recht-rechtssubjekte-rechtsobjekte.mp3"></audio>
@@ -1531,6 +1533,10 @@
 <script src="js/bewertung.js?v=bewertung-diagramm-v3"></script>
 <script type="module" src="js/lernstand.js?v=lernstand-history-fix-v2"></script>
 <script src="js/wissensdatenbank.js?v=kilian-block-v2"></script>
+<script src="js/podcast-hash-validate.js?v=pilot-hash-v1"></script>
+<script src="js/podcast-dom-tokenize.js?v=pilot-tokenize-v1"></script>
+<script src="js/podcast-time-to-word.js?v=pilot-time-word-v1"></script>
+<script src="js/podcast-visibility-sync.js?v=pilot-visibility-v1"></script>
 <script src="js/lerntexte.js?v=lerntexte-v13"></script>
 <script src="js/pruefungssimulation.js?v=lernstand-pruefung-v3"></script>
 <script type="module" src="js/pruefungslernstand.js?v=lernstand-pruefung-v1"></script>

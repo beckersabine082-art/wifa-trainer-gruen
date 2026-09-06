@@ -38,7 +38,527 @@ let lerntexteAudioTestKapitelAktiv = false;
 let lerntexteAudioPlaylist = [];
 let lerntexteAudioPlaylistIndex = 0;
 let lerntexteAudioQuelle = "";
+let lerntextePilotTextRoot = null;
+let lerntextePilotManifestState = null;
+let lerntextePilotAudio = null;
+let lerntextePilotKaraokeCleanup = null;
+let lerntextePilotUid = null;
+let lerntextePilotCurrentHash = "";
+let lerntextePilotEntry = null;
+let lerntextePilotResumeState = null;
+let lerntextePilotCompletedState = null;
+let lerntextePilotLastValidWordIndex = 0;
 const lerntexteAudioTestStatischeQuelle = "https://beckersabine082-art.github.io/wifa-trainer-gruen/audio/podcast/recht-rechtssubjekte-rechtsobjekte.mp3";
+
+const PILOT_FACH = "Recht";
+const PILOT_TITEL = "Rechtssubjekte und Rechtsobjekte";
+const PILOT_MP3_PATH = "podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3";
+const PILOT_JSON_PATH = "podcast/recht-rechtssubjekte-und-rechtsobjekte.json";
+
+function lerntexteIstPilotEinheit(fach, titel) {
+  return String(fach || "") === PILOT_FACH && String(titel || "") === PILOT_TITEL;
+}
+
+function lerntextePilotTextFuerEintrag(eintrag) {
+  if (!eintrag) return "";
+  const lerntext = eintrag && Object.prototype.hasOwnProperty.call(eintrag, 'lerntext') ? String(eintrag.lerntext || "") : "";
+  return lerntext;
+}
+
+async function lerntextePilotHash(text, podcastText) {
+  const source = String(text == null ? "" : text);
+
+  if (typeof require === 'function') {
+    try {
+      const crypto = require('node:crypto');
+      return crypto.createHash('sha256').update(source, 'utf8').digest('hex');
+    } catch (error) {
+      // Node fallback below.
+    }
+  }
+
+  const cryptoApi = (typeof window !== 'undefined' && window.crypto && window.crypto.subtle)
+    || (typeof crypto !== 'undefined' && crypto.subtle);
+
+  if (cryptoApi && typeof TextEncoder !== 'undefined') {
+    const encoder = new TextEncoder();
+    const buffer = await cryptoApi.digest('SHA-256', encoder.encode(source));
+    return Array.from(new Uint8Array(buffer)).map(function (byte) {
+      return byte.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  const fallback = source ? Array.from(source).reduce(function (hashValue, char) {
+    return ((hashValue * 31) + char.charCodeAt(0)) >>> 0;
+  }, 0).toString(16) : '0';
+
+  return fallback.length === 64 ? fallback : fallback;
+}
+
+async function lerntextePilotManifest() {
+  const currentHash = await lerntextePilotHash('');
+  return {
+    fach: PILOT_FACH,
+    titel: PILOT_TITEL,
+    mp3Path: PILOT_MP3_PATH,
+    jsonPath: PILOT_JSON_PATH,
+    lerntextHash: currentHash,
+    wortZeitmarken: []
+  };
+}
+
+function lerntextePilotStatus(text) {
+  if (typeof document === 'undefined' || !document.getElementById) return;
+  const statusNode = document.getElementById('lerntexteAudioStatus');
+  if (statusNode) {
+    statusNode.textContent = text;
+  }
+}
+
+async function lerntextePilotAssetsLaden() {
+  if (typeof window !== 'undefined' && window.lerntextePilotDependencies) {
+    const dependencies = window.lerntextePilotDependencies;
+    return {
+      manifest: await dependencies.loadManifest(PILOT_JSON_PATH),
+      mp3Metadata: await dependencies.loadMetadata(PILOT_MP3_PATH),
+      mp3Url: await dependencies.loadMp3Url(PILOT_MP3_PATH)
+    };
+  }
+
+  const firebase = await import('./firebase-config.js');
+  const storageRef = firebase.ref(firebase.storage, PILOT_MP3_PATH);
+  const jsonRef = firebase.ref(firebase.storage, PILOT_JSON_PATH);
+  const storageModule = await import('https://www.gstatic.com/firebasejs/12.17.1/firebase-storage.js');
+  const manifestUrl = await firebase.getDownloadURL(jsonRef);
+  const manifestResponse = await fetch(manifestUrl);
+  if (!manifestResponse.ok) {
+    throw new Error('Podcast-Manifest konnte nicht geladen werden.');
+  }
+
+  return {
+    manifest: await manifestResponse.json(),
+    mp3Metadata: await storageModule.getMetadata(storageRef),
+    mp3Url: await firebase.getDownloadURL(storageRef)
+  };
+}
+
+function lerntextePilotHashValidator() {
+  if (typeof window !== 'undefined' && typeof window.lerntexteAudioVersionIstSynchron === 'function') {
+    return window.lerntexteAudioVersionIstSynchron;
+  }
+
+  if (typeof require === 'function') {
+    try {
+      const validatorModule = require('./podcast-hash-validate.js');
+      if (validatorModule && typeof validatorModule.lerntexteAudioVersionIstSynchron === 'function') {
+        return validatorModule.lerntexteAudioVersionIstSynchron;
+      }
+    } catch (error) {
+      // Fallback below.
+    }
+  }
+
+  return function (currentHash, jsonHash, mp3Hash) {
+    const hashes = [currentHash, jsonHash, mp3Hash];
+    return hashes.every(function (hash) {
+      return typeof hash === 'string' && hash.length > 0 && /\S/.test(hash);
+    }) && currentHash === jsonHash && jsonHash === mp3Hash;
+  };
+}
+
+async function lerntextePilotAssetValidieren(eintrag, manifest, mp3Metadata) {
+  if (!eintrag || !lerntexteIstPilotEinheit(eintrag.fach, eintrag.titel)) {
+    return { valid: false, reason: 'Nicht-Pilot-Einheit' };
+  }
+
+  if (!manifest || typeof manifest !== 'object') {
+    return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
+  }
+
+  if (typeof manifest.lerntextHash !== 'string' || !manifest.lerntextHash.trim()) {
+    return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
+  }
+
+  if (typeof manifest.mp3Path !== 'string' || manifest.mp3Path !== PILOT_MP3_PATH) {
+    return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
+  }
+
+  if (typeof manifest.jsonPath !== 'string' || manifest.jsonPath !== PILOT_JSON_PATH) {
+    return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
+  }
+
+  if (!Array.isArray(manifest.wortZeitmarken)) {
+    return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
+  }
+
+  const currentHash = await lerntextePilotHash(lerntextePilotTextFuerEintrag(eintrag));
+  if (!mp3Metadata || !mp3Metadata.customMetadata || typeof mp3Metadata.customMetadata.lerntextHash !== 'string') {
+    return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
+  }
+
+  const hashValidator = lerntextePilotHashValidator();
+  if (!hashValidator(currentHash, manifest.lerntextHash, mp3Metadata.customMetadata.lerntextHash)) {
+    return { valid: false, reason: 'Podcast muss aktualisiert werden.' };
+  }
+
+  return { valid: true, reason: '', currentHash: currentHash };
+}
+
+async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadata, resumeState, validation) {
+  if (!validation.valid) {
+    lerntextePilotStatus(validation.reason || 'Podcast muss aktualisiert werden.');
+    return false;
+  }
+
+  const audioElement = typeof document !== 'undefined' && document.getElementById ? document.getElementById('lerntexteAudioPlayer') : null;
+  if (!audioElement) {
+    lerntextePilotStatus('Podcast muss aktualisiert werden.');
+    return false;
+  }
+
+  if (resumeState && resumeState.lerntextHash === validation.currentHash && resumeState.completed !== true) {
+    const candidate = Number(resumeState.sekundenPosition);
+    if (typeof candidate === 'number' && isFinite(candidate) && candidate >= 0) {
+      audioElement.currentTime = candidate;
+    }
+  }
+
+  lerntextePilotEntry = eintrag;
+  lerntextePilotCurrentHash = validation.currentHash;
+  await lerntextePilotProgressLaden(eintrag, validation.currentHash);
+  lerntextePilotLastValidWordIndex = 0;
+  lerntexteAudioAktiv = true;
+  lerntexteAudioPausiert = false;
+  lerntexteAudioQuelle = 'firebase';
+  lerntextePilotKaraokeEinrichten(audioElement, manifest, lerntextePilotTextRoot);
+  lerntextePilotButtonsVerdrahten();
+
+  if (typeof audioElement.play === 'function') {
+    try {
+      await audioElement.play();
+      return true;
+    } catch (error) {
+      lerntextePilotStatus('Podcast konnte nicht gestartet werden.');
+      return false;
+    }
+  }
+
+  return true;
+}
+
+async function lerntextePilotAudioStarten(eintrag, manifest, mp3Metadata, resumeState) {
+  const validation = await lerntextePilotAssetValidieren(eintrag, manifest, mp3Metadata);
+  return lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadata, resumeState, validation);
+}
+
+function lerntextePilotKaraokeAufraeumen() {
+  if (typeof lerntextePilotKaraokeCleanup === 'function') {
+    lerntextePilotKaraokeCleanup();
+  }
+
+  lerntextePilotKaraokeCleanup = null;
+  lerntextePilotTextRoot = null;
+  lerntextePilotManifestState = null;
+  lerntextePilotAudio = null;
+  lerntextePilotUid = null;
+  lerntextePilotCurrentHash = "";
+  lerntextePilotEntry = null;
+  lerntextePilotResumeState = null;
+  lerntextePilotCompletedState = null;
+  lerntextePilotLastValidWordIndex = 0;
+  const resumeButton = lerntexteElement('lerntextePilotResumeBtn');
+  const restartButton = lerntexteElement('lerntextePilotRestartBtn');
+  if (resumeButton) {
+    resumeButton.hidden = true;
+    resumeButton.onclick = null;
+  }
+  if (restartButton) {
+    restartButton.hidden = true;
+    restartButton.onclick = null;
+  }
+}
+
+async function lerntextePilotNatürlichBeenden() {
+  if (!lerntextePilotUid) {
+    lerntextePilotKaraokeAufraeumen();
+    lerntexteAudioAktiv = false;
+    return;
+  }
+
+  const saved = await lerntextePilotProgressSpeichern(true);
+  if (!saved) {
+    lerntextePilotKaraokeAufraeumen();
+    lerntexteAudioAktiv = false;
+    return;
+  }
+
+  lerntextePilotKaraokeAufraeumen();
+  lerntexteAudioAktiv = false;
+  lerntexteAudioPausiert = false;
+  lerntexteAudioPlaylistIndex += 1;
+  await lerntexteAudioPlaylistWeiter();
+}
+
+function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot) {
+  const progressSnapshot = {
+    uid: lerntextePilotUid,
+    currentHash: lerntextePilotCurrentHash,
+    entry: lerntextePilotEntry,
+    resumeState: lerntextePilotResumeState,
+    completedState: lerntextePilotCompletedState,
+    lastValidWordIndex: lerntextePilotLastValidWordIndex
+  };
+  lerntextePilotKaraokeAufraeumen();
+  lerntextePilotUid = progressSnapshot.uid;
+  lerntextePilotCurrentHash = progressSnapshot.currentHash;
+  lerntextePilotEntry = progressSnapshot.entry;
+  lerntextePilotResumeState = progressSnapshot.resumeState;
+  lerntextePilotCompletedState = progressSnapshot.completedState;
+  lerntextePilotLastValidWordIndex = progressSnapshot.lastValidWordIndex;
+  lerntextePilotAudio = audio;
+  lerntextePilotManifestState = manifest;
+  lerntextePilotTextRoot = textRoot;
+
+  const resync = function (time) {
+    resyncPilotHighlight(time, lerntextePilotTextRoot, lerntextePilotManifestState);
+  };
+  const timeupdateHandler = function () {
+    resync(audio.currentTime);
+  };
+  const seekedHandler = function () {
+    resync(audio.currentTime);
+  };
+  const endedHandler = function () {
+    lerntextePilotNatürlichBeenden().catch(function () {
+      lerntextePilotStatus('Podcast konnte nicht abgeschlossen werden.');
+    });
+  };
+
+  audio.addEventListener('timeupdate', timeupdateHandler);
+  audio.addEventListener('seeked', seekedHandler);
+  audio.addEventListener('ended', endedHandler);
+
+  const visibilityCleanup = typeof window !== 'undefined' && typeof window.setupVisibilitySyncHandlers === 'function'
+    ? window.setupVisibilitySyncHandlers(audio, resync)
+    : function () {};
+
+  lerntextePilotKaraokeCleanup = function () {
+    audio.removeEventListener('timeupdate', timeupdateHandler);
+    audio.removeEventListener('seeked', seekedHandler);
+    audio.removeEventListener('ended', endedHandler);
+    visibilityCleanup();
+  };
+
+  resync(audio.currentTime);
+}
+
+function resyncPilotHighlight(time, textRoot, manifest) {
+  textRoot = textRoot || lerntextePilotTextRoot;
+  manifest = manifest || lerntextePilotManifestState;
+  if (!textRoot || !manifest || !Array.isArray(manifest.wortZeitmarken)) {
+    return -1;
+  }
+
+  if (typeof window !== 'undefined' && typeof window.findWordIndexAtTime === 'function') {
+    const index = window.findWordIndexAtTime(manifest.wortZeitmarken, Number(time));
+    const elements = textRoot.querySelectorAll ? textRoot.querySelectorAll('[data-word-index]') : [];
+    elements.forEach(function (element) {
+      element.classList.remove('podcast-word-active');
+    });
+
+    if (index >= 0) {
+      lerntextePilotLastValidWordIndex = index;
+      const activeWord = textRoot.querySelector ? textRoot.querySelector('[data-word-index="' + String(index) + '"]') : null;
+      if (activeWord) {
+        activeWord.classList.add('podcast-word-active');
+      }
+      return index;
+    }
+
+    return -1;
+  }
+
+  return -1;
+}
+
+async function lerntextePilotFortschrittLaden(uid) {
+  if (typeof uid !== 'string' || !uid.trim()) {
+    throw new Error('Nutzer ist für Podcast-Fortschritt erforderlich.');
+  }
+
+  if (typeof window !== 'undefined' && typeof window.lerntextePodcastFortschrittLaden === 'function') {
+    const result = await window.lerntextePodcastFortschrittLaden(uid, PILOT_FACH);
+    if (Array.isArray(result)) {
+      return result.filter(function (entry) {
+        return entry && entry.firebasePfad === PILOT_MP3_PATH;
+      });
+    }
+    if (!result || !Array.isArray(result.data)) {
+      return [];
+    }
+    return result.data.filter(function (entry) {
+      return entry && entry.firebasePfad === PILOT_MP3_PATH;
+    });
+  }
+
+  return [];
+}
+
+async function lerntextePilotFortschrittSpeichern(state) {
+  if (typeof window !== 'undefined' && typeof window.lerntextePodcastFortschrittSpeichern === 'function') {
+    return window.lerntextePodcastFortschrittSpeichern(state);
+  }
+
+  return state;
+}
+
+function lerntextePilotUidErmitteln() {
+  const uid = typeof window !== 'undefined' ? window.aktuellerNutzer : null;
+  return typeof uid === 'string' && uid.trim() ? uid.trim() : null;
+}
+
+async function lerntextePilotProgressLaden(eintrag, currentHash) {
+  lerntextePilotUid = lerntextePilotUidErmitteln();
+  lerntextePilotResumeState = null;
+  lerntextePilotCompletedState = null;
+  if (!lerntextePilotUid) return;
+
+  try {
+    const result = await lerntextePilotFortschrittLaden(lerntextePilotUid);
+    const entries = Array.isArray(result)
+      ? result
+      : result && Array.isArray(result.data)
+        ? result.data
+        : [];
+    const matchingEntries = entries.filter(function (entry) {
+      return entry
+        && entry.nutzer === lerntextePilotUid
+        && entry.fach === PILOT_FACH
+        && entry.einheit === PILOT_TITEL
+        && entry.firebasePfad === PILOT_MP3_PATH
+        && entry.lerntextHash === currentHash;
+    });
+    matchingEntries.forEach(function (entry) {
+      if (entry.completed === true) {
+        lerntextePilotCompletedState = entry;
+      } else if (entry.completed === false) {
+        const position = Number(entry.sekundenPosition);
+        if (isFinite(position) && position >= 0) {
+          lerntextePilotResumeState = entry;
+        }
+      }
+    });
+  } catch (error) {
+    lerntextePilotStatus('Podcast-Fortschritt konnte nicht geladen werden.');
+  }
+}
+
+function lerntextePilotSaveState(completed) {
+  const audio = lerntextePilotAudio;
+  const position = audio && typeof audio.currentTime === 'number' && isFinite(audio.currentTime)
+    ? Math.max(0, audio.currentTime)
+    : 0;
+  return {
+    nutzer: lerntextePilotUid,
+    fach: PILOT_FACH,
+    einheit: PILOT_TITEL,
+    firebasePfad: PILOT_MP3_PATH,
+    lerntextHash: lerntextePilotCurrentHash,
+    sekundenPosition: position,
+    wortIndex: Math.max(0, Number(lerntextePilotLastValidWordIndex) || 0),
+    completed: completed === true
+  };
+}
+
+async function lerntextePilotProgressSpeichern(completed) {
+  if (!lerntextePilotUid || !lerntextePilotAudio) return false;
+  try {
+    await lerntextePilotFortschrittSpeichern(lerntextePilotSaveState(completed));
+    return true;
+  } catch (error) {
+    lerntextePilotStatus('Podcast-Fortschritt konnte nicht gespeichert werden.');
+    return false;
+  }
+}
+
+async function lerntextePilotFortsetzen() {
+  if (!lerntextePilotAudio) return;
+  if (lerntextePilotCompletedState) {
+    if (lerntexteAudioPlaylistIndex + 1 < lerntexteAudioPlaylist.length) {
+      lerntexteAudioPlaylistIndex += 1;
+      await lerntexteAudioPlaylistWeiter();
+      return;
+    }
+    lerntextePilotStatus('Podcast bereits abgeschlossen. Von vorne abspielen möglich.');
+    return;
+  }
+
+  lerntextePodcastFortsetzen(lerntextePilotAudio, lerntextePilotResumeState, lerntextePilotCurrentHash);
+  resyncPilotHighlight(lerntextePilotAudio.currentTime);
+  lerntexteAudioAktiv = true;
+  lerntexteAudioPausiert = false;
+  try {
+    await lerntextePilotAudio.play();
+  } catch (error) {
+    lerntextePilotStatus('Podcast konnte nicht gestartet werden.');
+  }
+}
+
+async function lerntextePilotVonVorne() {
+  if (!lerntextePilotAudio) return;
+  lerntextePodcastVonVorne(lerntextePilotAudio);
+  resyncPilotHighlight(lerntextePilotAudio.currentTime);
+  lerntexteAudioAktiv = true;
+  lerntexteAudioPausiert = false;
+  try {
+    await lerntextePilotAudio.play();
+  } catch (error) {
+    lerntextePilotStatus('Podcast konnte nicht gestartet werden.');
+  }
+}
+
+async function lerntextePilotPausieren() {
+  if (!lerntextePilotAudio) return;
+  const saved = await lerntextePodcastPausieren(lerntextePilotAudio, function () {
+    return lerntextePilotProgressSpeichern(false);
+  }, lerntextePilotSaveState(false));
+  lerntexteAudioPausiert = true;
+  if (saved !== false) {
+    lerntexteElement('lerntexteAudioStatus').textContent = 'Audio pausiert.';
+  }
+}
+
+function lerntextePilotStoppen() {
+  if (!lerntextePilotAudio) return;
+  lerntextePodcastStoppen(lerntextePilotAudio, function () {
+    return lerntextePilotProgressSpeichern(false);
+  }, lerntextePilotSaveState(false)).then(function (saved) {
+    lerntexteAudioAktiv = false;
+    lerntexteAudioPausiert = false;
+    if (saved !== false) {
+      lerntexteElement('lerntexteAudioStatus').textContent = 'Audio gestoppt.';
+    }
+  }).catch(function () {
+    lerntextePilotStatus('Podcast-Fortschritt konnte nicht gespeichert werden.');
+  });
+}
+
+function lerntextePilotButtonsVerdrahten() {
+  const pauseButton = lerntexteElement('lerntexteAudioPauseBtn');
+  const stopButton = lerntexteElement('lerntexteAudioStopBtn');
+  const resumeButton = lerntexteElement('lerntextePilotResumeBtn');
+  const restartButton = lerntexteElement('lerntextePilotRestartBtn');
+  if (pauseButton) pauseButton.onclick = lerntexteAudioPausieren;
+  if (stopButton) stopButton.onclick = lerntexteAudioStoppen;
+  if (resumeButton) {
+    resumeButton.hidden = false;
+    resumeButton.onclick = lerntextePilotFortsetzen;
+  }
+  if (restartButton) {
+    restartButton.hidden = false;
+    restartButton.onclick = lerntextePilotVonVorne;
+  }
+}
 
 // Konvertiert einen Wert zu einem sicheren URL-Slug für Podcast-Dateipfade
 function lerntexteAudioSlug(wert) {
@@ -104,6 +624,10 @@ function lerntexteAudioTestKapitelMetadatenSetzen() {
 }
 
 async function lerntexteAudioFirebaseUrlLaden(eintrag) {
+  if (typeof window !== 'undefined' && window.lerntexteAudioDependencies && typeof window.lerntexteAudioDependencies.loadUrl === 'function') {
+    return window.lerntexteAudioDependencies.loadUrl(eintrag);
+  }
+
   try {
     const { storage, ref, getDownloadURL } = await import('./firebase-config.js');
     
@@ -169,6 +693,10 @@ function lerntexteElement(id) {
 }
 
 function lerntexteAudioTextFuerEintrag(eintrag) {
+  if (eintrag && lerntexteIstPilotEinheit(eintrag.fach, eintrag.titel)) {
+    return lerntextePilotTextFuerEintrag(eintrag).trim();
+  }
+
   const directText = eintrag && eintrag.podcastText ? String(eintrag.podcastText).trim() : "";
   if (directText) {
     return directText;
@@ -665,6 +1193,7 @@ function lerntexteNormalisiereUnterkapitelNr(wert) {
 }
 
 function lerntexteAnzeigen() {
+  lerntextePilotKaraokeAufraeumen();
   const bereich = lerntexteElement("lerntexteInhaltBereich");
   bereich.innerHTML = "";
 
@@ -696,13 +1225,25 @@ function lerntexteAnzeigen() {
     text.className = "lerntexte-text";
     text.innerHTML = lerntexteFormatiereText(eintrag.lerntext);
 
+    if (lerntexteIstPilotEinheit(eintrag.fach, eintrag.titel)
+      && typeof window !== 'undefined'
+      && typeof window.lerntexteDomTokenisieren === 'function') {
+      window.lerntexteDomTokenisieren(text);
+      lerntextePilotTextRoot = text;
+    }
+
     block.appendChild(titel);
     block.appendChild(text);
     bereich.appendChild(block);
   });
 }
 
-function lerntexteAudioPlaylistWeiter() {
+function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
+  if (Array.isArray(playlistOverride)) {
+    lerntexteAudioPlaylist = playlistOverride;
+    lerntexteAudioPlaylistIndex = typeof playlistIndexOverride === 'number' ? playlistIndexOverride : 0;
+  }
+
   if (!lerntexteAudioPlaylist.length) {
     lerntexteAudioStoppen("Alle Lerneinheiten wurden abgespielt.");
     return;
@@ -718,6 +1259,8 @@ function lerntexteAudioPlaylistWeiter() {
   const title = currentItem && currentItem.titel ? currentItem.titel : "Lerneinheit";
   const statusText = "Audio läuft: " + (lerntexteAudioPlaylistIndex + 1) + " von " + total + " – " + title;
 
+  const isPilot = currentItem && currentItem.eintrag && lerntexteIstPilotEinheit(currentItem.eintrag.fach, currentItem.eintrag.titel);
+
   if (lerntexteElement("lerntexteAudioStatus")) {
     lerntexteElement("lerntexteAudioStatus").textContent = statusText;
   }
@@ -732,6 +1275,24 @@ function lerntexteAudioPlaylistWeiter() {
 
   async function startFirebaseTry() {
     const domAudio = document.getElementById("lerntexteAudioPlayer");
+
+    if (isPilot) {
+      try {
+        const assets = await lerntextePilotAssetsLaden();
+        const validation = await lerntextePilotAssetValidieren(currentItem.eintrag, assets.manifest, assets.mp3Metadata);
+        if (!validation.valid || !domAudio) {
+          lerntextePilotStatus(validation.reason || 'Podcast muss aktualisiert werden.');
+          return false;
+        }
+
+        domAudio.src = assets.mp3Url;
+        domAudio.load();
+        return await lerntextePilotAudioStartenValidiert(currentItem.eintrag, assets.manifest, assets.mp3Metadata, null, validation);
+      } catch (error) {
+        lerntextePilotStatus('Podcast konnte nicht geladen werden.');
+        return false;
+      }
+    }
 
     try {
       const url = await lerntexteAudioFirebaseUrlLaden(currentItem.eintrag);
@@ -823,10 +1384,16 @@ function lerntexteAudioPlaylistWeiter() {
     }
   }
 
-  startFirebaseTry();
+  return startFirebaseTry();
 }
 
 function lerntexteAudioStoppen(status) {
+  const currentPlayer = document.getElementById("lerntexteAudioPlayer");
+  if (currentPlayer && currentPlayer === lerntextePilotAudio) {
+    lerntextePilotStoppen();
+    return;
+  }
+
   lerntexteAudioGeneration++;
   lerntexteAudioAktiv = false;
   lerntexteAudioPausiert = false;
@@ -902,6 +1469,10 @@ function lerntexteAudioAbspielen() {
   lerntexteAudioPlaylist = playlist;
   lerntexteAudioPlaylistIndex = 0;
   lerntexteAudioQuelle = "";
+  if (playlist[0] && playlist[0].eintrag && lerntexteIstPilotEinheit(playlist[0].eintrag.fach, playlist[0].eintrag.titel)) {
+    const pilotAudio = document.getElementById('lerntexteAudioPlayer');
+    if (pilotAudio) pilotAudio.currentTime = 0;
+  }
   lerntexteAudioProgressSet(0, "0:00 / 0:00");
   lerntexteAudioSteuerungAktualisieren();
   lerntexteAudioPlaylistWeiter();
@@ -971,6 +1542,11 @@ function lerntexteSprechen(chunks, index, generation) {
 }
 
 function lerntexteAudioPausieren() {
+  const currentPlayer = document.getElementById("lerntexteAudioPlayer");
+  if (currentPlayer && currentPlayer === lerntextePilotAudio) {
+    return lerntextePilotPausieren();
+  }
+
   if (!lerntexteAudioAktiv || lerntexteAudioPausiert) return;
   lerntexteAudioPausiert = true;
 
@@ -1053,6 +1629,15 @@ if (typeof window !== 'undefined') {
   window.lerntexteAudioFirebasePfad = lerntexteAudioFirebasePfad;
   window.lerntexteAudioTextFuerEintrag = lerntexteAudioTextFuerEintrag;
   window.lerntexteAudioPlaylistErstellen = lerntexteAudioPlaylistErstellen;
+  window.lerntexteIstPilotEinheit = lerntexteIstPilotEinheit;
+  window.lerntextePilotHash = lerntextePilotHash;
+  window.lerntextePilotTextFuerEintrag = lerntextePilotTextFuerEintrag;
+  window.lerntextePilotManifest = lerntextePilotManifest;
+  window.lerntexteAudioPlaylistWeiter = lerntexteAudioPlaylistWeiter;
+  window.lerntextePilotAudioStarten = lerntextePilotAudioStarten;
+  window.resyncPilotHighlight = resyncPilotHighlight;
+  window.lerntextePilotFortschrittLaden = lerntextePilotFortschrittLaden;
+  window.lerntextePilotFortschrittSpeichern = lerntextePilotFortschrittSpeichern;
 }
 
 // ============================================================
@@ -1061,6 +1646,15 @@ if (typeof window !== 'undefined') {
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
+    lerntexteIstPilotEinheit,
+    lerntextePilotHash,
+    lerntextePilotTextFuerEintrag,
+    lerntextePilotManifest,
+    lerntexteAudioPlaylistWeiter,
+    lerntextePilotAudioStarten,
+    resyncPilotHighlight,
+    lerntextePilotFortschrittLaden,
+    lerntextePilotFortschrittSpeichern,
     lerntextePodcastAbspielen,
     lerntextePodcastPausieren,
     lerntextePodcastStoppen,
