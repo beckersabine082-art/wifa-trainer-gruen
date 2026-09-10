@@ -835,6 +835,7 @@ white-space: normal;
       right: 16px;
       z-index: 9997;
       max-width: min(320px, calc(100vw - 32px));
+      max-height: min(420px, calc(100vh - 160px));
       display: flex;
       gap: 10px;
       align-items: flex-start;
@@ -845,37 +846,41 @@ white-space: normal;
       display: none;
     }
 
-    .trainer-hint-header {
-      display: none;
-    }
-
     .trainer-hint-close {
       position: absolute;
-      top: 6px;
-      right: 8px;
-      background: none;
-      border: none;
+      top: -10px;
+      right: -10px;
+      z-index: 1;
+      background: #ffffff;
+      border: 1px solid #b794f6;
       cursor: pointer;
       font-size: 18px;
-      color: #9a7bd1;
+      line-height: 1;
+      color: #6b4fa0;
       padding: 0;
-      width: 20px;
-      height: 20px;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 3px;
-      transition: background 200ms;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(80, 45, 140, 0.28);
+      transition: background 200ms, color 200ms;
     }
 
-    .trainer-hint-close:hover {
-      background: #f5f0ff;
+    .trainer-hint-close:hover,
+    .trainer-hint-close:focus-visible {
+      background: #b794f6;
+      color: #ffffff;
     }
 
     .trainer-hint-content {
       display: flex;
       gap: 10px;
       align-items: flex-start;
+      overflow-y: auto;
+      max-height: inherit;
+      width: 100%;
     }
 
     .trainer-hint-bear {
@@ -912,7 +917,6 @@ white-space: normal;
       line-height: 1.5;
       color: #2d1f46;
       word-wrap: break-word;
-      padding-right: 24px;
     }
 
     @keyframes hint-bubble-slide-in {
@@ -929,6 +933,7 @@ white-space: normal;
     @media (max-width: 520px) {
       .trainer-hint-bubble {
         max-width: calc(100vw - 32px);
+        max-height: min(360px, calc(100vh - 140px));
         bottom: 100px;
       }
       

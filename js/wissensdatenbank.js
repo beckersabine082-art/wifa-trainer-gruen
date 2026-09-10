@@ -498,6 +498,14 @@ function schliesseTrainerHint() {
   }
 }
 
+document.addEventListener("keydown", function(event) {
+  if (event.key !== "Escape") return;
+  const hintBubble = document.getElementById("trainerHintBubble");
+  if (hintBubble && !hintBubble.hidden) {
+    schliesseTrainerHint();
+  }
+});
+
 async function zeigeTrainerHintBubble() {
   const hintBubble = document.getElementById("trainerHintBubble");
   const hintText = document.getElementById("trainerHintText");
