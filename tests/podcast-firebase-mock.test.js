@@ -67,6 +67,8 @@ function createMockClient(options) {
 
     await publishToFirebase({
       mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
       jsonPath: files.jsonPath,
       lerntextHash: 'hash-1',
       adminClient: mock.client
@@ -84,15 +86,20 @@ function createMockClient(options) {
 
     await publishToFirebase({
       mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
       jsonPath: files.jsonPath,
       lerntextHash: 'sha256-unchanged',
       adminClient: mock.client
     });
 
     assert.deepStrictEqual(mock.calls[0].saveOptions, {
+      preconditionOpts: { ifGenerationMatch: 0 },
       metadata: {
+        contentType: 'audio/mpeg',
         metadata: {
-          lerntextHash: 'sha256-unchanged'
+          lerntextHash: 'sha256-unchanged',
+          manifestHash: require('crypto').createHash('sha256').update('{"words":[]}').digest('hex')
         }
       }
     });
@@ -109,6 +116,8 @@ function createMockClient(options) {
 
     await publishToFirebase({
       mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
       jsonPath: files.jsonPath,
       lerntextHash: 'hash-2',
       adminClient: mock.client
@@ -124,6 +133,8 @@ function createMockClient(options) {
     await assert.rejects(function() {
       return publishToFirebase({
         mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
         jsonPath: files.jsonPath,
         lerntextHash: 'hash-3',
         adminClient: mock.client
@@ -142,6 +153,8 @@ function createMockClient(options) {
     await assert.rejects(function() {
       return publishToFirebase({
         mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
         jsonPath: files.jsonPath,
         lerntextHash: 'hash-4',
         adminClient: mock.client
@@ -159,6 +172,8 @@ function createMockClient(options) {
 
     const result = await publishToFirebase({
       mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
       jsonPath: files.jsonPath,
       lerntextHash: 'hash-5',
       adminClient: mock.client
@@ -177,6 +192,8 @@ function createMockClient(options) {
 
     await publishToFirebase({
       mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
       jsonPath: files.jsonPath,
       lerntextHash: 'hash-6',
       adminClient: mock.client
@@ -194,6 +211,8 @@ function createMockClient(options) {
     await assert.rejects(function() {
       return publishToFirebase({
         mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
         jsonPath: files.jsonPath,
         lerntextHash: 'hash-7',
         adminClient: mock.client
@@ -212,6 +231,8 @@ function createMockClient(options) {
     await assert.rejects(function() {
       return publishToFirebase({
         mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
         jsonPath: files.jsonPath,
         lerntextHash: 'hash-8',
         adminClient: mock.client
@@ -229,6 +250,8 @@ function createMockClient(options) {
     await assert.rejects(function() {
       return publishToFirebase({
         mp3Path: files.mp3Path,
+      storageMp3Path: pilotMp3Path, storageJsonPath: pilotJsonPath,
+      expectedState: {mp3Generation:0,jsonGeneration:0},
         jsonPath: files.jsonPath,
         lerntextHash: '',
         adminClient: mock.client

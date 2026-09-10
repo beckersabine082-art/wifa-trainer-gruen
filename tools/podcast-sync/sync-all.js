@@ -4,12 +4,11 @@ const path = require('path');
 
 const { sha256Lerntext, podcastPaths } = require('./hash-paths.js');
 const { countTtsTokens } = require('./audit-pilot.js');
-const { normalizeLerntextForTts } = require('./normalize-lerntext.js');
-const { generateTtsMp3 } = require('./tts-generate.js');
-const { transcribeWordTimestamps } = require('./transcribe-words.js');
-const { alignTranscriptWordsToLerntext } = require('./align-words.js');
+const { generateLocalAudio } = require('./local-audio.js');
 const { buildPodcastManifest, writePodcastManifest } = require('./build-manifest.js');
 const { publishToFirebase } = require('./firebase-publish.js');
+const { withPublishLock } = require('./publish-lock.js');
+const { createHash } = require('node:crypto');
 
 const MAX_TTS_TOKENS = 2000;
 
@@ -60,7 +59,6 @@ function validateEntries(lerntexte) {
     });
 
     if (!lerntext.trim()) report.status = 'EMPTY';
-    else if (report.ttsTokenCount > MAX_TTS_TOKENS) report.status = 'OVER_2000_TOKENS';
     reports.push(report);
   });
 
@@ -108,27 +106,38 @@ async function readFirebaseAssetState({ bucket, report }) {
   const [mp3Exists, jsonExists] = await Promise.all([mp3File.exists(), jsonFile.exists()]);
   let mp3Hash = '';
   let jsonHash = '';
+  let mp3Generation = 0;
+  let jsonGeneration = 0;
+  let expectedManifestHash = '';
+  let actualManifestHash = '';
   if (mp3Exists[0] && typeof mp3File.getMetadata === 'function') {
     const metadata = await mp3File.getMetadata();
     mp3Hash = String(metadata[0] && metadata[0].metadata && metadata[0].metadata.lerntextHash || '');
+    mp3Generation = metadata[0].generation;
+    expectedManifestHash = metadata[0].metadata?.manifestHash || '';
   }
   if (jsonExists[0] && typeof jsonFile.download === 'function') {
+    const metadata = await jsonFile.getMetadata();
+    jsonGeneration = metadata[0].generation;
     try {
       const downloaded = await jsonFile.download();
+      actualManifestHash = createHash('sha256').update(downloaded[0]).digest('hex');
       const manifest = JSON.parse(downloaded[0].toString('utf8'));
       jsonHash = String(manifest && manifest.lerntextHash || '');
     } catch (error) {
-      jsonHash = '';
+      if (!(error instanceof SyntaxError)) throw error;
     }
   }
-  return { mp3Exists: Boolean(mp3Exists[0]), jsonExists: Boolean(jsonExists[0]), mp3Hash, jsonHash };
+  return { mp3Exists: Boolean(mp3Exists[0]), jsonExists: Boolean(jsonExists[0]), mp3Hash, jsonHash, mp3Generation, jsonGeneration,
+    manifestMatches: !expectedManifestHash || expectedManifestHash === actualManifestHash };
 }
 
 function reportStatus(report, assetState) {
   report.assetState = assetState || { mp3Exists: false, jsonExists: false, mp3Hash: '', jsonHash: '' };
-  report.status = report.lerntext.trim() && report.ttsTokenCount <= MAX_TTS_TOKENS
+  report.status = report.lerntext.trim()
     && report.assetState.mp3Exists && report.assetState.jsonExists
     && report.assetState.mp3Hash === report.lerntextHash
+    && report.assetState.manifestMatches !== false
     && report.assetState.jsonHash === report.lerntextHash ? 'VALID/SKIP' : (report.status || 'SYNC_NEEDED');
   return report;
 }
@@ -146,9 +155,11 @@ function summarize(reports, collisions) {
 
 async function inspectAll({ lerntexte, bucket }) {
   const inspected = validateEntries(lerntexte);
-  for (const report of inspected.reports) {
-    if (report.status === 'EMPTY' || report.status === 'OVER_2000_TOKENS') continue;
-    reportStatus(report, await readFirebaseAssetState({ bucket, report }));
+  for (let i = 0; i < inspected.reports.length; i += 8) {
+    await Promise.all(inspected.reports.slice(i, i + 8).map(async report => {
+      if (report.status === 'EMPTY') return;
+      reportStatus(report, await readFirebaseAssetState({ bucket, report }));
+    }));
   }
   inspected.collisions.forEach(function (collision) {
     inspected.reports.filter(report => collision.units.includes(report.identity)).forEach(report => {
@@ -162,7 +173,7 @@ function dryRunBlocksLiveSync(result) {
   return result.summary.EMPTY > 0 || result.summary.OVER_2000_TOKENS > 0 || result.summary.PATH_COLLISIONS > 0;
 }
 
-async function syncAll({ lerntexte, adminClient, openaiClient, tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-sync-')), now = new Date().toISOString(), adapters = {} }) {
+async function syncAll({ lerntexte, adminClient, tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-sync-')), now = new Date().toISOString(), adapters = {}, onStatus = () => {} }) {
   const bucket = adminClient && adminClient.storage().bucket();
   const inspection = await inspectAll({ lerntexte, bucket });
   if (dryRunBlocksLiveSync(inspection)) return { inspection, generated: [], failed: inspection.reports.filter(report => report.status !== 'VALID/SKIP') };
@@ -173,16 +184,26 @@ async function syncAll({ lerntexte, adminClient, openaiClient, tempDir = fs.mkdt
     const localMp3Path = path.join(tempDir, path.basename(report.mp3Path));
     const localJsonPath = path.join(tempDir, path.basename(report.jsonPath));
     try {
-      const normalized = normalizeLerntextForTts(report.lerntext);
-      await (adapters.generateTts || generateTtsMp3)({ text: normalized.text, outputPath: localMp3Path, openaiClient, countTtsTokens });
-      const transcript = await (adapters.transcribe || transcribeWordTimestamps)({ mp3Path: localMp3Path, openaiClient });
-      const aligned = await (adapters.align || alignTranscriptWordsToLerntext)(report.lerntext, transcript.words);
-      const manifest = (adapters.buildManifest || buildPodcastManifest)({ fach: report.fach, titel: report.titel, lerntext: report.lerntext, lerntextHash: report.lerntextHash, wortZeitmarken: aligned.wortZeitmarken, updatedAt: now });
+      reportStatus(report, await readFirebaseAssetState({ bucket, report }));
+      if (report.status === 'VALID/SKIP') { onStatus({status:'SKIP', identity:report.identity}); continue; }
+      onStatus({status:'GENERATING', identity:report.identity});
+      const audio = await (adapters.generateLocal || generateLocalAudio)({ lerntext: report.lerntext, outputPath: localMp3Path });
+      const manifest = (adapters.buildManifest || buildPodcastManifest)({ fach: report.fach, titel: report.titel, lerntext: report.lerntext, lerntextHash: report.lerntextHash, wortZeitmarken: audio.wortZeitmarken, updatedAt: now });
       (adapters.writeManifest || writePodcastManifest)({ outputPath: localJsonPath, manifest });
-      await (adapters.publish || publishToFirebase)({ mp3Path: localMp3Path, jsonPath: localJsonPath, storageMp3Path: report.mp3Path, storageJsonPath: report.jsonPath, lerntextHash: report.lerntextHash, adminClient });
+      const published = await withPublishLock(bucket, report.mp3Path, async () => {
+        reportStatus(report, await readFirebaseAssetState({ bucket, report }));
+        if (report.status === 'VALID/SKIP') return false;
+        await (adapters.publish || publishToFirebase)({ mp3Path: localMp3Path, jsonPath: localJsonPath, storageMp3Path: report.mp3Path, storageJsonPath: report.jsonPath, lerntextHash: report.lerntextHash, adminClient, expectedState: report.assetState });
+        reportStatus(report, await readFirebaseAssetState({ bucket, report }));
+        if (report.status !== 'VALID/SKIP') throw new Error('Firebase-Verifikation nach Upload fehlgeschlagen');
+        return true;
+      });
+      if (!published) { onStatus({status:'SKIP', identity:report.identity}); continue; }
       generated.push(report.identity);
+      onStatus({status:'GENERATED', identity:report.identity, duration:audio.duration});
     } catch (error) {
       failed.push({ identity: report.identity, error: error.message });
+      onStatus({status:'FAILED', identity:report.identity, error:error.message});
     } finally {
       [localMp3Path, localJsonPath].forEach(function (filePath) { if (fs.existsSync(filePath)) fs.unlinkSync(filePath); });
     }
@@ -190,13 +211,18 @@ async function syncAll({ lerntexte, adminClient, openaiClient, tempDir = fs.mkdt
   return { inspection, generated, failed };
 }
 
-module.exports = { MAX_TTS_TOKENS, loadLerntexteReadOnly, validateEntries, inspectAll, dryRunBlocksLiveSync, syncAll, selectOnlyLerntext, formatFailedReport, runCli };
+module.exports = { MAX_TTS_TOKENS, loadLerntexteReadOnly, validateEntries, inspectAll, readFirebaseAssetState, dryRunBlocksLiveSync, syncAll, selectOnlyLerntext, formatFailedReport, runCli, createAdminClient };
 
 async function createAdminClient() {
   const { initializeApp, getApps, getApp, cert } = require('firebase-admin/app');
   const { getStorage } = require('firebase-admin/storage');
   const { requireFirebaseAdminConfig } = require('./index.js');
-  const config = requireFirebaseAdminConfig();
+  const accountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  const account = accountPath ? JSON.parse(fs.readFileSync(accountPath, 'utf8')) : null;
+  const config = account ? {
+    projectId:account.project_id, clientEmail:account.client_email, privateKey:account.private_key,
+    storageBucket:process.env.FIREBASE_STORAGE_BUCKET || account.project_id + '.firebasestorage.app'
+  } : requireFirebaseAdminConfig();
   const app = getApps().length ? getApp() : initializeApp({
     credential: cert({
       projectId: config.projectId,
@@ -229,12 +255,15 @@ async function runCli(argv = process.argv.slice(2)) {
     return inspection;
   }
 
-  const OpenAI = require('openai');
-  const { requireOpenAiKey } = require('./index.js');
+  const journal = process.env.PODCAST_STATUS_LOG;
   const result = await syncAll({
     lerntexte: selectedLerntexte,
     adminClient,
-    openaiClient: new OpenAI({ apiKey: requireOpenAiKey() })
+    onStatus(event) {
+      const line = JSON.stringify({at:new Date().toISOString(),...event});
+      console.log(line);
+      if (journal) fs.appendFileSync(journal, line + '\n');
+    }
   });
   console.log('TOTAL: ' + result.inspection.summary.TOTAL);
   console.log('SKIPPED: ' + result.inspection.summary['VALID/SKIP']);

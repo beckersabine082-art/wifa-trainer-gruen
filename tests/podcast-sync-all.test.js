@@ -94,19 +94,19 @@ test('geänderter Hash wird als SYNC_NEEDED erkannt', async () => {
     lerntexte: [{ fach: 'Recht', titel: 'Einheit', lerntext: 'Neu.' }],
     bucket: fakeBucket({
       [paths.mp3Path]: { hash: sha256Lerntext('Alt.') },
-      [paths.jsonPath]: { hash: sha256Lerntext('Alt.') }
+      [paths.jsonPath]: { json: {lerntextHash: sha256Lerntext('Alt.')} }
     })
   });
   assert.equal(result.reports[0].status, 'SYNC_NEEDED');
 });
 
-test('über 2000 Tokens blockieren den Dry-Run', async () => {
+test('lange Texte sind für die satzweise lokale Synthese erlaubt', async () => {
   const result = await inspectAll({
     lerntexte: [{ fach: 'Recht', titel: 'Lang', lerntext: 'Rechtssubjekte '.repeat(2500) }],
     bucket: fakeBucket({})
   });
-  assert.equal(result.summary.OVER_2000_TOKENS, 1);
-  assert.equal(dryRunBlocksLiveSync(result), true);
+  assert.equal(result.summary.SYNC_NEEDED, 1);
+  assert.equal(dryRunBlocksLiveSync(result), false);
 });
 
 test('Pfadkollision blockiert den Dry-Run', async () => {

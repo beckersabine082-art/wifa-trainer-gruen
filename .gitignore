@@ -1,3 +1,5 @@
 tools/podcast-sync/node_modules/
 tools/podcast-sync/.env
 tools/podcast-sync/.env.local
+tools/podcast-sync/.local/
+**/__pycache__/
