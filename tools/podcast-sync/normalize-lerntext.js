@@ -93,7 +93,7 @@ function tokenizeVisibleWords(text) {
   // Unicode-Regel mit Bindestrich und Apostroph als interne Wortzeichen
   // [\p{L}\p{N}]+(?:[-''][\p{L}\p{N}]+)*
   // mit /gu (global, unicode)
-  const words = text.match(/[\p{L}\p{N}]+(?:[-''][\p{L}\p{N}]+)*/gu) || [];
+  const words = text.match(/[\p{L}\p{N}]+(?:[-'’][\p{L}\p{N}]+)*/gu) || [];
   
   return words;
 }

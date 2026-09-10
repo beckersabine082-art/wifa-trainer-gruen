@@ -1,9 +1,7 @@
 const fs = require('fs');
+const { createHash } = require('node:crypto');
 
-const MP3_STORAGE_PATH = 'podcast/recht-rechtssubjekte-und-rechtsobjekte.mp3';
-const JSON_STORAGE_PATH = 'podcast/recht-rechtssubjekte-und-rechtsobjekte.json';
-
-function validateInput({ mp3Path, jsonPath, lerntextHash }) {
+function validateInput({ mp3Path, jsonPath, storageMp3Path, storageJsonPath, lerntextHash }) {
   if (!mp3Path || !fs.existsSync(mp3Path)) {
     throw new Error('MP3-Datei nicht gefunden: ' + mp3Path);
   }
@@ -13,28 +11,37 @@ function validateInput({ mp3Path, jsonPath, lerntextHash }) {
   if (typeof lerntextHash !== 'string' || lerntextHash.trim() === '') {
     throw new Error('lerntextHash darf nicht leer sein');
   }
+  if (!storageMp3Path || !storageJsonPath) {
+    throw new Error('Firebase-Zielpfade fehlen');
+  }
 }
 
-async function publishToFirebase({ mp3Path, jsonPath, lerntextHash, adminClient }) {
-  validateInput({ mp3Path, jsonPath, lerntextHash });
+async function publishToFirebase({ mp3Path, jsonPath, storageMp3Path, storageJsonPath, lerntextHash, adminClient, expectedState }) {
+  validateInput({ mp3Path, jsonPath, storageMp3Path, storageJsonPath, lerntextHash });
 
   const bucket = adminClient.storage().bucket();
   const mp3Data = fs.readFileSync(mp3Path);
   const jsonData = fs.readFileSync(jsonPath);
+  if (!expectedState || expectedState.mp3Generation === undefined || expectedState.jsonGeneration === undefined) {
+    throw new Error('Geprüfte Firebase-Objektversionen fehlen');
+  }
 
-  await bucket.file(MP3_STORAGE_PATH).save(mp3Data, {
+  await bucket.file(storageMp3Path).save(mp3Data, {
+    preconditionOpts: { ifGenerationMatch: expectedState.mp3Generation },
     metadata: {
-      metadata: { lerntextHash }
+      contentType: 'audio/mpeg',
+      metadata: { lerntextHash, manifestHash: createHash('sha256').update(jsonData).digest('hex') }
     }
   });
-  await bucket.file(JSON_STORAGE_PATH).save(jsonData, {
+  await bucket.file(storageJsonPath).save(jsonData, {
+    preconditionOpts: { ifGenerationMatch: expectedState.jsonGeneration },
     metadata: { contentType: 'application/json' }
   });
 
   return {
     success: true,
-    mp3Url: MP3_STORAGE_PATH,
-    jsonUrl: JSON_STORAGE_PATH
+    mp3Url: storageMp3Path,
+    jsonUrl: storageJsonPath
   };
 }
 

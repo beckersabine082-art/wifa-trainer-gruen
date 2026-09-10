@@ -59,10 +59,16 @@ test('playlist keeps selected units in original order and skips empty audio text
   assert.strictEqual(JSON.stringify(playlist.map(item => item.eintrag.titel)), JSON.stringify(['Einheit 1', 'Einheit 2', 'Einheit 3', 'Rechtssubjekte und Rechtsobjekte']));
 });
 
-test('podcastText has priority over lerntext', function () {
+test('lerntext is the only playlist audio source', function () {
   const playlist = context.window.lerntexteAudioPlaylistErstellen(selectedUnits);
   const entry = playlist.find(item => item.eintrag.titel === 'Einheit 3');
-  assert.strictEqual(entry.text, 'Text 3');
+  assert.strictEqual(entry.text, 'Text 3 alt');
+});
+
+test('non-pilot unit uses its dynamic Firebase path', function () {
+  const path = context.window.lerntexteAudioFirebasePfad('Steuern', { titel: 'Einheit 7' });
+  assert.strictEqual(path, 'podcast/steuern-einheit-7.mp3');
+  assert.ok(code.includes('lerntextePilotAssetsLaden(currentItem.eintrag)'));
 });
 
 test('Recht path generation remains valid for the normal playlist case', function () {

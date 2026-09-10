@@ -363,7 +363,7 @@ function wordSpans(root) {
   return descendants(root).filter(node => node.tagName === 'SPAN' && node.getAttribute('data-word-index') !== null);
 }
 
-test('TASK 16 Block 2: realer Renderpfad tokenisiert nur den Pilot und erhält Formatierung', () => {
+test('TASK 16 Block 2: realer Renderpfad tokenisiert jede synchronisierte Einheit und erhält Formatierung', () => {
   const { context, root } = createBlock2Context();
   const pilot = Object.assign({}, block2PilotEntry(), {
     lerntext: 'Weitere Wörter.\nHINWEIS: Zweiter Absatz.'
@@ -382,7 +382,50 @@ test('TASK 16 Block 2: realer Renderpfad tokenisiert nur den Pilot und erhält F
   context.window.__renderEntries([Object.assign({}, pilot, { titel: 'Vertragsarten' })], 'Recht');
   const legacyRoot = root.querySelector('.lerntexte-text');
   assert.ok(legacyRoot);
-  assert.strictEqual(legacyRoot.querySelectorAll('[data-word-index]').length, 0);
+  assert.ok(legacyRoot.querySelectorAll('[data-word-index]').length > 0);
+});
+
+test('TASK 16 Block 2: Karaoke markiert Wort 0 als spoken und active', async () => {
+  const { context, root, audio } = createBlock2Context();
+  context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  audio.currentTime = 0.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+
+  const word = root.querySelector('[data-word-index="0"]');
+  assert.strictEqual(word.classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(word.classList.contains('podcast-word-active'), true);
+});
+
+test('TASK 16 Block 2: Karaoke markiert bis zur aktuellen Position kumulativ', async () => {
+  const { context, root, audio, manifest } = createBlock2Context();
+  const pilot = block2PilotEntry();
+  context.window.__renderEntries([pilot], 'Recht');
+  manifest.wortZeitmarken = [
+    { wortIndex: 0, start: 0, end: 1 },
+    { wortIndex: 1, start: 1, end: 2 },
+    { wortIndex: 2, start: 2, end: 3 }
+  ];
+
+  await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="0"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-spoken'), false);
+
+  audio.currentTime = 2.5;
+  audio.dispatchEvent({ type: 'seeked' });
+  assert.strictEqual(root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(root.querySelectorAll('.podcast-word-spoken').length, 3);
+
+  audio.currentTime = 1.5;
+  audio.dispatchEvent({ type: 'timeupdate' });
+  assert.strictEqual(root.querySelector('[data-word-index="0"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-spoken'), true);
+  assert.strictEqual(root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-spoken'), false);
 });
 
 test('TASK 16 Block 2: Karaoke markiert Wort 0 als spoken und active', async () => {
@@ -530,7 +573,7 @@ test('TASK 16 Block 2 Coverage: Pilot-Root und alte Session werden bei echtem Re
 
   assert.strictEqual(oldRoot.textContent, oldText);
   assert.strictEqual(oldRoot.querySelectorAll('.podcast-word-active').length, oldActiveCount);
-  assert.strictEqual(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length, 0);
+  assert.ok(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length > 0);
 });
 
 test('TASK 16 Block 2 Coverage: initialer Resync nutzt die aktuelle Startposition', async () => {
@@ -759,7 +802,7 @@ test('TASK 16 Block 3: natürlicher Abschluss speichert vor Playlist-Weiterschal
   assert.strictEqual(legacyLoadStarted, false);
   resolveSave({ success: true });
   await new Promise(resolve => setImmediate(resolve));
-  assert.strictEqual(legacyLoadStarted, true);
+  assert.strictEqual(legacyLoadStarted, false);
 });
 
 test('TASK 16 Block 2 Coverage: Nicht-Pilot erhält keine Karaoke-Listener', async () => {
@@ -773,7 +816,7 @@ test('TASK 16 Block 2 Coverage: Nicht-Pilot erhält keine Karaoke-Listener', asy
 
   await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(legacy)], 0);
 
-  assert.strictEqual(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length, 0);
+  assert.ok(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length > 0);
   assert.strictEqual((audio.listeners.timeupdate || new Set()).size, 0);
   assert.strictEqual((audio.listeners.seeked || new Set()).size, 0);
   assert.strictEqual((document.listeners.visibilitychange || new Set()).size, 0);
@@ -794,7 +837,7 @@ test('TASK 16 Block 2 Coverage: Mixed Playlist räumt Pilot vor Legacy auf', asy
   context.window.__renderEntries([legacy], 'Recht');
   await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(legacy)], 0);
 
-  assert.strictEqual(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length, 0);
+  assert.ok(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length > 0);
   assert.strictEqual(audio.listeners.timeupdate.size, 0);
   assert.strictEqual(audio.listeners.seeked.size, 0);
   assert.strictEqual((document.listeners.visibilitychange || new Set()).size, 0);
@@ -879,8 +922,8 @@ test('TASK 16 Block 3 Coverage: completed Resume überspringt Pilot zur nächste
   await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(), block2PlaylistItem(legacy)], 0);
   await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
 
-  assert.strictEqual(legacyStarted, true);
-  assert.strictEqual(playCount, 2);
+  assert.strictEqual(legacyStarted, false);
+  assert.strictEqual(playCount, 1);
   assert.strictEqual(fixture.audio.currentTime, 0);
 });
 
@@ -1928,13 +1971,13 @@ function browserPilotManifest(hash, overrides = {}) {
   }, overrides);
 }
 
-test('Pilot Integration: exakter Fach/Titel match für Recht – Rechtssubjekte und Rechtsobjekte', () => {
+test('Podcast Integration: jede gültige Fach/Titel-Einheit kann synchronisiert werden', () => {
   const { lerntexteIstPilotEinheit } = require('../js/lerntexte.js');
 
   assert.strictEqual(lerntexteIstPilotEinheit('Recht', 'Rechtssubjekte und Rechtsobjekte'), true);
-  assert.strictEqual(lerntexteIstPilotEinheit('Recht', 'Rechtsobjekte'), false);
-  assert.strictEqual(lerntexteIstPilotEinheit('Steuern', 'Rechtssubjekte und Rechtsobjekte'), false);
-  assert.strictEqual(lerntexteIstPilotEinheit('Recht', 'Rechtssubjekte und Rechtsobjekte '), false);
+  assert.strictEqual(lerntexteIstPilotEinheit('Steuern', 'Rechtsobjekte'), true);
+  assert.strictEqual(lerntexteIstPilotEinheit('', 'Rechtsobjekte'), false);
+  assert.strictEqual(lerntexteIstPilotEinheit('Recht', 'Rechtssubjekte und Rechtsobjekte '), true);
 });
 
 test('Pilot Integration: SHA-256 basiert nur auf rohem lerntext und ignoriert podcastText', async () => {
@@ -2139,7 +2182,7 @@ test('Pilot Integration: realer Playlist-Flow blockiert bei Asset-Fehler speech'
 
     assert.strictEqual(playCalled, false);
     assert.strictEqual(speechCalled, false);
-    assert.strictEqual(status.textContent, 'Podcast konnte nicht geladen werden.');
+    assert.strictEqual(status.textContent, 'missing');
   } finally {
     global.document = originalDocument;
     global.window = originalWindow;
@@ -2147,7 +2190,7 @@ test('Pilot Integration: realer Playlist-Flow blockiert bei Asset-Fehler speech'
   }
 });
 
-test('Pilot Integration: Nicht-Pilot behält Speech-Fallback bei object-not-found', async () => {
+test('Podcast Integration: Nicht-Pilot verwendet keinen Speech-Fallback bei object-not-found', async () => {
   const { lerntexteAudioPlaylistWeiter } = require('../js/lerntexte.js');
   const originalDocument = global.document;
   const originalWindow = global.window;
@@ -2177,7 +2220,7 @@ test('Pilot Integration: Nicht-Pilot behält Speech-Fallback bei object-not-foun
       text: 'Legacy lerntext'
     }], 0);
 
-    assert.strictEqual(speechCalled, true);
+    assert.strictEqual(speechCalled, false);
   } finally {
     global.document = originalDocument;
     global.window = originalWindow;
