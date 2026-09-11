@@ -253,6 +253,7 @@ function trainerVonVorne() {
       });
     })
     .then(function() {
+      window.WifaAnalytics?.reset('trainer');
       ladeFrageAusFach(context.fach, context.auswahl === "__ALL__" ? aktuellesThema : context.auswahl, "");
       setzeStatus("Fortschritt zurückgesetzt: Du startest wieder von vorne.");
     })
@@ -752,6 +753,7 @@ async function ladeFrageAusFach(fach, thema, currentId = "") {
 
       const daten = result.data || {};
 if (daten.themaAbgeschlossen) {
+  window.WifaAnalytics?.complete('trainer');
   aktuelleFrage = "";
   aktuelleMusterloesung = "";
   aktuelleStichpunkte = [];
@@ -797,6 +799,8 @@ if (daten.themaAbgeschlossen) {
       }
 
       zeigeGeladeneFrage(daten, thema);
+      window.WifaAnalytics?.start('trainer', fach, thema);
+      window.WifaAnalytics?.content('trainer', fach, daten.thema || thema);
 
       setzeStatus("Frage geladen.");
     } catch (error) {
@@ -830,6 +834,7 @@ async function starteThema() {
       return;
     }
 
+    window.WifaAnalytics?.reset('trainer');
     aktuellesThema = thema;
     aktuelleFrageId = "";
     wiederholungsKontext = null;

@@ -286,6 +286,8 @@ async function ladePruefungSimulation() {
     box.innerHTML = html;
 
     pruefungIstAktiv = true;
+    window.WifaAnalytics?.reset('exam');
+    window.WifaAnalytics?.start('exam', daten.every(item => item.fach === daten[0].fach) ? daten[0].fach : '');
 
     initialisiereAlleSkizzenfelder();
 
@@ -1022,6 +1024,7 @@ tabellenFelder.forEach(function(feld, index) {
     }
 
     renderPruefungsAuswertung(bewertung.data || {});
+    window.WifaAnalytics?.complete('exam');
 
     pruefungIstAktiv = false;
 

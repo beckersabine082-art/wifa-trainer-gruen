@@ -117,6 +117,7 @@ async function quizVonVorne() {
     }
   }
 
+  window.WifaAnalytics?.reset('quiz');
   rundenNummer = 1;
   fragenIndex = 0;
   rundenReihenfolge = [...pool];
@@ -181,6 +182,7 @@ function neuerFragenpool() {
 }
 
 function neueRunde() {
+  window.WifaAnalytics?.reset('quiz');
   let neu = mischen(neuerFragenpool());
   if (neu.length > 1 && letzteFrageAlterRunde && neu[0].quizKey === letzteFrageAlterRunde) {
     const swapIndex = 1 + Math.floor(Math.random() * (neu.length - 1));
@@ -357,6 +359,8 @@ async function zeigeAktuelleFrage() {
     }
     if (status) status.textContent = '';
     if (karte) karte.hidden = false;
+    window.WifaAnalytics?.start('quiz', quizFach);
+    window.WifaAnalytics?.content('quiz', aktuelleFrage.fach, aktuelleFrage.thema);
   } catch (error) {
     if (token !== ladeToken) return;
     if (status) status.textContent = `Frage konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
@@ -405,6 +409,7 @@ async function fuehreSpeicherungAus(ausgewaehlteOption, richtigeOption, richtig)
       richtig
     });
     antwortGespeichert = true;
+    if (fragenIndex === rundenReihenfolge.length - 1) window.WifaAnalytics?.complete('quiz');
     aktualisiereSitzungsStatistik(richtig);
     zeigeErgebnis(richtig, richtigeOption);
     if (status) status.textContent = '';

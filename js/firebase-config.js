@@ -30,14 +30,7 @@ import {
   getDownloadURL
 } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-storage.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCu8an6nozgp1NYLs7QqjRZou3gEegdG8s",
-  authDomain: "wifa-trainer-gruen.firebaseapp.com",
-  projectId: "wifa-trainer-gruen",
-  storageBucket: "wifa-trainer-gruen.firebasestorage.app",
-  messagingSenderId: "561836344573",
-  appId: "1:561836344573:web:23c2cc88c74a9e8f11aa94"
-};
+import {firebasePublicConfig as firebaseConfig} from './firebase-public-config.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);

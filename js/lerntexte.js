@@ -236,10 +236,12 @@ async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadat
   lerntextePilotButtonsVerdrahten();
 
   if (typeof audioElement.play === 'function') {
+    window.WifaAnalytics?.audio(audioElement, eintrag.fach, eintrag.titel);
     try {
       await audioElement.play();
       return true;
     } catch (error) {
+      window.WifaAnalytics?.audioError(eintrag.fach, eintrag.titel, error?.name);
       lerntextePilotStatus('Podcast konnte nicht gestartet werden.');
       return false;
     }
@@ -527,6 +529,7 @@ async function lerntextePilotFortsetzen() {
 
 async function lerntextePilotVonVorne() {
   if (!lerntextePilotAudio) return;
+  window.WifaAnalytics?.restartAudio(lerntextePilotAudio);
   lerntextePodcastVonVorne(lerntextePilotAudio);
   resyncPilotHighlight(lerntextePilotAudio.currentTime);
   lerntexteAudioAktiv = true;
@@ -1266,6 +1269,7 @@ function lerntexteAnzeigen() {
     block.appendChild(text);
     bereich.appendChild(block);
   });
+  window.WifaAnalytics?.content('learning_text', lerntexteAktuellesFach, einheiten.length === 1 ? einheiten[0].titel : einheiten[0].hauptkapitel);
 }
 
 function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
@@ -1309,6 +1313,7 @@ function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
       const assets = await lerntextePilotAssetsLaden(currentItem.eintrag);
       const validation = await lerntextePilotAssetValidieren(currentItem.eintrag, assets.manifest, assets.mp3Metadata);
       if (!validation.valid) {
+        window.WifaAnalytics?.audioError(currentItem.eintrag.fach, currentItem.eintrag.titel, 'asset_invalid');
         lerntextePilotStatus(validation.reason || 'Podcast muss aktualisiert werden.');
         return false;
       }
@@ -1316,6 +1321,7 @@ function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
       domAudio.load();
       return await lerntextePilotAudioStartenValidiert(currentItem.eintrag, assets.manifest, assets.mp3Metadata, null, validation);
     } catch (error) {
+      window.WifaAnalytics?.audioError(currentItem.eintrag.fach, currentItem.eintrag.titel, error?.code);
       lerntextePilotStatus(error && error.message ? error.message : "Podcast konnte nicht geladen werden.");
     }
   }

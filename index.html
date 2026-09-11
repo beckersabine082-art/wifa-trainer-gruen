@@ -14,6 +14,7 @@
   <meta name="theme-color" content="#b794f6">
 
 
+<link rel="stylesheet" href="css/analytics.css">
 </head>
 <body>
   <div class="app">
@@ -1009,7 +1010,7 @@
 
     <div class="privacy-text">
       <p>Der WiFa Trainer ist ein privates Lern- und Übungsprojekt.</p>
-      <p>Personenbezogene Daten werden nur verarbeitet, soweit dies für die Bereitstellung der Website, Nutzerkonten, Lernfunktionen, Sicherheit sowie KI-gestützte Funktionen erforderlich ist.</p>
+      <p>Personenbezogene Daten werden für die Bereitstellung der Website, Nutzerkonten, Lernfunktionen, Sicherheit und KI-gestützte Funktionen sowie nach gesonderter Einwilligung für die unten erläuterte Nutzungsanalyse verarbeitet.</p>
       <p>Verantwortliche Stelle:</p>
       <p>Sabine Becker<br>biene-becks@web.de</p>
     </div>
@@ -1214,6 +1215,21 @@
       <p>Sabine Becker<br><a href="mailto:biene-becks@web.de">biene-becks@web.de</a></p>
     </div>
   </div>
+
+<!-- Identical addition in datenschutz.html and index.html#datenschutzView. -->
+<div class="card" id="analytics">
+  <h2 class="section-title">15. Freiwillige Nutzungsanalyse mit Google Analytics</h2>
+  <div class="privacy-text">
+    <p>Die Nutzungsanalyse ist technisch vorbereitet und bis zur abgeschlossenen Einrichtung deaktiviert. Nach Aktivierung verwenden wir Google Analytics 4 über das vorhandene Firebase-Projekt ausschließlich nach Ihrer freiwilligen Einwilligung. Sie können die Website einschließlich aller Lernfunktionen ohne diese Einwilligung nutzen.</p>
+    <p>Zweck ist die zusammengefasste Auswertung von Besuchen, wiederkehrender Nutzung, angezeigten Ansichten, Lernfunktionen, Fächern, Themen und Abschlüssen sowie Podcast-Starts, erreichten Wiedergabepositionen und technischen Audiofehlern. Ein Trainer-Abschluss bezeichnet das Durchlaufen der Fragen, keine bestandene Prüfung.</p>
+    <p>Erfasst werden pseudonyme Cookie-/Gerätekennungen, Sitzungsinformationen, Ereigniszeitpunkte und technische Angaben wie Browser, Gerät und Sprache. Die IP-Adresse wird bei der Verbindung technisch an Google übertragen; laut Google wird sie in GA4 nicht protokolliert oder gespeichert. Die Daten sind deshalb nicht als vollständig anonym zu verstehen. Wir senden keine Namen, E-Mail-Adressen, Firebase-Nutzer-IDs, Lernantworten oder andere Freitexte an Analytics. Fach und Thema werden ausschließlich über fest hinterlegte Kennungen übermittelt. Tatsächliche URL-Parameter, URL-Fragmente und Verweis-URLs werden nicht in die Messdaten übernommen.</p>
+    <p>Vor Zustimmung wird die Messkomponente nicht geladen. Bei Ablehnung oder Widerruf senden wir auch keine cookielosen Analytics-Pings. Werbefunktionen und Google Signals werden in der Messkonfiguration deaktiviert. Es erfolgt keine Verknüpfung mit Ihrem Lernkonto und kein zusätzlicher Analytics-Schreibzugriff auf die Lernstands-Datenbank.</p>
+    <p>Die Entscheidung wird mit Zeitpunkt für höchstens 180 Tage unter <code>wifa.analytics.consent.v1</code> im lokalen Browserspeicher hinterlegt. Ein freiwilliger Testausschluss wird unter <code>wifa.analytics.exclude.v1</code> bis zur Aufhebung oder Löschung des Browserspeichers gespeichert. Bei Zustimmung können die Cookies <code>_ga</code> und <code>_ga_…</code> gesetzt werden; ihre konfigurierte Höchstdauer beträgt 180 Tage ohne laufende Verlängerung. Beim Widerruf werden diese Analytics-Cookies für diese Installation gelöscht. Bereits übermittelte Daten werden durch einen Widerruf nicht rückwirkend entfernt.</p>
+    <p>Die Schaltfläche „Datenschutz-Einstellungen“ am Seitenende ist jederzeit erreichbar. Dort können Sie gleichwertig annehmen oder ablehnen bzw. eine Zustimmung widerrufen. Eine erneute Zustimmung ist jederzeit möglich. Bei gesperrtem lokalem Speicher bleibt Analytics aus. Die Einwilligung betrifft nur Analytics; technisch erforderliche Anmelde- und Lernstandsfunktionen sind davon unabhängig.</p>
+    <p>Vorgesehene Rechtsgrundlagen sind Art. 6 Abs. 1 lit. a DSGVO für die freiwillige Analyse und § 25 Abs. 1 TDDDG für den einwilligungspflichtigen Zugriff auf das Endgerät. Der Widerruf berührt nicht die Rechtmäßigkeit der Verarbeitung vor dem Widerruf.</p>
+    <p class="privacy-note"><strong>Vor Aktivierung durch die Betreiberin zu vervollständigen und rechtlich zu prüfen:</strong> tatsächlich zuständige Google-Vertragsgesellschaft und Empfänger, Auftragsverarbeitungsbedingungen, konkrete Grundlage möglicher Übermittlungen in die USA und weitere Drittländer sowie deren Risiken, Aufbewahrungsfrist der GA4-Ereignisdaten (vorgesehen: 2 Monate, in der Konsole noch zu bestätigen), Auswirkungen auf aggregierte Berichte und das Verfahren bei Löschanfragen. Die vollständigen erforderlichen Betreiber-/Kontaktangaben sind zu prüfen; vorhandener Name und E-Mail werden nicht durch erfundene Angaben ergänzt. Auch eine etwaige Nutzung durch Minderjährige ist zu berücksichtigen. Dieser vorbereitete Abschnitt ersetzt keine rechtliche Prüfung und garantiert keine Rechtskonformität. Vor Veröffentlichung einer aktivierten Messung ist der Hinweis auf die noch ausstehende Einrichtung an den tatsächlichen Stand anzupassen.</p>
+  </div>
+</div>
 </section>
 
     <section class="view privacy-page" id="nutzungsbedingungenView">
@@ -1523,6 +1539,10 @@
     </div>
   </div>
 
+<script src="js/analytics-settings.js"></script>
+<script src="js/analytics-topics.js"></script>
+<script src="js/analytics-core.js"></script>
+<script src="js/analytics-consent.js"></script>
 <script src="js/api.js"></script>
 <script src="js/auth-shim.js"></script>
 <script src="js/main.js?v=nav-menu-v5"></script>

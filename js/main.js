@@ -85,6 +85,7 @@ function zeigeBereich(viewId) {
     const ziel = document.getElementById(viewId);
     if (ziel) {
       ziel.classList.add("active");
+      window.WifaAnalytics?.view(viewId);
     }
 
     document.querySelectorAll(".nav-actions .nav-btn").forEach(function(btn) {
