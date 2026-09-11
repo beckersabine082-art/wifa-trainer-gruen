@@ -94,6 +94,152 @@ function loadTrainerScript() {
   return context;
 }
 
+function loadKilianScript() {
+  const source = fs.readFileSync(path.join(__dirname, '../js/wissensdatenbank.js'), 'utf8');
+  const elements = new Map();
+  const documentListeners = new Map();
+  const apiCalls = [];
+  const makeElement = (id) => ({
+    id,
+    value: '',
+    textContent: '',
+    innerHTML: '',
+    style: { display: 'none' },
+    classList: { contains: () => false, add() {}, remove() {} },
+    querySelectorAll: () => []
+  });
+  const context = {
+    console,
+    document: {
+      getElementById(id) {
+        if (!elements.has(id)) elements.set(id, makeElement(id));
+        return elements.get(id);
+      },
+      querySelectorAll: () => [],
+      addEventListener(type, listener) {
+        const listeners = documentListeners.get(type) || [];
+        listeners.push(listener);
+        documentListeners.set(type, listeners);
+      }
+    },
+    window: { speechSynthesis: { cancel() {}, speak() {} } },
+    apiPost: async (...args) => {
+      apiCalls.push(args);
+      return { success: true, data: { antwort: 'ok' } };
+    },
+    formatKilianAntwort: value => value,
+    aktuellerTeilbereich: 'WQ',
+    aktuellesFach: 'Recht',
+    aktuellesThema: 'Vertrag',
+    aktuelleFrage: 'Was ist ein Vertrag?',
+    aktuelleFrageId: 'Q-001',
+    aktuelleKilianBewertung: null,
+    Array,
+    String,
+    Object
+  };
+  context.window = context;
+  vm.createContext(context);
+  vm.runInContext(source, context);
+  return { context, elements, documentListeners, apiCalls };
+}
+
+test('Kilian bubble sends with Enter and keeps Shift+Enter as a line break', async () => {
+  const { context, documentListeners, apiCalls } = loadKilianScript();
+  const input = context.document.getElementById('kilianBubbleInput');
+  const keydown = event => documentListeners.get('keydown').forEach(listener => listener(event));
+  input.value = 'Wie funktioniert das?';
+  let enterPrevented = false;
+
+  keydown({
+    target: input,
+    key: 'Enter',
+    shiftKey: false,
+    preventDefault() { enterPrevented = true; }
+  });
+  await Promise.resolve();
+
+  assert.equal(enterPrevented, true);
+  assert.equal(apiCalls.length, 1);
+
+  let shiftEnterPrevented = false;
+  keydown({
+    target: input,
+    key: 'Enter',
+    shiftKey: true,
+    preventDefault() { shiftEnterPrevented = true; }
+  });
+
+  assert.equal(shiftEnterPrevented, false);
+  assert.equal(apiCalls.length, 1);
+});
+
+test('Kilian bubble ignores Enter when the input is empty', () => {
+  const { context, documentListeners, apiCalls } = loadKilianScript();
+  const input = context.document.getElementById('kilianBubbleInput');
+  input.value = '   ';
+  let prevented = false;
+
+  documentListeners.get('keydown').forEach(listener => listener({
+    target: input,
+    key: 'Enter',
+    shiftKey: false,
+    preventDefault() { prevented = true; }
+  }));
+
+  assert.equal(prevented, false);
+  assert.equal(apiCalls.length, 0);
+});
+
+test('Kilian bubble keeps same-question chat and clears it for another question', () => {
+  const { context, elements } = loadKilianScript();
+  context.kilianBubbleFrageWechseln('Q-001');
+  elements.get('kilianBubbleAntwort').textContent = 'Antwort aus Frage A';
+  elements.get('kilianBubbleInput').value = 'Rückfrage';
+
+  context.kilianBubbleFrageWechseln('Q-001');
+  assert.equal(elements.get('kilianBubbleAntwort').textContent, 'Antwort aus Frage A');
+  assert.equal(elements.get('kilianBubbleInput').value, 'Rückfrage');
+
+  context.kilianBubbleFrageWechseln('Q-002');
+  assert.equal(elements.get('kilianBubbleAntwort').textContent, 'Hier erscheint Kilians Antwort.');
+  assert.equal(elements.get('kilianBubbleInput').value, '');
+});
+
+test('Kilian context includes the current question but omits evaluation before grading', () => {
+  const { context } = loadKilianScript();
+  const before = context.trainerKilianKontext();
+  assert.equal(before.frageId, 'Q-001');
+  assert.equal(before.fach, 'Recht');
+  assert.equal(before.thema, 'Vertrag');
+  assert.equal(before.fragetext, 'Was ist ein Vertrag?');
+  assert.equal(before.antwort, '');
+
+  context.aktuelleKilianBewertung = {
+    musterloesung: 'Eine Einigung.',
+    punkte: 1,
+    maxPunkte: 2,
+    erkannte: ['Einigung'],
+    fehlende: ['Willenserklärungen']
+  };
+  const after = context.trainerKilianKontext();
+  assert.equal(after.bewertung.musterloesung, 'Eine Einigung.');
+  assert.equal(after.bewertung.punkte, 1);
+});
+
+test('Kilian request embeds hidden current-question context for older backends', () => {
+  const { context } = loadKilianScript();
+  const request = context.trainerKilianAnfrage('Was bedeutet das?');
+  assert.match(request, /Was bedeutet das\?/);
+  assert.match(request, /Fragen-ID: Q-001/);
+  assert.match(request, /Vollständiger Fragetext: Was ist ein Vertrag\?/);
+  assert.doesNotMatch(request, /Musterlösung|Bewertung nach Auswertung/);
+
+  context.aktuelleKilianBewertung = { musterloesung: 'Eine Einigung.', punkte: 1 };
+  assert.match(context.trainerKilianAnfrage('Warum kein Punkt?'), /Bewertung nach Auswertung/);
+  assert.match(context.trainerKilianAnfrage('Warum kein Punkt?'), /Eine Einigung\./);
+});
+
 function loadQuizScript() {
   const quizSource = fs.readFileSync(path.join(__dirname, '../js/quiz.js'), 'utf8')
     .replace(/import\s*\{[\s\S]*?\}\s*from\s*['"][^'"]+['"];?\n?/g, '')

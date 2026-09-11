@@ -9,6 +9,8 @@ function waehleTeilbereich() {
     aktuelleMusterloesung = "";
     aktuelleStichpunkte = [];
     aktuelleFrageId = "";
+    aktuelleKilianBewertung = null;
+    if (typeof kilianBubbleFrageWechseln === "function") kilianBubbleFrageWechseln("");
 
     const fachSelect = document.getElementById("fachSelect");
     const fachBereich = document.getElementById("fachBereich");
@@ -65,6 +67,8 @@ function waehleFachAusDropdown() {
       aktuelleMusterloesung = "";
       aktuelleStichpunkte = [];
       aktuelleFrageId = "";
+      aktuelleKilianBewertung = null;
+      if (typeof kilianBubbleFrageWechseln === "function") kilianBubbleFrageWechseln("");
 
       document.getElementById("themaBereich").style.display = "none";
       document.getElementById("themaSelect").innerHTML = '<option value="">-- Thema wählen --</option>';
@@ -635,6 +639,7 @@ function waehleFach(fach) {
     aktuelleFrage = daten.frage || "";
     aktuellesThema = daten.thema || fallbackThema || "Thema nicht hinterlegt";
     aktuelleMusterloesung = daten.musterloesung || "";
+    aktuelleKilianBewertung = null;
     aktuelleStichpunkte = String(daten.stichpunkte || "")
       .split(";")
       .map(function(punkt) {
@@ -657,6 +662,7 @@ function waehleFach(fach) {
         : "";
 
     resetFrageAnzeige();
+    if (typeof kilianBubbleFrageWechseln === "function") kilianBubbleFrageWechseln(aktuelleFrageId);
 
     let frageHtml = "";
     if (aktuelleFrage) {
@@ -756,6 +762,10 @@ if (daten.themaAbgeschlossen) {
   aktuelleMusterloesung = "";
   aktuelleStichpunkte = [];
   aktuelleFrageId = "";
+  aktuelleKilianBewertung = null;
+  if (typeof kilianBubbleFrageWechseln === "function") kilianBubbleFrageWechseln("");
+  aktuelleKilianBewertung = null;
+  if (typeof kilianBubbleFrageWechseln === "function") kilianBubbleFrageWechseln("");
 
   const frageGesamt = Number(daten.frageGesamt || 0);
 
@@ -786,6 +796,8 @@ if (daten.themaAbgeschlossen) {
         aktuelleMusterloesung = "";
         aktuelleStichpunkte = [];
         aktuelleFrageId = "";
+        aktuelleKilianBewertung = null;
+        if (typeof kilianBubbleFrageWechseln === "function") kilianBubbleFrageWechseln("");
 
         document.getElementById("frageText").textContent =
           daten.frage || "Keine aktive Frage gefunden.";

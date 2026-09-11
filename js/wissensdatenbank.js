@@ -381,7 +381,8 @@ async function frageKilian() {
     document.getElementById("kilianAntwort").textContent = "Antwort wird geladen.";
 
     const kilianResult = await apiPost("frageKilian", {
-      frage: frage
+      frage: frage,
+      kontext: trainerKilianKontext()
     });
 
     if (!kilianResult.success) {
@@ -407,6 +408,69 @@ function kilianLeeren() {
 
   document.getElementById("kilianStatus").textContent =
     "Kilian wartet auf deine Frage.";
+}
+
+let kilianBubbleFrageId = "";
+
+function trainerKilianAntwort() {
+  const antwortInput = document.getElementById("antwortInput");
+  const hauptantwort = antwortInput ? String(antwortInput.value || "").trim() : "";
+  const weitereAntworten = Array.from(document.querySelectorAll(
+    ".aufgaben-html-bereich input:not([type=hidden]), .aufgaben-html-bereich textarea, .aufgaben-html-bereich select"
+  )).map(function(element) {
+    return String(element.value || "").trim();
+  }).filter(Boolean);
+
+  return [hauptantwort].concat(weitereAntworten).filter(Boolean).join(" | ");
+}
+
+function trainerKilianKontext() {
+  if (typeof aktuelleFrageId === "undefined" || !String(aktuelleFrageId || "").trim()) {
+    return null;
+  }
+
+  const kontext = {
+    frageId: String(aktuelleFrageId || "").trim(),
+    fach: String(typeof aktuellesFach !== "undefined" ? aktuellesFach : "").trim(),
+    thema: String(typeof aktuellesThema !== "undefined" ? aktuellesThema : "").trim(),
+    fragetext: String(typeof aktuelleFrage !== "undefined" ? aktuelleFrage : "").trim(),
+    antwort: trainerKilianAntwort()
+  };
+
+  if (typeof aktuelleKilianBewertung !== "undefined" && aktuelleKilianBewertung) {
+    kontext.bewertung = aktuelleKilianBewertung;
+  }
+
+  return kontext;
+}
+
+function trainerKilianAnfrage(frage) {
+  const kontext = trainerKilianKontext();
+  if (!kontext) return String(frage || "").trim();
+
+  return String(frage || "").trim() +
+    "\n\n[Automatischer Aufgaben-Kontext. Nutze ihn direkt und frage nicht erneut nach dem Fragetext.]\n" +
+    "Fragen-ID: " + kontext.frageId + "\n" +
+    "Fach: " + kontext.fach + "\n" +
+    "Thema: " + kontext.thema + "\n" +
+    "Vollständiger Fragetext: " + kontext.fragetext + "\n" +
+    "Aktuelle Nutzerantwort: " + (kontext.antwort || "Keine Antwort eingegeben.") +
+    (kontext.bewertung
+      ? "\nBewertung nach Auswertung: " + JSON.stringify(kontext.bewertung)
+      : "");
+}
+
+function kilianBubbleFrageWechseln(frageId) {
+  const neueFrageId = String(frageId || "").trim();
+  if (neueFrageId === kilianBubbleFrageId) return;
+
+  kilianBubbleFrageId = neueFrageId;
+  const input = document.getElementById("kilianBubbleInput");
+  const antwort = document.getElementById("kilianBubbleAntwort");
+  const status = document.getElementById("kilianBubbleStatus");
+  if (input) input.value = "";
+  if (antwort) antwort.textContent = "Hier erscheint Kilians Antwort.";
+  if (status) status.textContent = "Kilian wartet auf deine Frage.";
 }
 
 function toggleKilianBubble() {
@@ -442,7 +506,8 @@ async function frageKilianBubble() {
       "Antwort wird geladen...";
 
     const result = await apiPost("frageKilian", {
-      frage: frage
+      frage: trainerKilianAnfrage(frage),
+      kontext: trainerKilianKontext()
     });
 
     if (!result.success) {
@@ -463,6 +528,19 @@ async function frageKilianBubble() {
       "Fehler: " + error.message;
   }
 }
+
+function behandleKilianBubbleTastatur(event) {
+  if (event.target?.id !== "kilianBubbleInput" || event.key !== "Enter" || event.shiftKey) {
+    return;
+  }
+
+  if (!event.target.value.trim()) return;
+
+  event.preventDefault();
+  frageKilianBubble();
+}
+
+document.addEventListener("keydown", behandleKilianBubbleTastatur);
 
 function kilianBubbleVorlesen() {
   if (!("speechSynthesis" in window)) {
@@ -518,18 +596,12 @@ async function zeigeTrainerHintBubble() {
 
   try {
     // Build the hint request message with context
-    const frageText = 
-      "Gib mir einen kleinen Tipp zu dieser Frage, ohne mir direkt die vollständige Lösung zu verraten.\n\n" +
-      "Kontext:\n" +
-      "Teilbereich: " + (typeof aktuellerTeilbereich !== 'undefined' ? aktuellerTeilbereich : '') + "\n" +
-      "Fach: " + (typeof aktuellesFach !== 'undefined' ? aktuellesFach : '') + "\n" +
-      "Thema: " + (typeof aktuellesThema !== 'undefined' ? aktuellesThema : '') + "\n" +
-      "Frage-ID: " + (typeof aktuelleFrageId !== 'undefined' ? aktuelleFrageId : '') + "\n" +
-      "Fragetext: " + (typeof aktuelleFrage !== 'undefined' ? aktuelleFrage : '');
+    const frageText = "Gib mir einen kleinen Tipp zu dieser Frage, ohne mir direkt die vollständige Lösung zu verraten.";
 
     // Fetch the hint from the API
     const result = await apiPost("frageKilian", {
-      frage: frageText
+      frage: trainerKilianAnfrage(frageText),
+      kontext: trainerKilianKontext()
     });
 
     if (!result.success) {

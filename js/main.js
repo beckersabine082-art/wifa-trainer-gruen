@@ -30,6 +30,7 @@ const faecherNachTeilbereich = {
   let aktuelleStichpunkte = [];
   let aktuelleFrageId = "";
   let letzteAusgewerteteAntwort = "";
+  let aktuelleKilianBewertung = null;
   let ladeToken = 0;
   let appIstBeschaeftigt = false;
   // Interner Zustand: true, wenn die aktuelle Frage über die Fehleranalyse-Wiederholung geöffnet wurde (nicht anhand von sichtbarem Text erkennen)

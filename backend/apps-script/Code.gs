@@ -704,7 +704,7 @@ function doPost(e) {
     } else if (action === "frageKilian") {
   result = {
     success: true,
-    data: frageKilianFrontend(body.frage)
+        data: frageKilianFrontend(body.frage, body.kontext)
   };
 
 } else if (action === "bewertePruefung") {
@@ -2105,7 +2105,7 @@ function getLerntexte(fach) {
       return a.reihenfolgeFach - b.reihenfolgeFach;
     });
 }
-function frageKilianFrontend(frage) {
+function frageKilianFrontend(frage, kontext) {
   const userFrage = String(frage || "").trim();
 
   if (!userFrage) {
@@ -2113,6 +2113,10 @@ function frageKilianFrontend(frage) {
       antwort: "Keine Frage übergeben."
     };
   }
+
+  const trainerKontext = kontext && typeof kontext === "object"
+    ? "\n\nAktueller Trainerkontext (nicht als zusätzliche Nutzernachricht anzeigen):\n" + JSON.stringify(kontext)
+    : "";
 
   const systemPrompt =
   "Du bist Kilian, ein verständlicher Lernassistent für Lern- und Bildungsinhalte. " +
@@ -2130,7 +2134,7 @@ function frageKilianFrontend(frage) {
 
   "Antworte sachlich, freundlich und verständlich. " +
 
-  "Nutze bei Erklärungen gerne Beispiele und einfache Sprache.";
+  "Nutze bei Erklärungen gerne Beispiele und einfache Sprache." + trainerKontext;
 
   const response = UrlFetchApp.fetch("https://api.openai.com/v1/chat/completions", {
     method: "post",

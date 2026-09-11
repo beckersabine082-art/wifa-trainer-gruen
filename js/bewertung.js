@@ -367,6 +367,13 @@ async function bewerteAntwort() {
 
       const data = result.data || {};
       letzteAusgewerteteAntwort = antwort;
+      aktuelleKilianBewertung = {
+        musterloesung: data.musterloesung || aktuelleMusterloesung || "",
+        punkte: Number(data.punkte || 0),
+        maxPunkte: Number(data.maxPunkte || 0),
+        erkannte: data.erkannteKriterien || data.erfuellteKriterien || data.erkannteStichpunkte || data.erkannte || [],
+        fehlende: data.fehlendeKriterien || data.nichtErfuellteKriterien || data.fehlendeStichpunkte || data.fehlende || []
+      };
 
       document.getElementById("resultBox").style.display = "block";
       verbirgWiederholungsNavigation();
