@@ -630,7 +630,17 @@ function getLernstandFrontend(nutzer) {
 }
 function doPost(e) {
   try {
-    const body = JSON.parse(e.postData.contents || "{}");
+    let body;
+    try { body = JSON.parse(e.postData.contents || "{}"); }
+    catch (_) {
+      // Never echo malformed request bodies (which may contain authentication tokens).
+      return ContentService.createTextOutput(JSON.stringify({success:false,error:'invalid_request'}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    if (body && (body.action === 'usageRecord' || body.action === 'usageRead')) {
+      return ContentService.createTextOutput(JSON.stringify(usageHandle_(body)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     const action = String(body.action || "").trim();
 
     let result = {};

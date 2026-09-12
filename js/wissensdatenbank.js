@@ -73,6 +73,7 @@ async function kartenFachWaehlen() {
 }
 
 async function ladeKarteikarten() {
+  const usageTicket = window.WifaUsage?.captureTicket();
   karteikartenAudioStoppen();
   const fach = document.getElementById("kartenFachSelect").value;
   const thema = document.getElementById("kartenThemaSelect").value;
@@ -109,6 +110,7 @@ async function ladeKarteikarten() {
       karteikartenDaten.length + " Karteikarten geladen.";
 
     zeigeAktuelleKarte();
+    if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.record('flashcards_start', fach);
 
   } catch (error) {
     document.getElementById("kartenStatus").textContent =
@@ -364,6 +366,7 @@ function audioStoppen() {
 }
 
 async function frageKilian() {
+  const usageTicket = window.WifaUsage?.captureTicket();
   if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
     alert("Sorry – Betrug auf diesem Weg nicht möglich.\n\nDie Prüfung soll deinen tatsächlichen Wissensstand zeigen.\nIn den anderen Lernbereichen unterstütze ich dich danach gerne wieder.");
     return;
@@ -392,6 +395,7 @@ async function frageKilian() {
       formatKilianAntwort(kilianResult.data?.antwort || "Keine Antwort erhalten.");
 
     document.getElementById("kilianStatus").textContent = "Antwort erhalten.";
+    if (kilianResult.data?.antwort && window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.record('kilian_use');
 
   } catch (error) {
     document.getElementById("kilianStatus").textContent =
@@ -419,9 +423,11 @@ function toggleKilianBubble() {
 
   fenster.style.display =
     fenster.style.display === "block" ? "none" : "block";
+  if (fenster.style.display === "block") window.WifaUsage?.record('kilian_open');
 }
 
 async function frageKilianBubble() {
+  const usageTicket = window.WifaUsage?.captureTicket();
   if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
     alert("Sorry – Betrug auf diesem Weg nicht möglich.\n\nDie Prüfung soll deinen tatsächlichen Wissensstand zeigen.\nIn den anderen Lernbereichen unterstütze ich dich danach gerne wieder.");
     return;
@@ -457,6 +463,7 @@ async function frageKilianBubble() {
 
     document.getElementById("kilianBubbleStatus").textContent =
       "Antwort erhalten.";
+    if (result.data?.antwort && window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.record('kilian_use');
 
   } catch (error) {
     document.getElementById("kilianBubbleStatus").textContent =

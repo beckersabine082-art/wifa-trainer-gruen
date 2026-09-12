@@ -206,7 +206,7 @@ async function lerntextePilotAssetValidieren(eintrag, manifest, mp3Metadata) {
   return { valid: true, reason: '', currentHash: currentHash };
 }
 
-async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadata, resumeState, validation) {
+async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadata, resumeState, validation, usageTicket = window.WifaUsage?.captureTicket()) {
   if (!validation.valid) {
     lerntextePilotStatus(validation.reason || 'Podcast muss aktualisiert werden.');
     return false;
@@ -232,11 +232,12 @@ async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadat
   lerntexteAudioAktiv = true;
   lerntexteAudioPausiert = false;
   lerntexteAudioQuelle = 'firebase';
-  lerntextePilotKaraokeEinrichten(audioElement, manifest, lerntextePilotTextRoot);
+  lerntextePilotKaraokeEinrichten(audioElement, manifest, lerntextePilotTextRoot, usageTicket);
   lerntextePilotButtonsVerdrahten();
 
   if (typeof audioElement.play === 'function') {
     window.WifaAnalytics?.audio(audioElement, eintrag.fach, eintrag.titel);
+    window.WifaUsage?.audio(audioElement, eintrag.fach, eintrag.titel, usageTicket);
     try {
       await audioElement.play();
       return true;
@@ -251,8 +252,9 @@ async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadat
 }
 
 async function lerntextePilotAudioStarten(eintrag, manifest, mp3Metadata, resumeState) {
+  const usageTicket = window.WifaUsage?.captureTicket();
   const validation = await lerntextePilotAssetValidieren(eintrag, manifest, mp3Metadata);
-  return lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadata, resumeState, validation);
+  return lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadata, resumeState, validation, usageTicket);
 }
 
 function lerntextePilotKaraokeAufraeumen() {
@@ -282,7 +284,7 @@ function lerntextePilotKaraokeAufraeumen() {
   }
 }
 
-async function lerntextePilotNatürlichBeenden() {
+async function lerntextePilotNatürlichBeenden(usageTicket) {
   if (!lerntextePilotUid) {
     lerntextePilotKaraokeAufraeumen();
     lerntexteAudioAktiv = false;
@@ -300,10 +302,10 @@ async function lerntextePilotNatürlichBeenden() {
   lerntexteAudioAktiv = false;
   lerntexteAudioPausiert = false;
   lerntexteAudioPlaylistIndex += 1;
-  await lerntexteAudioPlaylistWeiter();
+  await lerntexteAudioPlaylistWeiter(undefined, undefined, usageTicket);
 }
 
-function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot) {
+function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot, usageTicket = window.WifaUsage?.captureTicket()) {
   const progressSnapshot = {
     uid: lerntextePilotUid,
     currentHash: lerntextePilotCurrentHash,
@@ -333,7 +335,7 @@ function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot) {
     resync(audio.currentTime);
   };
   const endedHandler = function () {
-    lerntextePilotNatürlichBeenden().catch(function () {
+    lerntextePilotNatürlichBeenden(usageTicket).catch(function () {
       lerntextePilotStatus('Podcast konnte nicht abgeschlossen werden.');
     });
   };
@@ -530,6 +532,7 @@ async function lerntextePilotFortsetzen() {
 async function lerntextePilotVonVorne() {
   if (!lerntextePilotAudio) return;
   window.WifaAnalytics?.restartAudio(lerntextePilotAudio);
+  window.WifaUsage?.restartAudio(lerntextePilotAudio);
   lerntextePodcastVonVorne(lerntextePilotAudio);
   resyncPilotHighlight(lerntextePilotAudio.currentTime);
   lerntexteAudioAktiv = true;
@@ -999,6 +1002,7 @@ function initialisiereLerntexteAnsicht() {
 }
 
 async function lerntexteFachWaehlen(fach) {
+  const usageTicket = window.WifaUsage?.captureTicket();
   lerntexteAudioStoppen();
   lerntexteAktuellesFach = fach;
   lerntexteAktuellesKapitel = "";
@@ -1044,7 +1048,7 @@ async function lerntexteFachWaehlen(fach) {
       titelElement.textContent = lerntexteAktuellesKapitel ? "Kapitel " + lerntexteAktuellesKapitel : lerntexteAktuellesFach;
     }
 
-    lerntexteAnzeigen();
+    lerntexteAnzeigen(usageTicket);
 
   } catch (error) {
     lerntexteElement("lerntexteStatus").textContent =
@@ -1224,7 +1228,7 @@ function lerntexteNormalisiereUnterkapitelNr(wert) {
   return text;
 }
 
-function lerntexteAnzeigen() {
+function lerntexteAnzeigen(usageTicket = window.WifaUsage?.captureTicket()) {
   lerntextePilotKaraokeAufraeumen();
   const bereich = lerntexteElement("lerntexteInhaltBereich");
   bereich.innerHTML = "";
@@ -1270,9 +1274,10 @@ function lerntexteAnzeigen() {
     bereich.appendChild(block);
   });
   window.WifaAnalytics?.content('learning_text', lerntexteAktuellesFach, einheiten.length === 1 ? einheiten[0].titel : einheiten[0].hauptkapitel);
+  if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.content(lerntexteAktuellesFach, einheiten.map(eintrag => eintrag.titel));
 }
 
-function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
+function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride, usageTicket = window.WifaUsage?.captureTicket()) {
   if (Array.isArray(playlistOverride)) {
     lerntexteAudioPlaylist = playlistOverride;
     lerntexteAudioPlaylistIndex = typeof playlistIndexOverride === 'number' ? playlistIndexOverride : 0;
@@ -1319,7 +1324,7 @@ function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride) {
       }
       domAudio.src = assets.mp3Url;
       domAudio.load();
-      return await lerntextePilotAudioStartenValidiert(currentItem.eintrag, assets.manifest, assets.mp3Metadata, null, validation);
+      return await lerntextePilotAudioStartenValidiert(currentItem.eintrag, assets.manifest, assets.mp3Metadata, null, validation, usageTicket);
     } catch (error) {
       window.WifaAnalytics?.audioError(currentItem.eintrag.fach, currentItem.eintrag.titel, error?.code);
       lerntextePilotStatus(error && error.message ? error.message : "Podcast konnte nicht geladen werden.");
@@ -1357,6 +1362,7 @@ function lerntexteAudioStoppen(status) {
   if (player) {
     player.pause();
     player.currentTime = 0;
+    window.WifaUsage?.restartAudio(player);
     player.onended = null;
     player.ontimeupdate = null;
   }

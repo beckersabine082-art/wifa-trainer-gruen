@@ -217,6 +217,7 @@ async function ladeTrainerFortschritt(fach, thema, requestToken = ++trainerProgr
 }
 
 function trainerVonVorne() {
+  const usageTicket = window.WifaUsage?.captureTicket();
   if (appIstBeschaeftigt) return;
   if (!aktuellesFach || !aktuellesThema) {
     alert("Bitte zuerst ein Fach und ein Thema auswählen.");
@@ -254,7 +255,8 @@ function trainerVonVorne() {
     })
     .then(function() {
       window.WifaAnalytics?.reset('trainer');
-      ladeFrageAusFach(context.fach, context.auswahl === "__ALL__" ? aktuellesThema : context.auswahl, "");
+      if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.reset('trainer');
+      ladeFrageAusFach(context.fach, context.auswahl === "__ALL__" ? aktuellesThema : context.auswahl, "", usageTicket);
       setzeStatus("Fortschritt zurückgesetzt: Du startest wieder von vorne.");
     })
     .catch(function(error) {
@@ -735,7 +737,7 @@ function waehleFach(fach) {
     starteTrainerTippTimer();
   }
 
-async function ladeFrageAusFach(fach, thema, currentId = "") {
+async function ladeFrageAusFach(fach, thema, currentId = "", usageTicket = window.WifaUsage?.captureTicket()) {
   trainerTippTimerAbbrechen();
     const eigenerToken = ++ladeToken;
 
@@ -800,6 +802,7 @@ if (daten.themaAbgeschlossen) {
 
       zeigeGeladeneFrage(daten, thema);
       window.WifaAnalytics?.start('trainer', fach, thema);
+      if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.start('trainer', fach);
       window.WifaAnalytics?.content('trainer', fach, daten.thema || thema);
 
       setzeStatus("Frage geladen.");
@@ -815,6 +818,7 @@ if (daten.themaAbgeschlossen) {
   }
 
 async function starteThema() {
+    const usageTicket = window.WifaUsage?.captureTicket();
     if (appIstBeschaeftigt) return;
 
     const thema = document.getElementById("themaSelect").value;
@@ -835,12 +839,13 @@ async function starteThema() {
     }
 
     window.WifaAnalytics?.reset('trainer');
+    window.WifaUsage?.reset('trainer');
     aktuellesThema = thema;
     aktuelleFrageId = "";
     wiederholungsKontext = null;
 
     const gespeicherteFrageId = await ladeTrainerFortschritt(aktuellesFach, aktuellesThema);
-    ladeFrageAusFach(aktuellesFach, aktuellesThema, gespeicherteFrageId || "");
+    ladeFrageAusFach(aktuellesFach, aktuellesThema, gespeicherteFrageId || "", usageTicket);
   }
 
 function naechsteFrage() {

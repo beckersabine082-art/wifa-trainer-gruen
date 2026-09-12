@@ -133,6 +133,7 @@ function ermittlePruefungsEinheitTitel(teilbereich, einheitKey) {
 }
 
 async function ladePruefungSimulation() {
+  const usageTicket = window.WifaUsage?.captureTicket();
   const box = document.getElementById("pruefungContainer");
 
   pruefungAuswertungBereitsGespeichert = false;
@@ -288,6 +289,7 @@ async function ladePruefungSimulation() {
     pruefungIstAktiv = true;
     window.WifaAnalytics?.reset('exam');
     window.WifaAnalytics?.start('exam', daten.every(item => item.fach === daten[0].fach) ? daten[0].fach : '');
+    if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.record('simulation_start', daten.every(item => item.fach === daten[0].fach) ? daten[0].fach : '', teilbereich);
 
     initialisiereAlleSkizzenfelder();
 

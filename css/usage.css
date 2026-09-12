@@ -1,0 +1,34 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #193a2f; background: #f1f5f1; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1160px; margin: auto; padding: 32px 24px 48px; }
+a { color: #216644; }
+.back { display: inline-block; margin-bottom: 24px; }
+header { max-width: 760px; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 16px; }
+h2 { font-size: 1.25rem; margin: 0 0 18px; }
+p { line-height: 1.6; }
+.eyebrow { text-transform: uppercase; font-weight: 650; letter-spacing: .12em; font-size: .8rem; }
+.controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 28px 0 20px; }
+button, select { font: inherit; border: 1px solid #8ca797; border-radius: 8px; padding: 11px 14px; background: white; color: inherit; }
+button { background: #216644; color: white; cursor: pointer; }
+button:disabled { opacity: .55; cursor: wait; }
+:focus-visible { outline: 3px solid #b07919; outline-offset: 3px; }
+#usageStatus { min-height: 3em; }
+section { background: #fff; border: 1px solid #dbe4dc; border-radius: 16px; padding: 24px; margin-bottom: 22px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.total { background: #e1eee4; }
+.total p { font-size: 3rem; font-weight: 700; margin: 0; }
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th, td { text-align: left; padding: 12px 5px; border-bottom: 1px solid #e4ebe5; }
+tbody th { font-weight: 450; }
+td, thead th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.table-scroll { overflow-x: auto; }
+.table-scroll table { min-width: 700px; }
+.table-scroll thead th:not(:first-child) { text-align: right; }
+.trend { display: flex; align-items: flex-end; height: 160px; gap: 3px; border-bottom: 1px solid #92aa9a; margin-bottom: 20px; }
+.usage-bar { flex: 1; background: #39815a; min-width: 1px; }
+summary { cursor: pointer; font-weight: 600; padding: 10px 0; }
+footer { color: #506358; max-width: 840px; font-size: .9rem; }
+[hidden] { display: none !important; }
+@media (max-width: 760px) { .grid { grid-template-columns: 1fr; gap: 0; } main { padding: 24px 16px; } section { padding: 18px; } }

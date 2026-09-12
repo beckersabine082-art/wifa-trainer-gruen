@@ -2,6 +2,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/fireba
 import { 
   getAuth,
   onAuthStateChanged,
+  onIdTokenChanged,
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
@@ -56,6 +57,7 @@ export {
   ref,
   getDownloadURL,
   onAuthStateChanged,
+  onIdTokenChanged,
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,

@@ -83,6 +83,7 @@ async function ladeQuizFortschritt() {
 }
 
 async function quizVonVorne() {
+  const usageTicket = window.WifaUsage?.captureTicket();
   const pool = neuerFragenpool();
   if (!pool.length) return;
 
@@ -118,6 +119,7 @@ async function quizVonVorne() {
   }
 
   window.WifaAnalytics?.reset('quiz');
+  if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.reset('quiz');
   rundenNummer = 1;
   fragenIndex = 0;
   rundenReihenfolge = [...pool];
@@ -126,7 +128,7 @@ async function quizVonVorne() {
   antwortGespeichert = false;
   letzteAuswahl = null;
 
-  await zeigeAktuelleFrage();
+  await zeigeAktuelleFrage(usageTicket);
 }
 
 function quizShuffleMix() {
@@ -181,8 +183,9 @@ function neuerFragenpool() {
   return [...new Map(gefiltert.map(item => [String(item.quizKey || '').trim(), item])).values()].filter(Boolean);
 }
 
-function neueRunde() {
+function neueRunde(usageTicket = window.WifaUsage?.captureTicket()) {
   window.WifaAnalytics?.reset('quiz');
+  if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.reset('quiz');
   let neu = mischen(neuerFragenpool());
   if (neu.length > 1 && letzteFrageAlterRunde && neu[0].quizKey === letzteFrageAlterRunde) {
     const swapIndex = 1 + Math.floor(Math.random() * (neu.length - 1));
@@ -332,7 +335,7 @@ function renderFrage() {
   }
 }
 
-async function zeigeAktuelleFrage() {
+async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket()) {
   const status = document.getElementById('quizStatus');
   const karte = document.getElementById('quizKarte');
   const eintrag = rundenReihenfolge[fragenIndex];
@@ -360,6 +363,7 @@ async function zeigeAktuelleFrage() {
     if (status) status.textContent = '';
     if (karte) karte.hidden = false;
     window.WifaAnalytics?.start('quiz', quizFach);
+    if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.start('quiz', quizFach);
     window.WifaAnalytics?.content('quiz', aktuelleFrage.fach, aktuelleFrage.thema);
   } catch (error) {
     if (token !== ladeToken) return;
@@ -496,6 +500,7 @@ function bindeQuizInteraktionen() {
 }
 
 export async function initialisiereQuiz() {
+  const usageTicket = window.WifaUsage?.captureTicket();
   const status = document.getElementById('quizStatus');
   const karte = document.getElementById('quizKarte');
   if (!status) return;
@@ -527,12 +532,12 @@ export async function initialisiereQuiz() {
       return;
     }
     befuelleQuizModus();
-    neueRunde();
+    neueRunde(usageTicket);
     const savedIndex = await ladeQuizFortschritt();
     if (typeof savedIndex === 'number' && savedIndex >= 0 && savedIndex < rundenReihenfolge.length) {
       fragenIndex = savedIndex;
     }
-    await zeigeAktuelleFrage();
+    await zeigeAktuelleFrage(usageTicket);
   } catch (error) {
     status.textContent = `Quizkatalog konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
   }

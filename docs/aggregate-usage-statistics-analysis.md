@@ -1,5 +1,7 @@
 # Aggregierte Nutzungsstatistik: Architekturprüfung
 
+**Historischer Analysestand vor Umsetzung.** Die anschließend beauftragte Implementierung und die noch erforderliche Live-Einrichtung sind in [aggregate-usage-setup.md](aggregate-usage-setup.md) beschrieben.
+
 Stand: 12. September 2026. Untersuchte Basis: `6261498f975cb5e29b00b29c291d3405a55d101e`, nach Abruf identisch mit `origin/main`. Der vorhandene Analytics-Branch `codex/consent-analytics` zeigt ebenfalls auf diesen Commit. Eigener Arbeitsbranch: `feature/aggregate-usage-statistics`.
 
 ## Ergebnis und Umfang
