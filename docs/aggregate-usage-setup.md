@@ -1,6 +1,8 @@
 # Interne Nutzungsstatistik – Einrichtung und Betrieb
 
-Ausbauweg A ist im Repository implementiert. **Die private Tabelle, Serverkonfiguration, Admin-Berechtigung und das Apps-Script-Deployment sind noch nicht live eingerichtet.** Nach der Google-Anmeldung wurde das richtige Projekt anhand der bestehenden Web-App-ID bestätigt. Der neue Router wurde in den aktuellen Live-Editor-Code eingefügt und `Usage.gs` ergänzt, jeweils per Textvergleich verifiziert. Die aktive öffentliche Bereitstellung bleibt Version 93 vom 05.09.2026. Der Setup-Aufruf verlangt eine neue Google-Autorisierung; deren Abschluss steht aus. Es wurde kein Tarif geändert und keine Functions-Anwendung angelegt.
+Ausbauweg A ist implementiert und auf dem Feature-Branch gepusht. **Das Apps-Script-Backend ist als Version 94 vom 12.09.2026, 18:21 Uhr unter der unveränderten Web-App-ID bereitgestellt.** Die Google-Autorisierung und `setupUsageStatistics` wurden erfolgreich abgeschlossen; die separate private Tabelle wurde erzeugt und geprüft. `USAGE_SPREADSHEET_ID` und `USAGE_FIREBASE_WEB_API_KEY` sind gespeichert. `USAGE_ENABLED=false` bleibt bis zur kontrollierten Abnahme gesetzt. Ein echter öffentlicher POST an `usageRead` mit absichtlich ungültigem Token lieferte erwartungsgemäß `{"success":false,"error":"unavailable"}` bei deaktivierter Sammlung; dies beweist noch keine erfolgreiche Live-Tokenprüfung.
+
+**Offen:** gezielte Auswahl und Berechtigung des eigenen Firebase-Admin-Kontos, positive/negative Live-Abnahme mit echten Konten und Veröffentlichung des Frontends über GitHub Pages. Die automatische Sicherheitsprüfung hat das Öffnen der Firebase-Nutzerliste wegen möglicher Einsicht in andere private Kontodaten abgelehnt. Dafür ist die UID des gewünschten eigenen Kontos vom Betreiber oder eine explizite Freigabe zur gezielten Kontosuche erforderlich. Es wurde kein Tarif geändert und keine Functions-Anwendung angelegt.
 
 ## Was umgesetzt ist
 
@@ -104,7 +106,7 @@ Firestore-Regeln bleiben unverändert: unbekannte Pfade sind gesperrt. Die Stati
 
 Automatisierte Tests liegen in `tests/usage-backend.test.js`, `tests/usage-admin.test.js` und `tests/usage-client.test.js`. Sie prüfen die echte neue Anwendungslogik mit lokalen Doubles für Google, Drive, Sheets und Browserdienste. Die Backend-Tests wurden zuerst ohne Modul ausgeführt (rot), dann mit Implementierung (grün); ebenso Admin-Helfer und Browser.
 
-Die Mock-Tests beweisen keine echte Google-Tokenprüfung und kein reales Apps-Script-Deployment. Genau dafür sind die obigen kontrollierten Live-Prüfungen notwendig. Live-Datenfluss, Google-Freigaben und private Tabelle sind bis zur Konsoleneinrichtung ausdrücklich **offen**. Der historische Analysebericht bleibt als Ausgangslage erhalten; diese Datei beschreibt die nachfolgende Implementierung.
+Die Mock-Tests beweisen keine echte Google-Tokenprüfung und kein reales Apps-Script-Deployment. Genau dafür sind die obigen kontrollierten Live-Prüfungen notwendig. Google-Freigabe, private Tabelle und Backend-Deployment sind eingerichtet; Live-Datenfluss mit echten Firebase-Konten und Frontend-Veröffentlichung sind ausdrücklich **offen**. Der historische Analysebericht bleibt als Ausgangslage erhalten; diese Datei beschreibt die nachfolgende Implementierung.
 
 Abschluss der lokalen Prüfung: **256 JavaScript-Tests bestanden, 0 fehlgeschlagen**. Die unabhängige Prüfung fand zwei anschließend behobene Fälle: E-Mail-Bestätigung bei gleicher UID und verspätete Feature-Antworten nach Kontowechsel. Tokenwechsel-Abonnement und flüchtige Generationstickets verhindern diese Fehlzuordnung, ohne Kennungen zu speichern. Der sichtbare Setup-Einstieg ist zusätzlich gegen fremde Google-Konten getestet. GA-Dateien und Firestore-Regeln sind im Diff unverändert.
 
