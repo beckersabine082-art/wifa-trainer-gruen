@@ -2,7 +2,9 @@
 
 Ausbauweg A ist implementiert und auf dem Feature-Branch gepusht. **Das Apps-Script-Backend ist als Version 94 vom 12.09.2026, 18:21 Uhr unter der unveränderten Web-App-ID bereitgestellt.** Die Google-Autorisierung und `setupUsageStatistics` wurden erfolgreich abgeschlossen; die separate private Tabelle wurde erzeugt und geprüft. `USAGE_SPREADSHEET_ID` und `USAGE_FIREBASE_WEB_API_KEY` sind gespeichert. `USAGE_ENABLED=false` bleibt bis zur kontrollierten Abnahme gesetzt. Ein echter öffentlicher POST an `usageRead` mit absichtlich ungültigem Token lieferte erwartungsgemäß `{"success":false,"error":"unavailable"}` bei deaktivierter Sammlung; dies beweist noch keine erfolgreiche Live-Tokenprüfung.
 
-**Offen:** gezielte Auswahl und Berechtigung des eigenen Firebase-Admin-Kontos, positive/negative Live-Abnahme mit echten Konten und Veröffentlichung des Frontends über GitHub Pages. Der Betreiber hat die gewünschte UID angegeben und Cloud Shell autorisiert. Die gezielte Google-API-Abfrage dieses Kontos bestätigt: vorhanden, nicht gesperrt, E-Mail noch nicht bestätigt, kein Statistik-Adminrecht. Die Vergabe wurde deshalb vor der Änderung abgebrochen. Der Betreiber muss zunächst seine E-Mail im Trainer bestätigen. Es wurden keine anderen Nutzerkonten gelesen. Für Cloud-Shell-Aufrufe ist die explizite Quotenprojekt-Zuordnung über `x-goog-user-project: wifa-trainer-gruen` erforderlich; dies ändert keinen Tarif. Es wurde kein Tarif geändert und keine Functions-Anwendung angelegt.
+**Admin-Zugriff eingerichtet:** Die gezielte erneute Abfrage nach UID und nach der vom Betreiber angegebenen E-Mail ergab zwei verschiedene Konten. Die zuerst übermittelte UID gehört nicht zum gewünschten E-Mail-Konto. Das gewünschte Konto ist tatsächlich E-Mail-bestätigt und nicht gesperrt. Für dieses Konto wurde `usageAdmin: true` gesetzt und durch einen zweiten Google-Abruf verifiziert; andere Claims wurden erhalten. Am ursprünglich angegebenen Konto wurde nichts geändert. Die frühere Aussage, der Betreiber müsse seine E-Mail erst bestätigen, war wegen der falschen Kontozuordnung unzutreffend. UID und E-Mail werden hier nicht gespeichert.
+
+**Offen:** positive/negative Live-Abnahme des Statistikendpunkts mit echten ID-Tokens und Veröffentlichung des Frontends über GitHub Pages. Die Sammlung bleibt bis dahin deaktiviert. Cloud Shell ist autorisiert; für die gezielte Admin-API-Abfrage war die Quotenprojekt-Zuordnung `x-goog-user-project: wifa-trainer-gruen` erforderlich. Es wurde kein Tarif geändert und keine Functions-Anwendung angelegt.
 
 ## Was umgesetzt ist
 
@@ -55,7 +57,7 @@ node tools/usage-admin.cjs check '<Firebase-UID>'
 node tools/usage-admin.cjs revoke '<Firebase-UID>'
 ```
 
-Jeder Admin-Abruf liest die aktuelle Berechtigung aus Googles autoritativen Kontodaten. Ein im Browser gesetztes `admin=true`, eine manipulierte UID oder ein alter JWT-Admin-Claim reichen nicht. Fehlende oder nicht boolesche Admin-Claims werden abgelehnt. Das Setzen des Claims ist noch nicht ausgeführt worden.
+Jeder Admin-Abruf liest die aktuelle Berechtigung aus Googles autoritativen Kontodaten. Ein im Browser gesetztes `admin=true`, eine manipulierte UID oder ein alter JWT-Admin-Claim reichen nicht. Fehlende oder nicht boolesche Admin-Claims werden abgelehnt. Das Setzen des Claims wurde für das gezielt bestätigte Betreiberkonto ausgeführt und verifiziert. Die serverseitige Prüfung liest aktuelle Kontodaten; ein Token-Refresh ist für die Erkennung des Adminrechts nicht erforderlich.
 
 ### 3. Vorhandene Web-App aktualisieren und kontrolliert abnehmen
 
