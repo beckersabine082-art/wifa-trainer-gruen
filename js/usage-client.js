@@ -1,4 +1,4 @@
-import { auth, onIdTokenChanged } from './firebase-config.js';
+import { auth, onIdTokenChanged } from './firebase-config.js?v=usage-20260912';
 
 export function usageProductionLocation(location) {
   return location.origin === 'https://beckersabine082-art.github.io' &&

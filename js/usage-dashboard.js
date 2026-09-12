@@ -1,5 +1,5 @@
-import { auth, onIdTokenChanged } from './firebase-config.js';
-import { usageRequest } from './usage-client.js';
+import { auth, onIdTokenChanged } from './firebase-config.js?v=usage-20260912';
+import { usageRequest } from './usage-client.js?v=usage-20260912';
 
 const featureLabels = {trainer_start:'Trainer-Starts',quiz_start:'Quiz-Starts',simulation_start:'Prüfungssimulations-Starts',
   podcast_start:'Podcast-Starts',learning_text_open:'Lerntext-Aufrufe',flashcards_start:'Karteikarten-Starts',
