@@ -240,6 +240,143 @@ test('Kilian request embeds hidden current-question context for older backends',
   assert.match(context.trainerKilianAnfrage('Warum kein Punkt?'), /Eine Einigung\./);
 });
 
+function loadCodeFunctions() {
+  const script = fs.readFileSync(path.join(__dirname, '../backend/apps-script/Code.gs'), 'utf8');
+  const context = {
+    console,
+    Object,
+    String,
+    Array,
+    Math,
+    RegExp,
+    JSON,
+    Set,
+    Map,
+    SpreadsheetApp: {
+      getActiveSpreadsheet() {
+        return {
+          getSheets() {
+            return [
+              { getName() { return 'Recht'; } },
+              { getName() { return 'Buchhaltung'; } },
+              { getName() { return 'Lerntexte'; } },
+              { getName() { return 'Glossar'; } },
+              { getName() { return 'NutzerFortschritt'; } }
+            ];
+          }
+        };
+      }
+    },
+    getSheetByNameSafe_() {
+      return null;
+    },
+    PropertiesService: {
+      getScriptProperties() {
+        return { getProperty() { return 'test-key'; } };
+      }
+    },
+    UrlFetchApp: {
+      fetch() {
+        return {
+          getResponseCode() { return 200; },
+          getContentText() {
+            return JSON.stringify({ choices: [{ message: { content: 'ok' } }] });
+          }
+        };
+      }
+    }
+  };
+  vm.createContext(context);
+  vm.runInContext(script, context);
+  return context;
+}
+
+test('Kilian prompt and trainer context reflect the real source constraints', () => {
+  const codeSource = fs.readFileSync(path.join(__dirname, '../backend/apps-script/Code.gs'), 'utf8');
+  const { context } = loadKilianScript();
+
+  assert.match(codeSource, /keinen Zugriff auf externe Live-Quellen|Websuche|Retrieval-Tools/i);
+  assert.match(codeSource, /keine Live-Verifikation|Live-Verifikation/i);
+  assert.match(codeSource, /interne WiFa-Trainer-Datenbasis/i);
+  assert.match(codeSource, /Prokurist.*§\s*49\s*Abs\.?\s*2\s*HGB|§\s*49\s*Abs\.?\s*2\s*HGB.*Prokurist/i);
+  assert.match(codeSource, /Die EZB strebt.*2 %|2 %.*symmetrisch|symmetrisch/i);
+
+  const request = context.trainerKilianAnfrage('Was bedeutet das?');
+  assert.match(request, /Fragen-ID: Q-001/);
+  assert.match(request, /Fach: Recht/);
+  assert.match(request, /Thema: Vertrag/);
+  assert.match(request, /Vollständiger Fragetext: Was ist ein Vertrag\?/);
+  assert.match(request, /Aktuelle Nutzerantwort: Keine Antwort eingegeben\./);
+});
+
+test('internal knowledge ranking prioritizes Prokura, property sales and HGB over unrelated content', () => {
+  const context = loadCodeFunctions();
+  const candidates = [
+    { source: 'Glossar', fach: 'Recht', thema: 'Vertrag', titel: 'Vertrag', text: 'Ein Vertrag ist eine Vereinbarung zwischen zwei Personen.' },
+    { source: 'Frage/Musterlösung', fach: 'Recht', thema: 'Prokura', titel: 'Prokura', text: 'Ein Prokurist darf Grundstücke kaufen. Für den Verkauf oder die Belastung eines Grundstücks braucht es besondere Ermächtigung nach § 49 Abs. 2 HGB.' },
+    { source: 'Lerntext', fach: 'Buchhaltung', thema: 'Bilanz', titel: 'Bilanz', text: 'Die Bilanz zeigt die Vermögenslage eines Unternehmens.' }
+  ];
+
+  const ranked = context.rankInternalKnowledgeMatches_('Darf ein Prokurist Grundstücke verkaufen?', candidates, 'Rechnungswesen', 'Buchführung');
+
+  assert.ok(ranked.length >= 1);
+  assert.equal(ranked[0].source, 'Frage/Musterlösung');
+  assert.match(ranked[0].text, /Grundstück|§ 49 Abs\. 2 HGB|verkaufen/i);
+  assert.equal(ranked.length, 1);
+});
+
+test('internal knowledge ranking prioritizes EZB inflation target hits', () => {
+  const context = loadCodeFunctions();
+  const candidates = [
+    { source: 'Lerntext', fach: 'Wirtschaft', thema: 'Geldpolitik', titel: 'Inflation', text: 'Die EZB strebt für den Euroraum eine Inflationsrate von 2 % an. Das Ziel ist symmetrisch.' },
+    { source: 'Glossar', fach: 'Wirtschaft', thema: 'Volkswirtschaft', titel: 'Preisniveau', text: 'Preisniveau beschreibt das allgemeine Niveau der Preise.' },
+    { source: 'Frage/Musterlösung', fach: 'Recht', thema: 'Vertrag', titel: 'Vertrag', text: 'Ein Vertrag ist eine Willenserklärung.' }
+  ];
+
+  const ranked = context.rankInternalKnowledgeMatches_('Wie hoch ist das Inflationsziel der EZB?', candidates, 'Wirtschaft', 'Geldpolitik');
+
+  assert.equal(ranked[0].source, 'Lerntext');
+  assert.match(ranked[0].text, /EZB|2 %|symmetrisch/i);
+});
+
+test('internal knowledge ranking finds BCG matrix content even if current screen context is unrelated', () => {
+  const context = loadCodeFunctions();
+  const candidates = [
+    { source: 'Frage/Musterlösung', fach: 'Unternehmensführung', thema: 'Portfolio', titel: 'BCG-Matrix', text: 'Die BCG-Matrix bewertet Produkte nach Marktwachstum und relativer Marktanteil.' },
+    { source: 'Glossar', fach: 'Recht', thema: 'Gesellschaftsrecht', titel: 'Gesellschaft', text: 'Eine Gesellschaft ist eine rechtliche Personenvereinigung.' }
+  ];
+
+  const ranked = context.rankInternalKnowledgeMatches_('Was ist die BCG-Matrix?', candidates, 'Rechnungswesen', 'Buchführung');
+
+  assert.equal(ranked[0].source, 'Frage/Musterlösung');
+  assert.match(ranked[0].text, /BCG|Marktwachstum|Marktanteil/i);
+});
+
+test('internal knowledge search ignores unrelated current-fach bias when the question is clearly different', () => {
+  const context = loadCodeFunctions();
+  const candidates = [
+    { source: 'Frage/Musterlösung', fach: 'Rechnungswesen', thema: 'Bilanz', titel: 'Bilanz', text: 'Die Bilanz zeigt Vermögen und Schulden.' },
+    { source: 'Frage/Musterlösung', fach: 'Recht', thema: 'Prokura', titel: 'Prokura', text: 'Ein Prokurist darf im Namen des Unternehmens Grundstücke kaufen; der Verkauf bedarf besonderer Ermächtigung nach § 49 Abs. 2 HGB.' }
+  ];
+
+  const ranked = context.rankInternalKnowledgeMatches_('Darf ein Prokurist Grundstücke verkaufen?', candidates, 'Rechnungswesen', 'Bilanz');
+
+  assert.equal(ranked[0].fach, 'Recht');
+  assert.match(ranked[0].text, /Prokurist|§ 49 Abs\. 2 HGB/i);
+});
+
+test('internal knowledge search returns empty context when nothing matches', () => {
+  const context = loadCodeFunctions();
+  const candidates = [
+    { source: 'Glossar', fach: 'Recht', thema: 'Vertrag', titel: 'Vertrag', text: 'Ein Vertrag ist eine Vereinbarung.' },
+    { source: 'Lerntext', fach: 'Buchhaltung', thema: 'Bilanz', titel: 'Bilanz', text: 'Die Bilanz zeigt Vermögen und Schulden.' }
+  ];
+
+  const ranked = context.rankInternalKnowledgeMatches_('Wie funktioniert ein Warp-Antrieb bei einem Raumschiff?', candidates, 'Recht', 'Vertrag');
+
+  assert.equal(ranked.length, 0);
+});
+
 function loadQuizScript() {
   const quizSource = fs.readFileSync(path.join(__dirname, '../js/quiz.js'), 'utf8')
     .replace(/import\s*\{[\s\S]*?\}\s*from\s*['"][^'"]+['"];?\n?/g, '')

@@ -2105,6 +2105,354 @@ function getLerntexte(fach) {
       return a.reihenfolgeFach - b.reihenfolgeFach;
     });
 }
+
+function normalizeKnowledgeSearchText_(value) {
+  const text = String(value || "")
+    .toLowerCase()
+    .replace(/§/g, " ")
+    .replace(/[\u00A0\t\n\r]+/g, " ")
+    .replace(/[^a-z0-9äöüß%+\-_/\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text) {
+    return [];
+  }
+
+  const stopWords = {
+    der: true, die: true, das: true, und: true, oder: true, ist: true, sind: true,
+    mit: true, aus: true, auf: true, zum: true, zur: true, bei: true, von: true,
+    fur: true, für: true, nach: true, wann: true, warum: true, was: true, wie: true,
+    kann: true, darf: true, darfst: true, muss: true, mehr: true, weniger: true,
+    keine: true, nicht: true, ein: true, eine: true, einem: true, einer: true, einen: true,
+    auch: true, hier: true, dort: true, dann: true, aber: true, gibt: true, haben: true,
+    werden: true, wurde: true, sein: true, sei: true, ihr: true, ihre: true, ihren: true,
+    im: true, in: true, am: true, als: true, zu: true, um: true, wir: true, ich: true,
+    du: true, sie: true, es: true, man: true, sehr: true, etwas: true, etwas: true
+  };
+
+  return text.split(" ")
+    .map(function(part) {
+      return part.trim();
+    })
+    .filter(function(part) {
+      return part && !stopWords[part] && part.length > 1;
+    });
+}
+
+function knowledgeSearchVariants_(term) {
+  const normalized = String(term || "").trim().toLowerCase();
+
+  if (!normalized) {
+    return [];
+  }
+
+  const variants = [normalized];
+
+  if (normalized === "verkaufen") {
+    variants.push("verkauf", "veräußern", "veräussern", "veräusserung", "veräußerung");
+  }
+  if (normalized === "verkauf") {
+    variants.push("verkaufen", "veräußern", "veräussern");
+  }
+  if (normalized === "prokurist") {
+    variants.push("prokura");
+  }
+  if (normalized === "prokura") {
+    variants.push("prokurist");
+  }
+  if (normalized === "ezb") {
+    variants.push("europäische zentralbank", "europaeische zentralbank", "euro", "inflation");
+  }
+  if (normalized === "inflation") {
+    variants.push("inflationsziel", "inflationsrate");
+  }
+  if (normalized === "bcg") {
+    variants.push("bcg-matrix", "portfolio-matrix", "matrix");
+  }
+
+  return variants
+    .map(function(v) {
+      return String(v || "").toLowerCase();
+    })
+    .filter(function(v, index, all) {
+      return v && all.indexOf(v) === index;
+    });
+}
+
+function getGlossarForSearch_() {
+  const ss = getSpreadsheet_();
+  const sheet = ss.getSheetByName("Glossar");
+
+  if (!sheet) {
+    return [];
+  }
+
+  const values = sheet.getDataRange().getValues();
+
+  if (values.length <= 1) {
+    return [];
+  }
+
+  return values.slice(1)
+    .filter(function(row) {
+      return String(row[0] || "").trim();
+    })
+    .map(function(row) {
+      return {
+        source: "Glossar",
+        fach: String(row[2] || "").trim(),
+        thema: String(row[3] || "").trim(),
+        titel: String(row[0] || "").trim(),
+        text: [
+          String(row[0] || "").trim(),
+          String(row[1] || "").trim(),
+          String(row[4] || "").trim()
+        ].filter(Boolean).join(" "),
+        begriff: String(row[0] || "").trim(),
+        erklaerung: String(row[1] || "").trim(),
+        synonyme: String(row[4] || "").trim()
+      };
+    });
+}
+
+function getLerntexteForSearch_() {
+  const ss = getSpreadsheet_();
+  const sheet = ss.getSheetByName("Lerntexte");
+
+  if (!sheet) {
+    return [];
+  }
+
+  const lastRow = sheet.getLastRow();
+  const lastColumn = sheet.getLastColumn();
+
+  if (lastRow < 3) {
+    return [];
+  }
+
+  const headers = sheet.getRange(2, 1, 1, lastColumn).getValues()[0].map(function(header) {
+    return String(header || "").trim();
+  });
+
+  const index = {};
+  headers.forEach(function(header, idx) {
+    index[header] = idx;
+  });
+
+  const rows = sheet.getRange(3, 1, lastRow - 2, lastColumn).getValues();
+
+  return rows
+    .filter(function(row) {
+      const aktiv = String(row[index["Aktiv"]] || "").trim().toLowerCase();
+      return aktiv === "ja";
+    })
+    .map(function(row) {
+      return {
+        source: "Lerntext",
+        fach: String(row[index["Fach"]] || "").trim(),
+        thema: String(row[index["Hauptkapitel"]] || "").trim() || String(row[index["Titel"]] || "").trim(),
+        titel: String(row[index["Titel"]] || "").trim(),
+        text: [
+          String(row[index["Titel"]] || "").trim(),
+          String(row[index["Kurzfassung"]] || "").trim(),
+          String(row[index["Prüfungsfokus"]] || "").trim(),
+          String(row[index["Lerntext"]] || "").trim()
+        ].filter(Boolean).join(" "),
+        lerntext: String(row[index["Lerntext"]] || "").trim(),
+        kurzfassung: String(row[index["Kurzfassung"]] || "").trim(),
+        pruefungsfokus: String(row[index["Prüfungsfokus"]] || "").trim(),
+        hauptkapitel: String(row[index["Hauptkapitel"]] || "").trim(),
+        unterkapitel: String(row[index["Unterkapitel_Nr"]] || "").trim()
+      };
+    });
+}
+
+function rankInternalKnowledgeMatches_(frage, candidates, currentFach, currentThema) {
+  const queryTerms = normalizeKnowledgeSearchText_(frage);
+  const fachFilter = String(currentFach || "").trim();
+  const themaFilter = String(currentThema || "").trim();
+
+  if (!queryTerms.length || !Array.isArray(candidates) || !candidates.length) {
+    return [];
+  }
+
+  const scored = candidates.map(function(candidate) {
+    const source = String(candidate.source || "").trim();
+    const fach = String(candidate.fach || "").trim();
+    const thema = String(candidate.thema || "").trim();
+    const title = String(candidate.titel || candidate.begriff || candidate.title || "").trim();
+    const text = String(candidate.text || candidate.lerntext || candidate.erklaerung || candidate.musterloesung || "").trim();
+    const combined = [title, fach, thema, text].join(" ");
+    let score = 0;
+    let matchedAnyTerm = false;
+
+    if (fachFilter && fach && fach.toLowerCase() === fachFilter.toLowerCase()) {
+      score += 30;
+    }
+    if (themaFilter && thema && thema.toLowerCase() === themaFilter.toLowerCase()) {
+      score += 25;
+    }
+    if (source === "Frage/Musterlösung") {
+      score += 25;
+    }
+    if (source === "Lerntext") {
+      score += 15;
+    }
+    if (source === "Glossar") {
+      score += 8;
+    }
+
+    queryTerms.forEach(function(term) {
+      const variants = knowledgeSearchVariants_(term);
+      const haystack = combined.toLowerCase();
+      let matchCount = 0;
+
+      variants.forEach(function(v) {
+        if (v && haystack.indexOf(v) !== -1) {
+          matchCount += 1;
+        }
+      });
+
+      if (matchCount === 0) {
+        return;
+      }
+
+      matchedAnyTerm = true;
+
+      if (title && title.toLowerCase().indexOf(term) !== -1) {
+        score += 18;
+      }
+      if (thema && thema.toLowerCase().indexOf(term) !== -1) {
+        score += 16;
+      }
+      if (text && text.toLowerCase().indexOf(term) !== -1) {
+        score += 10;
+      }
+      if (source === "Frage/Musterlösung" && text && text.toLowerCase().indexOf(term) !== -1) {
+        score += 12;
+      }
+      if (source === "Lerntext" && (candidate.pruefungsfokus || candidate.kurzfassung) && String(candidate.pruefungsfokus || candidate.kurzfassung).toLowerCase().indexOf(term) !== -1) {
+        score += 12;
+      }
+      if (candidate.synonyme && String(candidate.synonyme).toLowerCase().indexOf(term) !== -1) {
+        score += 8;
+      }
+    });
+
+    if (!matchedAnyTerm || score <= 0) {
+      return null;
+    }
+
+    return {
+      score: score,
+      source: source,
+      fach: fach,
+      thema: thema,
+      titel: title,
+      text: text,
+      begriff: candidate.begriff || title
+    };
+  }).filter(Boolean)
+    .sort(function(a, b) {
+      return b.score - a.score;
+    });
+
+  const deDuplicated = [];
+  const seen = {};
+
+  scored.forEach(function(item) {
+    const fingerprint = [item.source, item.fach, item.thema, item.titel, item.text].join("|").toLowerCase();
+
+    if (!seen[fingerprint]) {
+      seen[fingerprint] = true;
+      deDuplicated.push(item);
+    }
+  });
+
+  return deDuplicated.slice(0, 5);
+}
+
+function findRelevanteInterneTreffer_(frage, kontext) {
+  const userFrage = String(frage || "").trim();
+
+  if (!userFrage) {
+    return [];
+  }
+
+  const kontextData = kontext && typeof kontext === "object" ? kontext : {};
+  const currentFach = String(kontextData.fach || "").trim();
+  const currentThema = String(kontextData.thema || "").trim();
+
+  const candidates = [];
+  const ss = getSpreadsheet_();
+  const sheets = ss.getSheets();
+
+  sheets.forEach(function(sheet) {
+    const sheetName = String(sheet.getName() || "").trim();
+
+    if (!sheetName || ["Glossar", "Lerntexte", "Formelsammlung", "Quizfragen", "NutzerFortschritt", "PodcastFortschritt"].indexOf(sheetName) !== -1) {
+      return;
+    }
+
+    const activeQuestions = getActiveQuestions(sheetName);
+
+    activeQuestions.forEach(function(question) {
+      const fullText = [question.frage, question.musterloesung, question.stichpunkte].join(" ");
+      if (!fullText.trim()) {
+        return;
+      }
+
+      candidates.push({
+        source: "Frage/Musterlösung",
+        fach: sheetName,
+        thema: question.thema,
+        titel: question.thema || question.id || sheetName,
+        text: fullText,
+        musterloesung: question.musterloesung,
+        stichpunkte: question.stichpunkte
+      });
+    });
+  });
+
+  getLerntexteForSearch_().forEach(function(item) {
+    candidates.push(item);
+  });
+
+  getGlossarForSearch_().forEach(function(item) {
+    candidates.push(item);
+  });
+
+  return rankInternalKnowledgeMatches_(userFrage, candidates, currentFach, currentThema);
+}
+
+function formatInterneWissenTreffer_(treffer) {
+  if (!Array.isArray(treffer) || !treffer.length) {
+    return "";
+  }
+
+  const formatted = treffer.map(function(item, index) {
+    const sourceLabel = String(item.source || "Interner Treffer").trim() || "Interner Treffer";
+    const fach = item.fach ? "Fach: " + item.fach : "Fach: Unbekannt";
+    const thema = item.thema ? "Thema: " + item.thema : "Thema: Unbekannt";
+    const titel = item.titel ? "Titel: " + item.titel : "";
+    const begriff = item.begriff ? "Begriff: " + item.begriff : "";
+    const text = item.text ? String(item.text).trim() : "";
+
+    return [
+      "Treffer " + (index + 1),
+      "Quelle: " + sourceLabel,
+      fach,
+      thema,
+      titel,
+      begriff,
+      "Inhalt: " + (text.length > 500 ? text.substring(0, 500) + "..." : text)
+    ].filter(Boolean).join("\n");
+  });
+
+  return "\n\nINTERNE WISSENSTREFFER\n" + formatted.join("\n\n");
+}
+
 function frageKilianFrontend(frage, kontext) {
   const userFrage = String(frage || "").trim();
 
@@ -2118,13 +2466,34 @@ function frageKilianFrontend(frage, kontext) {
     ? "\n\nAktueller Trainerkontext (nicht als zusätzliche Nutzernachricht anzeigen):\n" + JSON.stringify(kontext)
     : "";
 
+  const interneTreffer = findRelevanteInterneTreffer_(userFrage, kontext);
+  const interneWissenKontext = formatInterneWissenTreffer_(interneTreffer);
+
   const systemPrompt =
-  "Du bist Kilian, ein verständlicher Lernassistent für Lern- und Bildungsinhalte. " +
+  "Du bist Kilian, ein verständlicher Lernassistent für Lern- und Bildungsinhalte der WiFa-Trainer-Anwendung. " +
   "Du erklärst Themen klar, strukturiert und praxisnah auf Deutsch. " +
 
   "Dein Schwerpunkt liegt auf kaufmännischen, wirtschaftlichen, mathematischen, organisatorischen, technischen, unternehmerischen, rechtlichen, steuerlichen und allgemeinen Bildungsthemen. " +
 
   "Du hilfst beim Lernen, Verstehen, Zusammenfassen, Erklären und Wiederholen von Wissen. " +
+
+  "Wichtige Quellen- und Prüfregeln: Zuerst orientierst du dich an der internen WiFa-Trainer-Datenbasis und am aktuellen Trainerkontext. Wenn dort passende Lerninhalte, Regeln, Aufgaben, Definitionen oder Hinweise vorhanden sind, beantwortest du grundsätzlich auf dieser Grundlage. " +
+
+  "Du hast keinen Zugriff auf externe Live-Quellen, Websuche, Retrieval-Tools, aktuelle Gesetze, offizielle Behörden- oder wissenschaftliche Datenbanken. Du kannst deshalb nur auf die interne WiFa-Trainer-Datenbasis und dein statisches Modellwissen zurückgreifen. " +
+
+  "Diese internen Treffer haben Vorrang vor allgemeinem Modellwissen. Wenn Modellwissen einem eindeutigen internen Fachinhalt widerspricht, ist zunächst der interne Inhalt zu verwenden. " +
+
+  "Externe Informationen oder aktuelle Rechtslage darfst du nicht als live verifiziert behaupten, wenn du keinen Zugriff auf eine aktuelle Quelle hast. Wenn eine Frage eine aktuelle Rechtsprechung, aktuelle Gesetzeslage oder eine offizielle Verifikation erfordert, nennst du ausdrücklich, dass keine Live-Verifikation möglich ist. " +
+
+  "Bei fachlichen Auskünften, insbesondere zu Recht, Steuern, Wirtschaft, Prüfungsfragen und allgemeinen Grundlagen, darfst du keine Vermutungen, keine Spekulationen und keine ungesicherten Allgemeinplatz-Antworten geben. Wenn die interne Quelle unklar ist, sag das ehrlich und formuliere die Antwort vorsichtig mit dem vorhandenen Wissensstand. " +
+
+  "Prüfregeln: 1) interne Lerninhalte vor Modellwissen; 2) keine Behauptung einer aktuellen Quellenprüfung ohne echten externen Quellenzugriff; 3) bei Rechts- und Wirtschaftsfragen nur die für den Lernkontext relevante Regel; 4) bei Unsicherheit keine absolut klingende Antwort ohne Grundlage; 5) keine widersprüchliche Mischung aus verschiedenen Quellen, sondern eine saubere fachliche Antwort auf Basis der besten verfügbaren Quelle. " +
+
+  "Rechtlich relevante Beispiele: Ein Prokurist darf im Namen des Unternehmens grundsätzlich ein Grundstück kaufen. Der Verkauf oder die Belastung eines Grundstücks ist dagegen nur mit besonderer Ermächtigung nach § 49 Abs. 2 HGB zulässig. Wenn du die aktuelle Rechtslage nicht anhand einer aktuellen Quelle verifizieren kannst, sagst du explizit, dass die Antwort nur auf dem Lernkontext bzw. dem allgemeinen Modellwissen beruht und keine Live-Verifikation durch aktuelle externe Quellen erfolgt. " +
+
+  "Wirtschaftlich relevante Beispiele: Die EZB strebt für den Euroraum mittelfristig eine Inflationsrate von 2 % an. Das Ziel ist symmetrisch. " +
+
+  "Wenn du eine Antwort aus dem allgemeinen Wissensmodell ableitest, tue das nur als zweite Quelle und klar als Ergänzung, nicht als Ersatz für die interne WiFa-Trainer-Datenbasis. " +
 
   "Du beantwortest KEINE Fragen zu Pornografie, sexuellen Inhalten, Fetischen, Gewaltfantasien, illegalen Aktivitäten, Drogenmissbrauch, Hassinhalten, rassistischen oder antisemitischen Inhalten oder anderen unangemessenen Themen. " +
 
@@ -2134,7 +2503,10 @@ function frageKilianFrontend(frage, kontext) {
 
   "Antworte sachlich, freundlich und verständlich. " +
 
-  "Nutze bei Erklärungen gerne Beispiele und einfache Sprache." + trainerKontext;
+  "Nutze bei Erklärungen gerne Beispiele und einfache Sprache. " +
+
+  (interneWissenKontext ? interneWissenKontext : "\n\nINTERNE WISSENSTREFFER\nKeine passenden internen Treffer in der WiFa-Trainer-Datenbasis gefunden.") +
+  trainerKontext;
 
   const response = UrlFetchApp.fetch("https://api.openai.com/v1/chat/completions", {
     method: "post",
