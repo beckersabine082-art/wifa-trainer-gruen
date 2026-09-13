@@ -384,6 +384,16 @@ function doGet(e) {
     data: getNextQuestion(fach, thema, currentId)
   };
 
+    } else if (action === "previousQuestion") {
+      const fach = String(e?.parameter?.fach || "").trim();
+      const thema = String(e?.parameter?.thema || "").trim();
+      const currentId = String(e?.parameter?.currentId || "").trim();
+
+      result = {
+        success: true,
+        data: getPreviousQuestion(fach, thema, currentId)
+      };
+
     } else if (action === "firstQuestion") {
       const fach = String(e?.parameter?.fach || "").trim();
       const thema = String(e?.parameter?.thema || "").trim();
@@ -1093,19 +1103,10 @@ function getNextQuestion(sheetName, thema, currentId) {
 
     if (currentIndex >= 0) {
       if (currentIndex >= gefilterteFragen.length - 1) {
-        return {
-          id: "",
-          thema: thema,
-          frage: "",
-          musterloesung: "",
-          stichpunkte: "",
-          fragePosition: gefilterteFragen.length,
-          frageGesamt: gefilterteFragen.length,
-          themaAbgeschlossen: true
-        };
+        nextIndex = 0;
+      } else {
+        nextIndex = currentIndex + 1;
       }
-
-      nextIndex = currentIndex + 1;
     }
   }
 
@@ -1122,6 +1123,63 @@ function getNextQuestion(sheetName, thema, currentId) {
     loesungsschluessel: frage.loesungsschluessel,
     bilddatei: frage.bilddatei,
     fragePosition: nextIndex + 1,
+    frageGesamt: gefilterteFragen.length,
+    themaAbgeschlossen: false
+  };
+}
+
+function getPreviousQuestion(sheetName, thema, currentId) {
+  const activeQuestions = getActiveQuestions(sheetName);
+  const gefilterteFragen = filterQuestionsByThema_(activeQuestions, thema);
+
+  if (!gefilterteFragen.length) {
+    return {
+      id: "",
+      thema: thema,
+      frage: "Keine aktive Frage für dieses Thema gefunden.",
+      musterloesung: "",
+      stichpunkte: "",
+      fragePosition: 0,
+      frageGesamt: 0,
+      themaAbgeschlossen: false
+    };
+  }
+
+  const aktuelleId = String(currentId || "").trim();
+  const currentIndex = gefilterteFragen.findIndex(function(q) {
+    return String(q.id || "").trim() === aktuelleId;
+  });
+
+  if (currentIndex < 0) {
+    return {
+      id: "",
+      thema: thema,
+      frage: "Die aktuelle Frage wurde in diesem Thema nicht gefunden.",
+      musterloesung: "",
+      stichpunkte: "",
+      fragePosition: 0,
+      frageGesamt: gefilterteFragen.length,
+      themaAbgeschlossen: false,
+      navigationFehler: true
+    };
+  }
+
+  const previousIndex = currentIndex === 0
+    ? gefilterteFragen.length - 1
+    : currentIndex - 1;
+  const frage = gefilterteFragen[previousIndex];
+
+  return {
+    id: frage.id,
+    thema: frage.thema,
+    frage: frage.frage,
+    musterloesung: frage.musterloesung,
+    stichpunkte: frage.stichpunkte,
+    fragetyp: frage.fragetyp,
+    aufgabenHtml: frage.aufgabenHtml,
+    loesungsschluessel: frage.loesungsschluessel,
+    bilddatei: frage.bilddatei,
+    fragePosition: previousIndex + 1,
     frageGesamt: gefilterteFragen.length,
     themaAbgeschlossen: false
   };

@@ -108,6 +108,35 @@ let trainerTippFrageToken = 0;
 let trainerTippAngeboten = false;
 let trainerShuffleAktiv = false;
 let trainerProgressLoadToken = 0;
+let trainerFragenVerlauf = [];
+let trainerVerlaufIndex = -1;
+let trainerFragenCache = new Map();
+let trainerShuffleLadeToken = 0;
+
+function trainerFrageImVerlaufRegistrieren(daten, aktualisiereIndex = true) {
+  const frageId = String(daten && daten.id || "").trim();
+  if (!frageId) return;
+
+  trainerFragenCache.set(frageId, daten);
+  const bestehenderIndex = trainerFragenVerlauf.indexOf(frageId);
+  if (bestehenderIndex < 0) {
+    if (trainerVerlaufIndex < trainerFragenVerlauf.length - 1) {
+      trainerFragenVerlauf = trainerFragenVerlauf.slice(0, trainerVerlaufIndex + 1);
+    }
+    trainerFragenVerlauf.push(frageId);
+    if (aktualisiereIndex) trainerVerlaufIndex = trainerFragenVerlauf.length - 1;
+  } else if (aktualisiereIndex) {
+    trainerVerlaufIndex = bestehenderIndex;
+  }
+  trainerAktualisiereVorherigeSchaltflaeche();
+}
+
+function trainerAktualisiereVorherigeSchaltflaeche() {
+  const button = document.getElementById("btnVorherigeFrage");
+  if (button) button.disabled = trainerShuffleAktiv
+    ? trainerFragenVerlauf.length === 0
+    : !aktuelleFrageId;
+}
 
 function trainerProgressSelectionMatches(fach, thema) {
   const expectedFach = String(fach || "").trim();
@@ -228,6 +257,10 @@ function trainerVonVorne() {
   }
 
   trainerShuffleAktiv = false;
+  trainerFragenVerlauf = [];
+  trainerVerlaufIndex = -1;
+  trainerFragenCache = new Map();
+  trainerAktualisiereVorherigeSchaltflaeche();
   const shuffleBtn = document.getElementById("trainerShuffleBtn");
   if (shuffleBtn) {
     shuffleBtn.classList.remove("active");
@@ -265,16 +298,64 @@ function trainerVonVorne() {
     });
 }
 
-function trainerShuffleMix() {
+async function trainerShuffleMix() {
+  if (appIstBeschaeftigt || !aktuellesFach || !aktuellesThema) return;
+
+  resetFrageAnzeige();
   trainerShuffleAktiv = !trainerShuffleAktiv;
   const btn = document.getElementById("trainerShuffleBtn");
   if (btn) {
     btn.classList.toggle("active", trainerShuffleAktiv);
     btn.textContent = trainerShuffleAktiv ? "Shuffle Mix: AN" : "Shuffle Mix";
   }
-  setzeStatus(trainerShuffleAktiv
-    ? "Shuffle Mix aktiv – dieser Verlauf bleibt nur in dieser Session lokal."
-    : "Shuffle Mix deaktiviert – Fortschritt wird wieder gespeichert.");
+  if (!trainerShuffleAktiv) {
+    trainerFragenVerlauf = aktuelleFrageId ? [aktuelleFrageId] : [];
+    trainerVerlaufIndex = trainerFragenVerlauf.length ? 0 : -1;
+    trainerAktualisiereVorherigeSchaltflaeche();
+    setzeStatus("Shuffle Mix deaktiviert – Fortschritt wird wieder gespeichert.");
+    return;
+  }
+
+  const eigenerToken = ++trainerShuffleLadeToken;
+  try {
+    setzeAppBeschaeftigt(true);
+    setzeStatus("Shuffle-Reihenfolge wird vorbereitet...");
+    const fragen = [];
+    let currentId = "";
+
+    for (let index = 0; index < 500; index++) {
+      const result = await apiGet(index === 0 ? "firstQuestion" : "nextQuestion", index === 0
+        ? { fach: aktuellesFach, thema: aktuellesThema }
+        : { fach: aktuellesFach, thema: aktuellesThema, currentId: currentId });
+      if (eigenerToken !== trainerShuffleLadeToken) return;
+      if (!result || !result.success || !result.data || !result.data.id) break;
+      const daten = result.data;
+      fragen.push(daten);
+      trainerFragenCache.set(String(daten.id), daten);
+      currentId = String(daten.id);
+    }
+
+    for (let index = fragen.length - 1; index > 0; index--) {
+      const zielIndex = Math.floor(Math.random() * (index + 1));
+      const temp = fragen[index];
+      fragen[index] = fragen[zielIndex];
+      fragen[zielIndex] = temp;
+    }
+
+    trainerFragenVerlauf = fragen.map(function(daten) { return String(daten.id); });
+    trainerVerlaufIndex = Math.max(0, trainerFragenVerlauf.indexOf(aktuelleFrageId));
+    trainerAktualisiereVorherigeSchaltflaeche();
+    setzeStatus("Shuffle Mix aktiv – dieser Verlauf bleibt nur in dieser Session lokal.");
+  } catch (error) {
+    trainerShuffleAktiv = false;
+    if (btn) {
+      btn.classList.remove("active");
+      btn.textContent = "Shuffle Mix";
+    }
+    setzeStatus("Shuffle-Reihenfolge konnte nicht geladen werden: " + error.message);
+  } finally {
+    if (eigenerToken === trainerShuffleLadeToken) setzeAppBeschaeftigt(false);
+  }
 }
 
 function trainerTippAusblenden() {
@@ -416,15 +497,10 @@ function aktualisiereWiederholungsSperre() {
     const antwortInput = document.getElementById("antwortInput");
     const auswertungBtn = document.getElementById("btnAuswertungStarten");
     const antwortLeerenBtn = document.getElementById("btnAntwortLeeren");
-    const musterloesungBtn = document.getElementById("btnMusterloesungAnzeigen");
 
     if (antwortInput) antwortInput.readOnly = false;
     if (auswertungBtn) auswertungBtn.disabled = false;
     if (antwortLeerenBtn) antwortLeerenBtn.disabled = false;
-    if (musterloesungBtn) {
-      musterloesungBtn.disabled = Boolean(wiederholungsKontext);
-      musterloesungBtn.hidden = Boolean(wiederholungsKontext);
-    }
   }
 
 // Nach erfolgreicher Auswertung und Firestore-Speicherung einer Wiederholungsfrage wird der Versuch fixiert
@@ -432,15 +508,10 @@ function sperreAbgeschlossenenWiederholungsversuch() {
     const antwortInput = document.getElementById("antwortInput");
     const auswertungBtn = document.getElementById("btnAuswertungStarten");
     const antwortLeerenBtn = document.getElementById("btnAntwortLeeren");
-    const musterloesungBtn = document.getElementById("btnMusterloesungAnzeigen");
 
     if (antwortInput) antwortInput.readOnly = true;
     if (auswertungBtn) auswertungBtn.disabled = true;
     if (antwortLeerenBtn) antwortLeerenBtn.disabled = true;
-    if (musterloesungBtn) {
-      musterloesungBtn.disabled = false;
-      musterloesungBtn.hidden = false;
-    }
   }
 
 function verbirgWiederholungsNavigation() {
@@ -635,7 +706,7 @@ function waehleFach(fach) {
     }
   }
 
-  function zeigeGeladeneFrage(daten, fallbackThema, istWiederholungsfrage = false) {
+  function zeigeGeladeneFrage(daten, fallbackThema, istWiederholungsfrage = false, aktualisiereVerlauf = true) {
     aktuelleFrage = daten.frage || "";
     aktuellesThema = daten.thema || fallbackThema || "Thema nicht hinterlegt";
     aktuelleMusterloesung = daten.musterloesung || "";
@@ -733,6 +804,11 @@ function waehleFach(fach) {
 
     if (String(daten.id || "").trim()) {
       aktuelleFrageId = String(daten.id || "").trim();
+      if (trainerShuffleAktiv) {
+        trainerFrageImVerlaufRegistrieren(daten, aktualisiereVerlauf);
+      } else {
+        trainerAktualisiereVorherigeSchaltflaeche();
+      }
       speichereTrainerFortschritt(aktuellesFach, aktuellesThema, aktuelleFrageId);
     }
 
@@ -740,7 +816,7 @@ function waehleFach(fach) {
     starteTrainerTippTimer();
   }
 
-async function ladeFrageAusFach(fach, thema, currentId = "") {
+async function ladeFrageAusFach(fach, thema, currentId = "", action = "nextQuestion") {
   trainerTippTimerAbbrechen();
     const eigenerToken = ++ladeToken;
 
@@ -748,7 +824,7 @@ async function ladeFrageAusFach(fach, thema, currentId = "") {
       setzeAppBeschaeftigt(true);
       setzeStatus("Frage wird geladen...");
 
-      const result = await apiGet("nextQuestion", { fach, thema, currentId });
+      const result = await apiGet(action, { fach, thema, currentId });
 
       if (eigenerToken !== ladeToken) return;
 
@@ -844,6 +920,10 @@ async function starteThema() {
 
     aktuellesThema = thema;
     aktuelleFrageId = "";
+    trainerFragenVerlauf = [];
+    trainerVerlaufIndex = -1;
+    trainerFragenCache = new Map();
+    trainerAktualisiereVorherigeSchaltflaeche();
     wiederholungsKontext = null;
 
     const gespeicherteFrageId = await ladeTrainerFortschritt(aktuellesFach, aktuellesThema);
@@ -851,7 +931,9 @@ async function starteThema() {
   }
 
 function naechsteFrage() {
-    if (appIstBeschaeftigt) return;
+  if (appIstBeschaeftigt) {
+    return;
+  }
 
     if (!aktuellerTeilbereich) {
       alert("Bitte zuerst einen Teilbereich auswählen.");
@@ -869,7 +951,39 @@ function naechsteFrage() {
     }
 
     wiederholungsKontext = null;
-    ladeFrageAusFach(aktuellesFach, aktuellesThema, aktuelleFrageId);
+
+    if (trainerShuffleAktiv && trainerVerlaufIndex >= 0 && trainerVerlaufIndex < trainerFragenVerlauf.length - 1) {
+      trainerVerlaufIndex++;
+      trainerAktualisiereVorherigeSchaltflaeche();
+      const shuffleFrage = trainerFragenCache.get(trainerFragenVerlauf[trainerVerlaufIndex]);
+      if (shuffleFrage) zeigeGeladeneFrage(shuffleFrage, aktuellesThema, false, false);
+      else setzeStatus("Shuffle-Frage konnte nicht geladen werden.");
+      return;
+    }
+
+    ladeFrageAusFach(aktuellesFach, aktuellesThema, aktuelleFrageId).catch(function(error) {
+        setzeStatus("Frage konnte nicht wiederhergestellt werden: " + error.message);
+    });
+  }
+
+function vorherigeFrage() {
+  if (appIstBeschaeftigt) {
+    return;
+  }
+    wiederholungsKontext = null;
+    if (trainerShuffleAktiv) {
+      if (!trainerFragenVerlauf.length) return;
+      trainerVerlaufIndex = (trainerVerlaufIndex - 1 + trainerFragenVerlauf.length) % trainerFragenVerlauf.length;
+      trainerAktualisiereVorherigeSchaltflaeche();
+      const shuffleFrage = trainerFragenCache.get(trainerFragenVerlauf[trainerVerlaufIndex]);
+      if (shuffleFrage) zeigeGeladeneFrage(shuffleFrage, aktuellesThema, false, false);
+      else setzeStatus("Shuffle-Frage konnte nicht geladen werden.");
+      return;
+    }
+
+    ladeFrageAusFach(aktuellesFach, aktuellesThema, aktuelleFrageId, "previousQuestion").catch(function(error) {
+      setzeStatus("Vorherige Frage konnte nicht geladen werden: " + error.message);
+    });
   }
 
 function antwortLeeren() {
@@ -888,6 +1002,26 @@ function antwortLeeren() {
 
     if (document.getElementById("skizze-normal")) loescheSkizze("normal");
     letzteAusgewerteteAntwort = "";
+    aktuelleKilianBewertung = null;
+    verbirgWiederholungsNavigation();
+    const resultBox = document.getElementById("resultBox");
+    const solutionBox = document.getElementById("solutionBox");
+    const musterloesungText = document.getElementById("musterloesungText");
+    const bewertungBox = document.getElementById("bewertungskriterien");
+    const ergebnisText = document.getElementById("ergebnisText");
+    const punkteAnzeige = document.getElementById("punkteAnzeige");
+    if (resultBox) resultBox.style.display = "none";
+    if (solutionBox) solutionBox.style.display = "none";
+    if (musterloesungText) musterloesungText.textContent = "";
+    if (bewertungBox) {
+      bewertungBox.innerHTML = "";
+      bewertungBox.hidden = true;
+    }
+    if (ergebnisText) ergebnisText.textContent = "Hier erscheint die Bewertung.";
+    if (punkteAnzeige) {
+      punkteAnzeige.textContent = "0 / 0 Punkte";
+      punkteAnzeige.classList.remove("good", "bad");
+    }
   }
 
 document.getElementById("antwortInput").addEventListener("keydown", function(event) {

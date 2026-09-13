@@ -389,11 +389,21 @@ const bewertungText = bereinigeBewertungText(
       punkteAnzeige.classList.add(maxPunkte > 0 && punkte >= maxPunkte / 2 ? "good" : "bad");
 
       document.getElementById("ergebnisText").textContent = bewertungText;
-      zeigeBewertungskriterien(data);
+      const bewertungskriterienBox = document.getElementById("bewertungskriterien");
+      if (bewertungskriterienBox) {
+        bewertungskriterienBox.innerHTML = "";
+        bewertungskriterienBox.hidden = true;
+      }
 
-      aktuelleMusterloesung = data.musterloesung || "";
-      document.getElementById("solutionBox").style.display = "none";
-      document.getElementById("musterloesungText").textContent = "";
+      aktuelleMusterloesung = data.musterloesung || aktuelleMusterloesung || "";
+      const bewertungskriterien = [].concat(
+        aktuelleKilianBewertung.erkannte || [],
+        aktuelleKilianBewertung.fehlende || []
+      );
+      document.getElementById("solutionBox").style.display = aktuelleMusterloesung ? "block" : "none";
+      document.getElementById("musterloesungText").innerHTML =
+        hebeStichpunkteHervor(aktuelleMusterloesung, bewertungskriterien.concat(aktuelleStichpunkte));
+
 
       verbucheSessionErgebnis(
         aktuellesFach,
@@ -675,21 +685,10 @@ function hebeStichpunkteHervor(text, stichpunkte) {
 
     html = html.replace(
       new RegExp("(" + escaped + ")", "gi"),
-      "<strong><em>$1</em></strong>"
+      "<strong class=\"musterloesung-kriterium\">$1</strong>"
     );
   });
 
   return html;
 }
 
-function zeigeMusterloesung() {
-    if (!aktuelleMusterloesung) {
-      alert("Zur aktuellen Frage ist keine Musterlösung vorhanden.");
-      return;
-    }
-
-    document.getElementById("resultBox").style.display = "block";
-    document.getElementById("solutionBox").style.display = "block";
-    document.getElementById("musterloesungText").innerHTML =
-  hebeStichpunkteHervor(aktuelleMusterloesung, []);
-  }
