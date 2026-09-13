@@ -98,6 +98,7 @@ test('all reviewed tasks retain their original solution prefix, points, types an
       assert.equal(row.fach, unit.einheit, key);
       assert.equal(row.stichpunkte.split(';').map(x => x.trim()).filter(Boolean).length, before.kriterienAnzahl, key);
       assert.equal(hash(row.musterloesung.slice(0, before.erhaltenerTextLaenge)), before.erhaltenerTextSha256, `${key}: original solution content removed or rewritten`);
+      assert.equal(before.erhaltenerTextSha256, before.urspruenglicherTextSha256, `${key}: original company/legal-form references not restored`);
       assert.equal(hash(row.aufgabenHtml), before.aufgabenHtmlSha256, `${key}: table/task data changed`);
       assert.equal(row.bilddatei, before.bilddatei, key);
     }
@@ -107,16 +108,45 @@ test('all reviewed tasks retain their original solution prefix, points, types an
   assert.deepEqual(keys.slice().sort(), Object.keys(baseline.aufgaben).sort());
 });
 
-test('alternative legal entities occur only in explicit comparisons and actual counterparties stay distinct', () => {
+test('all 164 additions and all grading criteria survive the company-name correction', () => {
+  const catalog = JSON.parse(fs.readFileSync('data/pruefungssimulation/katalog.json', 'utf8'));
+  const baseline = JSON.parse(fs.readFileSync('tests/fixtures/pruefungssimulation-bestand.json', 'utf8'));
+  const hash = value => createHash('sha256').update(value).digest('hex');
+  let additions = 0;
+  for (const row of catalog.einheiten.flatMap(unit => unit.aufgaben)) {
+    const key = `${row.simulationId}|${row.fach}|${row.aufgabe}|${row.teilaufgabe}`;
+    const before = baseline.aufgaben[key];
+    let suffix = row.musterloesung.slice(before.erhaltenerTextLaenge);
+    if (suffix) additions++;
+    // Reverse only the documented case-reference substitutions, then compare
+    // against the immutable hash of the complete addition in commit 11f6553.
+    for (const change of before.ergaenzungNamenskorrekturen || []) {
+      assert.ok(suffix.includes(change.nachher), `${key}: required restored company reference missing`);
+      suffix = suffix.replaceAll(change.nachher, change.vorher);
+    }
+    assert.equal(hash(suffix), before.ergaenzung11f6553Sha256, `${key}: addition shortened or changed beyond company references`);
+    assert.equal(hash(row.stichpunkte), before.stichpunkte11f6553Sha256, `${key}: grading criteria changed`);
+    for (const [field, expectedHash] of Object.entries(baseline.wiederhergestellteFallfelder?.[key] || {})) {
+      assert.equal(hash(row[field]), expectedHash, `${key}/${field}: original case constellation changed`);
+    }
+  }
+  assert.equal(additions, 164);
+});
+
+test('Circle Harbor entities retain their case-specific legal forms and external counterparties stay distinct', () => {
   assert.ok(fs.existsSync('data/pruefungssimulation/katalog.json'));
   const catalog = JSON.parse(fs.readFileSync('data/pruefungssimulation/katalog.json', 'utf8'));
   const rows = catalog.einheiten.flatMap(unit => unit.aufgaben);
-  assert.ok(!/UrbanMotion|Circle Harbor Service GmbH|Circle Harbor Fleet Mobility OHG|Frau Circle Harbor/.test(JSON.stringify(rows)));
-  for (const row of rows) {
-    if (/Circle Harbor (?:Mobility|Components|Infrastruktur) (?:OHG|KG|GmbH & Co\. KG)/.test(JSON.stringify(row))) {
-      assert.match(row.situation + row.hauptsituation, /Vergleichs|hypothetisch|rechtlich eigenständigen Geschäftspartners/, row.simulationId);
-    }
-  }
+  assert.ok(!/UrbanMotion|Frau Circle Harbor/.test(JSON.stringify(rows)));
+  const first = (simulationId, fach) => rows.find(row => row.simulationId === simulationId && row.fach === fach);
+  assert.match(first('HQ_SIM_3', 'HQ_A1').hauptsituation, /Circle Harbor Service GmbH mit Sitz in Darmstadt/);
+  assert.match(first('WQ_VWL_SIM_2', 'VWL/BWL').hauptsituation, /Circle Harbor Fleet Mobility OHG/);
+  assert.match(first('WQ_RS_SIM_2', 'Recht und Steuern').hauptsituation, /Circle Harbor Mobility OHG/);
+  assert.match(first('WQ_VWL_SIM_3', 'VWL/BWL').hauptsituation, /Circle Harbor Mobility OHG/);
+  assert.match(first('WQ_RS_SIM_3', 'Recht und Steuern').hauptsituation, /Circle Harbor Infrastruktur KG mit Sitz in Brake/);
+  assert.match(first('WQ_RS_SIM_3', 'Recht und Steuern').musterloesung, /Vertrag für die KG/);
+  const outsourcing = rows.find(row => row.simulationId === 'WQ_VWL_SIM_4' && row.aufgabe === 5 && row.teilaufgabe === 'b');
+  assert.match(outsourcing.situation, /bei Circle Harbor Mobility/);
   const cargo = rows.find(row => row.simulationId === 'HQ_SIM_1' && row.fach === 'HQ_A2' && row.aufgabe === 6 && row.teilaufgabe === 'a');
   assert.match(cargo.situation, /Circle Harbor GmbH.*NordCargo GmbH/);
   const lawsuit = rows.find(row => row.simulationId === 'WQ_RS_SIM_4' && row.aufgabe === 4 && row.teilaufgabe === 'c');
