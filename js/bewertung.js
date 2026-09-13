@@ -384,11 +384,17 @@ const bewertungText = bereinigeBewertungText(
       punkteAnzeige.classList.add(maxPunkte > 0 && punkte >= maxPunkte / 2 ? "good" : "bad");
 
       document.getElementById("ergebnisText").textContent = bewertungText;
-      zeigeBewertungskriterien(data);
-
-      aktuelleMusterloesung = data.musterloesung || "";
-      document.getElementById("solutionBox").style.display = "none";
-      document.getElementById("musterloesungText").textContent = "";
+      // Restore the automatic solution UI from 0eb066c, without its Kilian dependency.
+      aktuelleMusterloesung = data.musterloesung || aktuelleMusterloesung || "";
+      const ausErgebnis = extrahiereKriterienAusErgebnis(data.ergebnis);
+      const bewertungskriterien = [].concat(
+        findeKriterien(data, ["erkannteKriterien", "erfuellteKriterien", "erkannteStichpunkte", "erkannte"]),
+        findeKriterien(data, ["fehlendeKriterien", "nichtErfuellteKriterien", "fehlendeStichpunkte", "fehlende"]),
+        ausErgebnis.erkannte, ausErgebnis.fehlende, aktuelleStichpunkte
+      );
+      document.getElementById("solutionBox").style.display = aktuelleMusterloesung ? "block" : "none";
+      document.getElementById("musterloesungText").innerHTML =
+        hebeStichpunkteHervor(aktuelleMusterloesung, bewertungskriterien);
 
       verbucheSessionErgebnis(
         aktuellesFach,
@@ -583,60 +589,6 @@ function extrahiereKriterienAusErgebnis(text) {
   };
 }
 
-function zeigeBewertungskriterien(data) {
-  const box = document.getElementById("bewertungskriterien");
-  if (!box) return;
-
-  let erkannte = findeKriterien(data, [
-    "erkannteKriterien",
-    "erfuellteKriterien",
-    "erkannteStichpunkte",
-    "erkannte"
-  ]);
-  let fehlende = findeKriterien(data, [
-    "fehlendeKriterien",
-    "nichtErfuellteKriterien",
-    "fehlendeStichpunkte",
-    "fehlende"
-  ]);
-
-  if (!erkannte.length && !fehlende.length) {
-    const ausErgebnis = extrahiereKriterienAusErgebnis(data.ergebnis);
-    erkannte = ausErgebnis.erkannte;
-    fehlende = ausErgebnis.fehlende;
-  }
-
-  if (!erkannte.length && !fehlende.length) {
-    const punkte = Number(data.punkte || 0);
-    const maxPunkte = Number(data.maxPunkte || 0);
-    if (maxPunkte > 0 && punkte >= maxPunkte) {
-      box.textContent = "Alle wesentlichen Inhalte wurden erkannt.";
-      box.hidden = false;
-      return;
-    }
-
-    box.hidden = true;
-    box.innerHTML = "";
-    return;
-  }
-
-  let html = "";
-  if (erkannte.length) {
-    html += "<strong>Erkannt:</strong><ul>" + erkannte.map(function(kriterium) {
-      return "<li>" + escapeHtml(kriterium) + "</li>";
-    }).join("") + "</ul>";
-  }
-
-  if (fehlende.length) {
-    html += "<strong>Für die volle Punktzahl fehlte noch:</strong><ul>" + fehlende.map(function(kriterium) {
-      return "<li>" + escapeHtml(kriterium) + "</li>";
-    }).join("") + "</ul>";
-  }
-
-  box.innerHTML = html;
-  box.hidden = false;
-}
-
 function resetSession() {
     if (appIstBeschaeftigt) return;
 
@@ -654,37 +606,14 @@ function resetSession() {
 
 function hebeStichpunkteHervor(text, stichpunkte) {
   if (!text) return "";
-
-  let html = escapeHtml(text);
-
-  if (!Array.isArray(stichpunkte)) {
-    return html;
-  }
-
-  stichpunkte.forEach(function(punkt) {
-    const clean = String(punkt || "").trim();
-
-    if (!clean) return;
-
-    const escaped = escapeRegExp(clean);
-
-    html = html.replace(
-      new RegExp("(" + escaped + ")", "gi"),
-      "<strong><em>$1</em></strong>"
-    );
-  });
-
-  return html;
+  const quelle = String(text);
+  const kriterien = [...new Set(normalisiereKriterien(stichpunkte))].sort((a, b) => b.length - a.length);
+  if (!kriterien.length) return escapeHtml(quelle);
+  // Match the original text once, then escape each segment. Never search generated HTML
+  // or append absent criteria; overlapping criteria prefer the longer source match.
+  const muster = new RegExp("(" + kriterien.map(escapeRegExp).join("|") + ")", "gi");
+  return quelle.split(muster).map(function(teil, index) {
+    const html = escapeHtml(teil);
+    return index % 2 ? '<strong class="musterloesung-kriterium">' + html + '</strong>' : html;
+  }).join("");
 }
-
-function zeigeMusterloesung() {
-    if (!aktuelleMusterloesung) {
-      alert("Zur aktuellen Frage ist keine Musterlösung vorhanden.");
-      return;
-    }
-
-    document.getElementById("resultBox").style.display = "block";
-    document.getElementById("solutionBox").style.display = "block";
-    document.getElementById("musterloesungText").innerHTML =
-  hebeStichpunkteHervor(aktuelleMusterloesung, []);
-  }
