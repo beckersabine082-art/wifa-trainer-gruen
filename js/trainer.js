@@ -110,6 +110,8 @@ let trainerTippFrageToken = 0;
 let trainerTippAngeboten = false;
 let trainerShuffleAktiv = false;
 let trainerProgressLoadToken = 0;
+let trainerWiederholungSpeicherung = null;
+let trainerWiederholungNavigationAngefordert = false;
 
 // Each special mode has its own path; seenIds survives shuffle backtracking.
 let trainerShuffleSeenIds = new Set();
@@ -780,6 +782,7 @@ function sperreAbgeschlossenenWiederholungsversuch() {
   }
 
 function verbirgWiederholungsNavigation() {
+    trainerWiederholungSpeicherung = null;
     const box = document.getElementById("wiederholungNavBox");
     if (!box) return;
     box.style.display = "none";
@@ -793,20 +796,32 @@ function verbirgWiederholungsNavigation() {
     }
   }
 
-async function zeigeWiederholungsNavigation() {
+async function zeigeWiederholungsNavigation(speicherung = Promise.resolve()) {
     if (!wiederholungsKontext) return;
+    const kontext = wiederholungsKontext;
 
     const box = document.getElementById("wiederholungNavBox");
     const hinweis = document.getElementById("wiederholungNavHinweis");
     const nextBtn = document.getElementById("btnNaechsterOffenerFehler");
     if (!box || !nextBtn) return;
+    box.style.display = "block";
+    const backBtn = document.getElementById("btnZurueckZurFehleranalyse");
+    [nextBtn, backBtn].filter(Boolean).forEach(button => {
+      button.disabled = false;
+      button.style.opacity = "1";
+      button.style.cursor = "";
+    });
 
     try {
+      // Render immediately, but only inspect errors after the new attempt is durable.
+      await speicherung;
+      if (wiederholungsKontext !== kontext || trainerWiederholungNavigationAngefordert) return;
       if (typeof window.ermittleNaechstenOffenenFehler !== "function") {
         throw new Error("Fehlerübersicht ist noch nicht bereit.");
       }
 
-      const ergebnis = await window.ermittleNaechstenOffenenFehler(wiederholungsKontext.key);
+      const ergebnis = await window.ermittleNaechstenOffenenFehler(kontext.key);
+      if (wiederholungsKontext !== kontext || trainerWiederholungNavigationAngefordert) return;
 
       if (ergebnis.hasOtherOpenError) {
         nextBtn.style.display = "";
@@ -824,21 +839,25 @@ async function zeigeWiederholungsNavigation() {
         if (hinweis) hinweis.textContent = "Keine weiteren offenen Fehler.";
       }
     } catch (error) {
+      if (wiederholungsKontext !== kontext || trainerWiederholungNavigationAngefordert) return;
       if (hinweis) hinweis.textContent = "Fehlerübersicht konnte nicht aktualisiert werden: " + error.message;
-    } finally {
-      box.style.display = "block";
     }
   }
 
 async function naechsterOffenerFehler() {
-    if (appIstBeschaeftigt) return;
+    if (trainerWiederholungNavigationAngefordert || (appIstBeschaeftigt && !trainerWiederholungSpeicherung)) return;
     if (!wiederholungsKontext) return;
 
     const kontext = wiederholungsKontext;
     const hinweis = document.getElementById("wiederholungNavHinweis");
+    trainerWiederholungNavigationAngefordert = true;
+    let eigeneSperre = false;
 
     try {
+      await trainerWiederholungSpeicherung;
+      if (wiederholungsKontext !== kontext) return;
       setzeAppBeschaeftigt(true);
+      eigeneSperre = true;
 
       if (typeof window.ermittleNaechstenOffenenFehler !== "function") {
         throw new Error("Fehlerübersicht ist noch nicht bereit.");
@@ -853,6 +872,8 @@ async function naechsterOffenerFehler() {
 
       if (!zielAttempt) {
         if (hinweis) hinweis.textContent = "Keine weiteren offenen Fehler.";
+        const nextBtn = document.getElementById("btnNaechsterOffenerFehler");
+        if (nextBtn) nextBtn.style.display = "none";
         return;
       }
 
@@ -864,17 +885,28 @@ async function naechsterOffenerFehler() {
     } catch (error) {
       setzeStatus("Nächster offener Fehler konnte nicht geladen werden: " + error.message);
     } finally {
-      setzeAppBeschaeftigt(false);
+      trainerWiederholungNavigationAngefordert = false;
+      if (eigeneSperre) setzeAppBeschaeftigt(false);
     }
   }
 
-function zurueckZurFehleranalyse() {
-    if (appIstBeschaeftigt) return;
-    wiederholungsKontext = null;
-    if (typeof oeffneLernstandBereich === "function") {
-      oeffneLernstandBereich("lernstandFehlerView");
-    } else {
-      zeigeBereich("lernstandFehlerView");
+async function zurueckZurFehleranalyse() {
+    if (trainerWiederholungNavigationAngefordert || (appIstBeschaeftigt && !trainerWiederholungSpeicherung)) return;
+    const kontext = wiederholungsKontext;
+    trainerWiederholungNavigationAngefordert = true;
+    try {
+      await trainerWiederholungSpeicherung;
+      if (wiederholungsKontext !== kontext) return;
+      wiederholungsKontext = null;
+      if (typeof oeffneLernstandBereich === "function") {
+        oeffneLernstandBereich("lernstandFehlerView");
+      } else {
+        zeigeBereich("lernstandFehlerView");
+      }
+    } catch (error) {
+      setzeStatus("Lernstand konnte nicht gespeichert werden: " + error.message);
+    } finally {
+      trainerWiederholungNavigationAngefordert = false;
     }
   }
 

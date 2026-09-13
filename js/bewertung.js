@@ -411,7 +411,7 @@ const bewertungText = bereinigeBewertungText(
         throw new Error("Lernstand-Speicherung ist noch nicht bereit.");
       }
 
-      await window.speichereWifaAttempt({
+      const speicherung = window.speichereWifaAttempt({
         bereich: aktuellerTeilbereich || ermittleTeilbereich(aktuellesFach),
         fach: aktuellesFach,
         thema: aktuellesThema,
@@ -420,11 +420,16 @@ const bewertungText = bereinigeBewertungText(
         erreichtePunkte: punkte,
         maximalePunkte: maxPunkte
       });
+      if (wiederholungsKontext) {
+        trainerWiederholungSpeicherung = speicherung;
+        // The existing navigation renders now; its data refresh waits for persistence.
+        void zeigeWiederholungsNavigation(speicherung);
+      }
+      await speicherung;
 
       setzeStatus("Auswertung abgeschlossen und Lernstand gespeichert.");
 
       if (wiederholungsKontext) {
-        await zeigeWiederholungsNavigation();
         sperreAbgeschlossenenWiederholungsversuch();
       }
     } catch (error) {
