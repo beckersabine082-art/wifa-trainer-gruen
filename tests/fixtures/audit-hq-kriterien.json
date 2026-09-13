@@ -1,0 +1,590 @@
+[
+  {
+    "key": "HQ_SIM_1|HQ_A1|1|a",
+    "field": "stichpunkte",
+    "before": "Strategische Ziele;Zielkonflikt;Qualitätssteigerung;Markterschließung;Kundenzufriedenheit;Vertriebspartner;Marktkenntnisse;Kostensteigerung",
+    "after": "Zwei unterschiedliche strategische Ziele formuliert, die sich bei der Vertriebspartnerauswahl gegenseitig unterstützen;Zusammenhang und Bedeutung der Vertriebspartner für diese passende Zielkombination erläutert;Zwei unterschiedliche strategische Ziele formuliert, zwischen denen bei der Vertriebspartnerauswahl ein Zielkonflikt besteht;Zielkonflikt und Bedeutung der Vertriebspartner für die beiden konfliktären Ziele erläutert",
+    "evidence": {
+      "answer": "Passend: höhere Deckungsbeiträge und geringere Prozesskosten. Partner können Aufträge bündeln und die Abwicklung effizienter machen. Konfliktär: intensive persönliche Betreuung und geringere Provisionen. Beratungsstarke Partner benötigen Zeit und Vergütung, was dem Kostensenkungsziel entgegensteht.",
+      "oldMatched": 4,
+      "expectedPoints": 8,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|1|c",
+    "field": "stichpunkte",
+    "before": "Zuverlässigkeit;Marktkenntnisse;wirtschaftliche Stabilität;Vertriebsnetz;Kundenkontakte;Servicequalität;digitale Vertriebsstrukturen",
+    "after": "Erstes geeignetes Bewertungskriterium für Vertriebspartner genannt und seine Bedeutung erläutert;Zweites vom ersten verschiedenes geeignetes Bewertungskriterium genannt und seine Bedeutung erläutert;Drittes eigenständiges geeignetes Bewertungskriterium genannt und seine Bedeutung erläutert;Viertes eigenständiges geeignetes Bewertungskriterium genannt und seine Bedeutung erläutert",
+    "evidence": {
+      "answer": "Zuverlässigkeit sichert eingehaltene Lieferzusagen. Marktkenntnis hilft, passende Kunden anzusprechen. Wirtschaftliche Stabilität senkt das Ausfallrisiko. Gute Servicequalität fördert zufriedene Stammkunden.",
+      "oldMatched": 4,
+      "expectedPoints": 4,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|3|a",
+    "field": "stichpunkte",
+    "before": "Kommunikation und Information;Verständlichkeit;Offenheit;Informationsfluss;Aufmerksamkeit;Motivation;Anerkennung;Unterstützung;Vertrauen;Partizipation;Teamentwicklung;Umgang mit Konflikten;Teamarbeit;Aufgabenverteilung;Führungspersönlichkeit;Kritikfähigkeit;Verlässlichkeit;Verantwortung;Wertschätzung",
+    "after": "Erster geeigneter Indikator für Kommunikation und Information genannt;Zweiter davon verschiedener geeigneter Indikator für Kommunikation und Information genannt;Erster geeigneter Indikator für Motivation genannt;Zweiter davon verschiedener geeigneter Indikator für Motivation genannt;Erster geeigneter Indikator für Teamentwicklung genannt;Zweiter davon verschiedener geeigneter Indikator für Teamentwicklung genannt;Erster geeigneter Indikator für Führungspersönlichkeit genannt;Zweiter davon verschiedener geeigneter Indikator für Führungspersönlichkeit genannt",
+    "evidence": {
+      "answer": "Kommunikation und Information: Verständlichkeit und Offenheit. Motivation: Anerkennung und Unterstützung. Teamentwicklung: konstruktiver Umgang mit Konflikten und Förderung der Teamarbeit. Führungspersönlichkeit: Kritikfähigkeit und Verlässlichkeit.",
+      "oldMatched": 12,
+      "expectedPoints": 8,
+      "oldPoints": 5.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|3|b",
+    "field": "stichpunkte",
+    "before": "360-Grad-Feedback;verschiedene Perspektiven;Kollegen;Mitarbeiter;externe Partner;umfassendere Bewertung;blinde Flecken erkennen;Selbstbild;Fremdbild;Vergleich",
+    "after": "Erste fachlich zutreffende Chance eines 360-Grad-Feedbacks erläutert;Zweite von der ersten verschiedene fachlich zutreffende Chance eines 360-Grad-Feedbacks erläutert",
+    "evidence": {
+      "answer": "Das 360-Grad-Feedback ergänzt die Sicht der Führungskraft um die Perspektive der Mitarbeitenden und ergibt ein umfassenderes Bild, wodurch blinde Flecken erkannt werden. Der Vergleich von Selbstbild und Fremdbild zeigt konkrete Ansatzpunkte für die eigene Entwicklung.",
+      "oldMatched": 8,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|3|c",
+    "field": "stichpunkte",
+    "before": "unsachliche Kritik;Frustration;Anonymität;klare Regeln;unqualifizierte Antworten;verzerrte Bewertungen;uneinheitliche Bewertungen;zusammengefasste Auswertung;einheitliche Bewertungsmaßstäbe;Zielvereinbarung",
+    "after": "Erstes fachlich zutreffendes Risiko eines 360-Grad-Feedbacks beschrieben;Geeignete Maßnahme gegen das erste Risiko erarbeitet;Zweites eigenständiges Risiko eines 360-Grad-Feedbacks beschrieben;Geeignete Maßnahme gegen das zweite Risiko erarbeitet",
+    "evidence": {
+      "answer": "Aus Angst vor Vergeltung könnten Beschäftigte Kritik verschweigen. Anonyme Auswertung schützt sie. Unterschiedliche Bewertungsmaßstäbe können Urteile verzerren. Einheitliche verhaltensbezogene Maßstäbe und eine Einweisung reduzieren diese Verzerrung.",
+      "oldMatched": 4,
+      "expectedPoints": 4,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|3|d",
+    "field": "stichpunkte",
+    "before": "Schulungen für Führungskräfte;Kompetenzen aufbauen;Mentor;Coach;individuelle Unterstützung;praktische Unterstützung;Coaching empfohlen;Mentoring empfohlen;gezielte Förderung;konkrete Defizite",
+    "after": "Erste zielführende Personalentwicklungsmaßnahme für Führungskompetenz beschrieben;Zweite davon verschiedene zielführende Personalentwicklungsmaßnahme beschrieben;Eine der beiden beschriebenen Maßnahmen zur Durchführung empfohlen;Empfehlung anhand des Führungsentwicklungsbedarfs nachvollziehbar begründet",
+    "evidence": {
+      "answer": "Eine Führungskräfteschulung baut fehlende Kompetenzen systematisch auf. Ein erfahrener Mentor bietet individuelle praktische Unterstützung bei konkreten Defiziten. Ich empfehle Mentoring, weil die gezielte Förderung unmittelbar an den Problemen des Teamleiters ansetzen kann.",
+      "oldMatched": 8,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|4|b",
+    "field": "stichpunkte",
+    "before": "Anforderungen definieren;Erwartungen festlegen;gezielte Fragen vorbereiten;Führungserfahrung prüfen;Konfliktverhalten prüfen;offene Fragen;Gesprächsnotizen;Beobachtungen dokumentieren;objektiver Vergleich",
+    "after": "Erste konkrete Handlungsempfehlung zur Vorbereitung oder Durchführung der Bewerbungsgespräche gegeben;Zweite eigenständige konkrete Handlungsempfehlung zur Vorbereitung oder Durchführung gegeben;Dritte eigenständige konkrete Handlungsempfehlung zur Vorbereitung oder Durchführung gegeben;Vierte eigenständige konkrete Handlungsempfehlung zur Vorbereitung oder Durchführung gegeben",
+    "evidence": {
+      "answer": "Reservieren Sie einen ungestörten Raum. Legen Sie vorab fest, wer das Gespräch führt und wer protokolliert. Prüfen Sie die Lebensläufe auf Widersprüche und bereiten Sie Nachfragen vor. Verwenden Sie für alle Bewerber einen einheitlichen Fragenleitfaden.",
+      "oldMatched": 4,
+      "expectedPoints": 4,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|5|a",
+    "field": "stichpunkte",
+    "before": "Brainwriting;6-3-5-Methode;Walt-Disney-Methode;schriftliche Ideen;aktive Beteiligung;Ideen erweitern;verschiedene Perspektiven;strukturierte Ideen;alle Teilnehmer eingebunden;Dominanz vermeiden;6-3-5 geeignet",
+    "after": "Erste geeignete Kreativitätstechnik mit ihrer Vorgehensweise dargestellt;Zweite eigenständige geeignete Kreativitätstechnik mit ihrer Vorgehensweise dargestellt;Dritte eigenständige geeignete Kreativitätstechnik mit ihrer Vorgehensweise dargestellt;Eine der dargestellten Techniken für das Meeting ausgewählt;Auswahl anhand der Aufgabe und der tatsächlichen oder ausdrücklich angenommenen Teilnehmerzahl nachvollziehbar begründet",
+    "evidence": {
+      "answer": "Beim Brainwriting schreiben alle Ideen zunächst still auf und entwickeln sie gemeinsam weiter. Die Walt-Disney-Methode betrachtet Ideen aus Träumer-, Realisten- und Kritikersicht. Bei der Kopfstandmethode sammeln wir abschreckende Ausbildungsbedingungen und kehren diese in attraktive Maßnahmen um. Ich wähle die Kopfstandmethode: Sie passt zu unserer konkreten Frage und eröffnet auch einer kleinen Gruppe ungewohnte Lösungswege.",
+      "oldMatched": 9,
+      "expectedPoints": 9,
+      "oldPoints": 7.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|5|b",
+    "field": "stichpunkte",
+    "before": "Zeit einplanen;Moderation vorbereiten;Gruppenzusammensetzung berücksichtigen;Konfliktpotenzial erkennen;Interessen berücksichtigen;Belastbarkeit einschätzen;Konzentrationsfähigkeit",
+    "after": "Ersten geeigneten Aspekt der persönlichen Vorbereitung auf das Kreativmeeting beschrieben;Zweiten davon verschiedenen geeigneten Aspekt der persönlichen Vorbereitung beschrieben",
+    "evidence": {
+      "answer": "Ich reserviere ausreichend Zeit, um meine Moderation vorzubereiten. Außerdem prüfe ich meine eigene Belastbarkeit und Konzentrationsfähigkeit und plane vorher Erholung, damit ich das Treffen aufmerksam leiten kann.",
+      "oldMatched": 4,
+      "expectedPoints": 4,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|5|c",
+    "field": "stichpunkte",
+    "before": "Unternehmenshomepage;Ausbildungsplätze veröffentlichen;Karriereinformationen;Online-Jobbörsen;Agentur für Arbeit;soziale Medien;Instagram;Facebook;LinkedIn;junge Zielgruppen;attraktiver Ausbildungsbetrieb",
+    "after": "Erste Möglichkeit des Einsatzes von Onlinemedien zur Gewinnung von Auszubildenden erläutert;Zweite davon verschiedene Möglichkeit des Einsatzes von Onlinemedien zur Gewinnung von Auszubildenden erläutert;Dritte eigenständige Möglichkeit des Einsatzes von Onlinemedien zur Gewinnung von Auszubildenden erläutert",
+    "evidence": {
+      "answer": "Auf der Homepage stellen wir Ausbildungsplätze und Karrierewege mit einfachem Bewerbungsweg vor. Auf privaten Ausbildungs-Jobbörsen veröffentlichen wir Anzeigen, damit aktiv Suchende uns finden. Auf Instagram zeigen Auszubildende ihren Arbeitsalltag und sprechen junge Menschen authentisch an.",
+      "oldMatched": 8,
+      "expectedPoints": 6,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|4|a",
+    "field": "stichpunkte",
+    "before": "langfristige Entscheidungen;strategische Analysen;SWOT-Analyse;strategische Alternativen;Frühwarnsysteme;strategische Risiken",
+    "after": "Erste fachlich zutreffende Aufgabe des strategischen Controllings für die geplante Marktexpansion formuliert;Zweite eigenständige fachlich zutreffende Aufgabe des strategischen Controllings für die geplante Marktexpansion formuliert",
+    "evidence": {
+      "answer": "Das strategische Controlling kann mittels SWOT langfristige Entscheidungen zur Expansion vorbereiten. Außerdem kann es alternative Markteintrittsstrategien bewerten und der Geschäftsführung eine vergleichbare Entscheidungsgrundlage liefern.",
+      "oldMatched": 4,
+      "expectedPoints": 2,
+      "oldPoints": 1.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|5|c",
+    "field": "stichpunkte",
+    "before": "subjektive Kriterienauswahl;subjektive Gewichtung;Beeinflussung;eingeschränkte Objektivität",
+    "after": "Ersten fachlich zutreffenden Kritikpunkt an der Nutzwertanalyse beschrieben;Zweiten vom ersten verschiedenen fachlich zutreffenden Kritikpunkt an der Nutzwertanalyse beschrieben",
+    "evidence": {
+      "answer": "Die Gewichtung beruht auf persönlichen Präferenzen der Bewertenden. Dadurch wird das Ergebnis beeinflusst und ist nur eingeschränkt objektiv.",
+      "oldMatched": 3,
+      "expectedPoints": 1,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|7|c",
+    "field": "stichpunkte",
+    "before": "Gemeinschaftslizenz; § 3 GüKG; tatsächliche und dauerhafte Niederlassung; Zuverlässigkeit; finanzielle Leistungsfähigkeit; fachliche Eignung; Verkehrsleiter; Haftpflichtversicherung § 7a GüKG; Mitführungspflichten § 7 GüKG",
+    "after": "Erste zentrale rechtliche Voraussetzung oder Pflicht für gewerblichen Güterkraftverkehr eines deutschen Unternehmens zutreffend beschrieben;Zweite eigenständige zentrale rechtliche Voraussetzung oder Pflicht zutreffend beschrieben;Dritte eigenständige zentrale rechtliche Voraussetzung oder Pflicht zutreffend beschrieben;Vierte eigenständige zentrale rechtliche Voraussetzung oder Pflicht zutreffend beschrieben;Fünfte eigenständige zentrale rechtliche Voraussetzung oder Pflicht zutreffend beschrieben",
+    "evidence": {
+      "answer": "Eine Gemeinschaftslizenz nach §3 GüKG berechtigt zur Durchführung des gewerblichen Verkehrs. Eine tatsächliche dauerhafte Niederlassung sichert einen realen Betriebssitz. Zuverlässigkeit erfordert die Einhaltung relevanter Vorschriften. Finanzielle Leistungsfähigkeit muss den tragfähigen Betrieb ermöglichen. Fachliche Eignung sichert das erforderliche Fachwissen, regelmäßig durch den Verkehrsleiter.",
+      "oldMatched": 7,
+      "expectedPoints": 5,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|9|b",
+    "field": "stichpunkte",
+    "before": "einheitliche Bedingungen;weniger Verhandlungen;Transparenz;Rechtssicherheit;Informationspflichten bündeln",
+    "after": "Ersten fachlich zutreffenden Vorteil der Verwendung von AGB beschrieben;Zweiten eigenständigen fachlich zutreffenden Vorteil der Verwendung von AGB beschrieben;Dritten eigenständigen fachlich zutreffenden Vorteil der Verwendung von AGB beschrieben;Vierten eigenständigen fachlich zutreffenden Vorteil der Verwendung von AGB beschrieben",
+    "evidence": {
+      "answer": "Einheitliche Bedingungen verhindern widersprüchliche Vertragsgestaltung. Weniger Einzelverhandlungen sparen Bearbeitungszeit. Transparente Bedingungen machen Rechte und Pflichten vorhersehbar. Rechtlich zulässige und wirksam einbezogene AGB erhöhen die Rechtssicherheit.",
+      "oldMatched": 4,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|9|c",
+    "field": "stichpunkte",
+    "before": "unwirksame AGB; §§ 307 bis 309 BGB; Haftung grobe Fahrlässigkeit; unangemessen kurze Mängelfrist; unzulässige Formvorgabe; Gerichtsstandsklausel Verbraucher",
+    "after": "Erstes Beispiel einer gegenüber Verbrauchern unwirksamen AGB-Klausel zutreffend genannt;Zweites davon verschiedenes Beispiel einer gegenüber Verbrauchern unwirksamen AGB-Klausel zutreffend genannt;Drittes eigenständiges Beispiel einer gegenüber Verbrauchern unwirksamen AGB-Klausel zutreffend genannt;Viertes eigenständiges Beispiel einer gegenüber Verbrauchern unwirksamen AGB-Klausel zutreffend genannt",
+    "evidence": {
+      "answer": "Unwirksam sein können der vollständige Ausschluss der Haftung für grobe Fahrlässigkeit, eine unangemessene Verkürzung der Mängelfrist, eine unzulässig strenge Formvorgabe für Verbrauchererklärungen und eine unzulässige Gerichtsstandsklausel zulasten des Verbrauchers.",
+      "oldMatched": 5,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A1|1|a",
+    "field": "stichpunkte",
+    "before": "vier Zielsetzungen;jeweilige Begründung;Produktimage;Kosten;Beschaffungssicherheit;Produktentwicklung;Expansion;Qualitätssicherung",
+    "after": "Erste geeignete übergeordnete betriebliche Zielsetzung für regionale Lieferanten gewählt;Auswahl der ersten Zielsetzung fallbezogen begründet;Zweite eigenständige geeignete Zielsetzung gewählt;Auswahl der zweiten Zielsetzung fallbezogen begründet;Dritte eigenständige geeignete Zielsetzung gewählt;Auswahl der dritten Zielsetzung fallbezogen begründet;Vierte eigenständige geeignete Zielsetzung gewählt;Auswahl der vierten Zielsetzung fallbezogen begründet",
+    "evidence": {
+      "answer": "Regionale Lieferanten können das Produktimage durch nachweisbare regionale Wertschöpfung verbessern. Kürzere Transporte können Kosten senken. Kürzere Lieferwege erleichtern schnelle Nachlieferungen und erhöhen die Beschaffungssicherheit. Persönliche Lieferantenbesuche erleichtern Qualitätsprüfungen und verbessern die Qualitätssicherung.",
+      "oldMatched": 6,
+      "expectedPoints": 8,
+      "oldPoints": 6.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A1|1|b",
+    "field": "stichpunkte",
+    "before": "drei Kriterien;objektive Messgröße;Zuverlässigkeit;Image;Kosten;Entwicklungspotenzial;Marktmacht",
+    "after": "Erstes geeignetes Bewertungskriterium für regionale Lieferanten konkretisiert;Möglichst objektive Messung des ersten Kriteriums angegeben;Zweites eigenständiges geeignetes Bewertungskriterium konkretisiert;Möglichst objektive Messung des zweiten Kriteriums angegeben;Drittes eigenständiges geeignetes Bewertungskriterium konkretisiert;Möglichst objektive Messung des dritten Kriteriums angegeben",
+    "evidence": {
+      "answer": "Liefertreue messe ich als Anteil vollständig und termingerecht eingegangener Lieferungen. Wiederbeschaffungszeit messe ich in Tagen zwischen Bestellung und nutzbarem Wareneingang. Gesamteinstandskosten messe ich als rabattierten Einkaufspreis zuzüglich Bezugskosten je vergleichbarer Komponente.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A1|2|a",
+    "field": "stichpunkte",
+    "before": "zwei Marketinginstrumente;Umsetzung Regionalität;Promotion;Price;Product;Place",
+    "after": "Umsetzung der regionalen Beschaffungsstrategie für ein erstes Instrument des klassischen Marketingmix beschrieben;Umsetzung der regionalen Beschaffungsstrategie für ein zweites davon verschiedenes Instrument des klassischen Marketingmix beschrieben",
+    "evidence": {
+      "answer": "Promotion: Die regionale Herkunft wird nachprüfbar in der Kommunikation dargestellt und spricht regionalitätsbewusste Kunden an. Price: Gesparte Transportkosten können in niedrigere Verkaufspreise oder zusätzliche Preisreserven umgesetzt werden.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A1|4|a",
+    "field": "stichpunkte",
+    "before": "vier Kennzahlen/Vergleichsgrößen;Umsatz;Sortiment;Vertriebsgebiet;Marktvolumen;Marktpotenzial;Marktanteil;Preisniveau",
+    "after": "Erste geeignete quantitative Kennzahl oder Vergleichsgröße für die Konkurrenzanalyse beschrieben;Zweite eigenständige geeignete quantitative Kennzahl oder Vergleichsgröße beschrieben;Dritte eigenständige geeignete quantitative Kennzahl oder Vergleichsgröße beschrieben;Vierte eigenständige geeignete quantitative Kennzahl oder Vergleichsgröße beschrieben",
+    "evidence": {
+      "answer": "Jahresumsatz in Euro vergleicht die Unternehmensgröße. Marktanteil ist der Wettbewerberabsatz geteilt durch den gesamten regionalen Absatz. Sortimentsbreite zählt die angebotenen Produktgruppen. Ein Preisindex für denselben Warenkorb vergleicht das Preisniveau.",
+      "oldMatched": 5,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A1|5|c",
+    "field": "stichpunkte",
+    "before": "drei Ishikawa-Ursachen;je Maßnahme;Mensch;Methode;Material;Maschine;Milieu;Messung",
+    "after": "Erste fachlich schlüssige Ursache-Wirkungs-Beziehung für Fehler 1, Akku-Lagerung außerhalb zulässiger Temperatur, im Ishikawa-Schema analysiert;Passende Maßnahme zur ersten Ursache abgeleitet;Zweite eigenständige Ursache-Wirkungs-Beziehung für denselben Fehler im Ishikawa-Schema analysiert;Passende Maßnahme zur zweiten Ursache abgeleitet;Dritte eigenständige Ursache-Wirkungs-Beziehung für denselben Fehler im Ishikawa-Schema analysiert;Passende Maßnahme zur dritten Ursache abgeleitet",
+    "evidence": {
+      "answer": "Mensch: Unkenntnis der zulässigen Lagertemperatur führt zur falschen Lagerplatzwahl, deshalb anhand der Herstellervorgaben schulen. Methode: Fehlende Lagerregeln lassen Überschreitungen bestehen, deshalb verbindliche Arbeitsanweisungen festlegen. Messung: Fehlende Temperaturmessung lässt Abweichungen unentdeckt, deshalb funktionierende Sensoren mit Alarmierung einsetzen.",
+      "oldMatched": 5,
+      "expectedPoints": 6,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A1|7|a",
+    "field": "stichpunkte",
+    "before": "drei Maßnahmen;positive Wirkung;internationale Mitarbeitende;Menschen mit Behinderungen;ältere erfahrene Mitarbeitende;Wissensweitergabe;Reputation",
+    "after": "Erste geeignete Diversity-Maßnahme zur Personalbesetzung erläutert;Positive betriebliche Wirkung der ersten Maßnahme erläutert;Zweite eigenständige geeignete Diversity-Maßnahme erläutert;Positive betriebliche Wirkung der zweiten Maßnahme erläutert;Dritte eigenständige geeignete Diversity-Maßnahme erläutert;Positive betriebliche Wirkung der dritten Maßnahme erläutert",
+    "evidence": {
+      "answer": "Mehrsprachige Mitarbeitende erleichtern die Beratung ausländischer Kundschaft. Barrierefreie Arbeitsplätze ermöglichen geeigneten Menschen mit Behinderung selbstständige Mitarbeit. Altersgemischte Teams verbinden ältere Erfahrung mit neuen Kenntnissen und fördern durch Patenschaften die Wissensweitergabe.",
+      "oldMatched": 6,
+      "expectedPoints": 9,
+      "oldPoints": 8.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A1|9|a",
+    "field": "stichpunkte",
+    "before": "fünf Maßnahmen;Mentoring;Stützunterricht;alte Prüfungen;Prüfungssimulation;Assistierte Ausbildung;externe Hilfe",
+    "after": "Erste geeignete unterstützende Maßnahme für Christians Ausbildungserfolg in einen nachvollziehbaren Plan eingebunden;Zweite eigenständige geeignete Unterstützungsmaßnahme in den Plan eingebunden;Dritte eigenständige geeignete Unterstützungsmaßnahme in den Plan eingebunden;Vierte eigenständige geeignete Unterstützungsmaßnahme in den Plan eingebunden;Fünfte eigenständige geeignete Unterstützungsmaßnahme in den Plan eingebunden",
+    "evidence": {
+      "answer": "Ein Mentor klärt zuerst Christians Schwierigkeiten und vereinbart Lernziele. Wöchentlicher Stützunterricht bearbeitet seine Wissenslücken. Danach übt er passende alte Prüfungsaufgaben. Regelmäßige Prüfungssimulationen trainieren seine Zeiteinteilung. Bei tieferliegenden persönlichen Problemen wird geeignete externe Beratung vermittelt.",
+      "oldMatched": 6,
+      "expectedPoints": 5,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|1|b",
+    "field": "stichpunkte",
+    "before": "zwei Kritikpunkte;Prognoseunsicherheit;Zahlungszeitpunkte;Restwert;Nutzungsdauer",
+    "after": "Ersten fachlich zutreffenden Kritikpunkt am Verfahren zur Bestimmung der wirtschaftlich optimalen Nutzungsdauer genannt;Zweiten davon verschiedenen fachlich zutreffenden Kritikpunkt am Verfahren genannt",
+    "evidence": {
+      "answer": "Die künftigen Ein- und Auszahlungen sind unsichere Prognosen. Außerdem fallen Zahlungen in der Realität häufig unterjährig an, während das Verfahren sie vereinfachend am Jahresende berücksichtigt.",
+      "oldMatched": 3,
+      "expectedPoints": 2,
+      "oldPoints": 1.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|4|c",
+    "field": "stichpunkte",
+    "before": "fünf Standortfaktoren;Lage;Infrastruktur;Wirtschaft;Kosten;Fachkräfte;Genehmigungen;Flächen;Lieferantennähe",
+    "after": "Ersten wesentlichen Standortfaktor für das zusätzliche Verteilzentrum beschrieben;Zweiten eigenständigen wesentlichen Standortfaktor beschrieben;Dritten eigenständigen wesentlichen Standortfaktor beschrieben;Vierten eigenständigen wesentlichen Standortfaktor beschrieben;Fünften eigenständigen wesentlichen Standortfaktor beschrieben",
+    "evidence": {
+      "answer": "Kurze Wege zu Hubs senken Fahrzeiten. Gute Verkehrsinfrastruktur erleichtert pünktliche Transporte. Niedrige Standortkosten schonen das Budget. Verfügbare Fachkräfte sichern den Lagerbetrieb. Passende Genehmigungen ermöglichen die geplanten Betriebszeiten.",
+      "oldMatched": 6,
+      "expectedPoints": 5,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|6|c",
+    "field": "stichpunkte",
+    "before": "drei Kritikpunkte;Kriterienauswahl subjektiv;Gewichtung subjektiv;Bewertung subjektiv;Momentaufnahme",
+    "after": "Ersten fachlich zutreffenden Kritikpunkt der Nutzwertanalyse beschrieben;Zweiten davon verschiedenen fachlich zutreffenden Kritikpunkt beschrieben;Dritten eigenständigen fachlich zutreffenden Kritikpunkt beschrieben",
+    "evidence": {
+      "answer": "Die Auswahl der Kriterien kann subjektiv sein. Die Gewichtung kann persönliche Zielpräferenzen widerspiegeln. Die Bewertung der Anbieter kann durch subjektive Einschätzungen der Bewertenden verzerrt werden.",
+      "oldMatched": 4,
+      "expectedPoints": 3,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|8|b",
+    "field": "stichpunkte",
+    "before": "§ 4 MarkenG;Registermarke;Verkehrsgeltung;§ 47 MarkenG;zehn Jahre;Verlängerung",
+    "after": "Erste rechtlich zutreffende Möglichkeit erläutert, wie für die Produktlinie Cargo Solutions Markenschutz entstehen kann;Zweite davon verschiedene rechtlich zutreffende Möglichkeit erläutert, wie für die Produktlinie Cargo Solutions Markenschutz entstehen kann",
+    "evidence": {
+      "answer": "Nach §4 MarkenG kann Schutz durch Eintragung eines eintragungsfähigen Zeichens beim DPMA entstehen. Außerdem kann die Benutzung im geschäftlichen Verkehr Schutz begründen, wenn das Zeichen dadurch Verkehrsgeltung als Marke erreicht hat.",
+      "oldMatched": 3,
+      "expectedPoints": 4,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|8|c",
+    "field": "stichpunkte",
+    "before": "GWB;§ 1 GWB;Preisabsprache;Gebietsabsprache;UWG;§§ 1,3 UWG;Gütezeichen ohne Genehmigung;irreführende Werbung;Lockangebot;unwahre zeitliche Begrenzung",
+    "after": "Anwendungsbereich des GWB zutreffend als Schutz des Wettbewerbs insbesondere vor Wettbewerbsbeschränkungen abgegrenzt;Erstes fachlich zutreffendes Beispiel für wettbewerbswidriges Unternehmensverhalten nach dem GWB genannt;Zweites eigenständiges fachlich zutreffendes GWB-Beispiel genannt;Anwendungsbereich des UWG zutreffend als Schutz vor unlauteren geschäftlichen Handlungen abgegrenzt;Erstes fachlich zutreffendes Beispiel für wettbewerbswidriges Unternehmensverhalten nach dem UWG genannt;Zweites eigenständiges fachlich zutreffendes UWG-Beispiel genannt",
+    "evidence": {
+      "answer": "Das GWB schützt den Wettbewerb vor Beschränkungen, etwa Preisabsprachen und Gebietsaufteilung zwischen Wettbewerbern nach §1 GWB. Das UWG schützt vor unlauteren geschäftlichen Handlungen nach §§1 und3 UWG, etwa vor unerlaubter Nutzung eines Gütezeichens und irreführender Werbung.",
+      "oldMatched": 8,
+      "expectedPoints": 6,
+      "oldPoints": 5.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|9|a",
+    "field": "stichpunkte",
+    "before": "je zwei Vorteile;direkter Vertrieb;Handelsspanne;Kontrolle;Kundenkontakt;indirekter Vertrieb;Flächendeckung;bestehende Strukturen;kein eigenes Netz",
+    "after": "Ersten zutreffenden Vorteil des direkten Vertriebs über eigene Mobility-Hubs beschrieben;Zweiten eigenständigen zutreffenden Vorteil des direkten Vertriebs beschrieben;Ersten zutreffenden Vorteil des indirekten Vertriebs über den Fahrradfachhandel beschrieben;Zweiten eigenständigen zutreffenden Vorteil des indirekten Vertriebs beschrieben",
+    "evidence": {
+      "answer": "Direkter Vertrieb ermöglicht die Kontrolle der Verkaufsberatung und unmittelbares Kundenfeedback. Indirekter Vertrieb ermöglicht eine schnelle flächendeckende Marktabdeckung und nutzt bereits vorhandene Vertriebsstrukturen des Fahrradfachhandels.",
+      "oldMatched": 7,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|9|b",
+    "field": "stichpunkte",
+    "before": "gebietsorientiert;Verkaufsbezirke;Außendienst;drei Vorteile;regionale Kenntnisse;Kundenbindung;klare Zuständigkeit;Reisekosten;Besuchseffizienz",
+    "after": "Gebietsorientierte Vertriebsorganisation durch geografische Bezirke mit zugeordneten Vertriebsverantwortlichen beschrieben;Erstes zutreffendes Argument für die Eignung bei der flächendeckenden Einführung in NRW erläutert;Zweites eigenständiges zutreffendes Eignungsargument erläutert;Drittes eigenständiges zutreffendes Eignungsargument erläutert",
+    "evidence": {
+      "answer": "NRW wird in geografische Verkaufsbezirke eingeteilt. Je ein Außendienstmitarbeiter ist für die Händler seines Bezirks zuständig. Das nutzt regionale Marktkenntnisse, stärkt durch einen festen Ansprechpartner die Kundenbindung und vermeidet Zuständigkeitskonflikte.",
+      "oldMatched": 7,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|9|c",
+    "field": "stichpunkte",
+    "before": "drei Kennzahlen;Umsatz je Produktgruppe;Produktdeckungsbeitrag;Auftragseingangsquote;Reklamationsquote;Stornoquote;Kundenkontakte;Pareto;Neueröffnungen",
+    "after": "Erste fachlich zutreffende Kennzahl des Vertriebscontrollings mit ihrer Bedeutung für die neue Strategie erläutert;Zweite eigenständige fachlich zutreffende Kennzahl mit ihrer Bedeutung erläutert;Dritte eigenständige fachlich zutreffende Kennzahl mit ihrer Bedeutung erläutert",
+    "evidence": {
+      "answer": "Umsatz je Produktgruppe zeigt den Markterfolg der Cargo-Boxen. Der Produktdeckungsbeitrag als Erlös minus variable Kosten zeigt den Beitrag zur Fixkostendeckung. Die Reklamationsquote als reklamierte Aufträge geteilt durch alle Aufträge macht Qualitätsprobleme sichtbar.",
+      "oldMatched": 4,
+      "expectedPoints": 3,
+      "oldPoints": 1.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|1|a",
+    "field": "stichpunkte",
+    "before": "vier Vorteile;Forming;Storming;Norming;Performing;Adjourning;kürzere Anlaufzeit;geringerer Abstimmungsaufwand",
+    "after": "Ersten wirtschaftlichen Vorteil vertrauter Projektmitglieder anhand einer zutreffenden Teambuilding-Phase erläutert;Zweiten eigenständigen wirtschaftlichen Vorteil anhand einer zutreffenden Teambuilding-Phase erläutert;Dritten eigenständigen wirtschaftlichen Vorteil anhand einer zutreffenden Teambuilding-Phase erläutert;Vierten eigenständigen wirtschaftlichen Vorteil anhand einer zutreffenden Teambuilding-Phase erläutert",
+    "evidence": {
+      "answer": "Forming dauert kürzer, weil das Kennenlernen entfällt und weniger Arbeitszeit bindet. Im Storming reduzieren bekannte Stärken Positionskonflikte und Abstimmungsaufwand. Im Norming können Rollen schneller passend vergeben werden. Performing beginnt früher, sodass das Team schneller produktive Projektergebnisse liefert.",
+      "oldMatched": 7,
+      "expectedPoints": 8,
+      "oldPoints": 7.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|1|b",
+    "field": "stichpunkte",
+    "before": "zwei Prozessschritte;Verfügbarkeit/Freistellung;Kick-off;Projektziele;Budget;Meilensteine;Rollen;Ressourcen;Berichtswege",
+    "after": "Ersten vor Projektbeginn trotz persönlicher Vertrautheit erforderlichen Klärungsschritt beschrieben;Zweiten eigenständigen erforderlichen Klärungsschritt beschrieben",
+    "evidence": {
+      "answer": "Vor Projektbeginn muss die zeitliche Freistellung der Mitarbeitenden verbindlich mit ihren Vorgesetzten geklärt werden. Außerdem müssen die Berichtswege festgelegt werden, damit klar ist, an wen Fortschritte und Probleme gemeldet werden.",
+      "oldMatched": 3,
+      "expectedPoints": 2,
+      "oldPoints": 1.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|1|c",
+    "field": "stichpunkte",
+    "before": "zwei Chancen;zwei Risiken;fachliche Erfahrung;Budgetkompetenz;kurze Entscheidungswege;Hierarchie;Dominanz;Rollenkonflikt;begründete Empfehlung",
+    "after": "Erste zutreffende Chance der Mitarbeit des Geschäftsführers im Projektteam erläutert;Zweite eigenständige zutreffende Chance erläutert;Erstes zutreffendes Risiko der Mitarbeit des Geschäftsführers erläutert;Zweites eigenständiges zutreffendes Risiko erläutert;Nachvollziehbar begründete Empfehlung für oder gegen seine operative Projektleitung ausgesprochen",
+    "evidence": {
+      "answer": "Der Geschäftsführer kann Budgets direkt freigeben und Entscheidungen schnell treffen. Das hierarchische Gefälle kann offene Beiträge hemmen, und seine Rollen als Gesamtentscheider und Projektleiter können kollidieren. Deshalb empfehle ich seine Tätigkeit im Lenkungsausschuss statt operativer Projektleitung, um Entscheidungskompetenz mit offener Teamarbeit zu verbinden.",
+      "oldMatched": 7,
+      "expectedPoints": 5,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|2|a",
+    "field": "stichpunkte",
+    "before": "Unfreezing zwei Maßnahmen;Moving zwei Maßnahmen;Freezing zwei Maßnahmen;Beteiligung;Umsetzung;Monitoring;Stabilisierung",
+    "after": "Erste geeignete Maßnahme der Unfreezing-Phase bei der Zusammenführung erläutert;Zweite eigenständige geeignete Maßnahme der Unfreezing-Phase erläutert;Erste geeignete Maßnahme der Moving-Phase bei der Zusammenführung erläutert;Zweite eigenständige geeignete Maßnahme der Moving-Phase erläutert;Erste geeignete Maßnahme der Freezing-Phase bei der Zusammenführung erläutert;Zweite eigenständige geeignete Maßnahme der Freezing-Phase erläutert",
+    "evidence": {
+      "answer": "Unfreezing: Den Veränderungsbedarf in einer Informationsveranstaltung erklären und ein verständliches Informationspaket zu Ablauf und Auswirkungen bereitstellen. Moving: Gemeinsame Zuständigkeiten einführen und Mitarbeitende im neuen System schulen. Freezing: Bewährte Abläufe verbindlich dokumentieren und durch Auffrischungstrainings gegen Rückfälle in alte Routinen absichern.",
+      "oldMatched": 5,
+      "expectedPoints": 6,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|3|a",
+    "field": "stichpunkte",
+    "before": "fünf Kommunikationsgrundsätze;je Begründung;klare Sprache;Beispiele;rhetorische Fragen;Stimme;Gestik;Mimik;Blickkontakt;aktives Zuhören",
+    "after": "Ersten geeigneten verbalen oder nonverbalen Kommunikationsgrundsatz für die Versammlung genannt;Bedeutung des ersten Grundsatzes für die Versammlung nachvollziehbar begründet;Zweiten eigenständigen geeigneten Kommunikationsgrundsatz genannt;Bedeutung des zweiten Grundsatzes nachvollziehbar begründet;Dritten eigenständigen geeigneten Kommunikationsgrundsatz genannt;Bedeutung des dritten Grundsatzes nachvollziehbar begründet;Vierten eigenständigen geeigneten Kommunikationsgrundsatz genannt;Bedeutung des vierten Grundsatzes nachvollziehbar begründet;Fünften eigenständigen geeigneten Kommunikationsgrundsatz genannt;Bedeutung des fünften Grundsatzes nachvollziehbar begründet",
+    "evidence": {
+      "answer": "Klare Sprache vermeidet Missverständnisse. Lebensnahe Beispiele machen die Veränderung verständlich. Rhetorische Fragen fördern gedankliche Beteiligung. Eine gut hörbare Stimme hält Aufmerksamkeit. Aktives Zuhören zeigt Respekt und macht Sorgen der Beschäftigten sichtbar.",
+      "oldMatched": 7,
+      "expectedPoints": 10,
+      "oldPoints": 7.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|4|c",
+    "field": "stichpunkte",
+    "before": "zwei Ordnungskriterien;ABC-Kunde;chronologisch;sachlich;Suche;Auswertung",
+    "after": "Erstes geeignetes Ordnungskriterium für Kundendaten empfohlen, das Suche und Auswertungen unterstützt;Zweites eigenständiges geeignetes Ordnungskriterium empfohlen, das Suche und Auswertungen unterstützt",
+    "evidence": {
+      "answer": "Eine ABC-Zuordnung lässt wichtige Kunden schnell finden und die Betreuung nach Kundengruppen auswerten. Chronologische Erfassung von Kontakten und Bestellungen erlaubt die schnelle Suche nach letzten Vorgängen und die Analyse von Entwicklungen.",
+      "oldMatched": 5,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|5|a",
+    "field": "stichpunkte",
+    "before": "drei Differenzierungsmerkmale;Beratung;Service;Kulanz;Handelsmarke;Umwelt;Preis-Leistung",
+    "after": "Erstes geeignetes Differenzierungsmerkmal des Webshops gegenüber Wettbewerbern beschrieben;Zweites eigenständiges geeignetes Differenzierungsmerkmal beschrieben;Drittes eigenständiges geeignetes Differenzierungsmerkmal beschrieben",
+    "evidence": {
+      "answer": "Technische Beratung per Live-Chat hilft Kunden, passende Ersatzteile auszuwählen. Eine eigene Handelsmarke schafft ein unterscheidbares Sortiment. Umweltverträgliche Verpackung und Rücknahme sprechen umweltbewusste Käufer an.",
+      "oldMatched": 4,
+      "expectedPoints": 3,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|5|b",
+    "field": "stichpunkte",
+    "before": "zwei Budgetansätze;Werbeziele/Werbebedarf;Liquidität;Prozentsatz Umsatz/Gewinn;prozyklisch;antizyklisch;Begründung",
+    "after": "Ersten geeigneten Ansatz zur Festlegung des Marketingbudgets erläutert;Eignung des ersten Ansatzes für die Einführung des Webshops begründet;Zweiten eigenständigen geeigneten Budgetansatz erläutert;Eignung des zweiten Ansatzes für die Einführung des Webshops begründet",
+    "evidence": {
+      "answer": "Das Einführungsbudget kann aus Werbezielen und erforderlichen Maßnahmen abgeleitet und an der verfügbaren Liquidität begrenzt werden. Das ist trotz fehlender Erfahrung sachgerecht. Alternativ kann ein Anteil des geplanten Umsatzes eingesetzt werden. Dies ist einfach, muss aber wegen seiner prozyklischen Wirkung kritisch geprüft werden.",
+      "oldMatched": 6,
+      "expectedPoints": 6,
+      "oldPoints": 5.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|5|c",
+    "field": "stichpunkte",
+    "before": "außerökonomische Methode;ökonomische Methode;Bekanntheitsgrad;Befragung;Seitenaufrufe;Bestellungen;Umsatz;Bestellwert",
+    "after": "Eine geeignete Methode zur Messung des außerökonomischen Werbeerfolgs des Webshops erläutert;Eine geeignete Methode zur Messung des ökonomischen Werbeerfolgs des Webshops erläutert",
+    "evidence": {
+      "answer": "Außerökonomisch messe ich durch vergleichbare Befragungen vor und nach der Werbung, ob der Bekanntheitsgrad steigt. Ökonomisch vergleiche ich den kampagnenbedingten Umsatz mit einer vergleichbaren Kontrollgruppe, damit allgemeine Marktveränderungen möglichst herausgerechnet werden.",
+      "oldMatched": 5,
+      "expectedPoints": 6,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|6|b",
+    "field": "stichpunkte",
+    "before": "geeignete Unterweisungsmethode;Ablauf;drei Begründungen;Leittextmethode;vollständige Handlung;Selbstständigkeit;Verantwortung",
+    "after": "Geeignete Unterweisungsmethode für die Angebotserstellung ausgewählt;Vorgehensweise der gewählten Methode zutreffend erläutert;Auswahl mit einem ersten zutreffenden Argument begründet;Auswahl mit einem zweiten eigenständigen zutreffenden Argument begründet;Auswahl mit einem dritten eigenständigen zutreffenden Argument begründet",
+    "evidence": {
+      "answer": "Bei der Vier-Stufen-Methode bereite ich die Angebotserstellung vor, demonstriere die Schritte mit Erklärung, lasse den Auszubildenden die Schritte nachmachen und erklären und lasse ihn anschließend üben. Das sichtbare Beispiel macht die Systembedienung verständlich. Unmittelbare Rückmeldung verhindert, dass Fehler eingeübt werden. Wiederholung festigt die erforderlichen Bedienhandlungen.",
+      "oldMatched": 3,
+      "expectedPoints": 7,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|6|c",
+    "field": "stichpunkte",
+    "before": "zwei Erfolgskontrollen;Sichtkontrolle;Qualitätskontrolle;Musterangebot;Checkliste",
+    "after": "Erste geeignete Möglichkeit zur Überprüfung des Erfolgs der Unterweisung beschrieben;Zweite eigenständige geeignete Möglichkeit zur Überprüfung des Unterweisungserfolgs beschrieben",
+    "evidence": {
+      "answer": "Eine neue, vergleichbare Kundenanfrage als praktische Transferaufgabe zeigt, ob der Auszubildende ein Angebot eigenständig erstellen kann. Ein mündliches Fachgespräch, in dem er Preis-, Liefer- und Zahlungsangaben erklärt, prüft sein Verständnis.",
+      "oldMatched": 2,
+      "expectedPoints": 2,
+      "oldPoints": 1.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A1|7|a",
+    "field": "stichpunkte",
+    "before": "fünf Gesprächstechniken;aktives Zuhören;Nachfragen;Zusammenfassen;Interessen;offene Fragen;Denkanstöße",
+    "after": "Erste geeignete Gesprächstechnik zur positiven Gestaltung des Konfliktgesprächs beschrieben;Zweite eigenständige geeignete Gesprächstechnik beschrieben;Dritte eigenständige geeignete Gesprächstechnik beschrieben;Vierte eigenständige geeignete Gesprächstechnik beschrieben;Fünfte eigenständige geeignete Gesprächstechnik beschrieben",
+    "evidence": {
+      "answer": "Aktives Zuhören zeigt dem Auszubildenden, dass seine Sicht ernst genommen wird. Nachfragen klärt ungenaue Vorwürfe. Zusammenfassen sichert gemeinsames Verständnis. Gegenüberstellen beider Interessen macht Lösungsräume sichtbar. Offene Fragen ermöglichen ausführliche Antworten statt bloßer Zustimmung.",
+      "oldMatched": 6,
+      "expectedPoints": 5,
+      "oldPoints": 4.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|4|a",
+    "field": "stichpunkte",
+    "before": "drei Ziele;Existenzsicherung;Wirtschaftlichkeit;Rentabilität;Liquidität;Information;Entscheidungsbasis;Frühwarnsystem",
+    "after": "Erstes wesentliches Ziel des Controllings mit seinem Nutzen für das Unternehmen erläutert;Zweites eigenständiges wesentliches Ziel mit seinem Nutzen erläutert;Drittes eigenständiges wesentliches Ziel mit seinem Nutzen erläutert",
+    "evidence": {
+      "answer": "Rentabilitätskontrolle zeigt, ob die neuen Sparten Ergebnisbeiträge erzielen. Liquiditätsplanung sichert rechtzeitige Zahlungen für Kaufpreis und Lageraufbau. Ein gemeinsames Berichtswesen versorgt die Geschäftsführung mit Informationen über die Entwicklung aller Bereiche.",
+      "oldMatched": 4,
+      "expectedPoints": 3,
+      "oldPoints": 2.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|4|b",
+    "field": "stichpunkte",
+    "before": "drei Aufgabenbereiche;je zwei Beispiele;Planung;Kontrolle;Steuerung;Information",
+    "after": "Ersten zentralen Aufgabenbereich des Controllings beschrieben;Erstes konkretes zutreffendes Beispiel für den ersten Aufgabenbereich genannt;Zweites eigenständiges zutreffendes Beispiel für den ersten Aufgabenbereich genannt;Zweiten eigenständigen zentralen Aufgabenbereich beschrieben;Erstes konkretes zutreffendes Beispiel für den zweiten Aufgabenbereich genannt;Zweites eigenständiges zutreffendes Beispiel für den zweiten Aufgabenbereich genannt;Dritten eigenständigen zentralen Aufgabenbereich beschrieben;Erstes konkretes zutreffendes Beispiel für den dritten Aufgabenbereich genannt;Zweites eigenständiges zutreffendes Beispiel für den dritten Aufgabenbereich genannt",
+    "evidence": {
+      "answer": "Planung koordiniert die Teilpläne: Budgets der Bereiche abstimmen und zum Gesamtplan zusammenführen. Kontrolle prüft die Zielerreichung: Soll-Ist-Vergleiche erstellen und Abweichungsursachen untersuchen. Information bereitet Entscheidungswissen auf: Berichte erstellen und relevante Kennzahlen auswerten.",
+      "oldMatched": 5,
+      "expectedPoints": 9,
+      "oldPoints": 8.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|4|c",
+    "field": "stichpunkte",
+    "before": "zwei Aspekte;Informationsverdichtung;Vergleichbarkeit;Kennzahlensystem;Zusammenhänge;Benchmarking;Entscheidungen",
+    "after": "Ersten zutreffenden Aspekt der Bedeutung von Kennzahlen oder Kennzahlensystemen für das Unternehmen beschrieben;Zweiten eigenständigen zutreffenden Aspekt dieser Bedeutung beschrieben",
+    "evidence": {
+      "answer": "Kennzahlen verdichten große Datenmengen auf wenige aussagekräftige Informationen. Einheitlich ermittelte Kennzahlen machen betriebliche Entwicklungen über die Zeit und zwischen Bereichen vergleichbar.",
+      "oldMatched": 3,
+      "expectedPoints": 2,
+      "oldPoints": 1.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|6|b",
+    "field": "stichpunkte",
+    "before": "vier Standortfaktoren;je Beispiel;Lage;Infrastruktur;Kosten;Fachkräfte;Genehmigungen;Flächen",
+    "after": "Ersten entscheidungsrelevanten Standortfaktor für das Versandlager genannt;Ersten Faktor anhand eines passenden situationsbezogenen Beispiels konkretisiert;Zweiten eigenständigen Standortfaktor genannt;Zweiten Faktor anhand eines passenden situationsbezogenen Beispiels konkretisiert;Dritten eigenständigen Standortfaktor genannt;Dritten Faktor anhand eines passenden situationsbezogenen Beispiels konkretisiert;Vierten eigenständigen Standortfaktor genannt;Vierten Faktor anhand eines passenden situationsbezogenen Beispiels konkretisiert",
+    "evidence": {
+      "answer": "Lage: Nähe zum Darmstädter Stammhaus verkürzt interne Ersatzteiltransporte. Infrastruktur: Ein Autobahnanschluss erleichtert schnelle überregionale Lieferungen. Kosten: Günstige Miete pro Lagerplatz senkt Versandkosten. Fachkräfte: Verfügbare Kommissionierer sichern die fehlerarme Bearbeitung des Zubehörsortiments.",
+      "oldMatched": 6,
+      "expectedPoints": 8,
+      "oldPoints": 6.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|7|a",
+    "field": "stichpunkte",
+    "before": "vier Lagerarten;Empfehlung;Begründung;Umschlagslager;Verteillager;Konsignationslager;Vorratslager",
+    "after": "Erste fachlich zutreffende Lagerart beschrieben;Zweite davon verschiedene Lagerart beschrieben;Dritte eigenständige Lagerart beschrieben;Vierte eigenständige Lagerart beschrieben;Eine für das geplante Versandlager geeignete Lagerart empfohlen;Empfehlung situationsbezogen nachvollziehbar begründet",
+    "evidence": {
+      "answer": "Ein Umschlagslager leitet Waren kurzfristig weiter. Ein Verteillager kommissioniert Bestände zu Kundenaufträgen. Ein Sammellager bündelt Wareneingänge mehrerer Quellen. Ein Vorratslager gleicht Bedarfsschwankungen aus. Ich empfehle ein Verteillager, weil Ersatzteile bevorratet und schnell für einzelne Webshopaufträge versandt werden sollen.",
+      "oldMatched": 6,
+      "expectedPoints": 6,
+      "oldPoints": 5.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|8|b",
+    "field": "stichpunkte",
+    "before": "zwei Begründungen;keine Mehrfachunterstellung;Komplexität Software;Webshop als Vertriebsweg",
+    "after": "Organisationskonzept anhand eines ersten zutreffenden situationsbezogenen Sachverhalts begründet;Organisationskonzept anhand eines zweiten eigenständigen zutreffenden situationsbezogenen Sachverhalts begründet",
+    "evidence": {
+      "answer": "Die Zusammenfassung von Service und Handel vermeidet Mehrfachunterstellungen der Niederlassungsmitarbeitenden. Ein eigener Softwarebereich ist wegen der fachlichen Komplexität sinnvoll und ermöglicht spezialisierte Vertriebsführung.",
+      "oldMatched": 3,
+      "expectedPoints": 4,
+      "oldPoints": 3.0
+    }
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|9|b",
+    "field": "stichpunkte",
+    "before": "drei Chancen;Wachstum;geringere Heimatmarktabhängigkeit;Produktdifferenzierung;Stückkostendegression;Auslastung;Wechselkurs;Innovation",
+    "after": "Erste fachlich zutreffende Chance der Außenhandelsausweitung für das Unternehmen differenziert erläutert;Zweite eigenständige fachlich zutreffende Chance differenziert erläutert;Dritte eigenständige fachlich zutreffende Chance differenziert erläutert",
+    "evidence": {
+      "answer": "Weitere ausländische Kunden ermöglichen zusätzliche Umsätze und Wachstum. Unterschiedliche Konjunkturverläufe können Rückgänge im Heimatmarkt teilweise ausgleichen und die Abhängigkeit reduzieren. Größere Absatzmengen verteilen fixe Entwicklungskosten auf mehr Aufträge und senken so Stückkosten, sofern zusätzliche Vertriebskosten den Vorteil nicht aufheben.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 3.0
+    }
+  }
+]

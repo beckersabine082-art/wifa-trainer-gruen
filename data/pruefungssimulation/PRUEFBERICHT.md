@@ -1,5 +1,7 @@
 # Prüfungssimulation: Inhaltsprüfung vom 13.09.2026
 
+Historischer Bericht vor dem anschließenden Funktions- und Konsistenzaudit. Die damalige Aussage über unveränderte Kriterien wird durch die einzeln belegten Rubrikreparaturen im [aktuellen Auditbericht](../../docs/pruefungssimulation-audit-2026-09-13.md) ergänzt; dieser enthält auch den neuen lesenden Sheet-Abgleich und die verbleibenden Grenzen.
+
 Alle 356 verfügbaren Teilaufgaben in 22 belegten Prüfungseinheiten wurden einschließlich Frage, Situationen, Folgebezügen, Aufgaben-HTML, Musterlösung und Bewertungshinweisen geprüft. Die beiden HQ-Einheiten der Simulation 4 sind in der Quelle leer und bleiben leer. Grundlage ist ein ausschließlich lesender Abruf des bereits verwendeten Prüfungs-Endpunkts am 13.09.2026. Das Google Sheet wurde nicht verändert.
 
 Die Simulation lädt den geprüften Stand aus `katalog.json`. Künftige Änderungen am Sheet werden dadurch nicht automatisch in die Prüfungssimulation übernommen; dafür muss der lokale Prüfungskatalog redaktionell aktualisiert werden. Trainerfragen und Lerntexte behalten ihre bisherigen Quellen. Die Bewertung und Speicherung der Prüfungsversuche verwenden weiterhin den bestehenden Ablauf.

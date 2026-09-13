@@ -851,7 +851,8 @@ function werteKriterienMitFallback_(text, antwort, stichpunkte, ids, istDiagramm
   return result;
 }
 
-function diagrammBewertungsregel_() {
+function diagrammBewertungsregel_(beschreibungErforderlich = true) {
+  if (!beschreibungErforderlich) return '- Prüfe die Skizze fachlich anhand von Frage, Musterlösung und Kriterien (Achsen, Kurven, Verläufe, Schnittpunkte und Beschriftungen). Das Vorhandensein von Pixeln ist kein erfülltes Kriterium. Verlange keine zusätzliche schriftliche Beschreibung, wenn die Aufgabe nur eine grafische Darstellung verlangt. Eine falsche Skizze darf nicht durch richtigen Text ersetzt werden.';
   return '- Skizze UND schriftliche Beschreibung/Begründung sind erforderlich. Prüfe die Skizze fachlich anhand von Frage, Musterlösung und Kriterien (Achsen, Kurven, Verläufe, Schnittpunkte und Beschriftungen). Das Vorhandensein von Pixeln ist kein erfülltes Kriterium. Eine falsche Skizze darf nicht durch eine richtige Beschreibung als vollständig richtig bewertet werden. Bewerte ein zeichnungsbezogenes Kriterium nur als erfüllt, wenn die Skizze UND die zugehörige Beschreibung dazu passen; keines ersetzt das andere.';
 }
 
@@ -2247,10 +2248,11 @@ function bewertePruefungFrontend(daten) {
     gesamtMaxPunkte += maxPunkte;
 
     const istDiagramm = fragetyp === "diagramm";
+    const beschreibungErforderlich = /beschreib|erläuter|erlaeuter|begründe|begruende|erklär|erklaer|beurteil|interpretier/i.test(frage);
     const hatText = antwort.length > 0;
     const hatSkizze = skizze.length > 0 && skizze.startsWith("data:image");
 
-    if ((!hatText && !hatSkizze) || (istDiagramm && (!hatText || !hatSkizze)) ||
+    if ((!hatText && !hatSkizze) || (istDiagramm && (!hatSkizze || (beschreibungErforderlich && !hatText))) ||
         (!istDiagramm && istKeineVerwertbareAntwort_(antwort))) {
       return {
         simulationId: eintrag.simulationId,
@@ -2258,7 +2260,7 @@ function bewertePruefungFrontend(daten) {
         teilaufgabe: eintrag.teilaufgabe,
         punkte: 0,
         maxPunkte: maxPunkte,
-        ergebnis: istDiagramm ? "Skizze und schriftliche Beschreibung/Begründung erforderlich." : "Keine Antwort eingegeben.",
+        ergebnis: istDiagramm ? (beschreibungErforderlich ? "Skizze und schriftliche Beschreibung/Begründung erforderlich." : "Skizze erforderlich.") : "Keine Antwort eingegeben.",
         erkannte: [],
         fehlende: stichpunkteListe
       };
@@ -2299,7 +2301,7 @@ Teilnehmerantwort:
 ${antwort || "(keine schriftliche Ergänzung)"}
 
 Bewertungsregeln:
-${istDiagramm ? diagrammBewertungsregel_() : ""}
+${istDiagramm ? diagrammBewertungsregel_(beschreibungErforderlich) : ""}
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
 - Die Musterlösung und Beispiele dienen als fachliche Referenz. Bei offenen Aufgaben können auch andere fachlich korrekte Lösungen die Kriterien erfüllen. Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt, sofern das Bewertungskriterium allgemein formuliert ist.

@@ -4,6 +4,19 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const { createHash } = require('node:crypto');
 
+// Reverse only the separately tested, exact audit corrections. The immutable
+// baseline continues to protect every character of all pre-audit solutions.
+function catalogBeforeAudit() {
+  const catalog = JSON.parse(fs.readFileSync('data/pruefungssimulation/katalog.json', 'utf8'));
+  const edits = require('./helpers/pruefung-audit.cjs').allCorrections();
+  for (const edit of edits.slice().reverse()) {
+    const row = catalog.einheiten.flatMap(u => u.aufgaben).find(r => `${r.simulationId}|${r.fach}|${r.aufgabe}|${r.teilaufgabe}` === edit.key);
+    assert.ok(row[edit.field].includes(edit.after), edit.key);
+    row[edit.field] = row[edit.field].replace(edit.after, edit.before);
+  }
+  return catalog;
+}
+
 function frontend(fetch) {
   const elements = {
     pruefungTeilbereichSelect: { value: 'WQ' },
@@ -13,12 +26,14 @@ function frontend(fetch) {
   };
   const context = {
     window: {}, fetch, API_BASE_URL: 'https://example.test/sheet',
+    clearInterval: () => {}, pruefungTimerInterval: null,
     document: { getElementById: id => elements[id], querySelectorAll: () => [] },
     sanitizeAufgabenHtml: value => String(value ?? ''),
     escapeHtml: value => String(value ?? '').replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
   };
   vm.createContext(context);
   vm.runInContext(fs.readFileSync('js/pruefungssimulation.js', 'utf8'), context);
+  context.stoppePruefungTimer = () => {};
   return { context, elements };
 }
 
@@ -76,7 +91,7 @@ test('failed or incomplete local catalogs show an error instead of stale remote 
 
 test('all reviewed tasks retain their original solution prefix, points, types and criterion counts', () => {
   assert.ok(fs.existsSync('data/pruefungssimulation/katalog.json'), 'The reviewed local catalog is required');
-  const catalog = JSON.parse(fs.readFileSync('data/pruefungssimulation/katalog.json', 'utf8'));
+  const catalog = catalogBeforeAudit();
   const baseline = JSON.parse(fs.readFileSync('tests/fixtures/pruefungssimulation-bestand.json', 'utf8'));
   assert.equal(catalog.einheiten.length, 24);
   const hash = value => createHash('sha256').update(value).digest('hex');
@@ -109,7 +124,7 @@ test('all reviewed tasks retain their original solution prefix, points, types an
 });
 
 test('all 164 additions and all grading criteria survive the company-name correction', () => {
-  const catalog = JSON.parse(fs.readFileSync('data/pruefungssimulation/katalog.json', 'utf8'));
+  const catalog = catalogBeforeAudit();
   const baseline = JSON.parse(fs.readFileSync('tests/fixtures/pruefungssimulation-bestand.json', 'utf8'));
   const hash = value => createHash('sha256').update(value).digest('hex');
   let additions = 0;

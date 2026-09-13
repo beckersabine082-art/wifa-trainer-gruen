@@ -30,8 +30,20 @@ let pruefungAuswertungBereitsGespeichert = false;
 let pruefungAuswertungWirdGespeichert = false;
 let pruefungLetzterSpeicherPayload = null;
 let pruefungIstAktiv = false;
+let pruefungAuswertungLaeuft = false;
+let pruefungLadeVersion = 0;
+
+function verwerfeAktuellePruefung() {
+  pruefungLadeVersion++;
+  stoppePruefungTimer();
+  pruefungIstAktiv = false;
+  aktuellePruefungsDaten = [];
+  letztePruefungsAntworten = [];
+}
 
 function pruefungTeilbereichWaehlen() {
+  if (pruefungAuswertungLaeuft) return;
+  verwerfeAktuellePruefung();
   const teilbereich = document.getElementById("pruefungTeilbereichSelect").value;
   const simulationBereich = document.getElementById("pruefungSimulationBereich");
   const simulationSelect = document.getElementById("pruefungSimulationSelect");
@@ -64,6 +76,8 @@ function pruefungTeilbereichWaehlen() {
 }
 
 function pruefungSimulationWaehlen() {
+  if (pruefungAuswertungLaeuft) return;
+  verwerfeAktuellePruefung();
   const teilbereich = document.getElementById("pruefungTeilbereichSelect").value;
   const simulation = document.getElementById("pruefungSimulationSelect").value;
   const fachBereich = document.getElementById("pruefungFachBereich");
@@ -93,6 +107,13 @@ const einheiten = pruefungsEinheitenNachTeilbereich[teilbereich] || [];
   fachBereich.style.display = "block";
   document.getElementById("pruefungStatus").textContent =
     "Simulation gewählt. Bitte Prüfungsfach auswählen.";
+}
+
+function pruefungFachWaehlen() {
+  if (pruefungAuswertungLaeuft) return;
+  verwerfeAktuellePruefung();
+  document.getElementById("pruefungContainer").innerHTML = "";
+  document.getElementById("pruefungStatus").textContent = "Bitte Prüfung starten.";
 }
 
 function startePruefungSimulation() {
@@ -133,6 +154,9 @@ function ermittlePruefungsEinheitTitel(teilbereich, einheitKey) {
 }
 
 async function ladePruefungSimulation() {
+  if (pruefungAuswertungLaeuft) return;
+  verwerfeAktuellePruefung();
+  const ladeVersion = pruefungLadeVersion;
   const usageTicket = window.WifaUsage?.captureTicket();
   const box = document.getElementById("pruefungContainer");
 
@@ -155,6 +179,7 @@ async function ladePruefungSimulation() {
     }
 
     const katalog = await response.json();
+    if (ladeVersion !== pruefungLadeVersion) return;
     const pruefung = Array.isArray(katalog?.einheiten)
       ? katalog.einheiten.find(function(item) {
         return item.teilbereich === teilbereich
@@ -173,13 +198,13 @@ async function ladePruefungSimulation() {
     const gewaehlteOption = fachSelect.options[fachSelect.selectedIndex];
     const minuten = Number(gewaehlteOption?.dataset?.zeit || 0);
 
-    if (minuten > 0) {
-      startePruefungTimer(minuten);
-    }
-
     if (!daten.length) {
       box.innerHTML = "<div class='status'>Keine Prüfung gefunden.</div>";
       return;
+    }
+
+    if (minuten > 0) {
+      startePruefungTimer(minuten);
     }
 
        let html = "";
@@ -309,6 +334,7 @@ async function ladePruefungSimulation() {
     initialisiereAlleSkizzenfelder();
 
   } catch (error) {
+    if (ladeVersion !== pruefungLadeVersion) return;
     box.innerHTML = "<div class='status'>Fehler: " + escapeHtml(error.message || error) + "</div>";
   }
 }
@@ -363,6 +389,7 @@ function initialisiereSkizzenCanvas(canvas) {
 
   // Track if user has actually drawn on this canvas
   canvas.hasUserDrawing = false;
+  canvas.drawingLocked = false;
 
   ctx.lineWidth = 3;
   ctx.lineCap = "round";
@@ -382,9 +409,9 @@ function initialisiereSkizzenCanvas(canvas) {
   }
 
   function start(event) {
+    if (canvas.drawingLocked) return;
     event.preventDefault();
     zeichnet = true;
-    canvas.hasUserDrawing = true;
 
     const pos = position(event);
     ctx.beginPath();
@@ -392,12 +419,13 @@ function initialisiereSkizzenCanvas(canvas) {
   }
 
   function zeichnen(event) {
-    if (!zeichnet) return;
+    if (!zeichnet || canvas.drawingLocked) return;
     event.preventDefault();
 
     const pos = position(event);
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
+    canvas.hasUserDrawing = true;
   }
 
   function stopp(event) {
@@ -434,6 +462,7 @@ function zeichneAchsenvorlage(index) {
   const ctx = canvas.getContext("2d");
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas.hasUserDrawing = false;
 
   ctx.lineWidth = 3;
   ctx.strokeStyle = "#111111";
@@ -481,6 +510,7 @@ stoppePruefungTimer();
     document.getElementById("pruefungTimerText");
 
 timerBox.style.display = "block";
+  document.getElementById("pruefungTimerStatus").textContent = "Die Prüfung läuft.";
   aktualisierePruefungTimerAnzeige();
 
   pruefungTimerInterval = setInterval(function() {
@@ -501,11 +531,12 @@ function pruefungBeendenWegenZeitablauf() {
   pruefungRestzeitSekunden = 0;
 
   pruefungIstAktiv = false;
+  document.querySelectorAll('#pruefungContainer .skizzen-canvas').forEach(canvas => { canvas.drawingLocked = true; });
 
   document.getElementById("pruefungTimerText").textContent =
     "Zeit abgelaufen";
 
-  document.querySelectorAll("#pruefungContainer textarea").forEach(function(textarea) {
+  document.querySelectorAll("#pruefungContainer textarea, #pruefungContainer input").forEach(function(textarea) {
     textarea.disabled = true;
     textarea.style.background = "#f3f4f6";
     textarea.style.cursor = "not-allowed";
@@ -524,21 +555,8 @@ function pruefungBeendenWegenZeitablauf() {
     "Prüfung beendet: Zeit abgelaufen.";
 }
 
-function pruefungsDiagrammeVollstaendig() {
-  const antworten = document.querySelectorAll('#pruefungContainer textarea.pruefung-antwort');
-  for (const textarea of antworten) {
-    if (String(textarea.dataset.fragetyp || '').toLowerCase() !== 'diagramm') continue;
-    const canvas = document.getElementById('skizze-' + textarea.dataset.index);
-    if (!textarea.value.trim() || !canvas || canvas.hasUserDrawing !== true || !canvasHatInhalt(canvas)) {
-      alert('Bitte für jede Diagrammaufgabe eine Skizze und eine schriftliche Beschreibung/Begründung eingeben.');
-      return false;
-    }
-  }
-  return true;
-}
-
 function pruefungManuellAbgeben() {
-  if (!pruefungsDiagrammeVollstaendig()) return;
+  if (pruefungAuswertungLaeuft || !document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort").length) return;
 
   const bestaetigt = confirm(
     "Möchtest du die Prüfung wirklich abgeben?"
@@ -552,8 +570,10 @@ function pruefungManuellAbgeben() {
 
   pruefungIstAktiv = false;
 
+  document.querySelectorAll('#pruefungContainer .skizzen-canvas').forEach(canvas => { canvas.drawingLocked = true; });
+
   document.querySelectorAll(
-    "#pruefungContainer textarea"
+    "#pruefungContainer textarea, #pruefungContainer input, #pruefungContainer button"
   ).forEach(function(textarea) {
 
     textarea.disabled = true;
@@ -565,7 +585,7 @@ function pruefungManuellAbgeben() {
 
   document.getElementById("pruefungTimerText").textContent =
     "Prüfung beendet";
-      startePruefungsAuswertung();
+      return startePruefungsAuswertung();
 }
 
 function renderPruefungsPunkteBegründung(item) {
@@ -939,7 +959,11 @@ function aktualisierePruefungTimerAnzeige() {
 }
 
 async function startePruefungsAuswertung() {
-  if (!pruefungsDiagrammeVollstaendig()) return;
+  if (pruefungAuswertungLaeuft) return;
+  if (!document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort").length) return;
+  pruefungAuswertungLaeuft = true;
+  const auswahlFelder = ['pruefungTeilbereichSelect', 'pruefungSimulationSelect', 'pruefungFachSelect'];
+  auswahlFelder.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = true; });
   try {
     const antworten = document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort");
     const daten = [];
@@ -1068,6 +1092,9 @@ tabellenFelder.forEach(function(feld, index) {
       "Fehler bei der Prüfungsauswertung: " + error.message;
 
     alert("Fehler bei der Prüfungsauswertung:\n\n" + error.message);
+  } finally {
+    pruefungAuswertungLaeuft = false;
+    auswahlFelder.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = false; });
   }
 }
 
@@ -1091,6 +1118,7 @@ function togglePruefungDropdown(event) {
 }
 
 function oeffnePruefungMitTeilbereich(teilbereich) {
+  if (pruefungAuswertungLaeuft) return;
   if (typeof requireAuth === 'function') {
     requireAuth('pruefungView');
   } else {

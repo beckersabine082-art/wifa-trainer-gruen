@@ -131,9 +131,19 @@ test('diagram requires both inputs and cannot override an AI rejection with text
   for(const [antwort,skizze] of [['','data:image/png;base64,YQ=='],['Nutzen für Kunden',''],['Nutzen für Kunden','data:image/png;base64,YQ==']]) {
     const before=h.calls.length;
     assert.equal(h.c.bewerteAntwortFrontend({fach:'BWL',frageId:'1',antwort,skizze,speichereInSheet:false}).punkte,0);
-    assert.equal(h.c.bewertePruefungFrontend([{frage:'Zeichnen',fragetyp:'diagramm',stichpunkte:'Nutzen für Kunden',maxPunkte:1,antwort,skizze}]).gesamtPunkte,0);
+    assert.equal(h.c.bewertePruefungFrontend([{frage:'Zeichnen und begründen.',fragetyp:'diagramm',stichpunkte:'Nutzen für Kunden',maxPunkte:1,antwort,skizze}]).gesamtPunkte,0);
     assert.equal(h.calls.length-before,antwort&&skizze?2:0);
   }
+});
+
+test('exam drawing-only tasks accept a correct sketch without an unrequested description',()=>{
+  const h=backend();
+  h.c.UrlFetchApp.fetch=(url,options)=>{h.calls.push({url,options});return {getResponseCode:()=>200,getContentText:()=>JSON.stringify({choices:[{message:{content:'{"erfuellt":["K1"],"nicht_erfuellt":[]}'}}]})};};
+  const row={frage:'Stellen Sie die Kurven grafisch dar und beschriften Sie die Achsen.',fragetyp:'diagramm',stichpunkte:'Kurven und Achsen',maxPunkte:6,antwort:'',skizze:'data:image/png;base64,YQ=='};
+  assert.equal(h.c.bewertePruefungFrontend([row]).gesamtPunkte,6);
+  assert.equal(h.calls.length,1);
+  assert.match(JSON.parse(h.calls[0].options.payload).messages[0].content[0].text,/keine zusätzliche schriftliche/);
+  assert.equal(h.c.bewertePruefungFrontend([{...row,frage:'Zeichnen und erläutern Sie die Kurven.'}]).gesamtPunkte,0);
 });
 test('gap maximum counts actual fields, preserving normalized data-answer solutions',()=>{
   const c={};vm.createContext(c);vm.runInContext(read('js/bewertung.js'),c);

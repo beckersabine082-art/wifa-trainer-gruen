@@ -1,0 +1,270 @@
+{
+  "checkedAt": "2026-09-13T18:00:25.002Z",
+  "method": "GET getPruefungSimulation; no writes",
+  "results": [
+    {
+      "teilbereich": "HQ",
+      "simulation": "1",
+      "einheit": "HQ_A1",
+      "rows": 14,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "HQ",
+      "simulation": "1",
+      "einheit": "HQ_A2",
+      "rows": 29,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "HQ",
+      "simulation": "2",
+      "einheit": "HQ_A1",
+      "rows": 18,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "HQ",
+      "simulation": "2",
+      "einheit": "HQ_A2",
+      "rows": 28,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "HQ",
+      "simulation": "3",
+      "einheit": "HQ_A1",
+      "rows": 17,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "HQ",
+      "simulation": "3",
+      "einheit": "HQ_A2",
+      "rows": 23,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "HQ",
+      "simulation": "4",
+      "einheit": "HQ_A1",
+      "rows": 0,
+      "points": 0,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "HQ",
+      "simulation": "4",
+      "einheit": "HQ_A2",
+      "rows": 0,
+      "points": 0,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "1",
+      "einheit": "Rechnungswesen",
+      "rows": 14,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "1",
+      "einheit": "Recht und Steuern",
+      "rows": 15,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "1",
+      "einheit": "Unternehmensführung",
+      "rows": 13,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "1",
+      "einheit": "VWL/BWL",
+      "rows": 16,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "2",
+      "einheit": "Rechnungswesen",
+      "rows": 15,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "2",
+      "einheit": "Recht und Steuern",
+      "rows": 17,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "2",
+      "einheit": "Unternehmensführung",
+      "rows": 11,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "2",
+      "einheit": "VWL/BWL",
+      "rows": 14,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "3",
+      "einheit": "Rechnungswesen",
+      "rows": 15,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "3",
+      "einheit": "Recht und Steuern",
+      "rows": 19,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "3",
+      "einheit": "Unternehmensführung",
+      "rows": 12,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "3",
+      "einheit": "VWL/BWL",
+      "rows": 12,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "4",
+      "einheit": "Rechnungswesen",
+      "rows": 11,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "4",
+      "einheit": "Recht und Steuern",
+      "rows": 15,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "4",
+      "einheit": "Unternehmensführung",
+      "rows": 11,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    },
+    {
+      "teilbereich": "WQ",
+      "simulation": "4",
+      "einheit": "VWL/BWL",
+      "rows": 17,
+      "points": 100,
+      "sameIdsAndOrder": true,
+      "changedOriginalSolutions": 0,
+      "changedPoints": 0,
+      "unknownIds": 0
+    }
+  ]
+}

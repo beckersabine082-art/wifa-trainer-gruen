@@ -1,0 +1,722 @@
+[
+  {
+    "key": "WQ_RS_SIM_1|Recht und Steuern|6|c",
+    "field": "stichpunkte",
+    "before": "Geschenke an Nichtarbeitnehmer; eingeschränkt abziehbar; § 4 Absatz 5 Nummer 1 EStG; Bewirtungsaufwendungen; teilweise abziehbar; § 4 Absatz 5 Nummer 2 EStG; Geldbußen; Ordnungsgelder; nicht abziehbar; § 4 Absatz 5 Nummer 8 EStG",
+    "after": "1. passende nicht oder nicht vollständig abziehbare Betriebsausgabe genannt;1. zu dieser Betriebsausgabe passende Rechtsvorschrift angegeben;2. passende nicht oder nicht vollständig abziehbare Betriebsausgabe genannt;2. zu dieser Betriebsausgabe passende Rechtsvorschrift angegeben",
+    "evidence": {
+      "answer": "Geschenke an Nichtarbeitnehmer sind bei Überschreiten der Freigrenze nicht abziehbar (§ 4 Abs. 5 Satz 1 Nr. 1 EStG). Bei angemessener geschäftlicher Bewirtung sind nur 70% abziehbar (§ 4 Abs. 5 Satz 1 Nr. 2 EStG).",
+      "oldMatched": 6,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_1|Unternehmensführung|3|a",
+    "field": "stichpunkte",
+    "before": "flexible Arbeitszeitregelungen; bessere Vereinbarkeit; Arbeitszufriedenheit steigern; Produktivität verbessern; zusätzliche freie Tage; Mitarbeiterbindung stärken; Fluktuation reduzieren; Fortbildungsmöglichkeiten; Fachkräfteentwicklung; qualifizierte Mitarbeitende; Gesundheitsangebote; Fehlzeiten reduzieren; Arbeitgeberimage verbessern; Anerkennung und Lob; Motivation steigern; positives Arbeitsklima; Zusammenarbeit verbessern",
+    "after": "1. eigenständiger nicht monetärer Mitarbeiteranreiz genannt;1. diesem Anreiz zugeordneter Unternehmensvorteil nachvollziehbar erläutert;2. eigenständiger nicht monetärer Mitarbeiteranreiz genannt;2. diesem Anreiz zugeordneter Unternehmensvorteil nachvollziehbar erläutert;3. eigenständiger nicht monetärer Mitarbeiteranreiz genannt;3. diesem Anreiz zugeordneter Unternehmensvorteil nachvollziehbar erläutert;4. eigenständiger nicht monetärer Mitarbeiteranreiz genannt;4. diesem Anreiz zugeordneter Unternehmensvorteil nachvollziehbar erläutert;5. eigenständiger nicht monetärer Mitarbeiteranreiz genannt;5. diesem Anreiz zugeordneter Unternehmensvorteil nachvollziehbar erläutert",
+    "evidence": {
+      "answer": "Flexible Arbeitszeiten steigern die Arbeitszufriedenheit. Zusätzliche freie Tage stärken die Bindung. Fortbildung sichert qualifizierte Fachkräfte. Gesundheitsangebote reduzieren Fehlzeiten. Lob erhöht die Motivation.",
+      "oldMatched": 13,
+      "expectedPoints": 15,
+      "oldPoints": 11
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_1|Unternehmensführung|4|a",
+    "field": "stichpunkte",
+    "before": "flexible Arbeitszeitregelungen; Gleitzeit; Homeoffice; Vereinbarkeit Beruf und Privatleben; leistungsorientierte Vergütung; Bonuszahlungen; Zuschläge; Fortbildungsmöglichkeiten; Weiterbildungsmaßnahmen; Entwicklungsmöglichkeiten; betriebliche Zusatzleistungen; Gesundheitsangebote; Arbeitgeberattraktivität steigern",
+    "after": "1. eigenständiges Merkmal eines attraktiven Arbeitgebers genannt;1. passende Umsetzung dieses Merkmals im Unternehmen beschrieben;2. eigenständiges Merkmal eines attraktiven Arbeitgebers genannt;2. passende Umsetzung dieses Merkmals im Unternehmen beschrieben;3. eigenständiges Merkmal eines attraktiven Arbeitgebers genannt;3. passende Umsetzung dieses Merkmals im Unternehmen beschrieben;4. eigenständiges Merkmal eines attraktiven Arbeitgebers genannt;4. passende Umsetzung dieses Merkmals im Unternehmen beschrieben",
+    "evidence": {
+      "answer": "Flexibilität: Gleitzeit erleichtert private Terminplanung. Leistungsgerechte Vergütung: nachvollziehbare Bonuszahlungen honorieren Leistung. Entwicklung: regelmäßige Weiterbildungen ermöglichen neue Aufgaben. Zusatzleistungen: Fahrtkostenzuschüsse entlasten Beschäftigte.",
+      "oldMatched": 10,
+      "expectedPoints": 10,
+      "oldPoints": 8
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_1|Unternehmensführung|4|b",
+    "field": "stichpunkte",
+    "before": "Headhunter; gezielte Fachkräftesuche; direkte Ansprache; Marktkenntnisse; Netzwerke nutzen; soziale Netzwerke; Karriereplattformen; aktive Bewerbersuche; direkte Kontaktaufnahme; schnelle Personalsuche; kostengünstige Methode; Qualifikationen einsehbar",
+    "after": "1. eigenständige Methode externer Personalbeschaffung erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Methode externer Personalbeschaffung erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);Geeignete Methode für Circle Harbor vorgeschlagen;Eignung der vorgeschlagenen Methode für Circle Harbor nachvollziehbar begründet",
+    "evidence": {
+      "answer": "Ein Headhunter recherchiert qualifizierte Fachkräfte, nutzt Netzwerke und spricht sie gezielt an. Eine Fachportal-Stellenanzeige veröffentlicht Anforderungen und nimmt Bewerbungen entgegen. Für die schwer zu besetzende Leitung wähle ich den Headhunter, weil sein Netzwerk auch nicht aktiv suchende erfahrene Führungskräfte erreicht.",
+      "oldMatched": 7,
+      "expectedPoints": 8,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_1|Unternehmensführung|4|c",
+    "field": "stichpunkte",
+    "before": "Überstunden; kurzfristiger Personalausgleich; flexible Reaktion; keine zusätzliche Personalbeschaffung; Zeitarbeitskräfte; begrenzter Einsatzzeitraum; geringer Rekrutierungsaufwand; schnelle Verfügbarkeit; qualifizierte Arbeitskräfte; Schichtbetrieb sichern",
+    "after": "1. kurzfristig geeignete Möglichkeit zum Ausgleich von Schichtpersonalausfällen genannt;1. Möglichkeit: erster zugehöriger Unternehmensvorteil erläutert;1. Möglichkeit: zweiter davon unabhängiger Unternehmensvorteil erläutert;2. kurzfristig geeignete Möglichkeit zum Ausgleich von Schichtpersonalausfällen genannt;2. Möglichkeit: erster zugehöriger Unternehmensvorteil erläutert;2. Möglichkeit: zweiter davon unabhängiger Unternehmensvorteil erläutert",
+    "evidence": {
+      "answer": "Vorübergehende Versetzung passend qualifizierter Kräfte aus ausreichend besetzten Bereichen: Es entfällt externe Rekrutierung, und eingearbeitetes Personal kennt die Betriebsabläufe. Zeitarbeit: Die Agentur übernimmt wesentliche Rekrutierungsarbeiten und kann bei verfügbaren qualifizierten Kräften rasch Schichten besetzen.",
+      "oldMatched": 9,
+      "expectedPoints": 8,
+      "oldPoints": 7
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_1|Unternehmensführung|5|a",
+    "field": "stichpunkte",
+    "before": "Feedback der Teilnehmenden; Relevanz für Unternehmensziele; zeitlicher Aufwand; Schulungsdauer; Qualität der Schulungsinhalte; Aktualität der Inhalte; Kosten der Maßnahme; Trainerkosten; Schulungsunterlagen; Arbeitsausfallzeiten",
+    "after": "1. eigenständiger geeigneter Bewertungsaspekt einer Kosten-Nutzen-Analyse von Personalentwicklung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger geeigneter Bewertungsaspekt einer Kosten-Nutzen-Analyse von Personalentwicklung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger geeigneter Bewertungsaspekt einer Kosten-Nutzen-Analyse von Personalentwicklung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger geeigneter Bewertungsaspekt einer Kosten-Nutzen-Analyse von Personalentwicklung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständiger geeigneter Bewertungsaspekt einer Kosten-Nutzen-Analyse von Personalentwicklung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Teilnehmerfeedback, Relevanz für Unternehmensziele, zeitlicher Aufwand, Qualität und Aktualität der Inhalte sowie Gesamtkosten der Maßnahme.",
+      "oldMatched": 7,
+      "expectedPoints": 5,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|1|b",
+    "field": "stichpunkte",
+    "before": "steigende Rohstoffkosten erhöhen Produktionskosten;\r\nhöhere Energiekosten erhöhen Betriebskosten;\r\nLieferengpässe verringern Produktionsmenge;\r\nsteigende Lohnkosten verteuern Produktion;\r\nKapazitätsausfälle verringern Angebot;\r\ngeringeres Marktangebot",
+    "after": "1. eigenständiger Faktor genannt, der das Angebot bei gleichem Preis verringert;1. Wirkung dieses Faktors auf Circle Harbor als günstig oder ungünstig zutreffend angegeben;2. eigenständiger Faktor genannt, der das Angebot bei gleichem Preis verringert;2. Wirkung dieses Faktors auf Circle Harbor als günstig oder ungünstig zutreffend angegeben;3. eigenständiger Faktor genannt, der das Angebot bei gleichem Preis verringert;3. Wirkung dieses Faktors auf Circle Harbor als günstig oder ungünstig zutreffend angegeben",
+    "evidence": {
+      "answer": "Steigende Rohstoffkosten, höhere Energiepreise und Lieferengpässe verringern das Angebot bei unverändertem Preis. Alle drei wirken für Circle Harbor ungünstig: Herstellung wird teurer beziehungsweise die mögliche Liefermenge sinkt.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|1|c",
+    "field": "stichpunkte",
+    "before": "höhere Einkommen steigern Nachfrage;\r\nstaatliche Förderung erhöht Nachfrage;\r\nsteigendes Umweltbewusstsein erhöht Nachfrage;\r\nWerbung steigert Nachfrage;\r\nsteigende Kraftstoffpreise fördern alternative Mobilität;\r\nhöhere Kaufbereitschaft erhöht Nachfrage",
+    "after": "1. eigenständiger Faktor genannt, der die Nachfrage bei gleichem Preis erhöht;1. Wirkung dieses Faktors auf Circle Harbor zutreffend eingeordnet;2. eigenständiger Faktor genannt, der die Nachfrage bei gleichem Preis erhöht;2. Wirkung dieses Faktors auf Circle Harbor zutreffend eingeordnet;3. eigenständiger Faktor genannt, der die Nachfrage bei gleichem Preis erhöht;3. Wirkung dieses Faktors auf Circle Harbor zutreffend eingeordnet",
+    "evidence": {
+      "answer": "Höheres Haushaltseinkommen, Kaufprämien für E-Fahrzeuge und wachsendes Umweltbewusstsein erhöhen die Nachfrage bei unverändertem Preis. Alle drei sind für Circle Harbor günstig, da sie zusätzliche Absatzmöglichkeiten eröffnen.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|2|a",
+    "field": "stichpunkte",
+    "before": "Liefervertrag verbessert Versorgungssicherheit;\r\nlangfristige Planungssicherheit entsteht;\r\ngroße Bestellmengen verbessern Einkaufskonditionen;\r\nAbhängigkeit von Lieferanten steigt;\r\nLieferantenwechsel wird erschwert;\r\nspätere Preissteigerungen möglich",
+    "after": "Ein passender Vorteil des gemeinsamen Liefervertrags beschrieben;Erster eigenständiger möglicher Nachteil des Liefervertrags beschrieben;Zweiter davon unabhängiger möglicher Nachteil des Liefervertrags beschrieben",
+    "evidence": {
+      "answer": "Der gemeinsame Vertrag sichert Bauteile langfristig und erhöht die Planbarkeit. Nachteilig ist die Abhängigkeit: Störungen des Partners treffen die eigene Produktion. Zudem erschwert die Vertragsbindung den Wechsel und damit die Nutzung neuer Technik anderer Anbieter.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|3|b",
+    "field": "stichpunkte",
+    "before": "Ausbau von Radwegen fördert alternative Mobilität;\r\nInnenstädte können für Autoverkehr eingeschränkt werden;\r\ngünstiger ÖPNV reduziert Individualverkehr;\r\nhöhere Parkgebühren senken Autonutzung;\r\nalternative Mobilitätsangebote werden gefördert",
+    "after": "1. eigenständige verkehrspolitische Maßnahme zur Reduktion des Autoverkehrs oder Förderung alternativer Mobilität beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige verkehrspolitische Maßnahme zur Reduktion des Autoverkehrs oder Förderung alternativer Mobilität beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige verkehrspolitische Maßnahme zur Reduktion des Autoverkehrs oder Förderung alternativer Mobilität beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Sichere Radwege machen den Umstieg attraktiver. Günstigere ÖPNV-Tarife senken die Kosten gegenüber Autofahrten. Höhere Parkgebühren verteuern die Autonutzung und fördern den Umstieg.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|3|c",
+    "field": "stichpunkte",
+    "before": "Kooperation mit ÖPNV erweitert Nutzungsmöglichkeiten;\r\nWerbung betont flexible Mobilität;\r\nUnternehmenskooperationen erschließen neue Kunden;\r\nLeasingangebote senken Einstiegskosten;\r\nnachhaltige Mobilität wird aktiv beworben",
+    "after": "1. eigenständige Marketingmaßnahme mit nachvollziehbarer Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Marketingmaßnahme mit nachvollziehbarer Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Eine Werbekampagne zeigt die flexible und emissionsarme Alltagsnutzung und steigert so Bekanntheit und Kaufinteresse. Firmenkooperationen bieten Beschäftigten Probefahrten und Beratung am Arbeitsplatz und erschließen Circle Harbor größere neue Kundengruppen.",
+      "oldMatched": 3,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|4|a",
+    "field": "stichpunkte",
+    "before": "Renteneintritte verringern Arbeitskräfteangebot;\r\nniedrige Geburtenraten reduzieren Nachwuchs;\r\nlängere Ausbildungszeiten verzögern Berufseintritt;\r\nVorruhestand reduziert Erwerbsbevölkerung;\r\nFachkräftemangel erschwert Stellenbesetzung;\r\ntechnologischer Wandel erhöht Qualifikationsbedarf",
+    "after": "1. eigenständige Ursache des Arbeitskräftemangels mit Wirkungszusammenhang erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Ursache des Arbeitskräftemangels mit Wirkungszusammenhang erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Ursache des Arbeitskräftemangels mit Wirkungszusammenhang erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständige Ursache des Arbeitskräftemangels mit Wirkungszusammenhang erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Geburtenstarke Jahrgänge verlassen altersbedingt den Arbeitsmarkt. Schwächere Geburtsjahrgänge liefern weniger Nachwuchs. Längere Ausbildung verzögert den Berufseinstieg. Vorruhestand reduziert die Zahl verfügbarer Erwerbstätiger zusätzlich.",
+      "oldMatched": 4,
+      "expectedPoints": 8,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|5|a",
+    "field": "stichpunkte",
+    "before": "25.000 Euro Stammkapital GmbH; 50.000 Euro Grundkapital AG; Geschäftsführer vs Vorstand/Aufsichtsrat; Handelbarkeit der Aktien; höhere Publizitätspflichten; Kapitalmarktfinanzierung",
+    "after": "1. eigenständiger Unterschied zwischen GmbH und börsennotierter AG für die Entscheidungsvorlage beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger Unterschied zwischen GmbH und börsennotierter AG für die Entscheidungsvorlage beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger Unterschied zwischen GmbH und börsennotierter AG für die Entscheidungsvorlage beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger Unterschied zwischen GmbH und börsennotierter AG für die Entscheidungsvorlage beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Entscheidungsvorlage: Die GmbH benötigt 25.000 Euro Stammkapital, die AG 50.000 Euro Grundkapital. Geschäftsführer und Gesellschafterversammlung stehen Vorstand, Aufsichtsrat und Hauptversammlung gegenüber. GmbH-Anteile werden notariell übertragen, börsennotierte Aktien grundsätzlich über die Börse gehandelt. Die börsennotierte AG hat umfangreichere Publizitätspflichten. Diese Unterschiede erhöhen Flexibilität, aber auch Aufwand der AG.",
+      "oldMatched": 5,
+      "expectedPoints": 12,
+      "oldPoints": 10
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|5|b",
+    "field": "stichpunkte",
+    "before": "GmbH-Anteile können übertragen werden;\r\nÜbertragung von GmbH-Anteilen benötigt notarielle Beurkundung;\r\nAG-Aktien können über Börse gekauft werden;\r\nKapitalerhöhung ermöglicht neues Eigenkapital;\r\nAusgabe neuer Aktien gewinnt Investoren",
+    "after": "Eine rechtlich geeignete Möglichkeit zur Aufnahme eines neuen GmbH-Gesellschafters erläutert;Eine rechtlich geeignete Möglichkeit zur Aufnahme eines neuen Aktionärs bei börsennotierter AG erläutert",
+    "evidence": {
+      "answer": "Ein neuer GmbH-Gesellschafter kann einen bestehenden Geschäftsanteil durch notariell beurkundete Übertragung erwerben. Bei der börsennotierten AG kann ein neuer Aktionär bereits ausgegebene Aktien über die Börse kaufen. Der Kaufpreis geht dabei jeweils an den bisherigen Anteilseigner.",
+      "oldMatched": 3,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|6|c",
+    "field": "stichpunkte",
+    "before": "Zusammenschluss erhöht Marktanteil;\r\ngemeinsame Nutzung senkt Kosten;\r\nneue Märkte können erschlossen werden;\r\nKnow-how des übernommenen Unternehmens kann genutzt werden;\r\nÜbernahme verursacht hohe Kosten;\r\nIntegration unterschiedlicher Unternehmenskulturen schwierig;\r\nSynergieeffekte können ausbleiben;\r\nAuslandsübernahmen bergen zusätzliche Risiken",
+    "after": "1. eigenständige Chance der Übernahme aus Sicht von Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Chance der Übernahme aus Sicht von Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);1. eigenständige Risiko der Übernahme aus Sicht von Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Risiko der Übernahme aus Sicht von Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Dafür: Die Übernahme erhöht den Marktanteil und stärkt die Wettbewerbsposition. Gemeinsamer Einkauf und Produktion senken Stückkosten. Dagegen: Der Kaufpreis belastet die Finanzierung. Unterschiedliche Unternehmenskulturen können Zusammenarbeit und Integration erschweren.",
+      "oldMatched": 4,
+      "expectedPoints": 8,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_RS_SIM_2|Recht und Steuern|4|b",
+    "field": "stichpunkte",
+    "before": "Beseitigung §8 UWG;Unterlassung §8 UWG;Wiederholungsgefahr;Schadensersatz §9 Abs.1 UWG;Mitbewerber",
+    "after": "1. eigenständiger wettbewerbsrechtlicher Anspruch des Mitbewerbers fachlich beschrieben;1. zu diesem Anspruch passende Rechtsgrundlage genannt;2. eigenständiger wettbewerbsrechtlicher Anspruch des Mitbewerbers fachlich beschrieben;2. zu diesem Anspruch passende Rechtsgrundlage genannt",
+    "evidence": {
+      "answer": "Die OHG kann als Mitbewerber Beseitigung der fortdauernden Beeinträchtigung nach § 8 Abs. 1 UWG verlangen. Zudem kann sie bei Wiederholungsgefahr nach § 8 Abs. 1 UWG Unterlassung weiterer unzulässiger Werbe-E-Mails verlangen.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_RS_SIM_2|Recht und Steuern|6|c",
+    "field": "stichpunkte",
+    "before": "Gebühr Beispiel;Beitrag Beispiel;z.B. Müllgebühr/Parkgebühr;IHK-Beitrag/Rundfunkbeitrag",
+    "after": "Passendes betriebliches Gebührenbeispiel genannt, das nicht bereits in Teilaufgabe a vorkommt;Passendes betriebliches Beitragsbeispiel genannt, das nicht bereits in Teilaufgabe a vorkommt",
+    "evidence": {
+      "answer": "Gebühr: Verwaltungsgebühr für eine betriebliche Baugenehmigung. Beitrag: Beitrag an die Berufsgenossenschaft für die gesetzliche Unfallversicherung der Beschäftigten.",
+      "oldMatched": 2,
+      "expectedPoints": 2,
+      "oldPoints": 1
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|1|a",
+    "field": "stichpunkte",
+    "before": "drei Befragungsformen;je ein Vorteil;je ein Nachteil;schriftlich;mündlich/Interview;online;telefonisch",
+    "after": "1. eigenständige Befragungsform genannt;1. Form: zugehöriger Vorteil beschrieben;1. Form: zugehöriger Nachteil beschrieben;2. eigenständige Befragungsform genannt;2. Form: zugehöriger Vorteil beschrieben;2. Form: zugehöriger Nachteil beschrieben;3. eigenständige Befragungsform genannt;3. Form: zugehöriger Vorteil beschrieben;3. Form: zugehöriger Nachteil beschrieben",
+    "evidence": {
+      "answer": "Schriftlich: standardisierte Formulare sind günstig, die Rücklaufquote kann gering sein. Persönlich: Nachfragen klären komplexe Antworten, der Zeitaufwand ist hoch. Online: Antworten sind schnell auswertbar, fehlender Internetzugang kann die Stichprobe verzerren.",
+      "oldMatched": 6,
+      "expectedPoints": 15,
+      "oldPoints": 13
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|2|a",
+    "field": "stichpunkte",
+    "before": "vier Auditformen;je zwei Instrumente;Management-Audit;Systemaudit;Umweltaudit;Compliance;Prozessaudit;Produktaudit",
+    "after": "1. eigenständige interne Auditform beschrieben;1. Auditform: erstes geeignetes Instrument oder Prüfmittel genannt;1. Auditform: zweites eigenständiges geeignetes Instrument oder Prüfmittel genannt;2. eigenständige interne Auditform beschrieben;2. Auditform: erstes geeignetes Instrument oder Prüfmittel genannt;2. Auditform: zweites eigenständiges geeignetes Instrument oder Prüfmittel genannt;3. eigenständige interne Auditform beschrieben;3. Auditform: erstes geeignetes Instrument oder Prüfmittel genannt;3. Auditform: zweites eigenständiges geeignetes Instrument oder Prüfmittel genannt;4. eigenständige interne Auditform beschrieben;4. Auditform: erstes geeignetes Instrument oder Prüfmittel genannt;4. Auditform: zweites eigenständiges geeignetes Instrument oder Prüfmittel genannt",
+    "evidence": {
+      "answer": "Management-Audit prüft Führungswirksamkeit mit Mitarbeiterbefragung und Fluktuationskennzahlen. Systemaudit prüft das organisatorische System durch Dokumentenprüfung und Kosten-Nutzen-Analyse. Umweltaudit prüft Umweltanforderungen mit Umweltkennzahlen und Prüfung des Umweltmanagementsystems. Compliance-Audit prüft Regelbefolgung durch Richtlinienvergleich und Stichproben.",
+      "oldMatched": 6,
+      "expectedPoints": 16,
+      "oldPoints": 12
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|3|a",
+    "field": "stichpunkte",
+    "before": "vier Teilbereiche;Personalbestand;quantitativer Bedarf;qualitativer Bedarf;Personalanpassung/Beschaffung;Personalkosten;Nachfolge/Übergabe;je Beispiel",
+    "after": "1. geeigneter eigenständiger Teilbereich der Personalplanung genannt;1. Teilbereich: erforderliche Handlung beim Führungskräftewechsel anhand eines passenden Beispiels beschrieben;2. geeigneter eigenständiger Teilbereich der Personalplanung genannt;2. Teilbereich: erforderliche Handlung beim Führungskräftewechsel anhand eines passenden Beispiels beschrieben;3. geeigneter eigenständiger Teilbereich der Personalplanung genannt;3. Teilbereich: erforderliche Handlung beim Führungskräftewechsel anhand eines passenden Beispiels beschrieben;4. geeigneter eigenständiger Teilbereich der Personalplanung genannt;4. Teilbereich: erforderliche Handlung beim Führungskräftewechsel anhand eines passenden Beispiels beschrieben",
+    "evidence": {
+      "answer": "Bestandsplanung: Austrittsdaten der heutigen Vertriebsleitungen erfassen. Quantitative Bedarfsplanung: Für drei in Ruhestand gehende Leitungen drei Nachfolger einplanen. Qualitative Bedarfsplanung: Führungs- und Vertriebskenntnisse der Nachfolger festlegen. Beschaffungsplanung: geeignete interne Kandidaten ansprechen und verbleibende Stellen extern ausschreiben.",
+      "oldMatched": 6,
+      "expectedPoints": 12,
+      "oldPoints": 9
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|4|a",
+    "field": "stichpunkte",
+    "before": "Aufgaben der Stelle;fachliche Kompetenz;persönliche Kompetenz;soziale Kompetenz;Führungskompetenz;drei beschreiben",
+    "after": "1. eigenständiger geeigneter Inhalt eines Führungs-Anforderungsprofils beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger geeigneter Inhalt eines Führungs-Anforderungsprofils beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger geeigneter Inhalt eines Führungs-Anforderungsprofils beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Fachkompetenz: Erfahrung im B 2 B-Vertrieb und in der Vertriebssteuerung. Sozialkompetenz: Kundenverhandlungen und konstruktive Konfliktlösung. Führungskompetenz: Ziele abstimmen, Aufgaben delegieren und Mitarbeitende entwickeln.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|4|b",
+    "field": "stichpunkte",
+    "before": "sechs Checklistenpunkte;Team informieren;Arbeitsplatz vorbereiten;Begrüßung;Kollegen vorstellen;Betriebsrundgang;Formalitäten;Arbeitsschutz;Einweisung;Pate",
+    "after": "1. eigenständiger passender Checklistenpunkt für Vorbereitung oder ersten Arbeitstag genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger passender Checklistenpunkt für Vorbereitung oder ersten Arbeitstag genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger passender Checklistenpunkt für Vorbereitung oder ersten Arbeitstag genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger passender Checklistenpunkt für Vorbereitung oder ersten Arbeitstag genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständiger passender Checklistenpunkt für Vorbereitung oder ersten Arbeitstag genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);6. eigenständiger passender Checklistenpunkt für Vorbereitung oder ersten Arbeitstag genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Team über Eintritt informieren; Arbeitsplatz und Zugänge vorbereiten; neuen Mitarbeiter begrüßen; Kollegen vorstellen; Betriebsrundgang durchführen; Personalformalitäten erledigen.",
+      "oldMatched": 7,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|5|a",
+    "field": "stichpunkte",
+    "before": "drei Folgen;Know-how-Verlust;Fachkräftemangel;Ausbildungsplätze unbesetzt;Personalkosten steigen;Produktionsengpässe",
+    "after": "1. eigenständige demografisch bedingte Auswirkung auf die Personalsituation erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige demografisch bedingte Auswirkung auf die Personalsituation erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige demografisch bedingte Auswirkung auf die Personalsituation erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Altersbedingte Abgänge nehmen Erfahrungswissen mit. Wegen weniger verfügbarer Fachkräfte bleiben Nachfolgestellen länger offen. Um knappe Bewerber zu gewinnen und Personal zu halten, muss Circle Harbor höhere Vergütungen anbieten; die Personalkosten steigen.",
+      "oldMatched": 4,
+      "expectedPoints": 9,
+      "oldPoints": 6
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|5|b",
+    "field": "stichpunkte",
+    "before": "drei Maßnahmen;Wissensmanagement;altersgemischte Teams;Schulkooperation;ältere Mitarbeiter binden;regionale/internationale Rekrutierung;Qualifizierung",
+    "after": "1. eigenständige strategische Maßnahme gegen demografische Folgen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige strategische Maßnahme gegen demografische Folgen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige strategische Maßnahme gegen demografische Folgen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Wissenstransfer durch Tandems und dokumentierte Übergaben erhält Erfahrung. Schulkooperationen und Praktika gewinnen Nachwuchs frühzeitig. Gezielte Qualifizierung bereitet vorhandene Beschäftigte auf spätere Führungsaufgaben vor.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 3
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|6|a",
+    "field": "stichpunkte",
+    "before": "fünf Gründe;Wettbewerbsfähigkeit;Fachkräfte sichern;Mitarbeiterbindung;Unabhängigkeit Arbeitsmarkt;Demografie;Zufriedenheit;Arbeitgeberattraktivität;neue Anforderungen",
+    "after": "1. eigenständiger Grund für Investitionen in Personalentwicklung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger Grund für Investitionen in Personalentwicklung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger Grund für Investitionen in Personalentwicklung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger Grund für Investitionen in Personalentwicklung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständiger Grund für Investitionen in Personalentwicklung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Schulungen halten Leistungen wettbewerbsfähig. Interne Nachfolger sichern Fach- und Führungskräfte. Entwicklungsperspektiven binden Beschäftigte. Eigene Qualifizierung verringert die Abhängigkeit vom externen Arbeitsmarkt. Wissenstransfer federt altersbedingte Wissensverluste ab.",
+      "oldMatched": 6,
+      "expectedPoints": 10,
+      "oldPoints": 7
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_2|Unternehmensführung|6|b",
+    "field": "stichpunkte",
+    "before": "Aufstiegsfortbildung;Anpassungsfortbildung;Erweiterungsfortbildung;Erhaltungsfortbildung;drei beschreiben",
+    "after": "1. eigenständige Art beruflicher Fortbildung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Art beruflicher Fortbildung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Art beruflicher Fortbildung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Aufstiegsfortbildung bereitet auf höherwertige Aufgaben vor, etwa Fachwirt. Anpassungsfortbildung passt Kenntnisse an geänderte Anforderungen an, etwa neue Software. Erweiterungsfortbildung vermittelt zusätzliche berufliche Kenntnisse ohne zwingenden Aufstieg.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_2|VWL/BWL|2|a",
+    "field": "stichpunkte",
+    "before": "staatliche Verantwortung;Fiskalpolitik;antizyklisch;Deficit Spending;kurzfristige Wirkung;Förderung von Konsum und Investitionen",
+    "after": "1. eigenständiger wesentlicher Aspekt nachfrageorientierter Konjunkturpolitik nach Keynes beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger wesentlicher Aspekt nachfrageorientierter Konjunkturpolitik nach Keynes beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger wesentlicher Aspekt nachfrageorientierter Konjunkturpolitik nach Keynes beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger wesentlicher Aspekt nachfrageorientierter Konjunkturpolitik nach Keynes beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständiger wesentlicher Aspekt nachfrageorientierter Konjunkturpolitik nach Keynes beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Der Staat übernimmt die Stabilisierung der gesamtwirtschaftlichen Nachfrage. Fiskalpolitik verändert öffentliche Ausgaben und Steuern. Sie wirkt antizyklisch: Impulse in der Rezession, Dämpfung im Boom. Bei freien Kapazitäten kann sie kurzfristig Produktion und Beschäftigung anregen. Sie setzt direkt bei Konsum und Investitionen an.",
+      "oldMatched": 5,
+      "expectedPoints": 10,
+      "oldPoints": 8
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_2|VWL/BWL|5|b",
+    "field": "stichpunkte",
+    "before": "Finanzierungskosten;Laufzeit;Zins-/Rückzahlungsbedingungen;Liquidität;Verschuldungsgrad;Sicherheiten;Abhängigkeit;Aufwand",
+    "after": "1. eigenständiger geeigneter Gesichtspunkt zur Beurteilung einer Finanzierungsform genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger geeigneter Gesichtspunkt zur Beurteilung einer Finanzierungsform genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger geeigneter Gesichtspunkt zur Beurteilung einer Finanzierungsform genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger geeigneter Gesichtspunkt zur Beurteilung einer Finanzierungsform genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Finanzierungskosten, Auswirkung auf die Liquidität, Auswirkung auf den Verschuldungsgrad, erforderliche Sicherheiten.",
+      "oldMatched": 4,
+      "expectedPoints": 4,
+      "oldPoints": 2
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_2|VWL/BWL|6|a",
+    "field": "stichpunkte",
+    "before": "GmbH;Haftung Gesellschaftsvermögen;keine persönliche Gesellschafterhaftung grundsätzlich;AG;keine persönliche Aktionärshaftung;Organhaftung bei Pflichtverletzung bleibt",
+    "after": "1. geeignete eigenständige Zielrechtsform mit geringerem persönlichen Gesellschafterhaftungsrisiko vorgeschlagen;1. Haftungsvorteil gegenüber der OHG nachvollziehbar begründet;2. geeignete eigenständige Zielrechtsform mit geringerem persönlichen Gesellschafterhaftungsrisiko vorgeschlagen;2. Haftungsvorteil gegenüber der OHG nachvollziehbar begründet",
+    "evidence": {
+      "answer": "Formwechsel in eine GmbH: Für neue Gesellschaftsschulden haftet grundsätzlich das Gesellschaftsvermögen, die Gesellschafter haften grundsätzlich nicht persönlich. Alternativ AG: Auch hier haftet grundsätzlich die Gesellschaft, nicht der Aktionär persönlich. Beide reduzieren gegenüber der unbeschränkten OHG-Haftung das persönliche Gesellschafterrisiko.",
+      "oldMatched": 5,
+      "expectedPoints": 8,
+      "oldPoints": 7
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_2|VWL/BWL|6|b",
+    "field": "stichpunkte",
+    "before": "Formwechselbeschluss;notarielle Beurkundung;Mindestkapital;Organe/Vertretung;Handelsregister;Geschäftsunterlagen anpassen",
+    "after": "1. eigenständiger wesentlicher Schritt des Formwechsels in eine haftungsbeschränkte Kapitalgesellschaft genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger wesentlicher Schritt des Formwechsels in eine haftungsbeschränkte Kapitalgesellschaft genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger wesentlicher Schritt des Formwechsels in eine haftungsbeschränkte Kapitalgesellschaft genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger wesentlicher Schritt des Formwechsels in eine haftungsbeschränkte Kapitalgesellschaft genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständiger wesentlicher Schritt des Formwechsels in eine haftungsbeschränkte Kapitalgesellschaft genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Formwechselbeschluss fassen; Beschluss und Satzung notariell beurkunden; vorgeschriebenes Kapital sicherstellen; Organe und Vertretung festlegen; Formwechsel zum Handelsregister anmelden und eintragen lassen.",
+      "oldMatched": 5,
+      "expectedPoints": 5,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_2|VWL/BWL|6|c",
+    "field": "stichpunkte",
+    "before": "kürzeres Zahlungsziel;Vorkasse;Sicherheiten;geringere Kreditlinie;Nachhaftung Altverbindlichkeiten;§ 224 UmwG",
+    "after": "Eine mögliche Auswirkung des Formwechsels auf Lieferantenbeziehungen nachvollziehbar dargestellt",
+    "evidence": {
+      "answer": "Lieferanten können zusätzliche Sicherheiten verlangen, weil sie für neue Forderungen nicht mehr auf die persönliche Haftung der bisherigen OHG-Gesellschafter vertrauen können.",
+      "oldMatched": 1,
+      "expectedPoints": 2,
+      "oldPoints": 0
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|1|a",
+    "field": "stichpunkte",
+    "before": "fünf Gründe;Information;Zukunftsperspektive;Führung;Wertschätzung;Kommunikation;Work-Life-Balance;Betriebsklima",
+    "after": "1. eigenständige mögliche Ursache für Dienst nach Vorschrift beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige mögliche Ursache für Dienst nach Vorschrift beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige mögliche Ursache für Dienst nach Vorschrift beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständige mögliche Ursache für Dienst nach Vorschrift beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständige mögliche Ursache für Dienst nach Vorschrift beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Informationsmangel schafft Unsicherheit. Autoritäre Führung verhindert Beteiligung. Fehlende Anerkennung lässt Mehrleistung nutzlos erscheinen. Schlechte Kommunikation schafft Gerüchte und Misstrauen. Dauerhaft ungünstige Schichten beeinträchtigen die Work-Life-Balance und fördern Rückzug.",
+      "oldMatched": 6,
+      "expectedPoints": 10,
+      "oldPoints": 8
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|1|b",
+    "field": "stichpunkte",
+    "before": "drei Signale;Fehlzeiten;Rückzug;Produktivität sinkt;Dienst nach Vorschrift",
+    "after": "1. eigenständiger mögliches Verhaltenssignal fehlender Identifikation genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger mögliches Verhaltenssignal fehlender Identifikation genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger mögliches Verhaltenssignal fehlender Identifikation genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Steigende Fehlzeiten, Rückzug aus Diskussionen und sinkende Produktivität gegenüber dem bisherigen Verhalten können Hinweise sein.",
+      "oldMatched": 4,
+      "expectedPoints": 3,
+      "oldPoints": 2
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|1|c",
+    "field": "stichpunkte",
+    "before": "drei Vorteile;Beteiligung;Identifikation;Teamarbeit;Motivation;bessere Entscheidungen;Feedback;Fluktuation",
+    "after": "1. eigenständiger Vorteil kooperativer Führung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger Vorteil kooperativer Führung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger Vorteil kooperativer Führung beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Beteiligung erhöht die Identifikation mit Entscheidungen. Respektvolle Zusammenarbeit stärkt Teamarbeit. Die Einbindung des Fachwissens steigert Motivation und reduziert Fehlentscheidungen.",
+      "oldMatched": 6,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|2|a",
+    "field": "stichpunkte",
+    "before": "fünf Quellen;Verbände;Destatis;IHK/HWK;Wirtschaftsförderung;Hochschulen;Beratung;Konsumforschung",
+    "after": "1. eigenständige geeignete Informationsquelle der Sekundärforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige geeignete Informationsquelle der Sekundärforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige geeignete Informationsquelle der Sekundärforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständige geeignete Informationsquelle der Sekundärforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständige geeignete Informationsquelle der Sekundärforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Bereits vorliegende Branchenverbandsberichte, Destatis-Statistiken, IHK-Brancheninformationen, Berichte der Wirtschaftsförderung und veröffentlichte Hochschulstudien.",
+      "oldMatched": 6,
+      "expectedPoints": 5,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|3|a",
+    "field": "stichpunkte",
+    "before": "drei Systeme;Qualitätsmanagement;Umweltmanagement;Arbeits-/Gesundheitsschutz;Energiemanagement",
+    "after": "1. eigenständiger integrierbares Managementsystem mit Zweck erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger integrierbares Managementsystem mit Zweck erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger integrierbares Managementsystem mit Zweck erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Qualitätsmanagement steuert Prozesse zur Sicherung und Verbesserung der Qualität. Umweltmanagement identifiziert Umweltwirkungen und organisiert ihre Verringerung. Arbeitsschutzmanagement erfasst Gefährdungen und setzt systematisch Sicherheits- und Gesundheitsschutzmaßnahmen um.",
+      "oldMatched": 4,
+      "expectedPoints": 9,
+      "oldPoints": 7
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|3|b",
+    "field": "stichpunkte",
+    "before": "je Strategie;Prozessanalyse;Ziele/Kennzahlen;Audit/KVP;ISO 9001;ISO 14001;ISO 50001",
+    "after": "1. eigenständige schlüssige Strategie zur Wirksamkeitsverbesserung eines jeweils anderen in a gewählten Managementsystems entwickelt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige schlüssige Strategie zur Wirksamkeitsverbesserung eines jeweils anderen in a gewählten Managementsystems entwickelt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige schlüssige Strategie zur Wirksamkeitsverbesserung eines jeweils anderen in a gewählten Managementsystems entwickelt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Qualität: Prozesse analysieren, messbare Fehlerziele setzen und durch Audits/KVP verbessern, etwa nach ISO 9001. Umwelt: Umweltaspekte erfassen, Reduktionsziele festlegen und deren Umsetzung prüfen, etwa nach ISO 14001. Arbeitsschutz: Gefährdungen beurteilen, priorisierte Schutzmaßnahmen mit Verantwortlichen umsetzen und durch Begehungen sowie Beinaheunfallauswertung verbessern.",
+      "oldMatched": 6,
+      "expectedPoints": 12,
+      "oldPoints": 10
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|4|a",
+    "field": "stichpunkte",
+    "before": "fünf Maßnahmen;Weiterbildung;Laufbahn;Arbeitsgestaltung;Vergütung;moderne Führung;Leitbild",
+    "after": "1. eigenständige Maßnahme zur Arbeitgeberattraktivität mit Nutzen für Beschäftigte erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Maßnahme zur Arbeitgeberattraktivität mit Nutzen für Beschäftigte erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Maßnahme zur Arbeitgeberattraktivität mit Nutzen für Beschäftigte erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständige Maßnahme zur Arbeitgeberattraktivität mit Nutzen für Beschäftigte erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständige Maßnahme zur Arbeitgeberattraktivität mit Nutzen für Beschäftigte erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Weiterbildung eröffnet neue Fachaufgaben. Transparente Laufbahnen machen Aufstieg planbar. Flexible, verlässliche Schichten erleichtern private Planung. Nachvollziehbare Leistungsprämien honorieren gute Arbeit. Wertschätzende Gespräche ermöglichen Feedback und Beteiligung.",
+      "oldMatched": 6,
+      "expectedPoints": 15,
+      "oldPoints": 13
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|4|b",
+    "field": "stichpunkte",
+    "before": "fünf Maßnahmen;Wissenstransfer;Digitalisierung;Gesundheit;Ergonomie;neue Zielgruppen;Qualifizierung;Ausbildung",
+    "after": "1. eigenständige Maßnahme gegen künftige personalpolitische Herausforderungen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Maßnahme gegen künftige personalpolitische Herausforderungen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Maßnahme gegen künftige personalpolitische Herausforderungen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständige Maßnahme gegen künftige personalpolitische Herausforderungen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);5. eigenständige Maßnahme gegen künftige personalpolitische Herausforderungen beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Tandems sichern Wissen älterer Fachkräfte. Mobile Verwaltungsarbeit erschließt flexible Arbeitsformen. Gesundheitsprogramme stärken die dauerhafte Einsatzfähigkeit. Hebehilfen erleichtern körperlich schwere Tätigkeiten. Einstiegsprogramme für bisher wenig angesprochene Bewerbergruppen verbreitern die Personalgewinnung.",
+      "oldMatched": 6,
+      "expectedPoints": 10,
+      "oldPoints": 8
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|5|b",
+    "field": "stichpunkte",
+    "before": "zwei Erkenntnisse;Fachkenntnisse/Fähigkeiten;Prozesskenntnisse;Motivation;Eigenverantwortung",
+    "after": "1. eigenständige mögliche Erkenntnis einer Potenzialanalyse mit Bedeutung für Personalentwicklung erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige mögliche Erkenntnis einer Potenzialanalyse mit Bedeutung für Personalentwicklung erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Die Potenzialanalyse zeigt fachliche Fähigkeiten und Lernpotenzial, aus denen sich geeignete zukünftige Fachaufgaben und Schulungen ableiten lassen. Sie zeigt außerdem die Motivation und Entwicklungsbereitschaft, sodass die Personalentwicklung passende und akzeptierte Entwicklungsschritte planen kann.",
+      "oldMatched": 3,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_3|VWL/BWL|1|c",
+    "field": "stichpunkte",
+    "before": "zwei Preisvorschläge;60 €;67,32 €;66 €;72,60 €;je Begründung",
+    "after": "1. konkreter eigenständiger Preisvorschlag für Geschäftsjahr 04 entwickelt;1. Preisvorschlag anhand der Nachfrageentwicklung und plausibler Annahmen begründet;2. konkreter eigenständiger Preisvorschlag für Geschäftsjahr 04 entwickelt;2. Preisvorschlag anhand der Nachfrageentwicklung und plausibler Annahmen begründet",
+    "evidence": {
+      "answer": "66 Euro beibehalten, wenn die Sondernachfrage anhält: Der Erlös je Abo bleibt erhalten, weitere preisbedingte Kundenverluste werden vermieden. Alternativ bei Normalisierung auf 60 Euro senken: Das kann Kunden zurückgewinnen, sofern der Mehrabsatz den niedrigeren Preis wirtschaftlich ausgleicht.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_3|VWL/BWL|2|b",
+    "field": "stichpunkte",
+    "before": "zwei Maßnahmen;Fortbildung/Weiterbildung;Teilzeit;sozialverträglicher Personalabbau",
+    "after": "1. eigenständige passende arbeitsmarkt- oder personalpolitische Maßnahme bei dauerhaft geringerem Ladenpersonalbedarf erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige passende arbeitsmarkt- oder personalpolitische Maßnahme bei dauerhaft geringerem Ladenpersonalbedarf erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Ladenpersonal für digitale Beratung und Auftragsabwicklung qualifizieren und damit in den Onlinebereich versetzen. Freiwillige Teilzeitvereinbarungen reduzieren das Arbeitsvolumen dauerhaft auf den geringeren Bedarf und erhalten Beschäftigung.",
+      "oldMatched": 3,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_3|VWL/BWL|5|b",
+    "field": "stichpunkte",
+    "before": "vier Maßnahmen;Kreditlinie;Zahlungsziele;Stundung;Vermögensverkauf;Kosten senken",
+    "after": "1. eigenständige kurzfristig wirksame Liquiditätsmaßnahme beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige kurzfristig wirksame Liquiditätsmaßnahme beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige kurzfristig wirksame Liquiditätsmaßnahme beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständige kurzfristig wirksame Liquiditätsmaßnahme beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Eine zugesagte höhere Kreditlinie liefert kurzfristig Geld. Verlängerte Lieferantenzahlungsziele verschieben Auszahlungen. Vereinbarte Stundungen verteilen bereits fällige Zahlungen auf spätere Termine. Verkauf nicht benötigten Vermögens setzt gebundenes Kapital frei.",
+      "oldMatched": 5,
+      "expectedPoints": 12,
+      "oldPoints": 10
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_4|Unternehmensführung|1|a",
+    "field": "stichpunkte",
+    "before": "drei Informationsquellen;Destatis;Branchenverbände/Fachzeitschriften;Marktforschungsinstitute;Unternehmensberatung;Wirtschaftsförderung;zwei Begründungen",
+    "after": "1. eigenständige geeignete Informationsquelle der Marktforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige geeignete Informationsquelle der Marktforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige geeignete Informationsquelle der Marktforschung genannt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);Erster sachgerechter Aspekt zur Begründung der Quellenauswahl erläutert;Zweiter eigenständiger Aspekt zur Begründung der Quellenauswahl erläutert",
+    "evidence": {
+      "answer": "Geeignete Quellen sind Destatis, Branchenverbände und Marktforschungsinstitute. Amtliche Daten ermöglichen einen methodisch nachvollziehbaren Vergleich. Branchen- und Kundenstudien liefern produktnahe Erkenntnisse für Mobilitätsangebote und deren Nachfrage.",
+      "oldMatched": 5,
+      "expectedPoints": 5,
+      "oldPoints": 4
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_4|Unternehmensführung|2|a",
+    "field": "stichpunkte",
+    "before": "drei Funktionen;Orientierungsfunktion;Integrationsfunktion;Entscheidungsfunktion;Koordinierungsfunktion;Situationsbezug",
+    "after": "1. eigenständige Leitbildfunktion mit Nutzen für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Leitbildfunktion mit Nutzen für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Leitbildfunktion mit Nutzen für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Orientierung: Gemeinsame Werte geben beiden Belegschaften Klarheit. Integration: Gemeinsame Grundsätze stärken das Wir-Gefühl. Entscheidungsfunktion: Das Leitbild bietet Führungskräften einen Rahmen für Entscheidungen nach der Zusammenführung.",
+      "oldMatched": 5,
+      "expectedPoints": 9,
+      "oldPoints": 8
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_4|Unternehmensführung|2|b",
+    "field": "stichpunkte",
+    "before": "drei Leitsätze;Verantwortung;Nachhaltigkeit;wirtschaftlicher Erfolg;Mitarbeitende;Kunden/Lieferanten",
+    "after": "1. eigenständiger schlüssiger Unternehmensleitsatz für Circle Harbor formuliert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger schlüssiger Unternehmensleitsatz für Circle Harbor formuliert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger schlüssiger Unternehmensleitsatz für Circle Harbor formuliert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Wir übernehmen Verantwortung für Menschen, Umwelt und Ressourcen. Wir entwickeln nachhaltige Mobilitätslösungen, die wirtschaftlichen Erfolg und Ressourcenschonung verbinden. Wir pflegen langfristige, faire und verlässliche Beziehungen zu Kunden und Lieferanten.",
+      "oldMatched": 5,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_4|Unternehmensführung|2|c",
+    "field": "stichpunkte",
+    "before": "drei Ziele;Wiedererkennung;Markenwirkung;Kundenbindung;Mitarbeiterbindung;einheitlicher Auftritt;Positionierung;Abhebung Wettbewerb",
+    "after": "1. eigenständiger Ziel einheitlicher Corporate Identity für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger Ziel einheitlicher Corporate Identity für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger Ziel einheitlicher Corporate Identity für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Ein einheitliches Erscheinungsbild erhöht Wiedererkennung und Markenwirkung. Gleiche Standards sichern einen konsistenten Auftritt nach innen und außen. Eine klare nachhaltige Positionierung hebt Circle Harbor von Wettbewerbern ab.",
+      "oldMatched": 6,
+      "expectedPoints": 9,
+      "oldPoints": 7
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_4|Unternehmensführung|4|",
+    "field": "stichpunkte",
+    "before": "fünf Maßnahmen jeweils Bewertung;Resturlaub;Arbeitszeitguthaben;Personalentwicklung;Befristungen;Leiharbeit;Arbeitszeitreduzierung",
+    "after": "1. eigenständige geeignete Maßnahme zur Vermeidung von Kurzarbeit beschrieben;1. Maßnahme hinsichtlich ihrer Eignung oder Grenzen im Fall bewertet;2. eigenständige geeignete Maßnahme zur Vermeidung von Kurzarbeit beschrieben;2. Maßnahme hinsichtlich ihrer Eignung oder Grenzen im Fall bewertet;3. eigenständige geeignete Maßnahme zur Vermeidung von Kurzarbeit beschrieben;3. Maßnahme hinsichtlich ihrer Eignung oder Grenzen im Fall bewertet;4. eigenständige geeignete Maßnahme zur Vermeidung von Kurzarbeit beschrieben;4. Maßnahme hinsichtlich ihrer Eignung oder Grenzen im Fall bewertet;5. eigenständige geeignete Maßnahme zur Vermeidung von Kurzarbeit beschrieben;5. Maßnahme hinsichtlich ihrer Eignung oder Grenzen im Fall bewertet",
+    "evidence": {
+      "answer": "Resturlaub unter Berücksichtigung der Urlaubswünsche abbauen: überbrückt Auslastung, ist aber auf Ansprüche begrenzt. Zeitguthaben abbauen: reduziert vorübergehend Arbeit, nicht automatisch laufenden Lohn. Weiterbildung vorziehen: nutzt freie Zeit und verbessert spätere Leistung, kostet zunächst Geld. Befristungen auslaufen lassen: senkt Kapazität ohne Kündigung, verliert Erfahrung. Leiharbeit reduzieren: schützt Stammpersonal, verringert schnelle Expansionsflexibilität.",
+      "oldMatched": 6,
+      "expectedPoints": 20,
+      "oldPoints": 17
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_4|Unternehmensführung|5|a",
+    "field": "stichpunkte",
+    "before": "drei Chancen Unternehmen;interne Besetzung;Personalüberhänge ausgleichen;Kurzarbeit vermeiden;Arbeitgeberattraktivität;drei Chancen Mitarbeitende;Arbeitsplatzsicherheit;Einkommen/Karriere;Motivation/Anerkennung",
+    "after": "1. eigenständige Chance der Personalentwicklung für Circle Harbor aufgezeigt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Chance der Personalentwicklung für Circle Harbor aufgezeigt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Chance der Personalentwicklung für Circle Harbor aufgezeigt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);1. eigenständige Chance der Personalentwicklung für Mitarbeitende aufgezeigt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Chance der Personalentwicklung für Mitarbeitende aufgezeigt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Chance der Personalentwicklung für Mitarbeitende aufgezeigt (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Für Circle Harbor: Fach- und Führungsstellen intern besetzen, Personalüberhänge durch Qualifizierung und Versetzung ausgleichen, Kurzarbeit durch Einsatz in anderen Bereichen vermeiden. Für Mitarbeitende: höhere Arbeitsplatzsicherheit, bessere Einkommens- und Karrierechancen, Motivation und Anerkennung durch Entwicklungsperspektiven.",
+      "oldMatched": 8,
+      "expectedPoints": 12,
+      "oldPoints": 11
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_4|Unternehmensführung|5|b",
+    "field": "stichpunkte",
+    "before": "Fortbildung zwei Maßnahmen;Weiterbildung/Lehrgänge;Coaching;Training-on-the-job/Job-Rotation;Karriereplanung zwei Maßnahmen;Laufbahnplanung;Nachfolgeplanung;Traineeprogramm;Standort-/Auslandseinsatz",
+    "after": "1. eigenständige Fortbildungsmaßnahme für Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Fortbildungsmaßnahme für Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);1. eigenständige Karriereplanungsmaßnahme für Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Karriereplanungsmaßnahme für Circle Harbor beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Fortbildung: Diagnoselehrgang vermittelt Werkstattkräften digitale Verfahren. Führungscoaching bereitet Teamleitungen auf Mitarbeitergespräche vor. Karriereplanung: Individuelle Laufbahn zur Hub-Leitung mit Qualifikationsschritten. Nachfolgeplanung für Schlüsselpositionen mit frühzeitiger Auswahl und geregelter Übergabe.",
+      "oldMatched": 6,
+      "expectedPoints": 8,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_4|VWL/BWL|1|c",
+    "field": "stichpunkte",
+    "before": "drei Ursachen;Nachholeffekte;expansive Geldpolitik;Lieferketten;Energiepreise;Ukrainekrieg",
+    "after": "1. eigenständige Ursache der hohen Inflation im betrachteten Zeitraum mit Wirkungszusammenhang erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Ursache der hohen Inflation im betrachteten Zeitraum mit Wirkungszusammenhang erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Ursache der hohen Inflation im betrachteten Zeitraum mit Wirkungszusammenhang erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Nachgeholter Konsum traf nach Corona auf begrenzte Kapazitäten und erhöhte Preise. Lieferkettenstörungen verknappten Vorprodukte. Der Energiepreisschock infolge des Ukrainekriegs verteuerte Herstellung und Transport und wurde teilweise in Verkaufspreisen weitergegeben.",
+      "oldMatched": 5,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_4|VWL/BWL|2|a",
+    "field": "stichpunkte",
+    "before": "zwei Chancen;EU-Binnenmarkt;keine Zölle;Euro;Marktzugang;zwei Risiken;Steuer/Verwaltung;Arbeitsrecht",
+    "after": "1. eigenständige Chance des eigenen belgischen Standorts beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Chance des eigenen belgischen Standorts beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);1. eigenständige Risiko des eigenen belgischen Standorts beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Risiko des eigenen belgischen Standorts beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Chancen: Ein Hub in Belgien verkürzt Stammkunden den Weg und erschließt Zusatzgeschäft. Euro-Zahlungen vermeiden Wechselkursschwankungen. Risiken: Zusätzliche steuerliche Registrierungen erhöhen den Verwaltungsaufwand. Abweichendes Arbeitsrecht kann höhere Personalkosten und andere Vertragsanforderungen verursachen.",
+      "oldMatched": 6,
+      "expectedPoints": 8,
+      "oldPoints": 6
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_4|VWL/BWL|2|b",
+    "field": "stichpunkte",
+    "before": "Schweiz kein EU-Mitglied;Zoll;abweichende Rechtsregeln;Bewilligungen;Schweizer Franken",
+    "after": "1. eigenständiger relevanter Unterschied Schweiz gegenüber Belgien erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger relevanter Unterschied Schweiz gegenüber Belgien erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger relevanter Unterschied Schweiz gegenüber Belgien erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "In der Schweiz gelten eigenständige nationale Steuer- und Unternehmensregeln statt der entsprechenden EU-Harmonisierung Belgiens; das erhöht Prüfaufwand. Beim grenzüberschreitenden Personaleinsatz können andere Melde- oder Bewilligungspflichten greifen. Der Franken verursacht im Gegensatz zum belgischen Euro Wechselkursrisiken.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_4|VWL/BWL|4|a",
+    "field": "stichpunkte",
+    "before": "drei Ursachen;Demografie;Arbeitszeit;Studium statt Ausbildung;internationaler Wettbewerb",
+    "after": "1. eigenständige Ursache des Fachkräftemangels mit Zusammenhang beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Ursache des Fachkräftemangels mit Zusammenhang beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige Ursache des Fachkräftemangels mit Zusammenhang beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Geburtenstarke Jahrgänge scheiden aus, während weniger Nachwuchs folgt. Kürzere Arbeitszeiten und früherer Ruhestand verringern das Arbeitsvolumen. Weniger Bewerber für duale Ausbildungen erschweren speziell die Besetzung beruflich qualifizierter Tätigkeiten.",
+      "oldMatched": 4,
+      "expectedPoints": 6,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_4|VWL/BWL|4|b",
+    "field": "stichpunkte",
+    "before": "drei Maßnahmen;Employer Branding;flexible Arbeit;ältere Beschäftigte;Ausbildung/Weiterbildung;Auslandsrekrutierung",
+    "after": "1. eigenständige personalpolitische Maßnahme gegen Fachkräftemangel mit Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige personalpolitische Maßnahme gegen Fachkräftemangel mit Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständige personalpolitische Maßnahme gegen Fachkräftemangel mit Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Employer Branding macht konkrete Arbeitgebervorteile nach außen sichtbar und erhöht passende Bewerbungen. Flexible Arbeitsmodelle ermöglichen zusätzlichen Bewerbergruppen die Beschäftigung. Altersgerechte Arbeitsplätze und Einsatzplanung halten erfahrene Fachkräfte länger einsatzfähig.",
+      "oldMatched": 4,
+      "expectedPoints": 9,
+      "oldPoints": 6
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_4|VWL/BWL|6|a",
+    "field": "stichpunkte",
+    "before": "vier Gründe;Marktzugang;Ressourcen bündeln;Portfolio;Risikoteilung;Synergien;Innovation;Kosten",
+    "after": "1. eigenständiger Grund für eine Kooperationsstrategie mit Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständiger Grund für eine Kooperationsstrategie mit Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);3. eigenständiger Grund für eine Kooperationsstrategie mit Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);4. eigenständiger Grund für eine Kooperationsstrategie mit Wirkung für Circle Harbor erläutert (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Vertriebspartner eröffnen neue Märkte. Geteilte Werkstätten bündeln Ressourcen. Ergänzende Ladeleistungen erweitern das Portfolio. Geteilte Entwicklungsrisiken begrenzen die finanzielle Belastung einzelner Partner.",
+      "oldMatched": 5,
+      "expectedPoints": 8,
+      "oldPoints": 5
+    }
+  },
+  {
+    "key": "WQ_VWL_SIM_4|VWL/BWL|6|b",
+    "field": "stichpunkte",
+    "before": "zwei Risiken;Kommunikation;Interessenkonflikte;Abhängigkeit;Komplexität",
+    "after": "1. eigenständige Risiko einer Unternehmenskooperation beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen);2. eigenständige Risiko einer Unternehmenskooperation beschrieben (andere fachlich passende Alternativen anerkennen, denselben Inhalt nicht mehrfach zählen)",
+    "evidence": {
+      "answer": "Unterschiedliche IT und unklare Zuständigkeiten führen zu Kommunikationsfehlern und Lieferverzögerungen. Widersprüchliche Qualitäts- und Kostenziele können gemeinsame Entscheidungen blockieren.",
+      "oldMatched": 3,
+      "expectedPoints": 4,
+      "oldPoints": 2
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_1|Unternehmensführung|2|d",
+    "field": "stichpunkte",
+    "before": "Umweltmanagementsystem; Energiemanagementsystem; Arbeitsschutzmanagementsystem; Sicherheit und Gesundheit bei der Arbeit",
+    "after": "1. eigenständiges zusätzlich zum Qualitätsmanagement integrierbares Managementsystem genannt;2. eigenständiges zusätzlich zum Qualitätsmanagement integrierbares Managementsystem genannt;3. eigenständiges zusätzlich zum Qualitätsmanagement integrierbares Managementsystem genannt",
+    "evidence": {
+      "answer": "Arbeitsschutzmanagement: Management für Sicherheit und Gesundheit bei der Arbeit.",
+      "oldMatched": 2,
+      "expectedPoints": 1,
+      "oldPoints": 2
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|2|c",
+    "field": "stichpunkte",
+    "before": "je zwei;Stärken Kundenbindung/Regionalität/Technik;Schwächen Modellpalette/Begrenzung/Personal;Chancen Cargo/Flotte/Zielgruppen;Risiken City-E-Bike-Nachfrage/Fachhandel/Fachkräfte",
+    "after": "1. eigenständige fachlich und fallbezogen zutreffende Stärke in der richtigen SWOT-Kategorie dargestellt;2. eigenständige fachlich und fallbezogen zutreffende Stärke in der richtigen SWOT-Kategorie dargestellt;1. eigenständige fachlich und fallbezogen zutreffende Schwäche in der richtigen SWOT-Kategorie dargestellt;2. eigenständige fachlich und fallbezogen zutreffende Schwäche in der richtigen SWOT-Kategorie dargestellt;1. eigenständige fachlich und fallbezogen zutreffende Chance in der richtigen SWOT-Kategorie dargestellt;2. eigenständige fachlich und fallbezogen zutreffende Chance in der richtigen SWOT-Kategorie dargestellt;1. eigenständige fachlich und fallbezogen zutreffende Risiko in der richtigen SWOT-Kategorie dargestellt;2. eigenständige fachlich und fallbezogen zutreffende Risiko in der richtigen SWOT-Kategorie dargestellt",
+    "evidence": {
+      "answer": "Stärke: hohe Kundenbindung. Schwäche: schmale Modellpalette. Chance: zusätzliche Flottenkunden erschließen. Risiko: sinkende Nachfrage nach City-E-Bikes.",
+      "oldMatched": 4,
+      "expectedPoints": 4,
+      "oldPoints": 6
+    }
+  },
+  {
+    "key": "WQ_UF_SIM_3|Unternehmensführung|5|a",
+    "field": "stichpunkte",
+    "before": "je fünf Vorteile;Unternehmen Qualifikation/Fachkräfte/Bindung/Wettbewerb/Unabhängigkeit;Mitarbeitende Potenzial/Aufgaben/Karriere/Sicherheit/Arbeitsmarkt",
+    "after": "1. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht des Unternehmens genannt;2. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht des Unternehmens genannt;3. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht des Unternehmens genannt;4. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht des Unternehmens genannt;5. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht des Unternehmens genannt;1. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht der Mitarbeitenden genannt;2. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht der Mitarbeitenden genannt;3. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht der Mitarbeitenden genannt;4. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht der Mitarbeitenden genannt;5. eigenständiger zutreffender Vorteil der Personalentwicklung aus Sicht der Mitarbeitenden genannt",
+    "evidence": {
+      "answer": "Vorteile für das Unternehmen: bessere Qualifikation, Fachkräfte sichern, Beschäftigte binden, Wettbewerbsfähigkeit erhöhen und geringere Abhängigkeit vom externen Arbeitsmarkt.",
+      "oldMatched": 1,
+      "expectedPoints": 5,
+      "oldPoints": 3
+    }
+  }
+]

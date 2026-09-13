@@ -1,0 +1,182 @@
+[
+  {
+    "key": "WQ_RS_SIM_4|Recht und Steuern|4|c",
+    "field": "musterloesung",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Für die hier erst erwogene UWG-Klage ist aufgrund der Zuständigkeitskonzentration nach § 24 Abs. 1 Nr. 2 JuZuVO NRW das Landgericht Bochum zuständig. Essen gehört zum OLG-Bezirk Hamm. Die ursprüngliche Angabe Landgericht Essen ist deshalb zu berichtigen."
+  },
+  {
+    "key": "WQ_RS_SIM_4|Recht und Steuern|4|c",
+    "field": "stichpunkte",
+    "before": "Landgericht Essen",
+    "after": "Landgericht Bochum aufgrund § 24 Abs. 1 Nr. 2 JuZuVO NRW"
+  },
+  {
+    "key": "WQ_RS_SIM_3|Recht und Steuern|5|b",
+    "field": "musterloesung",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Die Sondervorauszahlung wird bei monatlicher Voranmeldung grundsätzlich einmal für das Kalenderjahr angemeldet und entrichtet, nicht jeden Monat. Ihre Höhe beträgt grundsätzlich ein Elftel der maßgeblichen Vorjahresvorauszahlungen (§§ 47, 48 UStDV). Die frühere Formulierung „monatliche Sondervorauszahlung“ bezeichnet die Zahlungsperiodizität unzutreffend."
+  },
+  {
+    "key": "WQ_RS_SIM_2|Recht und Steuern|3|d",
+    "field": "stichpunkte",
+    "before": "sechs Monate ohne gleiche Krankheit",
+    "after": "sechs Monate ohne Arbeitsunfähigkeit wegen derselben Krankheit"
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|3|a",
+    "field": "stichpunkte",
+    "before": "ESG umfasst Umwelt soziale und Unternehmensziele",
+    "after": "ESG umfasst Umwelt, Soziales und Unternehmensführung (Governance)"
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|6|b",
+    "field": "musterloesung",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Die übernehmende Circle Harbor GmbH behält bei der hier beschriebenen Übernahme grundsätzlich ihre eigene rechtliche und wirtschaftliche Selbstständigkeit und erlangt den maßgeblichen Einfluss auf das Zielunternehmen. Ein Verlust der Selbstständigkeit auch des Erwerbers ist dem Fall nicht zu entnehmen."
+  },
+  {
+    "key": "WQ_VWL_SIM_1|VWL/BWL|6|b",
+    "field": "stichpunkte",
+    "before": "Mutterunternehmen trifft wesentliche Entscheidungen",
+    "after": "Mutterunternehmen trifft wesentliche Entscheidungen und bleibt selbst grundsätzlich rechtlich und wirtschaftlich selbstständig"
+  },
+  {
+    "key": "WQ_REWE_SIM_3|Rechnungswesen|5|c",
+    "field": "stichpunkte",
+    "before": "Absatzpreis",
+    "after": "Absatzpreis nur bei nachgewiesenem Zusammenhang mit der Kostenverursachung"
+  },
+  {
+    "key": "WQ_REWE_SIM_4|Rechnungswesen|4|",
+    "field": "situation",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Die Mengenunterschiede entstehen ausschließlich durch Bestandsmehrungen; Ausschuss oder Schwund treten nicht auf. Jedes verkaufte Stück durchläuft jede Stufe einmal."
+  },
+  {
+    "key": "WQ_REWE_SIM_4|Rechnungswesen|3|a",
+    "field": "situation",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Die produzierten Mengen werden im jeweiligen Monat vollständig verkauft; der Stückverkaufspreis ist in beiden Monaten gleich."
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A1|1|a",
+    "field": "hauptsituation",
+    "before": "Verschuldungsgrad 1,7",
+    "after": "Verschuldungsgrad rund 1,86"
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|1|a",
+    "field": "hauptsituation",
+    "before": "Verschuldungsgrad: 1,7",
+    "after": "Verschuldungsgrad: rund 1,86"
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|2|a",
+    "field": "situation",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Für Aufgabe 2 gelten ausschließlich die nachstehenden gesonderten Kennzahlengrundlagen; sie ersetzen für diese Berechnungen die allgemeinen Kennzahlen der Hauptsituation."
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|3|c",
+    "field": "frage",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Verwenden Sie folgende Vorzeichenkonvention: Verbrauchsabweichung = Sollkosten − Istkosten; Beschäftigungsabweichung = verrechnete Plankosten − Sollkosten."
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|3|b",
+    "field": "frage",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Verwenden Sie folgende Vorzeichenkonvention: Verbrauchsabweichung = Sollkosten − Istkosten; Beschäftigungsabweichung = verrechnete Plankosten − Sollkosten."
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|6|a",
+    "field": "musterloesung",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Die gewichteten Einzelbeiträge lauten tabellarisch (Bewertung × Gewicht):\nKriterium | Gewicht | A | B | C\nLieferzeit | 40 % | 1,60 | 1,60 | 2,00\nZuverlässigkeit | 25 % | 1,00 | 1,25 | 1,00\nFlexibilität | 20 % | 1,00 | 0,80 | 0,80\nService | 15 % | 0,60 | 0,45 | 0,60\nSumme | 100 % | 4,20 | 4,10 | 4,40\nGewichtsherleitung: z + 1,6z = 0,65 ergibt z = 0,25 und Lieferzeit 0,40. s + (s + 0,05) = 0,35 ergibt Service 0,15 und Flexibilität 0,20."
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|6|a",
+    "field": "stichpunkte",
+    "before": "Gewichte 40/25/20/15",
+    "after": "Gewichte 40/25/20/15 mit tabellarischen gewichteten Einzelbeiträgen"
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|3|a",
+    "field": "musterloesung",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Mit x als Beschäftigung in Stunden lautet die dimensionsrichtige Kostenfunktion K(x) = 36.708 € + (42 €/Std.) × x."
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|3|a",
+    "field": "musterloesung",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Mit x als Beschäftigung in Stunden lautet die dimensionsrichtige Kostenfunktion K(x) = 106.200 € + (56,50 €/Std.) × x."
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|2|b",
+    "field": "musterloesung",
+    "before": "",
+    "after": "\n\nAudit-Richtigstellung vom 13.09.2026: Die oben genannten Gesamtsummen sind Näherungswerte aus gerundeten gleichbleibenden Raten. Bei Fortführung der in Teilaufgabe a korrigierten Schlussrate beträgt die Gesamtzahlung ohne Tilgungsaussetzung 4 × 436.710 € + 436.705,46 € = 2.183.545,46 €. Ohne vorzeitige Rundung ergeben sich jährliche Annuitäten von 436.709,1428 € für fünf Jahre bzw. 538.054,0904 € für vier Jahre. Damit betragen die rechnerischen Gesamtzahlungen rund 2.183.545,71 € bzw. einschließlich des Zinsjahres 2.212.216,36 €. Bei einem centgenauen Zahlungsplan wird jeweils die Schlussrate ausgeglichen. Die Entscheidung gegen die Tilgungsaussetzung bleibt unverändert."
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|2|a",
+    "field": "stichpunkte",
+    "before": "solide Finanzierung",
+    "after": "Eigenkapitalpuffer von 40 % mit Branchen- und Zeitvergleich bewerten"
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|2|b",
+    "field": "stichpunkte",
+    "before": "attraktive Verzinsung",
+    "after": "Attraktivität der 14,40 % abhängig von Risiko und Eigentümeranforderungen"
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|2|d",
+    "field": "stichpunkte",
+    "before": "Überliquidität",
+    "after": "Überliquidität ohne zeitlichen Liquiditätsplan nicht bewiesen"
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|2|e",
+    "field": "stichpunkte",
+    "before": "akzeptabler Bereich",
+    "after": "140 % rechnerische Deckung bei einbringlichen Forderungen und passender Fälligkeit"
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|2|g",
+    "field": "stichpunkte",
+    "before": "angemessen",
+    "after": "Angemessenheit anhand vereinbarter Zahlungsziele beurteilen"
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|7|b",
+    "field": "stichpunkte",
+    "before": "Anzeige nach fünf Tagen rechtzeitig",
+    "after": "Anzeige nach fünf Tagen bei äußerlich nicht erkennbarer Fehlmenge rechtzeitig"
+  },
+  {
+    "key": "HQ_SIM_2|HQ_A2|7|b",
+    "field": "stichpunkte",
+    "before": "beauftragte Spedition haftet/abwickelt",
+    "after": "beauftragte Spedition als Vertragspartner, Obhutshaftung bei Frachtführerpflichten, sonst § 461 HGB prüfen"
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|2|a",
+    "field": "stichpunkte",
+    "before": "Annuität 436.710",
+    "after": "Annuität 436.709,14 € oder nachvollziehbar gerundet 436.710 € mit angepasster Schlussrate"
+  },
+  {
+    "key": "HQ_SIM_3|HQ_A2|2|b",
+    "field": "stichpunkte",
+    "before": "ohne Aussetzung 2.183.550",
+    "after": "ohne Aussetzung 2.183.545,46 € bei Fortführung der Schlussrate aus a, 2.183.550 € nur grobe Näherung"
+  },
+  {
+    "key": "HQ_SIM_1|HQ_A2|8|b",
+    "field": "stichpunkte",
+    "before": "Bestellung in zwei Wochen",
+    "after": "Bestellung in zwei Wochen bei 50 Verbrauchswochen oder rund 2,12 Wochen bei 52 Wochen mit offengelegter Annahme"
+  }
+]

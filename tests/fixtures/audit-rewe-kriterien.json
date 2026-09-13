@@ -1,0 +1,38 @@
+[
+  {
+    "key": "WQ_REWE_SIM_1|Rechnungswesen|2|a",
+    "field": "stichpunkte",
+    "before": "Spende soziale Einrichtung;\r\nErträge aus Wertpapierverkauf;\r\nSchadensfall;\r\nVerkauf Firmenfahrzeug über Buchwert;\r\nNachzahlung aus Vorperiode;\r\nSteuererstattung Vorperiode",
+    "after": "Ein geeignetes Beispiel für betriebsfremden Aufwand, etwa eine Spende an eine soziale Einrichtung oder ein anderes fachlich passendes Beispiel;Ein geeignetes Beispiel für betriebsfremden Ertrag, etwa Ertrag aus einer betriebsfremden Vermietung oder Wertpapierverkauf oder ein anderes fachlich passendes Beispiel;Ein geeignetes Beispiel für außergewöhnlichen neutralen Aufwand in der KLR, etwa ein außergewöhnlicher nicht durch normale Kostenverrechnung erfasster Brandschaden oder ein anderes fachlich passendes Beispiel;Ein geeignetes Beispiel für außergewöhnlichen neutralen Ertrag in der KLR, etwa Mehrerlös beim Verkauf eines Betriebsfahrzeugs über Buchwert oder ein anderes fachlich passendes Beispiel;Ein geeignetes Beispiel für periodenfremden Aufwand, etwa eine erst jetzt als Aufwand erfasste Nachzahlung für eine Vorperiode oder ein anderes fachlich passendes Beispiel, wobei bloß spätere Zahlung einer bereits erfassten Verbindlichkeit nicht genügt;Ein geeignetes Beispiel für periodenfremden Ertrag, etwa eine erst jetzt ertragswirksam erfasste Steuererstattung für eine Vorperiode oder ein anderes fachlich passendes Beispiel",
+    "evidence": {
+      "answer": "Betriebsfremder Ertrag etwa aus betriebsfremder Vermietung, die fünf anderen Kategorien mit passenden Beispielen.",
+      "oldMatched": 5,
+      "oldPoints": 10,
+      "expectedPoints": 12
+    }
+  },
+  {
+    "key": "WQ_REWE_SIM_1|Rechnungswesen|4|c",
+    "field": "stichpunkte",
+    "before": "Einzelkosten getrennt erfassen;Kostenarten oder Kostenartenrechnung berücksichtigen;Kostenstellenrechnung vorhanden;Gemeinkosten verursachungsgerecht verteilen;unterschiedliche Zuschlagssätze bilden;Material Fertigung Verwaltung Vertrieb getrennt betrachten",
+    "after": "Eine erste fachlich geeignete Voraussetzung der differenzierenden Zuschlagskalkulation beschrieben, etwa getrennte Erfassung der Einzelkosten nach Kostenarten oder verursachungsgerechte Zuordnung der Gemeinkosten zu Kostenstellen;Eine zweite von der ersten unabhängige fachlich geeignete Voraussetzung der differenzierenden Zuschlagskalkulation beschrieben, etwa getrennte Erfassung der Einzelkosten nach Kostenarten oder verursachungsgerechte Zuordnung der Gemeinkosten zu Kostenstellen, wobei bloße Umformulierungen derselben Voraussetzung nicht nochmals zählen",
+    "evidence": {
+      "answer": "Einzelkosten getrennt erfassen und Gemeinkosten verursachungsgerecht über Kostenstellen verteilen, beide Voraussetzungen beschrieben.",
+      "oldMatched": 5,
+      "oldPoints": 3,
+      "expectedPoints": 4
+    }
+  },
+  {
+    "key": "WQ_REWE_SIM_3|Rechnungswesen|5|c",
+    "field": "stichpunkte",
+    "before": "zwei Kriterien;Materialeinsatz;Fertigungszeit;Prozessschritte;Absatzpreis nur bei nachgewiesenem Zusammenhang mit der Kostenverursachung",
+    "after": "Ein erstes fachlich geeignetes Kriterium zur Bildung von Äquivalenzziffern genannt, etwa Materialeinsatz oder Länge oder Fertigungszeit oder Anzahl der Prozessschritte, Absatzpreis nur bei nachgewiesenem Zusammenhang mit der Kostenverursachung;Ein zweites vom ersten unabhängiges fachlich geeignetes Kriterium zur Bildung von Äquivalenzziffern genannt, etwa Materialeinsatz oder Länge oder Fertigungszeit oder Anzahl der Prozessschritte, Absatzpreis nur bei nachgewiesenem Zusammenhang mit der Kostenverursachung",
+    "evidence": {
+      "answer": "Materialeinsatz und Fertigungszeit.",
+      "oldMatched": 3,
+      "oldPoints": 1,
+      "expectedPoints": 2
+    }
+  }
+]
