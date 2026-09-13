@@ -432,6 +432,10 @@ const bewertungText = bereinigeBewertungText(
 
       setzeStatus("Auswertung abgeschlossen und Lernstand gespeichert.");
 
+      if (typeof window.trainerNochNieNachAuswertungRefresh === "function") {
+        await window.trainerNochNieNachAuswertungRefresh();
+      }
+
       if (wiederholungsKontext) {
         await zeigeWiederholungsNavigation();
         sperreAbgeschlossenenWiederholungsversuch();

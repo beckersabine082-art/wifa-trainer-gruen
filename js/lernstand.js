@@ -132,6 +132,11 @@ async function loadAttempts(user) {
     .filter(attempt => attempt.modul === MODULE_ID && attempt.userId === user.uid);
 }
 
+export async function loadAttemptsForCurrentUser(user = currentVerifiedUser()) {
+  if (!user || !user.uid) return [];
+  return loadAttempts(user);
+}
+
 function latestAttempts(attempts) {
   const latest = new Map();
   attempts.forEach(attempt => {
@@ -658,6 +663,7 @@ export async function ladeFehleranalyse() {
 }
 
 window.speichereWifaAttempt = speichereWifaAttempt;
+window.loadAttemptsForCurrentUser = loadAttemptsForCurrentUser;
 window.ladeWifaLernstand = ladeWifaLernstand;
 window.ladeLernstand = ladeWifaLernstand;
 window.ladeFehleranalyse = ladeFehleranalyse;

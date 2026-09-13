@@ -270,3 +270,99 @@ test('shuffle activation loads one topic pool and starts with a single unseen qu
   assert.equal(context.trainerShuffleHistory.length, 1);
   assert.equal(context.trainerShuffleAktiv, true);
 });
+
+test('never-answered selection ignores opened or unsubmitted answers and respects stored attempts across sessions', async () => {
+  const { context } = loadTrainerWithQuestions();
+  const questions = [
+    { id: 'Q1', frage: 'Erste Frage', thema: 'Vertrag' },
+    { id: 'Q2', frage: 'Zweite Frage', thema: 'Vertrag' },
+    { id: 'Q3', frage: 'Dritte Frage', thema: 'Vertrag' }
+  ];
+
+  const attempts = [
+    { questionKey: 'wifa-trainer::WQ::Recht::Vertrag::Q2', frageId: 'Q2', fach: 'Recht', thema: 'Vertrag', bereich: 'WQ' },
+    { questionKey: 'wifa-trainer::WQ::Recht::Vertrag::Q3', frageId: 'Q3', fach: 'Recht', thema: 'Vertrag', bereich: 'WQ', timestamp: { toMillis: () => 5000 } }
+  ];
+
+  const candidate = context.filtereNochNieBeantworteteFragen
+    ? context.filtereNochNieBeantworteteFragen(questions, attempts)
+    : null;
+
+  assert.deepEqual(candidate.map(item => item.id), ['Q1']);
+
+  const answeredKey = context.baueFrageKey
+    ? context.baueFrageKey({ bereich: 'WQ', fach: 'Recht', thema: 'Vertrag', frageId: 'Q2' })
+    : 'wifa-trainer::WQ::Recht::Vertrag::Q2';
+  assert.equal(answeredKey.endsWith('Q2'), true);
+});
+
+test('shuffle never-answered flow loads a new question and adds it to seenIds/history without duplication', async () => {
+  const { context } = loadTrainerWithQuestions();
+  const questions = [
+    { id: 'Q1', frage: 'Frage 1', thema: 'Vertrag' },
+    { id: 'Q2', frage: 'Frage 2', thema: 'Vertrag' },
+    { id: 'Q3', frage: 'Frage 3', thema: 'Vertrag' }
+  ];
+
+  context.aktuellesFach = 'Recht';
+  context.aktuellesThema = 'Vertrag';
+  context.aktuellerTeilbereich = 'WQ';
+  context.trainerShuffleAktiv = true;
+  context.trainerShuffleSeenIds = new Set(['Q1', 'Q2']);
+  context.trainerShuffleHistory = ['Q1', 'Q2'];
+  context.trainerShuffleHistoryIndex = 1;
+  context.trainerFragenVerlauf = ['Q1', 'Q2'];
+  context.trainerVerlaufIndex = 1;
+  context.zeigeGeladeneFrage = function(daten) {
+    context.aktuelleFrageId = String(daten.id || '');
+    context.aktuelleFrage = String(daten.frage || '');
+  };
+  context.window = context;
+  context.alert = function() {};
+
+  context.window.loadAttemptsForCurrentUser = async () => [{ questionKey: 'wifa-trainer::WQ::Recht::Vertrag::Q1' }, { questionKey: 'wifa-trainer::WQ::Recht::Vertrag::Q2' }];
+  context.window.apiGet = async (action, params) => {
+    if (action === 'questionsForTopic') return { success: true, data: questions };
+    return { success: true, data: null };
+  };
+
+  const result = await context.trainerNochNieBeantwortet();
+
+  assert.equal(result, true);
+  assert.equal(context.aktuelleFrageId, 'Q3');
+  assert.equal(context.trainerShuffleSeenIds.has('Q3'), true);
+  assert.equal(context.trainerShuffleHistory.includes('Q3'), true);
+  assert.equal(context.trainerShuffleHistory.filter(id => id === 'Q3').length, 1);
+});
+
+test('no unanswered question shows the completion message', async () => {
+  const { context } = loadTrainerWithQuestions();
+  const questions = [
+    { id: 'Q1', frage: 'Frage 1', thema: 'Vertrag' },
+    { id: 'Q2', frage: 'Frage 2', thema: 'Vertrag' }
+  ];
+
+  context.aktuellesFach = 'Recht';
+  context.aktuellesThema = 'Vertrag';
+  context.aktuellerTeilbereich = 'WQ';
+  context.window = context;
+  context.window.loadAttemptsForCurrentUser = async () => [
+    { questionKey: 'wifa-trainer::WQ::Recht::Vertrag::Q1' },
+    { questionKey: 'wifa-trainer::WQ::Recht::Vertrag::Q2' }
+  ];
+  context.window.apiGet = async (action, params) => {
+    if (action === 'questionsForTopic') return { success: true, data: questions };
+    return { success: true, data: null };
+  };
+  context.alert = function(message) {
+    context.lastAlert = message;
+  };
+  context.setzeAppBeschaeftigt = function() {};
+  context.setzeStatus = function() {};
+  context.zeigeGeladeneFrage = function() {};
+
+  const result = await context.trainerNochNieBeantwortet();
+
+  assert.equal(result, false);
+  assert.match(context.lastAlert, /Du hast alle Fragen dieses Themas mindestens einmal beantwortet/);
+});
