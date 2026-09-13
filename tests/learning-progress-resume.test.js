@@ -446,3 +446,86 @@ test('shuffle navigation still does not persist progress while the shuffle flag 
   assert.equal(result, false);
   assert.equal(posted, false);
 });
+
+test('lernstand loads from topic counts without questionsForTopic requests', async () => {
+  const source = fs.readFileSync(path.join(__dirname, '../js/lernstand.js'), 'utf8').replace(/^import[\s\S]*?;\s*/gm, '').replace(/^export /gm, '');
+  const stripped = source
+    .replace(/^import\s+.*?;\s*$/gm, '')
+    .replace(/^import\s+\{[^}]*\}\s+from\s+['"][^'"]+['"];?\s*$/gm, '');
+
+  const elements = new Map();
+  const makeElement = (id) => ({
+    id,
+    textContent: '',
+    innerHTML: '',
+    hidden: false,
+    dataset: {},
+    style: {},
+    classList: { add() {}, remove() {}, contains() { return false; } },
+    setAttribute() {},
+    addEventListener() {},
+    querySelector() { return null; },
+    querySelectorAll() { return []; },
+    getContext() { return { fillRect() {} }; },
+    appendChild() {},
+    replaceChildren() {},
+    focus() {}
+  });
+
+  const context = {
+    console,
+    setTimeout,
+    // DOM rendering is covered by lernstand-browser.test.cjs; these tests cover data loading.
+    mountSubjectAccordion: () => ({destroy() {}}),
+    auth: { currentUser: { uid: 'u-1', emailVerified: true } },
+    db: {},
+    collection: () => ({}) ,
+    doc: () => ({ id: 'attempt-1' }),
+    getDocs: async () => ({ docs: [] }),
+    setDoc: async () => {},
+    serverTimestamp: () => ({ toDate: () => new Date() }),
+    query: () => ({ type: 'query' }),
+    orderBy: () => 'orderBy',
+    buildQuestionKey: ({ bereich, fach, thema, frageId }) => `${bereich}|${fach}|${thema}|${frageId}`,
+    countAttemptedQuestions: () => new Map(),
+    summarizeQuestionCatalog: () => ({ header: '0 Fragen offen', emptyText: 'Keine offenen Fragen.' }),
+    summarizeTopicQuestions: () => ({})
+  };
+
+  context.document = {
+    querySelector: () => null,
+    querySelectorAll: () => [],
+    getElementById(id) {
+      if (!elements.has(id)) elements.set(id, makeElement(id));
+      return elements.get(id);
+    }
+  };
+  context.window = context;
+  context.faecherNachTeilbereich = { WQ: ['Recht'] };
+  const requestActions = [];
+  context.apiGet = async (action, params = {}) => {
+    if (typeof requestActions !== 'undefined') requestActions.push(action);
+    if (action === 'topics') {
+      return { success: true, data: [{ thema: 'Vertrag', anzahl: 1 }, { thema: 'Schuldrecht', anzahl: 1 }] };
+    }
+    if (action === 'questionsForTopic') {
+      if (params.thema === 'Vertrag') {
+        throw new Error('Failed to fetch');
+      }
+      return { success: true, data: [{ id: 'q-100', frage: 'Frage 100', thema: params.thema, fach: params.fach }] };
+    }
+    return { success: true, data: null };
+  };
+
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../js/lernstand-progress.mjs'), 'utf8').replace(/export /g, ''), context);
+  vm.runInContext(stripped, context);
+  await context.window.ladeWifaLernstand();
+
+  assert.deepEqual(requestActions, ['topics']);
+  const status = elements.get('lernstandStatus');
+  const list = elements.get('lernstandListe');
+  assert.ok(status.textContent.includes('Lernversuche geladen') || status.textContent.includes('Noch keine Fragen bearbeitet'));
+  assert.ok(!status.textContent.includes('Lernstand konnte nicht geladen werden'));
+  assert.ok(list.innerHTML.includes('Noch nie beantwortete Fragen') || list.innerHTML.includes('Lernstand nach Fach'));
+});

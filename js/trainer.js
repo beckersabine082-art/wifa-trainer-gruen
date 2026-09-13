@@ -1,5 +1,7 @@
 function waehleTeilbereich() {
     if (appIstBeschaeftigt) return;
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
 
     ladeToken++;
     aktuellerTeilbereich = document.getElementById("teilbereichSelect").value;
@@ -54,6 +56,8 @@ function waehleTeilbereich() {
 
 function waehleFachAusDropdown() {
     if (appIstBeschaeftigt) return;
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
 
     const fach = document.getElementById("fachSelect").value;
 
@@ -104,6 +108,251 @@ let trainerTippFrageToken = 0;
 let trainerTippAngeboten = false;
 let trainerShuffleAktiv = false;
 let trainerProgressLoadToken = 0;
+
+// Topic-scoped unanswered mode, ported without the source workspace's shuffle/history changes.
+let trainerNochNieAktiv = false;
+let trainerNochNieHistory = [];
+let trainerNochNieHistoryIndex = -1;
+let trainerNochNiePool = [];
+const trainerFragenCache = new Map();
+
+function trainerNochNieResetState() {
+  trainerNochNieHistory = [];
+  trainerNochNieHistoryIndex = -1;
+  trainerNochNiePool = [];
+  trainerFragenCache.clear();
+  const button = document.getElementById("trainerUnansweredBtn");
+  if (button) { button.classList.remove("active", "disabled"); button.disabled = false; button.textContent = "Noch nie beantwortet"; }
+}
+
+function baueFrageKey({ bereich, fach, thema, frageId }) {
+  return ["wifa-trainer", String(bereich || "").trim(), String(fach || "").trim(), String(thema || "").trim(), String(frageId || "").trim()].join("::");
+}
+
+function filtereNochNieBeantworteteFragen(fragen, attempts) {
+  const currentFach = String(aktuellesFach || "").trim();
+  const currentThema = String(aktuellesThema || "").trim();
+  const currentBereich = String(aktuellerTeilbereich || ermittleTeilbereich(currentFach) || "").trim();
+  const answered = new Set();
+
+  (Array.isArray(attempts) ? attempts : []).forEach(function(attempt) {
+    if (!attempt) return;
+    const modul = String(attempt.modul || "").trim();
+    if (modul && modul !== "wifa-trainer") return;
+    if (String(attempt.fach || "").trim() !== currentFach) return;
+    if (String(attempt.thema || "").trim() !== currentThema) return;
+
+    const key = String(attempt.questionKey || "").trim()
+      || baueFrageKey({
+        bereich: String(attempt.bereich || currentBereich || "").trim(),
+        fach: String(attempt.fach || currentFach).trim(),
+        thema: String(attempt.thema || currentThema).trim(),
+        frageId: String(attempt.frageId || "").trim()
+      });
+
+    if (key) answered.add(key);
+  });
+
+  return (Array.isArray(fragen) ? fragen : []).filter(function(frage) {
+    const frageId = String(frage && frage.id ? frage.id : "").trim();
+    if (!frageId) return false;
+
+    const key = baueFrageKey({
+      bereich: currentBereich,
+      fach: currentFach,
+      thema: currentThema,
+      frageId
+    });
+
+    return !answered.has(key);
+  });
+}
+
+async function trainerNochNieFragenpoolLaden() {
+  if (!aktuellesFach || !aktuellesThema) {
+    trainerNochNiePool = [];
+    return [];
+  }
+
+  const result = await apiGet("questionsForTopic", { fach: aktuellesFach, thema: aktuellesThema });
+  if (!result || !result.success || !Array.isArray(result.data)) {
+    throw new Error("Themenpool konnte nicht geladen werden.");
+  }
+
+  trainerNochNiePool = result.data.map(function(frage, index) {
+    const frageId = String(frage && frage.id ? frage.id : "").trim();
+    const withPosition = { ...frage };
+    withPosition.fragePosition = index + 1;
+    withPosition.frageGesamt = result.data.length;
+    if (frageId) {
+      trainerFragenCache.set(frageId, withPosition);
+    }
+    return withPosition;
+  });
+
+  return trainerNochNiePool;
+}
+
+async function trainerNochNieOffeneFragen() {
+  const pool = trainerNochNiePool.length ? trainerNochNiePool : await trainerNochNieFragenpoolLaden();
+  if (!pool.length) return [];
+
+  const userId = aktuellerNutzerUid();
+  const attempts = userId && typeof window.loadAttemptsForCurrentUser === "function"
+    ? await window.loadAttemptsForCurrentUser({ uid: userId })
+    : [];
+
+  return filtereNochNieBeantworteteFragen(pool, attempts);
+}
+
+async function trainerNochNieAktualisiereButtonStatus() {
+  const button = document.getElementById("trainerUnansweredBtn");
+  if (!button) return;
+
+  if (trainerNochNieAktiv) {
+    button.classList.add("active");
+    button.classList.remove("disabled");
+    button.disabled = false;
+    button.textContent = "Noch nie beantwortet: AKTIV";
+    return;
+  }
+
+  const openQuestions = await trainerNochNieOffeneFragen();
+  if (!openQuestions.length) {
+    button.classList.remove("active");
+    button.classList.add("disabled");
+    button.disabled = true;
+    button.textContent = "Alle Fragen bereits einmal beantwortet";
+    return;
+  }
+
+  button.classList.remove("active");
+  button.classList.remove("disabled");
+  button.disabled = false;
+  button.textContent = "Noch nie beantwortet";
+}
+
+async function trainerNochNieBeantwortet() {
+  if (appIstBeschaeftigt) return false;
+
+  if (!aktuellerTeilbereich || !aktuellesFach || !aktuellesThema) {
+    alert("Bitte zuerst ein Fach und ein Thema auswählen.");
+    return false;
+  }
+
+  if (trainerNochNieAktiv) {
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
+
+    await trainerNochNieAktualisiereButtonStatus();
+    setzeStatus("Noch nie beantwortet deaktiviert – normale Kreisnavigation ist wieder aktiv.");
+    return true;
+  }
+
+  if (trainerShuffleAktiv) {
+    trainerShuffleAktiv = false;
+
+    const shuffleBtn = document.getElementById("trainerShuffleBtn");
+    if (shuffleBtn) {
+      shuffleBtn.classList.remove("active");
+      shuffleBtn.textContent = "Shuffle Mix";
+    }
+  }
+
+  const userId = aktuellerNutzerUid();
+  if (!userId) {
+    alert("Bitte melde dich an, um unbeantwortete Fragen zu laden.");
+    return false;
+  }
+
+  try {
+    setzeAppBeschaeftigt(true);
+    await trainerNochNieFragenpoolLaden();
+    const offeneFragen = await trainerNochNieOffeneFragen();
+
+    if (!offeneFragen.length) {
+      trainerNochNieAktiv = false;
+      trainerNochNieResetState();
+      await trainerNochNieAktualisiereButtonStatus();
+      alert("Du hast alle Fragen dieses Themas mindestens einmal beantwortet.");
+      return false;
+    }
+
+    const ersteFrage = offeneFragen[0];
+    const ersteFrageId = String(ersteFrage && ersteFrage.id ? ersteFrage.id : "").trim();
+    if (!ersteFrageId) {
+      throw new Error("Die erste unbeantwortete Frage konnte nicht bestimmt werden.");
+    }
+
+    trainerNochNieAktiv = true;
+    trainerNochNieHistory = [ersteFrageId];
+    trainerNochNieHistoryIndex = 0;
+
+
+    const geladeneFrage = trainerNochNiePool.find(function(frage) {
+      return String(frage && frage.id ? frage.id : "").trim() === ersteFrageId;
+    }) || ersteFrage;
+
+    if (geladeneFrage) {
+      zeigeGeladeneFrage(geladeneFrage, aktuellesThema, false, false);
+    }
+
+    await trainerNochNieAktualisiereButtonStatus();
+    setzeStatus("Noch nie beantwortet: AKTIV – nächste Frage wird in Themenreihenfolge gewählt.");
+    return true;
+  } catch (error) {
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
+    setzeStatus("Noch nie beantwortet konnte nicht geladen werden: " + (error.message || error));
+    return false;
+  } finally {
+    setzeAppBeschaeftigt(false);
+  }
+}
+
+async function trainerNochNieNaechsteFrage() {
+  if (!trainerNochNieAktiv) return null;
+
+  const offeneFragen = await trainerNochNieOffeneFragen();
+  if (!offeneFragen.length) {
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
+    await trainerNochNieAktualisiereButtonStatus();
+    alert("Du hast alle Fragen dieses Themas mindestens einmal beantwortet.");
+    return null;
+  }
+
+  const aktuelleId = String(aktuelleFrageId || "").trim();
+  const aktuelleIndex = offeneFragen.findIndex(function(frage) {
+    return String(frage && frage.id ? frage.id : "").trim() === aktuelleId;
+  });
+  const startIndex = aktuelleIndex >= 0 ? aktuelleIndex + 1 : 0;
+  const naechsteFrage = offeneFragen[startIndex] || offeneFragen[0];
+  const naechsteId = String(naechsteFrage && naechsteFrage.id ? naechsteFrage.id : "").trim();
+
+  if (!naechsteId) {
+    return null;
+  }
+
+  if (!trainerNochNieHistory.includes(naechsteId)) {
+    trainerNochNieHistory.push(naechsteId);
+  }
+  trainerNochNieHistoryIndex = trainerNochNieHistory.length - 1;
+
+
+  const frage = trainerFragenCache.get(naechsteId) || trainerNochNiePool.find(function(item) {
+    return String(item && item.id ? item.id : "").trim() === naechsteId;
+  }) || naechsteFrage;
+
+  if (frage) {
+    zeigeGeladeneFrage(frage, aktuellesThema, false, false);
+    setzeStatus("Noch nie beantwortet: nächste offene Frage geladen.");
+    return frage;
+  }
+
+  return null;
+}
+
 
 function trainerProgressSelectionMatches(fach, thema) {
   const expectedFach = String(fach || "").trim();
@@ -219,6 +468,8 @@ async function ladeTrainerFortschritt(fach, thema, requestToken = ++trainerProgr
 function trainerVonVorne() {
   const usageTicket = window.WifaUsage?.captureTicket();
   if (appIstBeschaeftigt) return;
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
   if (!aktuellesFach || !aktuellesThema) {
     alert("Bitte zuerst ein Fach und ein Thema auswählen.");
     return;
@@ -265,6 +516,8 @@ function trainerVonVorne() {
 }
 
 function trainerShuffleMix() {
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
   trainerShuffleAktiv = !trainerShuffleAktiv;
   const btn = document.getElementById("trainerShuffleBtn");
   if (btn) {
@@ -611,6 +864,8 @@ async function ladeThemen(fach) {
   }
 
 function waehleFach(fach) {
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
     aktuellesFach = String(fach || "").trim();
     aktuellesThema = "";
     aktuelleFrage = "";
@@ -820,6 +1075,8 @@ if (daten.themaAbgeschlossen) {
 async function starteThema() {
     const usageTicket = window.WifaUsage?.captureTicket();
     if (appIstBeschaeftigt) return;
+    trainerNochNieAktiv = false;
+    trainerNochNieResetState();
 
     const thema = document.getElementById("themaSelect").value;
 
@@ -866,6 +1123,11 @@ function naechsteFrage() {
       return;
     }
 
+    if (trainerNochNieAktiv) {
+      setzeAppBeschaeftigt(true);
+      trainerNochNieNaechsteFrage().catch(error => setzeStatus(error.message)).finally(() => setzeAppBeschaeftigt(false));
+      return;
+    }
     wiederholungsKontext = null;
     ladeFrageAusFach(aktuellesFach, aktuellesThema, aktuelleFrageId);
   }
@@ -959,3 +1221,5 @@ function oeffneWifaWiederholungsfrage(daten, kontext) {
 }
 
 window.oeffneWifaWiederholungsfrage = oeffneWifaWiederholungsfrage;
+
+window.trainerNochNieBeantwortet = trainerNochNieBeantwortet;
