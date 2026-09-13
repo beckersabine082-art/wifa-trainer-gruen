@@ -403,6 +403,15 @@ function doGet(e) {
         data: getFirstActiveQuestion(fach, thema)
       };
 
+    } else if (action === "questionsForTopic") {
+      const fach = String(e?.parameter?.fach || "").trim();
+      const thema = String(e?.parameter?.thema || "").trim();
+
+      result = {
+        success: true,
+        data: getQuestionsForTopic(fach, thema)
+      };
+
     } else if (action === "questionById") {
       const fach = String(e?.parameter?.fach || "").trim();
       const frageId = String(e?.parameter?.frageId || "").trim();
@@ -1056,6 +1065,26 @@ function getQuestionById(sheetName, questionId) {
     musterloesung: "",
     stichpunkte: ""
   };
+}
+
+function getQuestionsForTopic(sheetName, thema) {
+  const activeQuestions = getActiveQuestions(sheetName);
+  const gefilterteFragen = filterQuestionsByThema_(activeQuestions, thema);
+
+  return gefilterteFragen.map(function(frage) {
+    return {
+      row: frage.row,
+      id: frage.id,
+      thema: frage.thema,
+      frage: frage.frage,
+      musterloesung: frage.musterloesung,
+      stichpunkte: frage.stichpunkte,
+      fragetyp: frage.fragetyp,
+      aufgabenHtml: frage.aufgabenHtml,
+      loesungsschluessel: frage.loesungsschluessel,
+      bilddatei: frage.bilddatei
+    };
+  });
 }
 
 function getFirstActiveQuestion(sheetName, thema) {

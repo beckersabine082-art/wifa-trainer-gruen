@@ -112,6 +112,10 @@ let trainerFragenVerlauf = [];
 let trainerVerlaufIndex = -1;
 let trainerFragenCache = new Map();
 let trainerShuffleLadeToken = 0;
+let trainerShuffleSeenIds = new Set();
+let trainerShuffleHistory = [];
+let trainerShuffleHistoryIndex = -1;
+let trainerShufflePool = [];
 
 function trainerFrageImVerlaufRegistrieren(daten, aktualisiereIndex = true) {
   const frageId = String(daten && daten.id || "").trim();
@@ -133,9 +137,137 @@ function trainerFrageImVerlaufRegistrieren(daten, aktualisiereIndex = true) {
 
 function trainerAktualisiereVorherigeSchaltflaeche() {
   const button = document.getElementById("btnVorherigeFrage");
-  if (button) button.disabled = trainerShuffleAktiv
-    ? trainerFragenVerlauf.length === 0
-    : !aktuelleFrageId;
+  if (button) {
+    button.disabled = trainerShuffleAktiv
+      ? trainerShuffleHistory.length === 0 || trainerShuffleHistoryIndex <= 0
+      : !aktuelleFrageId;
+  }
+}
+
+function trainerShuffleResetState() {
+  trainerShuffleSeenIds = new Set();
+  trainerShuffleHistory = [];
+  trainerShuffleHistoryIndex = -1;
+  trainerShufflePool = [];
+  trainerFragenVerlauf = [];
+  trainerVerlaufIndex = -1;
+}
+
+function trainerShuffleAktualisiereVerlaufState() {
+  trainerFragenVerlauf = trainerShuffleHistory.slice();
+  trainerVerlaufIndex = trainerShuffleHistoryIndex;
+  trainerAktualisiereVorherigeSchaltflaeche();
+}
+
+async function trainerShufflePoolErstellen() {
+  const result = await apiGet("questionsForTopic", {
+    fach: aktuellesFach,
+    thema: aktuellesThema
+  });
+
+  if (!result || !result.success || !Array.isArray(result.data)) {
+    throw new Error("Themenpool konnte nicht geladen werden.");
+  }
+
+  const ids = [];
+  const bereitsGeladen = new Set();
+  const gesamt = result.data.length;
+
+  result.data.forEach(function(daten, index) {
+    const frageId = String(daten && daten.id || "").trim();
+    if (!frageId || bereitsGeladen.has(frageId)) {
+      return;
+    }
+
+    bereitsGeladen.add(frageId);
+    ids.push(frageId);
+
+    daten.fragePosition = index + 1;
+    daten.frageGesamt = gesamt;
+
+    trainerFragenCache.set(frageId, daten);
+  });
+
+  trainerShufflePool = ids;
+  return ids;
+}
+
+function trainerShuffleFreieFragen() {
+  return trainerShufflePool.filter(function(frageId) {
+    return !trainerShuffleSeenIds.has(frageId);
+  });
+}
+
+function trainerShuffleFrageLaden(frageId) {
+  const sichereId = String(frageId || "").trim();
+  if (!sichereId) {
+    return null;
+  }
+
+  const cacheFrage = trainerFragenCache.get(sichereId);
+  if (cacheFrage) {
+    zeigeGeladeneFrage(cacheFrage, aktuellesThema, false, false);
+    return cacheFrage;
+  }
+
+  return null;
+}
+
+function trainerShuffleNaechsteFrage() {
+  if (!trainerShuffleAktiv) {
+    return null;
+  }
+
+  if (trainerShuffleHistoryIndex >= 0 && trainerShuffleHistoryIndex < trainerShuffleHistory.length - 1) {
+    trainerShuffleHistory = trainerShuffleHistory.slice(0, trainerShuffleHistoryIndex + 1);
+    trainerShuffleHistoryIndex = trainerShuffleHistory.length - 1;
+    trainerShuffleAktualisiereVerlaufState();
+  }
+
+  const freieFragen = trainerShuffleFreieFragen();
+  if (!freieFragen.length) {
+    if (trainerShufflePool.length && trainerShuffleSeenIds.size >= trainerShufflePool.length) {
+      const erneutStarten = typeof window !== "undefined" && typeof window.confirm === "function"
+        ? window.confirm("Du hast alle Fragen dieses Themas einmal im Shuffle gesehen. Shuffle von vorne beginnen?")
+        : false;
+
+      if (erneutStarten) {
+        trainerShuffleSeenIds.clear();
+        trainerShuffleHistory = [];
+        trainerShuffleHistoryIndex = -1;
+        trainerShuffleAktualisiereVerlaufState();
+        return trainerShuffleNaechsteFrage();
+      }
+
+      setzeStatus("Shuffle läuft weiter mit der aktuellen Frage.");
+      return null;
+    }
+
+    setzeStatus("Im Shuffle sind keine weiteren Fragen mehr verfügbar.");
+    return null;
+  }
+
+  const naechsteId = freieFragen[Math.floor(Math.random() * freieFragen.length)];
+  trainerShuffleSeenIds.add(naechsteId);
+  trainerShuffleHistory.push(naechsteId);
+  trainerShuffleHistoryIndex = trainerShuffleHistory.length - 1;
+  trainerShuffleAktualisiereVerlaufState();
+  return trainerShuffleFrageLaden(naechsteId);
+}
+
+function trainerShuffleVorherigeFrage() {
+  if (!trainerShuffleAktiv || !trainerShuffleHistory.length) {
+    return null;
+  }
+
+  if (trainerShuffleHistoryIndex <= 0) {
+    return null;
+  }
+
+  trainerShuffleHistoryIndex = trainerShuffleHistoryIndex - 1;
+  trainerShuffleAktualisiereVerlaufState();
+  const frageId = trainerShuffleHistory[trainerShuffleHistoryIndex];
+  return trainerShuffleFrageLaden(frageId);
 }
 
 function trainerProgressSelectionMatches(fach, thema) {
@@ -301,14 +433,19 @@ function trainerVonVorne() {
 async function trainerShuffleMix() {
   if (appIstBeschaeftigt || !aktuellesFach || !aktuellesThema) return;
 
-  resetFrageAnzeige();
-  trainerShuffleAktiv = !trainerShuffleAktiv;
   const btn = document.getElementById("trainerShuffleBtn");
+  const aktivieren = !trainerShuffleAktiv;
+
+  resetFrageAnzeige();
+  trainerShuffleAktiv = aktivieren;
+
   if (btn) {
     btn.classList.toggle("active", trainerShuffleAktiv);
-    btn.textContent = trainerShuffleAktiv ? "Shuffle Mix: AN" : "Shuffle Mix";
+    btn.textContent = trainerShuffleAktiv ? "Shuffle Mix: AKTIV" : "Shuffle Mix";
   }
+
   if (!trainerShuffleAktiv) {
+    trainerShuffleResetState();
     trainerFragenVerlauf = aktuelleFrageId ? [aktuelleFrageId] : [];
     trainerVerlaufIndex = trainerFragenVerlauf.length ? 0 : -1;
     trainerAktualisiereVorherigeSchaltflaeche();
@@ -320,41 +457,51 @@ async function trainerShuffleMix() {
   try {
     setzeAppBeschaeftigt(true);
     setzeStatus("Shuffle-Reihenfolge wird vorbereitet...");
-    const fragen = [];
-    let currentId = "";
+    trainerShuffleResetState();
 
-    for (let index = 0; index < 500; index++) {
-      const result = await apiGet(index === 0 ? "firstQuestion" : "nextQuestion", index === 0
-        ? { fach: aktuellesFach, thema: aktuellesThema }
-        : { fach: aktuellesFach, thema: aktuellesThema, currentId: currentId });
-      if (eigenerToken !== trainerShuffleLadeToken) return;
-      if (!result || !result.success || !result.data || !result.data.id) break;
-      const daten = result.data;
-      fragen.push(daten);
-      trainerFragenCache.set(String(daten.id), daten);
-      currentId = String(daten.id);
+    const pool = await trainerShufflePoolErstellen();
+    if (eigenerToken !== trainerShuffleLadeToken) return;
+    if (!pool.length) {
+      throw new Error("Im aktuellen Thema wurden keine Fragen gefunden.");
     }
 
-    for (let index = fragen.length - 1; index > 0; index--) {
+    trainerShufflePool = pool.slice();
+    for (let index = trainerShufflePool.length - 1; index > 0; index--) {
       const zielIndex = Math.floor(Math.random() * (index + 1));
-      const temp = fragen[index];
-      fragen[index] = fragen[zielIndex];
-      fragen[zielIndex] = temp;
+      const temp = trainerShufflePool[index];
+      trainerShufflePool[index] = trainerShufflePool[zielIndex];
+      trainerShufflePool[zielIndex] = temp;
     }
 
-    trainerFragenVerlauf = fragen.map(function(daten) { return String(daten.id); });
-    trainerVerlaufIndex = Math.max(0, trainerFragenVerlauf.indexOf(aktuelleFrageId));
-    trainerAktualisiereVorherigeSchaltflaeche();
+    const startId = String(trainerShufflePool[0] || "").trim();
+    if (!startId) {
+      throw new Error("Shuffle-Startfrage konnte nicht bestimmt werden.");
+    }
+
+    trainerShuffleSeenIds = new Set([startId]);
+    trainerShuffleHistory = [startId];
+    trainerShuffleHistoryIndex = 0;
+    trainerShuffleAktualisiereVerlaufState();
+
+    const frage = trainerFragenCache.get(startId);
+    if (!frage) {
+      throw new Error("Shuffle-Frage konnte nicht geladen werden.");
+    }
+
+    zeigeGeladeneFrage(frage, aktuellesThema, false, false);
     setzeStatus("Shuffle Mix aktiv – dieser Verlauf bleibt nur in dieser Session lokal.");
   } catch (error) {
     trainerShuffleAktiv = false;
+    trainerShuffleResetState();
     if (btn) {
       btn.classList.remove("active");
       btn.textContent = "Shuffle Mix";
     }
-    setzeStatus("Shuffle-Reihenfolge konnte nicht geladen werden: " + error.message);
+    setzeStatus("Shuffle-Reihenfolge konnte nicht geladen werden: " + (error.message || error));
   } finally {
-    if (eigenerToken === trainerShuffleLadeToken) setzeAppBeschaeftigt(false);
+    if (eigenerToken === trainerShuffleLadeToken) {
+      setzeAppBeschaeftigt(false);
+    }
   }
 }
 
@@ -952,12 +1099,16 @@ function naechsteFrage() {
 
     wiederholungsKontext = null;
 
-    if (trainerShuffleAktiv && trainerVerlaufIndex >= 0 && trainerVerlaufIndex < trainerFragenVerlauf.length - 1) {
-      trainerVerlaufIndex++;
-      trainerAktualisiereVorherigeSchaltflaeche();
-      const shuffleFrage = trainerFragenCache.get(trainerFragenVerlauf[trainerVerlaufIndex]);
-      if (shuffleFrage) zeigeGeladeneFrage(shuffleFrage, aktuellesThema, false, false);
-      else setzeStatus("Shuffle-Frage konnte nicht geladen werden.");
+    if (trainerShuffleAktiv) {
+      if (trainerShuffleHistoryIndex >= 0 && trainerShuffleHistoryIndex < trainerShuffleHistory.length - 1) {
+        trainerShuffleHistory = trainerShuffleHistory.slice(0, trainerShuffleHistoryIndex + 1);
+        trainerShuffleHistoryIndex = trainerShuffleHistory.length - 1;
+      }
+
+      const shuffleFrage = trainerShuffleNaechsteFrage();
+      if (shuffleFrage) {
+        return;
+      }
       return;
     }
 
@@ -972,12 +1123,10 @@ function vorherigeFrage() {
   }
     wiederholungsKontext = null;
     if (trainerShuffleAktiv) {
-      if (!trainerFragenVerlauf.length) return;
-      trainerVerlaufIndex = (trainerVerlaufIndex - 1 + trainerFragenVerlauf.length) % trainerFragenVerlauf.length;
-      trainerAktualisiereVorherigeSchaltflaeche();
-      const shuffleFrage = trainerFragenCache.get(trainerFragenVerlauf[trainerVerlaufIndex]);
-      if (shuffleFrage) zeigeGeladeneFrage(shuffleFrage, aktuellesThema, false, false);
-      else setzeStatus("Shuffle-Frage konnte nicht geladen werden.");
+      const shuffleFrage = trainerShuffleVorherigeFrage();
+      if (shuffleFrage) {
+        return;
+      }
       return;
     }
 

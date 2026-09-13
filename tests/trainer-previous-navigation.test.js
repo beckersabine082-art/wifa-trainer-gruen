@@ -208,3 +208,65 @@ test('normal trainer navigates 34 to 33 to 32 and forward again without answers'
   state = trainerState(context);
   assert.equal(state.frageId, 'Q1');
 });
+
+test('shuffle keeps seenIds separate from history and rejects stale forward branches after backtracking', () => {
+  const { context } = loadTrainerWithQuestions();
+  context.trainerShuffleAktiv = true;
+  context.trainerShuffleSeenIds = new Set(['Q1', 'Q2', 'Q3', 'Q4']);
+  context.trainerShuffleHistory = ['Q1', 'Q2', 'Q3', 'Q4'];
+  context.trainerShuffleHistoryIndex = 3;
+  context.trainerFragenVerlauf = ['Q1', 'Q2', 'Q3', 'Q4'];
+  context.trainerVerlaufIndex = 3;
+  context.trainerShufflePool = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'];
+  context.trainerFragenCache = new Map([
+    ['Q1', { id: 'Q1', frage: 'Q1', thema: 'Vertrag' }],
+    ['Q2', { id: 'Q2', frage: 'Q2', thema: 'Vertrag' }],
+    ['Q3', { id: 'Q3', frage: 'Q3', thema: 'Vertrag' }],
+    ['Q4', { id: 'Q4', frage: 'Q4', thema: 'Vertrag' }],
+    ['Q5', { id: 'Q5', frage: 'Q5', thema: 'Vertrag' }],
+    ['Q6', { id: 'Q6', frage: 'Q6', thema: 'Vertrag' }]
+  ]);
+  context.aktuelleFrageId = 'Q4';
+  context.aktuellesThema = 'Vertrag';
+
+  context.trainerShuffleSeenIds = new Set(['Q1', 'Q2', 'Q3']);
+  context.trainerShuffleHistory = ['Q1', 'Q2', 'Q3'];
+  context.trainerShuffleHistoryIndex = 2;
+  context.trainerFragenVerlauf = ['Q1', 'Q2', 'Q3'];
+  context.trainerVerlaufIndex = 2;
+  context.aktuelleFrageId = 'Q3';
+
+  const afterBack = context.trainerShuffleNaechsteFrage();
+  assert.ok(afterBack);
+  assert.notEqual(afterBack.id, 'Q4');
+  assert.ok(context.trainerShuffleSeenIds.has(afterBack.id));
+  assert.ok(context.trainerShuffleHistory.includes(afterBack.id));
+  assert.equal(context.trainerShuffleHistory.length, 4);
+  assert.deepEqual(context.trainerShuffleHistory.slice(0, 3), ['Q1', 'Q2', 'Q3']);
+  assert.equal(context.trainerShuffleHistory[3], afterBack.id);
+});
+
+test('shuffle activation loads one topic pool and starts with a single unseen question', async () => {
+  const { context, questions } = loadTrainerWithQuestions();
+  const calls = [];
+
+  context.aktuellesFach = 'Recht';
+  context.aktuellesThema = 'Vertrag';
+  context.trainerShuffleAktiv = false;
+  context.apiGet = async (action, params) => {
+    calls.push({ action, params });
+    if (action === 'questionsForTopic') {
+      return { success: true, data: questions.map(question => ({ ...question, thema: 'Vertrag' })) };
+    }
+    return { success: true, data: null };
+  };
+
+  await context.trainerShuffleMix();
+
+  assert.equal(calls.filter(call => call.action === 'questionsForTopic').length, 1);
+  assert.equal(context.trainerShufflePool.length, 83);
+  assert.equal(new Set(context.trainerShufflePool).size, 83);
+  assert.equal(context.trainerShuffleSeenIds.size, 1);
+  assert.equal(context.trainerShuffleHistory.length, 1);
+  assert.equal(context.trainerShuffleAktiv, true);
+});
