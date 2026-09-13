@@ -2576,9 +2576,10 @@ select:focus {
   margin-bottom: 4px;
 }
 
-/* Staerkste Themen: neutrale Flaeche, gruener Akzent */
+/* Staerkste Themen: dezenter gruener Hintergrund, gruener Akzent */
 .lernstand-strong-card {
-  border-color: #cfe9d7;
+  background: #e3f4e8;
+  border-color: #b6ddc2;
   border-left-color: #2f7d4c;
 }
 
@@ -2586,9 +2587,10 @@ select:focus {
   background: linear-gradient(135deg, #4f9f68, #2f7d4c);
 }
 
-/* Wiederholen: neutrale Flaeche, warmer Akzent statt gruen */
+/* Wiederholen: dezenter orange/gelblicher Hintergrund, warmer Akzent statt gruen */
 .lernstand-repeat-card {
-  border-color: #ecd8ad;
+  background: #fbe8c8;
+  border-color: #ecc98a;
   border-left-color: #c97f1f;
 }
 
