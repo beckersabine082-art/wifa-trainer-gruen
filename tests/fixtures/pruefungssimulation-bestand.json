@@ -1,0 +1,3665 @@
+{
+  "stand": "2026-09-13",
+  "quelleSha256": "dfb96cc3ad1432f6b46d43dc081dc0bf71208447eda4f6035f86cdbe5e621d1e",
+  "hinweis": "Prüfsummen des vollständig erhaltenen Lösungstexts nach ausschließlich fallbezogenen Namensersetzungen, vor angehängten Erläuterungen. Keine Texte aus Trainer oder Lernbereichen.",
+  "einheiten": {
+    "HQ|1|HQ_A1": {
+      "anzahl": 14,
+      "punkte": 100
+    },
+    "HQ|1|HQ_A2": {
+      "anzahl": 29,
+      "punkte": 100
+    },
+    "HQ|2|HQ_A1": {
+      "anzahl": 18,
+      "punkte": 100
+    },
+    "HQ|2|HQ_A2": {
+      "anzahl": 28,
+      "punkte": 100
+    },
+    "HQ|3|HQ_A1": {
+      "anzahl": 17,
+      "punkte": 100
+    },
+    "HQ|3|HQ_A2": {
+      "anzahl": 23,
+      "punkte": 100
+    },
+    "HQ|4|HQ_A1": {
+      "anzahl": 0,
+      "punkte": 0
+    },
+    "HQ|4|HQ_A2": {
+      "anzahl": 0,
+      "punkte": 0
+    },
+    "WQ|1|Rechnungswesen": {
+      "anzahl": 14,
+      "punkte": 100
+    },
+    "WQ|1|Recht und Steuern": {
+      "anzahl": 15,
+      "punkte": 100
+    },
+    "WQ|1|Unternehmensführung": {
+      "anzahl": 13,
+      "punkte": 100
+    },
+    "WQ|1|VWL/BWL": {
+      "anzahl": 16,
+      "punkte": 100
+    },
+    "WQ|2|Rechnungswesen": {
+      "anzahl": 15,
+      "punkte": 100
+    },
+    "WQ|2|Recht und Steuern": {
+      "anzahl": 17,
+      "punkte": 100
+    },
+    "WQ|2|Unternehmensführung": {
+      "anzahl": 11,
+      "punkte": 100
+    },
+    "WQ|2|VWL/BWL": {
+      "anzahl": 14,
+      "punkte": 100
+    },
+    "WQ|3|Rechnungswesen": {
+      "anzahl": 15,
+      "punkte": 100
+    },
+    "WQ|3|Recht und Steuern": {
+      "anzahl": 19,
+      "punkte": 100
+    },
+    "WQ|3|Unternehmensführung": {
+      "anzahl": 12,
+      "punkte": 100
+    },
+    "WQ|3|VWL/BWL": {
+      "anzahl": 12,
+      "punkte": 100
+    },
+    "WQ|4|Rechnungswesen": {
+      "anzahl": 11,
+      "punkte": 100
+    },
+    "WQ|4|Recht und Steuern": {
+      "anzahl": 15,
+      "punkte": 100
+    },
+    "WQ|4|Unternehmensführung": {
+      "anzahl": 11,
+      "punkte": 100
+    },
+    "WQ|4|VWL/BWL": {
+      "anzahl": 17,
+      "punkte": 100
+    }
+  },
+  "aufgaben": {
+    "HQ_SIM_1|HQ_A1|1|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "c2e59db942a5d79a7a417a9c513fdf10e21565374b7d4e08f44933122aef511f",
+      "erhaltenerTextLaenge": 1474,
+      "erhaltenerTextSha256": "c2e59db942a5d79a7a417a9c513fdf10e21565374b7d4e08f44933122aef511f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|1|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "ddc10ba4d300fa232929a56cc2c27ba0165bfd1abed88d9cc06d5dfba0e0c993",
+      "erhaltenerTextLaenge": 1013,
+      "erhaltenerTextSha256": "ddc10ba4d300fa232929a56cc2c27ba0165bfd1abed88d9cc06d5dfba0e0c993",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|1|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "aa6d67eb053e33c18abc6e379c402a1debbd214b7110e3a725e1bff3a2c376ab",
+      "erhaltenerTextLaenge": 1102,
+      "erhaltenerTextSha256": "aa6d67eb053e33c18abc6e379c402a1debbd214b7110e3a725e1bff3a2c376ab",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|2|a": {
+      "punkte": 17,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 11,
+      "urspruenglicherTextSha256": "6c8d15cd927fbece7fd8f81f980bdcaaa806307f77fc8cc9ede1bd92fc3a674c",
+      "erhaltenerTextLaenge": 830,
+      "erhaltenerTextSha256": "6c8d15cd927fbece7fd8f81f980bdcaaa806307f77fc8cc9ede1bd92fc3a674c",
+      "aufgabenHtmlSha256": "b0cc477c1c5d19129ff066709fe77c3138ac7c98fe824eac591c233e331a9c29",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|3|a": {
+      "punkte": 8,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 19,
+      "urspruenglicherTextSha256": "06dc4067116d7a4b7d9c742420386bd015a4cb406f7bf5ff12e7732a83a9174b",
+      "erhaltenerTextLaenge": 506,
+      "erhaltenerTextSha256": "06dc4067116d7a4b7d9c742420386bd015a4cb406f7bf5ff12e7732a83a9174b",
+      "aufgabenHtmlSha256": "c0f1ca17d43a4f3148f54a7a70b0da1e951e4628ee85d262812551c5025852af",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|3|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "419ab5cbcb19600cf56b6740dfdd7751bde415fb4b42daf0f11b3299ff2e4c6d",
+      "erhaltenerTextLaenge": 340,
+      "erhaltenerTextSha256": "419ab5cbcb19600cf56b6740dfdd7751bde415fb4b42daf0f11b3299ff2e4c6d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|3|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "4c4505df112bdf645a3a6a355e7c868e542d2f106dc67b8b6aaec1c6c1ec7f4b",
+      "erhaltenerTextLaenge": 505,
+      "erhaltenerTextSha256": "4c4505df112bdf645a3a6a355e7c868e542d2f106dc67b8b6aaec1c6c1ec7f4b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|3|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "6abe1955c98d296a7680cb047fed7bf8df3b834ffa29198f079421589c741d68",
+      "erhaltenerTextLaenge": 454,
+      "erhaltenerTextSha256": "6abe1955c98d296a7680cb047fed7bf8df3b834ffa29198f079421589c741d68",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|4|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 12,
+      "urspruenglicherTextSha256": "4773765866125550ffa9e4552272966243dd16f0cef524ad9f477b13827da695",
+      "erhaltenerTextLaenge": 907,
+      "erhaltenerTextSha256": "4773765866125550ffa9e4552272966243dd16f0cef524ad9f477b13827da695",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|4|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "d294b1c2cde22533612b2ff839f9898c589f719fc028fa9f5a034f2d243a0070",
+      "erhaltenerTextLaenge": 548,
+      "erhaltenerTextSha256": "d294b1c2cde22533612b2ff839f9898c589f719fc028fa9f5a034f2d243a0070",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|5|a": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 11,
+      "urspruenglicherTextSha256": "ce2f8fb6e06d31a873c9c48422e31d3dcce383c542a25c7ca98d01cf42f26662",
+      "erhaltenerTextLaenge": 1227,
+      "erhaltenerTextSha256": "ce2f8fb6e06d31a873c9c48422e31d3dcce383c542a25c7ca98d01cf42f26662",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|5|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "144c44cc5220dfd120776c21fb663bc9fde987394df0cdf2a982cbdfacabd45d",
+      "erhaltenerTextLaenge": 480,
+      "erhaltenerTextSha256": "144c44cc5220dfd120776c21fb663bc9fde987394df0cdf2a982cbdfacabd45d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|5|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 11,
+      "urspruenglicherTextSha256": "6b00e1476a71b0d2bb8a5d800072c99d3a15bea628df2f8fdcbd6d6b4bac5ce8",
+      "erhaltenerTextLaenge": 535,
+      "erhaltenerTextSha256": "6b00e1476a71b0d2bb8a5d800072c99d3a15bea628df2f8fdcbd6d6b4bac5ce8",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A1|6|a": {
+      "punkte": 16,
+      "fragetyp": "text",
+      "kriterienAnzahl": 15,
+      "urspruenglicherTextSha256": "f71a1a7b79d50b99ceb818c2d789f966b7af283609790f00587534f53d42e28c",
+      "erhaltenerTextLaenge": 1593,
+      "erhaltenerTextSha256": "f71a1a7b79d50b99ceb818c2d789f966b7af283609790f00587534f53d42e28c",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|1|a": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 11,
+      "urspruenglicherTextSha256": "bb0c567f73e3752fdd99767748e292c6b63a10a676e66984f367bb9c0c55f653",
+      "erhaltenerTextLaenge": 623,
+      "erhaltenerTextSha256": "bb0c567f73e3752fdd99767748e292c6b63a10a676e66984f367bb9c0c55f653",
+      "aufgabenHtmlSha256": "4bc707d6b1038e61aa90112a079dcb02a96e0144e75e95e04e38f064c8cb3041",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|1|b": {
+      "punkte": 8,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "120d28685eaaa8b105bf136f3fc15571ea19ef99f61b9ccec199156675f8028e",
+      "erhaltenerTextLaenge": 499,
+      "erhaltenerTextSha256": "120d28685eaaa8b105bf136f3fc15571ea19ef99f61b9ccec199156675f8028e",
+      "aufgabenHtmlSha256": "4bc707d6b1038e61aa90112a079dcb02a96e0144e75e95e04e38f064c8cb3041",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|2|a": {
+      "punkte": 2,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "e8394681fe5c64329f86bbc90c74b4a572a2bd308f8becf86353987560adeb84",
+      "erhaltenerTextLaenge": 326,
+      "erhaltenerTextSha256": "e8394681fe5c64329f86bbc90c74b4a572a2bd308f8becf86353987560adeb84",
+      "aufgabenHtmlSha256": "cfe6fecbf3cfa15e66db7b26bc7b7b29fbbd529100db03916e69a8567bbcf4f3",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|2|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "49eb7397c3f926a3c009c616c50aa62dca63a5d1b27969033abb79f788f71aa7",
+      "erhaltenerTextLaenge": 240,
+      "erhaltenerTextSha256": "49eb7397c3f926a3c009c616c50aa62dca63a5d1b27969033abb79f788f71aa7",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|2|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "c821233c4f01c77a2fc59a93e53c76c9e4e080471869a5b08178dffdcc185a0e",
+      "erhaltenerTextLaenge": 239,
+      "erhaltenerTextSha256": "c821233c4f01c77a2fc59a93e53c76c9e4e080471869a5b08178dffdcc185a0e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|2|d": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "865fdd45340b82e4227fbc518cc183baeec5f6b7c2fb4f35915e58656a175dba",
+      "erhaltenerTextLaenge": 214,
+      "erhaltenerTextSha256": "865fdd45340b82e4227fbc518cc183baeec5f6b7c2fb4f35915e58656a175dba",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|2|e": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "43a57229e713cb58a699d99ec760fbb43a5aa04c688d58c920897c2bfc3d70a1",
+      "erhaltenerTextLaenge": 179,
+      "erhaltenerTextSha256": "43a57229e713cb58a699d99ec760fbb43a5aa04c688d58c920897c2bfc3d70a1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|2|f": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "e88b63b5c0cdd52afe2eaf4f713a03b6fa7fbf6dd0b31d740699569a109bfcbc",
+      "erhaltenerTextLaenge": 592,
+      "erhaltenerTextSha256": "e88b63b5c0cdd52afe2eaf4f713a03b6fa7fbf6dd0b31d740699569a109bfcbc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|2|g": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "e808fdab6d21e1107a41201e87c9b2b27648b350cbaf74d31d4fe00cbc07318b",
+      "erhaltenerTextLaenge": 236,
+      "erhaltenerTextSha256": "e808fdab6d21e1107a41201e87c9b2b27648b350cbaf74d31d4fe00cbc07318b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|3|a": {
+      "punkte": 8,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "6b724ab2e6f4504d4e02e22550fd099116c1a0fdb7945f70130f65d65b631458",
+      "erhaltenerTextLaenge": 552,
+      "erhaltenerTextSha256": "6b724ab2e6f4504d4e02e22550fd099116c1a0fdb7945f70130f65d65b631458",
+      "aufgabenHtmlSha256": "32d00b8b4282610ace5a1a1b799c49cc33c879212d35ece33212689f6381805d",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|3|b": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "8c771c056f8dd76899057ec6c0c5d1b64cb76bb1282464bc402debaf1a7f8d9e",
+      "erhaltenerTextLaenge": 338,
+      "erhaltenerTextSha256": "8c771c056f8dd76899057ec6c0c5d1b64cb76bb1282464bc402debaf1a7f8d9e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|4|a": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "f5eddc555baf8698e3316ed7556b0cab53ad26ffbe084ae001b1b8ecab583eff",
+      "erhaltenerTextLaenge": 320,
+      "erhaltenerTextSha256": "f5eddc555baf8698e3316ed7556b0cab53ad26ffbe084ae001b1b8ecab583eff",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|4|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "7bf536c9f01872b9bfd8a7288b4ba350efdd40946544bc354c0ed075d70b425e",
+      "erhaltenerTextLaenge": 495,
+      "erhaltenerTextSha256": "7bf536c9f01872b9bfd8a7288b4ba350efdd40946544bc354c0ed075d70b425e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|5|a": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "479a5fee2ac97b5acc1222330d204b7d0061789878b07572828f0a48c5922f82",
+      "erhaltenerTextLaenge": 291,
+      "erhaltenerTextSha256": "479a5fee2ac97b5acc1222330d204b7d0061789878b07572828f0a48c5922f82",
+      "aufgabenHtmlSha256": "b066534648e21c3a2efb7a28f1e73c10c4bc4219bde747ab657a8731ad396f5e",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|5|b": {
+      "punkte": 1,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "5f65ed2077bb5857f74967eb4accda529a96f8ad4f557f9af7b12eb649a4baa0",
+      "erhaltenerTextLaenge": 151,
+      "erhaltenerTextSha256": "5f65ed2077bb5857f74967eb4accda529a96f8ad4f557f9af7b12eb649a4baa0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|5|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "b4da95f8149e43192d80853fd98cd8681e1a916cf509732bf4135f3b43d23383",
+      "erhaltenerTextLaenge": 229,
+      "erhaltenerTextSha256": "b4da95f8149e43192d80853fd98cd8681e1a916cf509732bf4135f3b43d23383",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|6|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "c939ccbf1a4672c847a2ecb1be1d89ec28875c38248ec5c5a8ad30089bf05854",
+      "erhaltenerTextLaenge": 690,
+      "erhaltenerTextSha256": "c939ccbf1a4672c847a2ecb1be1d89ec28875c38248ec5c5a8ad30089bf05854",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|7|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "e8340eed7490a33ffd7bc71c1f5e8068e171a1dd207e2b93106b9f5971cb74d1",
+      "erhaltenerTextLaenge": 889,
+      "erhaltenerTextSha256": "e8340eed7490a33ffd7bc71c1f5e8068e171a1dd207e2b93106b9f5971cb74d1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|7|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "82eb5667d57cb863964686ec3e2b9449a42bb97d7235ecb77538edcb2d7f5bfd",
+      "erhaltenerTextLaenge": 447,
+      "erhaltenerTextSha256": "82eb5667d57cb863964686ec3e2b9449a42bb97d7235ecb77538edcb2d7f5bfd",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|7|c": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "58357ab65b0e23bd068fd6295529ba289c0afc0e8577e0230a455b7182976aba",
+      "erhaltenerTextLaenge": 600,
+      "erhaltenerTextSha256": "58357ab65b0e23bd068fd6295529ba289c0afc0e8577e0230a455b7182976aba",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|8|a": {
+      "punkte": 1,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "1b1166ded0f8d2a719c2e0d5e031d6dfcf59f7c045ab517c429cd5361164f393",
+      "erhaltenerTextLaenge": 124,
+      "erhaltenerTextSha256": "1b1166ded0f8d2a719c2e0d5e031d6dfcf59f7c045ab517c429cd5361164f393",
+      "aufgabenHtmlSha256": "e4cddeba73800c59ba3496a9b3b0a4607b7b1a64950757dce9bf1ec2a8e2f6db",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|8|b": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "1ab7cb24820b1898b73d6d5031d2349e1aebd7183e65544aef46a91b7f0ba38f",
+      "erhaltenerTextLaenge": 250,
+      "erhaltenerTextSha256": "1ab7cb24820b1898b73d6d5031d2349e1aebd7183e65544aef46a91b7f0ba38f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|8|c": {
+      "punkte": 1,
+      "fragetyp": "text",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "122961efd8f11d02d35fa4121e3ff94cbfabbf133170002b88273477b6b64c61",
+      "erhaltenerTextLaenge": 41,
+      "erhaltenerTextSha256": "122961efd8f11d02d35fa4121e3ff94cbfabbf133170002b88273477b6b64c61",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|8|d": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "57298359c1ffb6d4135ad88c0c8d161e7e6580bc424d29445ba145bb610e48f5",
+      "erhaltenerTextLaenge": 147,
+      "erhaltenerTextSha256": "57298359c1ffb6d4135ad88c0c8d161e7e6580bc424d29445ba145bb610e48f5",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|8|e": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "4af9584de6d7763bcad28e0bd69d01952ccbf53a2e90c645f082a9dfb3eb9fba",
+      "erhaltenerTextLaenge": 251,
+      "erhaltenerTextSha256": "4af9584de6d7763bcad28e0bd69d01952ccbf53a2e90c645f082a9dfb3eb9fba",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|9|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "55260ca607489b429429c9c3551a541bebed1758a6a3c57faee89c02ef7c1374",
+      "erhaltenerTextLaenge": 653,
+      "erhaltenerTextSha256": "55260ca607489b429429c9c3551a541bebed1758a6a3c57faee89c02ef7c1374",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|9|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "fe300e5c5d474f2733175955395e212bdd57545e7964d4e1834f9d4928522c41",
+      "erhaltenerTextLaenge": 238,
+      "erhaltenerTextSha256": "fe300e5c5d474f2733175955395e212bdd57545e7964d4e1834f9d4928522c41",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|9|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "c7cc4153e91175d807ae559c482e318a194a064866701498a8f0394970ea03b1",
+      "erhaltenerTextLaenge": 431,
+      "erhaltenerTextSha256": "c7cc4153e91175d807ae559c482e318a194a064866701498a8f0394970ea03b1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_1|HQ_A2|9|d": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "f6c83561019499c19732c4981b0427c11d416deba711f88ab2be4b0491dfc1be",
+      "erhaltenerTextLaenge": 742,
+      "erhaltenerTextSha256": "f6c83561019499c19732c4981b0427c11d416deba711f88ab2be4b0491dfc1be",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|1|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "9cf76a0419aac440b8747d70e7424863d489d6680709a8384755bc37d9d6c9f6",
+      "erhaltenerTextLaenge": 400,
+      "erhaltenerTextSha256": "9cf76a0419aac440b8747d70e7424863d489d6680709a8384755bc37d9d6c9f6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|1|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "b668d140ecb58d909258a1e58c8eb1328b1e6d689128dc0b9cb7740d41139835",
+      "erhaltenerTextLaenge": 423,
+      "erhaltenerTextSha256": "b668d140ecb58d909258a1e58c8eb1328b1e6d689128dc0b9cb7740d41139835",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|2|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "6a0b6cd23ac4b0ee60011985fa6a15f4744c9324a1f086a89cde7a458d7ce22a",
+      "erhaltenerTextLaenge": 433,
+      "erhaltenerTextSha256": "6a0b6cd23ac4b0ee60011985fa6a15f4744c9324a1f086a89cde7a458d7ce22a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|3|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "9839f2fb1cb7ad678fa6fb5eefe000972b67ad1e17bc86c94dc9b2740ce9d83a",
+      "erhaltenerTextLaenge": 394,
+      "erhaltenerTextSha256": "9839f2fb1cb7ad678fa6fb5eefe000972b67ad1e17bc86c94dc9b2740ce9d83a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|4|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "54124dbb88e108a387e286c10ea68aa632df1036d1aa6b5ef0c16f975ba2b1c5",
+      "erhaltenerTextLaenge": 280,
+      "erhaltenerTextSha256": "54124dbb88e108a387e286c10ea68aa632df1036d1aa6b5ef0c16f975ba2b1c5",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|4|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "40786d621ef14fbad59cfb87b22e33bf4731df102f27f74b15894cc2ac9d1a16",
+      "erhaltenerTextLaenge": 726,
+      "erhaltenerTextSha256": "40786d621ef14fbad59cfb87b22e33bf4731df102f27f74b15894cc2ac9d1a16",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|5|a": {
+      "punkte": 3,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "fc66c24abf85c5ae1b886a37bcf1fb483377f370a21d04a793459137d4ff5cd3",
+      "erhaltenerTextLaenge": 192,
+      "erhaltenerTextSha256": "fc66c24abf85c5ae1b886a37bcf1fb483377f370a21d04a793459137d4ff5cd3",
+      "aufgabenHtmlSha256": "e880c82edb024afb2fbf58a7ca3bb5ce235da397e2f3c3478e974f859207902c",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|5|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "c9257276e24d83a5a66f0d98379a9381e549557ec13876146078aa75390cdf17",
+      "erhaltenerTextLaenge": 316,
+      "erhaltenerTextSha256": "c9257276e24d83a5a66f0d98379a9381e549557ec13876146078aa75390cdf17",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|5|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "b3812b203f025e1bf1ae0190797a9dfdd2361ed39f8b89f04bb3f0bde1dc6660",
+      "erhaltenerTextLaenge": 532,
+      "erhaltenerTextSha256": "b3812b203f025e1bf1ae0190797a9dfdd2361ed39f8b89f04bb3f0bde1dc6660",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|6|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "6cb191e94f70b26da9fe5886b64bd68eaeee0fa31571fff39f4b27353baccfc6",
+      "erhaltenerTextLaenge": 562,
+      "erhaltenerTextSha256": "6cb191e94f70b26da9fe5886b64bd68eaeee0fa31571fff39f4b27353baccfc6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|6|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "208a0016320c74c72115d8b6411dc5502c213ebb96836591055fe50f7aad2b63",
+      "erhaltenerTextLaenge": 237,
+      "erhaltenerTextSha256": "208a0016320c74c72115d8b6411dc5502c213ebb96836591055fe50f7aad2b63",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|7|a": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "67152895f776954099f742902bd525849850016e83a8c17af0640c68d4b6a549",
+      "erhaltenerTextLaenge": 448,
+      "erhaltenerTextSha256": "67152895f776954099f742902bd525849850016e83a8c17af0640c68d4b6a549",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|8|a": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "18019d1f6a2eb04a9cde0605ef7a4c138a940c6dabd41a751762332ba274a2bc",
+      "erhaltenerTextLaenge": 396,
+      "erhaltenerTextSha256": "18019d1f6a2eb04a9cde0605ef7a4c138a940c6dabd41a751762332ba274a2bc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|8|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "1cd98bc59524e1bf1a78ddc6a88f1e6b2c8faff266f176a681e5436c954077c6",
+      "erhaltenerTextLaenge": 551,
+      "erhaltenerTextSha256": "1cd98bc59524e1bf1a78ddc6a88f1e6b2c8faff266f176a681e5436c954077c6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|9|a": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "1c25947f1276dd4d7d395e3b4813c6f898d0463af50bfca23625b3f4179789bd",
+      "erhaltenerTextLaenge": 296,
+      "erhaltenerTextSha256": "1c25947f1276dd4d7d395e3b4813c6f898d0463af50bfca23625b3f4179789bd",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|9|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "accab34e71a6177160fa37086171b39a12a812daf2c5d752371e8d86fff4d59a",
+      "erhaltenerTextLaenge": 156,
+      "erhaltenerTextSha256": "accab34e71a6177160fa37086171b39a12a812daf2c5d752371e8d86fff4d59a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|9|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "42760562cf09c28ffad5d94291888d1d0aa92193bd2e7d05efbde2c1c1a8f5bb",
+      "erhaltenerTextLaenge": 234,
+      "erhaltenerTextSha256": "42760562cf09c28ffad5d94291888d1d0aa92193bd2e7d05efbde2c1c1a8f5bb",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A1|9|d": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "a9e2942a17fbe0c45e9e072d66dadb8dea507b0bc2dd9e2878666d2c0f9199a7",
+      "erhaltenerTextLaenge": 219,
+      "erhaltenerTextSha256": "a9e2942a17fbe0c45e9e072d66dadb8dea507b0bc2dd9e2878666d2c0f9199a7",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|1|a": {
+      "punkte": 12,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "f47241dcd0e0453b39bc086f339bc9275ff6b887b04100f10891d4d7bd253de5",
+      "erhaltenerTextLaenge": 309,
+      "erhaltenerTextSha256": "f47241dcd0e0453b39bc086f339bc9275ff6b887b04100f10891d4d7bd253de5",
+      "aufgabenHtmlSha256": "8f625ba204e38be0ba7d2796d3595d2d3d72dbf9dae8cbb38ba31cc5fd324d03",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|1|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "941b28fcb702bbbe4e0784344622b5a3266783f162d7b7a0f72cb78db4aae96c",
+      "erhaltenerTextLaenge": 227,
+      "erhaltenerTextSha256": "941b28fcb702bbbe4e0784344622b5a3266783f162d7b7a0f72cb78db4aae96c",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|2|a": {
+      "punkte": 2,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "216f5642f76a2df781321fc7b034a29282f13df5840fb361e8b4c3403ae64ea9",
+      "erhaltenerTextLaenge": 204,
+      "erhaltenerTextSha256": "216f5642f76a2df781321fc7b034a29282f13df5840fb361e8b4c3403ae64ea9",
+      "aufgabenHtmlSha256": "ac06c19fe3f59955b4741420d2cf53a282551ad5e0d3f52c21e4df1c8c2c440b",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|2|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "99c64ccf0d61135137374c42b5633445d58c4d36ac9eb1a7a21a6c3e1f327d5b",
+      "erhaltenerTextLaenge": 565,
+      "erhaltenerTextSha256": "99c64ccf0d61135137374c42b5633445d58c4d36ac9eb1a7a21a6c3e1f327d5b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|2|c": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "b47a6b52a5c69ba5bf4533a1ddc3709cf3a0538c02864f0915cf79c724e1c31b",
+      "erhaltenerTextLaenge": 156,
+      "erhaltenerTextSha256": "b47a6b52a5c69ba5bf4533a1ddc3709cf3a0538c02864f0915cf79c724e1c31b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|2|d": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "48985790cb00ca1192d56cf4ac42081ebcec261a33cb0716de89265ee4c12832",
+      "erhaltenerTextLaenge": 381,
+      "erhaltenerTextSha256": "48985790cb00ca1192d56cf4ac42081ebcec261a33cb0716de89265ee4c12832",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|3|a": {
+      "punkte": 1,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "ed62c87ae2221dcf3e78075a7fef80d1b9861148011813a4bc1db5f2cd6f73a0",
+      "erhaltenerTextLaenge": 27,
+      "erhaltenerTextSha256": "ed62c87ae2221dcf3e78075a7fef80d1b9861148011813a4bc1db5f2cd6f73a0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|3|b": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "440260eb5829d2fe736290b50a9c84bf73effcaad867f07aaa28f8637eafd76c",
+      "erhaltenerTextLaenge": 91,
+      "erhaltenerTextSha256": "440260eb5829d2fe736290b50a9c84bf73effcaad867f07aaa28f8637eafd76c",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|3|c": {
+      "punkte": 4,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "b3916d6b076b72632dab0ea27a80df38c197ec0dd398d70610a53001c2b23949",
+      "erhaltenerTextLaenge": 267,
+      "erhaltenerTextSha256": "b3916d6b076b72632dab0ea27a80df38c197ec0dd398d70610a53001c2b23949",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|3|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "27238a200fbcae71231169532bd883a750bab6ec0189a994bcba821cbd2b7e8b",
+      "erhaltenerTextLaenge": 385,
+      "erhaltenerTextSha256": "27238a200fbcae71231169532bd883a750bab6ec0189a994bcba821cbd2b7e8b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|4|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "283cea1f87e41cfc357ec4ff704a21c411f584cb6004e9367868358645b8c426",
+      "erhaltenerTextLaenge": 305,
+      "erhaltenerTextSha256": "283cea1f87e41cfc357ec4ff704a21c411f584cb6004e9367868358645b8c426",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|4|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "fc50c1ecc891c431574a83dec6268d9c4b5cbc2414032d7b6fa5232a2c320592",
+      "erhaltenerTextLaenge": 259,
+      "erhaltenerTextSha256": "fc50c1ecc891c431574a83dec6268d9c4b5cbc2414032d7b6fa5232a2c320592",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|4|c": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "1679cd5f872d7640dddc84ba5b809cec17261b742d2a4aa83be0b043103b3cf0",
+      "erhaltenerTextLaenge": 317,
+      "erhaltenerTextSha256": "1679cd5f872d7640dddc84ba5b809cec17261b742d2a4aa83be0b043103b3cf0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|5|a": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "2906cceed78fb6c58715278ba066b3b683f748005b6f518d402eff2510b4da51",
+      "erhaltenerTextLaenge": 109,
+      "erhaltenerTextSha256": "2906cceed78fb6c58715278ba066b3b683f748005b6f518d402eff2510b4da51",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|5|b": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "a18ca4b1ef415ecdfa922fa86a05f6abac483df9befe56eb4ce6cc5e23c419b1",
+      "erhaltenerTextLaenge": 139,
+      "erhaltenerTextSha256": "a18ca4b1ef415ecdfa922fa86a05f6abac483df9befe56eb4ce6cc5e23c419b1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|5|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "af0b143165b779816118003b16b24a39f935892baa2184d034fb9daaa27b165e",
+      "erhaltenerTextLaenge": 158,
+      "erhaltenerTextSha256": "af0b143165b779816118003b16b24a39f935892baa2184d034fb9daaa27b165e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|5|d": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "ea61e89093ec9bb41faa5967f284f5738ec94fde2b311aff5b83597c6d1f01a3",
+      "erhaltenerTextLaenge": 194,
+      "erhaltenerTextSha256": "ea61e89093ec9bb41faa5967f284f5738ec94fde2b311aff5b83597c6d1f01a3",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|6|a": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "83ad48cff1fe7b16f72727e7e7ae11bada760bfded86c2ac318901c99ffc6bbd",
+      "erhaltenerTextLaenge": 185,
+      "erhaltenerTextSha256": "83ad48cff1fe7b16f72727e7e7ae11bada760bfded86c2ac318901c99ffc6bbd",
+      "aufgabenHtmlSha256": "722ce0d5ab077d77d8601187b4339977abb167cb8a23b8432196023ac83ebbfb",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|6|b": {
+      "punkte": 1,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "75307f0ddd7ae17801707e25bda2f0d22f912cfaf5e5cbd8302e01183e71ffe3",
+      "erhaltenerTextLaenge": 144,
+      "erhaltenerTextSha256": "75307f0ddd7ae17801707e25bda2f0d22f912cfaf5e5cbd8302e01183e71ffe3",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|6|c": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "db19ca8022efb23048504fbf989fd3f0ea643fedb1b717f4949c0eadb3c0a78f",
+      "erhaltenerTextLaenge": 284,
+      "erhaltenerTextSha256": "db19ca8022efb23048504fbf989fd3f0ea643fedb1b717f4949c0eadb3c0a78f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|7|a": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "80765046e0fa36e57c86eda8369e1d6da95666abc6af4800fe1668bce9b0f70d",
+      "erhaltenerTextLaenge": 263,
+      "erhaltenerTextSha256": "80765046e0fa36e57c86eda8369e1d6da95666abc6af4800fe1668bce9b0f70d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|7|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "d664c40ff92be40731a1b873a2a6f007d49c51f436afa2bcb2e040d9b26239ce",
+      "erhaltenerTextLaenge": 437,
+      "erhaltenerTextSha256": "d664c40ff92be40731a1b873a2a6f007d49c51f436afa2bcb2e040d9b26239ce",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|8|a": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "085318321d48f3d7874b73c43496382dd52edf81bde94f63b0cd105ddbe3c943",
+      "erhaltenerTextLaenge": 308,
+      "erhaltenerTextSha256": "085318321d48f3d7874b73c43496382dd52edf81bde94f63b0cd105ddbe3c943",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|8|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "445d53fd2fd148565d60ae90a4d74184d7d75c1fc32744cf1b477e0de2a565dc",
+      "erhaltenerTextLaenge": 424,
+      "erhaltenerTextSha256": "445d53fd2fd148565d60ae90a4d74184d7d75c1fc32744cf1b477e0de2a565dc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|8|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "6aadc25ef7fc065f3f8456f442a29a9d77b4c9ff086954f9bac3307bffea83a2",
+      "erhaltenerTextLaenge": 608,
+      "erhaltenerTextSha256": "6aadc25ef7fc065f3f8456f442a29a9d77b4c9ff086954f9bac3307bffea83a2",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|9|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "052ac3911d77e8443a24469e68c5a0ab3fef84770f4369274566e60e6f2129d1",
+      "erhaltenerTextLaenge": 468,
+      "erhaltenerTextSha256": "052ac3911d77e8443a24469e68c5a0ab3fef84770f4369274566e60e6f2129d1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|9|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "198ffd457eaeafc2210e9ce0d76a6e639539b24b13ff4b4877e623bdabcf3225",
+      "erhaltenerTextLaenge": 376,
+      "erhaltenerTextSha256": "198ffd457eaeafc2210e9ce0d76a6e639539b24b13ff4b4877e623bdabcf3225",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_2|HQ_A2|9|c": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "b69be863f9823e39af3317c830cc362de53448e78c61e5bb14fe715f2d8bb97d",
+      "erhaltenerTextLaenge": 445,
+      "erhaltenerTextSha256": "b69be863f9823e39af3317c830cc362de53448e78c61e5bb14fe715f2d8bb97d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|1|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "3575be2e95250144382daeb9c9f75dd5fd7b603a96abb9c037694813b331f6b8",
+      "erhaltenerTextLaenge": 766,
+      "erhaltenerTextSha256": "3575be2e95250144382daeb9c9f75dd5fd7b603a96abb9c037694813b331f6b8",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|1|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "948fd05f4b3d7125f4546cc4b5389d8c2add541ce47856aa53fba781a4872794",
+      "erhaltenerTextLaenge": 367,
+      "erhaltenerTextSha256": "948fd05f4b3d7125f4546cc4b5389d8c2add541ce47856aa53fba781a4872794",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|1|c": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "a58a8eaf0de760fb175c60983fbbe81f9b259d91f02c681e3b1cf435f0a82164",
+      "erhaltenerTextLaenge": 555,
+      "erhaltenerTextSha256": "a58a8eaf0de760fb175c60983fbbe81f9b259d91f02c681e3b1cf435f0a82164",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|2|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "276565154616dc0f721586c3532a8685b666e8c574c91b5743f2bbd56661f226",
+      "erhaltenerTextLaenge": 514,
+      "erhaltenerTextSha256": "276565154616dc0f721586c3532a8685b666e8c574c91b5743f2bbd56661f226",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|3|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "e112ee7ed6ba533236f4fc5dab5ddb8b2132b1296627aeb1af91aeedf8fb7d42",
+      "erhaltenerTextLaenge": 657,
+      "erhaltenerTextSha256": "e112ee7ed6ba533236f4fc5dab5ddb8b2132b1296627aeb1af91aeedf8fb7d42",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|4|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "d48505cc40cb23e886fe7ff1bf52c82706fdfcf33a3b1a678b167eae69763995",
+      "erhaltenerTextLaenge": 531,
+      "erhaltenerTextSha256": "d48505cc40cb23e886fe7ff1bf52c82706fdfcf33a3b1a678b167eae69763995",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|4|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "64a53abfe8b6eb1635740e089eabc4432bd054474f20772d125181615c0b8cce",
+      "erhaltenerTextLaenge": 246,
+      "erhaltenerTextSha256": "64a53abfe8b6eb1635740e089eabc4432bd054474f20772d125181615c0b8cce",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|4|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "1be3d16438f6f01f329d7ce07d3ce8d1e41e66930255ad68d9a65f01dda13460",
+      "erhaltenerTextLaenge": 358,
+      "erhaltenerTextSha256": "1be3d16438f6f01f329d7ce07d3ce8d1e41e66930255ad68d9a65f01dda13460",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|5|a": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "dc576c231e68c07f868653b990e5f9c357fb601cb27a88cdebfb326a8fad9e85",
+      "erhaltenerTextLaenge": 426,
+      "erhaltenerTextSha256": "dc576c231e68c07f868653b990e5f9c357fb601cb27a88cdebfb326a8fad9e85",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|5|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "dd8e3c4419f0bbbd4da7e5a6896cdc2d40a1499875b0cb1c22459de4d18020b4",
+      "erhaltenerTextLaenge": 498,
+      "erhaltenerTextSha256": "dd8e3c4419f0bbbd4da7e5a6896cdc2d40a1499875b0cb1c22459de4d18020b4",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|5|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "644c1dc6857de0adee30ec6ac1c7cb093bd78fcfe622703462830842422cc129",
+      "erhaltenerTextLaenge": 412,
+      "erhaltenerTextSha256": "644c1dc6857de0adee30ec6ac1c7cb093bd78fcfe622703462830842422cc129",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|6|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "f551e0dd9c66334dc599124165db87f7a7a6961eb766a66ce5b32c17345bdf02",
+      "erhaltenerTextLaenge": 579,
+      "erhaltenerTextSha256": "f551e0dd9c66334dc599124165db87f7a7a6961eb766a66ce5b32c17345bdf02",
+      "aufgabenHtmlSha256": "d5d182e893e80bafde1a86267712e72f13c1f86c0cd2dbb145b08c14c26fc178",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|6|b": {
+      "punkte": 7,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "bbedbec9ef0550fc316d7cf54dc64349504b277c6131ac85faf819999521a7fc",
+      "erhaltenerTextLaenge": 401,
+      "erhaltenerTextSha256": "bbedbec9ef0550fc316d7cf54dc64349504b277c6131ac85faf819999521a7fc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|6|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "d677797c8fdc91316ac86870855554971dd923e49fbffff0dd84ec2e755356de",
+      "erhaltenerTextLaenge": 236,
+      "erhaltenerTextSha256": "d677797c8fdc91316ac86870855554971dd923e49fbffff0dd84ec2e755356de",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|7|a": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "fee4bef185c139bdc8a38afc7742637e08511797b3b4ac8c0901100d942217c3",
+      "erhaltenerTextLaenge": 286,
+      "erhaltenerTextSha256": "fee4bef185c139bdc8a38afc7742637e08511797b3b4ac8c0901100d942217c3",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|7|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "82d0944bb7bbbd9292f757b5b4461ef2c0a77c26c76d24373f84fdbc58665345",
+      "erhaltenerTextLaenge": 716,
+      "erhaltenerTextSha256": "82d0944bb7bbbd9292f757b5b4461ef2c0a77c26c76d24373f84fdbc58665345",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A1|8|a": {
+      "punkte": 10,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "2fa490528fd6222b8706b22cc5f11a4bdf4b7b76f41b30b15ceccbf28d992d85",
+      "erhaltenerTextLaenge": 1053,
+      "erhaltenerTextSha256": "2fa490528fd6222b8706b22cc5f11a4bdf4b7b76f41b30b15ceccbf28d992d85",
+      "aufgabenHtmlSha256": "e47f54e255bae641a42bc8d895f20a95272685b5d2ae5c18e36ef044c7e40639",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|1|a": {
+      "punkte": 8,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "a2e8d499807753b284f7fc0b786cab5cd83331143fb85f2482413d68638a7a75",
+      "erhaltenerTextLaenge": 392,
+      "erhaltenerTextSha256": "a2e8d499807753b284f7fc0b786cab5cd83331143fb85f2482413d68638a7a75",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|2|a": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "8db772fd75058a0ab09a39276338a14c50692fcc904aa09a0eafa38577c952b8",
+      "erhaltenerTextLaenge": 515,
+      "erhaltenerTextSha256": "8db772fd75058a0ab09a39276338a14c50692fcc904aa09a0eafa38577c952b8",
+      "aufgabenHtmlSha256": "afc3d823818b0f9d9a2f2d1486320b4830adff64d04477a98bd6b754576af05a",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|2|b": {
+      "punkte": 4,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "36c58942601ab3bd990928f99c5925fa9548283eb4deaed69db1293cf0a72277",
+      "erhaltenerTextLaenge": 370,
+      "erhaltenerTextSha256": "36c58942601ab3bd990928f99c5925fa9548283eb4deaed69db1293cf0a72277",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|2|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "a8447d1f7eac917e0ebcf3a51ac30a6c9f3dbfee4b38e3b7fcfa5514d1715785",
+      "erhaltenerTextLaenge": 359,
+      "erhaltenerTextSha256": "a8447d1f7eac917e0ebcf3a51ac30a6c9f3dbfee4b38e3b7fcfa5514d1715785",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|3|a": {
+      "punkte": 3,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "063474efbe680f554673392cb7584c9583bb57ac22ebc098e35dcc32bae847a1",
+      "erhaltenerTextLaenge": 175,
+      "erhaltenerTextSha256": "063474efbe680f554673392cb7584c9583bb57ac22ebc098e35dcc32bae847a1",
+      "aufgabenHtmlSha256": "6d31c7164dc54abdb1a161b170ebc1c8fe517c4d5b6fff2f6bf0cb5af857805e",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|3|b": {
+      "punkte": 5,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "de6f6dbb1676c6fcb68fae7fb7a8968f462766c2cfd03f734bfbc4ec5ea1c4c2",
+      "erhaltenerTextLaenge": 285,
+      "erhaltenerTextSha256": "de6f6dbb1676c6fcb68fae7fb7a8968f462766c2cfd03f734bfbc4ec5ea1c4c2",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|3|c": {
+      "punkte": 1,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "265550a5dcb96f8573a91081b78db76961040da8b66a6f2aa41d57ab99262a91",
+      "erhaltenerTextLaenge": 260,
+      "erhaltenerTextSha256": "265550a5dcb96f8573a91081b78db76961040da8b66a6f2aa41d57ab99262a91",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|3|d": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "4348472f898f68f5eced6e2fe1f4febb28b3aedda07ad812f4fafcf4755ebd71",
+      "erhaltenerTextLaenge": 131,
+      "erhaltenerTextSha256": "4348472f898f68f5eced6e2fe1f4febb28b3aedda07ad812f4fafcf4755ebd71",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|4|a": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "185920fb36441634d9b206ba6c2d874aa7b2bb73956befc73552304eb79f377a",
+      "erhaltenerTextLaenge": 318,
+      "erhaltenerTextSha256": "185920fb36441634d9b206ba6c2d874aa7b2bb73956befc73552304eb79f377a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|4|b": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "d29e69f04ed1842a7f3a00e5a15e04719e510f7e8d557928e187be9e71f7ac04",
+      "erhaltenerTextLaenge": 504,
+      "erhaltenerTextSha256": "d29e69f04ed1842a7f3a00e5a15e04719e510f7e8d557928e187be9e71f7ac04",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|4|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "0b397e87a789a90d67cfee1b80e5fdc70e8b5f0cca04a598e77f69778a1325fe",
+      "erhaltenerTextLaenge": 313,
+      "erhaltenerTextSha256": "0b397e87a789a90d67cfee1b80e5fdc70e8b5f0cca04a598e77f69778a1325fe",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|5|a": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "f087fa59b17953f88e86daed0ac629e629098362dd030f884305039a373b9d61",
+      "erhaltenerTextLaenge": 113,
+      "erhaltenerTextSha256": "f087fa59b17953f88e86daed0ac629e629098362dd030f884305039a373b9d61",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|5|b": {
+      "punkte": 3,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "c9647364530496c82077b66e46132febaac71bd0d48a503916361a7a4687c5c9",
+      "erhaltenerTextLaenge": 126,
+      "erhaltenerTextSha256": "c9647364530496c82077b66e46132febaac71bd0d48a503916361a7a4687c5c9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|5|c": {
+      "punkte": 1,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "9c0d313c261a03a6561a39612b793bf7696b7bff536339aa40887e1371d08f90",
+      "erhaltenerTextLaenge": 255,
+      "erhaltenerTextSha256": "9c0d313c261a03a6561a39612b793bf7696b7bff536339aa40887e1371d08f90",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|5|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "cc8e1070b1e18e999715c0098693f8e12f6c7f268cbd28454a243dfc0d79febf",
+      "erhaltenerTextLaenge": 458,
+      "erhaltenerTextSha256": "cc8e1070b1e18e999715c0098693f8e12f6c7f268cbd28454a243dfc0d79febf",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|6|a": {
+      "punkte": 7,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "84513eee2ecaf717cbf46b7684a0d431c03043fbf90b4ee6718d9da6e2021a0a",
+      "erhaltenerTextLaenge": 506,
+      "erhaltenerTextSha256": "84513eee2ecaf717cbf46b7684a0d431c03043fbf90b4ee6718d9da6e2021a0a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|6|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "dd33863c68c1492b40e232835e7d77f7b266ef9388a5ea41f6f90dd037431bda",
+      "erhaltenerTextLaenge": 432,
+      "erhaltenerTextSha256": "dd33863c68c1492b40e232835e7d77f7b266ef9388a5ea41f6f90dd037431bda",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|7|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "d88e1b3668427d46e55cc0e3d3938c0722264d22d91780e13eea5e34a02bb376",
+      "erhaltenerTextLaenge": 535,
+      "erhaltenerTextSha256": "d88e1b3668427d46e55cc0e3d3938c0722264d22d91780e13eea5e34a02bb376",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|7|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "464c5f7bcfba1ec05352e6c6b44fc2dbfdfccf4cbccb90822d850c9b2e6efb03",
+      "erhaltenerTextLaenge": 546,
+      "erhaltenerTextSha256": "464c5f7bcfba1ec05352e6c6b44fc2dbfdfccf4cbccb90822d850c9b2e6efb03",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|8|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "8821d7a8fe8a1b66130a38bfc109376d722f7416e7c33b38ad32ba0fd2256825",
+      "erhaltenerTextLaenge": 449,
+      "erhaltenerTextSha256": "8821d7a8fe8a1b66130a38bfc109376d722f7416e7c33b38ad32ba0fd2256825",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|8|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "809537624c5e38eecf0caa0349664392d03cb71d5b94ddfd0bb7347fe688ec7b",
+      "erhaltenerTextLaenge": 435,
+      "erhaltenerTextSha256": "809537624c5e38eecf0caa0349664392d03cb71d5b94ddfd0bb7347fe688ec7b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|9|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "b068fb114c5eac50000559b2336c65b128d46061e44b4b352cc984c5e66b8b36",
+      "erhaltenerTextLaenge": 486,
+      "erhaltenerTextSha256": "b068fb114c5eac50000559b2336c65b128d46061e44b4b352cc984c5e66b8b36",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "HQ_SIM_3|HQ_A2|9|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "c3275997eb335bd86667f8ef863c076ef15e3bdfdc8c22d57e182d046257e496",
+      "erhaltenerTextLaenge": 428,
+      "erhaltenerTextSha256": "c3275997eb335bd86667f8ef863c076ef15e3bdfdc8c22d57e182d046257e496",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|1|a": {
+      "punkte": 20,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 11,
+      "urspruenglicherTextSha256": "268e3cfac91da56c76d8d2072fb08415e99f02070fac4cb6949160b0a24ec4dd",
+      "erhaltenerTextLaenge": 1096,
+      "erhaltenerTextSha256": "268e3cfac91da56c76d8d2072fb08415e99f02070fac4cb6949160b0a24ec4dd",
+      "aufgabenHtmlSha256": "99d71acdbe15b6cc878d26f03534e740348a7f6ba260bd3813a9c46ada20ae87",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|2|a": {
+      "punkte": 12,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "77dd68dfa25365634f9e6ce00d25f71c8fad079ce05a6bc6c9d1115458696c1b",
+      "erhaltenerTextLaenge": 569,
+      "erhaltenerTextSha256": "77dd68dfa25365634f9e6ce00d25f71c8fad079ce05a6bc6c9d1115458696c1b",
+      "aufgabenHtmlSha256": "142659166c9e8f07ee6fcc0e366c1097b20899eb3b67756de287ce5a89c35edc",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|2|b": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "b6862269f9a8f8c3fb958fb639b882db01803aeb8ca10fddf1e1f227daf3a0ed",
+      "erhaltenerTextLaenge": 491,
+      "erhaltenerTextSha256": "b6862269f9a8f8c3fb958fb639b882db01803aeb8ca10fddf1e1f227daf3a0ed",
+      "aufgabenHtmlSha256": "3c8cc1fd1411b8a9d28c9af566f9fc17371803967cdc947255bd3f29afdeb693",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|3|a": {
+      "punkte": 13,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 16,
+      "urspruenglicherTextSha256": "d92b160837e2eeb3770518a785f159c0c069e800cae05f560e94df4cc171d822",
+      "erhaltenerTextLaenge": 834,
+      "erhaltenerTextSha256": "d92b160837e2eeb3770518a785f159c0c069e800cae05f560e94df4cc171d822",
+      "aufgabenHtmlSha256": "e40ef7b9c104f44e455e4798402e5d6f566e0c216c973d2cf33b52eac60d9f28",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|3|b": {
+      "punkte": 3,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "44940fc1d8ec11a1416b96d4c22b73bef2aae267010e1a0f9096a887d2993835",
+      "erhaltenerTextLaenge": 315,
+      "erhaltenerTextSha256": "44940fc1d8ec11a1416b96d4c22b73bef2aae267010e1a0f9096a887d2993835",
+      "aufgabenHtmlSha256": "c4da1d825b49e4ad55a3dd51c3b8ee32070e9afcdfa3c1c6420347ce068db7fb",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|4|a": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "f133e3598c4506104a74cb2bd4f11fb42bfa10a180fd447a0d4bb3ba192f8d96",
+      "erhaltenerTextLaenge": 441,
+      "erhaltenerTextSha256": "f133e3598c4506104a74cb2bd4f11fb42bfa10a180fd447a0d4bb3ba192f8d96",
+      "aufgabenHtmlSha256": "0700677e1515964cf3d8661f9dc00c62795c0dc54344208d166d816281a2ac25",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|4|b": {
+      "punkte": 3,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "5d050045efe817f6c1dfbea5bad9a210ad65d3cf6ddcf2ccc4e26def7c1a5efa",
+      "erhaltenerTextLaenge": 334,
+      "erhaltenerTextSha256": "5d050045efe817f6c1dfbea5bad9a210ad65d3cf6ddcf2ccc4e26def7c1a5efa",
+      "aufgabenHtmlSha256": "bfe90e2fa8e26acedbd7c247857b1fd1c6a8615cf4c29a5a37f15fc92d81f6e0",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|4|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "ef357ffc83f58feab05d5f51acd527126dbbbddbd10a6a719d80484a6a304ddf",
+      "erhaltenerTextLaenge": 383,
+      "erhaltenerTextSha256": "ef357ffc83f58feab05d5f51acd527126dbbbddbd10a6a719d80484a6a304ddf",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|5|a": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "e8722281842e31b20f623ed938525c2fdee7bb938abb22aadc74126a2dbedc48",
+      "erhaltenerTextLaenge": 446,
+      "erhaltenerTextSha256": "e8722281842e31b20f623ed938525c2fdee7bb938abb22aadc74126a2dbedc48",
+      "aufgabenHtmlSha256": "4d38b43d10a92fea7c1fc4e8cbc3be82320658581e66b04a72a77d3e57a8e54d",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|5|b": {
+      "punkte": 4,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "c0d8987f44f28988de0986117aea385e017c4baa5a9488e0bf7176c0dc373b28",
+      "erhaltenerTextLaenge": 220,
+      "erhaltenerTextSha256": "c0d8987f44f28988de0986117aea385e017c4baa5a9488e0bf7176c0dc373b28",
+      "aufgabenHtmlSha256": "b55471d3c1fd2209b1d370bea73daef88a188a4b3d284ae11e946f97ff5f9f73",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|5|c": {
+      "punkte": 4,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "a16ce4298fcfb4f8317531843921f44794a011c0f60fde3dc1876d22a6c93b47",
+      "erhaltenerTextLaenge": 250,
+      "erhaltenerTextSha256": "a16ce4298fcfb4f8317531843921f44794a011c0f60fde3dc1876d22a6c93b47",
+      "aufgabenHtmlSha256": "152b3350e823564bf3180dfd5ae8ae502436dd77b81ec631dad16810950fd6c2",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|5|d": {
+      "punkte": 4,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "71879ca96714515c64dfe3f7da35046dcd426335a5e135c52aeee3211c627867",
+      "erhaltenerTextLaenge": 211,
+      "erhaltenerTextSha256": "71879ca96714515c64dfe3f7da35046dcd426335a5e135c52aeee3211c627867",
+      "aufgabenHtmlSha256": "8455d07c9b2c9565261ca013095440612b8f4489a6f54cf7335a7c633e38b9f5",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|6|a": {
+      "punkte": 9,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "792179dca1894c2046634682ec5780c2c21871ee3faf8e632117c12691383cf0",
+      "erhaltenerTextLaenge": 308,
+      "erhaltenerTextSha256": "792179dca1894c2046634682ec5780c2c21871ee3faf8e632117c12691383cf0",
+      "aufgabenHtmlSha256": "74599b46ea535e953743f1acf57dd0539f1eb6bfd2c6c24d28ef1ed22a254e4d",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_1|Rechnungswesen|6|b": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "5f4530e3fd39fb75d48115c3fad2d0a2a86ddcb527e8cdd83b3348a77c5d812d",
+      "erhaltenerTextLaenge": 552,
+      "erhaltenerTextSha256": "5f4530e3fd39fb75d48115c3fad2d0a2a86ddcb527e8cdd83b3348a77c5d812d",
+      "aufgabenHtmlSha256": "2b137b8123e89ac9385a1b05ec8ac21eec8f5e0bd68d2baf0f4a1e4bbe9cd4fb",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|1|a": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "87e951a321d9892928a73873316a6fcdcdd954d5a30cc1ec2a5e6719a35f87eb",
+      "erhaltenerTextLaenge": 493,
+      "erhaltenerTextSha256": "87e951a321d9892928a73873316a6fcdcdd954d5a30cc1ec2a5e6719a35f87eb",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|1|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "b4e6631a24f2ab865a70b175c601883186be1511444a2f71b81bbedbd2844a9f",
+      "erhaltenerTextLaenge": 546,
+      "erhaltenerTextSha256": "b4e6631a24f2ab865a70b175c601883186be1511444a2f71b81bbedbd2844a9f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|2|a": {
+      "punkte": 7,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "bb33bc2f7818f21a6dbd1790c7818b5bf409471637c6e0fca3612a647e94f971",
+      "erhaltenerTextLaenge": 374,
+      "erhaltenerTextSha256": "bb33bc2f7818f21a6dbd1790c7818b5bf409471637c6e0fca3612a647e94f971",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|2|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "31bac4dad8b6c9c550a682bf3fdfcfce265123cae193278bb23f4ed922222bc1",
+      "erhaltenerTextLaenge": 471,
+      "erhaltenerTextSha256": "31bac4dad8b6c9c550a682bf3fdfcfce265123cae193278bb23f4ed922222bc1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|2|c": {
+      "punkte": 11,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "f27d9a166679f1f54797dd9d29a90f11d2bd54e950ac1b5c38d5588ff2f79010",
+      "erhaltenerTextLaenge": 395,
+      "erhaltenerTextSha256": "f27d9a166679f1f54797dd9d29a90f11d2bd54e950ac1b5c38d5588ff2f79010",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|3|a": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "2f595d9594b465dfec0e9ad06effb6b26e8da0f69b12da57a6a3e8df257e13e7",
+      "erhaltenerTextLaenge": 308,
+      "erhaltenerTextSha256": "2f595d9594b465dfec0e9ad06effb6b26e8da0f69b12da57a6a3e8df257e13e7",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|3|b": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "ec70036cfe09f2eb5a413ac8d7f508014087a065c2a1e3f5b431e91f158518c4",
+      "erhaltenerTextLaenge": 529,
+      "erhaltenerTextSha256": "ec70036cfe09f2eb5a413ac8d7f508014087a065c2a1e3f5b431e91f158518c4",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|3|c": {
+      "punkte": 7,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "0180c7bac4083c3ddddc3f95092192d445c79f632666b81cf56bf41c28a89243",
+      "erhaltenerTextLaenge": 359,
+      "erhaltenerTextSha256": "0180c7bac4083c3ddddc3f95092192d445c79f632666b81cf56bf41c28a89243",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|4|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "c9892fee4ce8e82bf811faead697cd1c6a1ebf1f83101de80331c21e034f6c39",
+      "erhaltenerTextLaenge": 435,
+      "erhaltenerTextSha256": "c9892fee4ce8e82bf811faead697cd1c6a1ebf1f83101de80331c21e034f6c39",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|4|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "bd6d1386b21992eaa9371de236a6d95796faabbacc476add2e3cdaa3f843af47",
+      "erhaltenerTextLaenge": 645,
+      "erhaltenerTextSha256": "bd6d1386b21992eaa9371de236a6d95796faabbacc476add2e3cdaa3f843af47",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|5|a": {
+      "punkte": 11,
+      "fragetyp": "text",
+      "kriterienAnzahl": 14,
+      "urspruenglicherTextSha256": "ad681ba9140340a2e6abb11d00784c7c7e403aa41129e38dfbf169a1d4c364ad",
+      "erhaltenerTextLaenge": 665,
+      "erhaltenerTextSha256": "ad681ba9140340a2e6abb11d00784c7c7e403aa41129e38dfbf169a1d4c364ad",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|5|b": {
+      "punkte": 7,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "64eeed046354955f6dbf19f8f53f650f4701b1173bf7fc7cc34e70d543c073b8",
+      "erhaltenerTextLaenge": 344,
+      "erhaltenerTextSha256": "64eeed046354955f6dbf19f8f53f650f4701b1173bf7fc7cc34e70d543c073b8",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|6|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "51d764e315d8b7f86007c7997ee060de4912da6153a70f2afa23df3da7edf97d",
+      "erhaltenerTextLaenge": 764,
+      "erhaltenerTextSha256": "51d764e315d8b7f86007c7997ee060de4912da6153a70f2afa23df3da7edf97d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|6|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "10df7a6ce00f7883b701e3dc487bdae50892e0335fa9e5f13f5e043a13a2bc6d",
+      "erhaltenerTextLaenge": 377,
+      "erhaltenerTextSha256": "10df7a6ce00f7883b701e3dc487bdae50892e0335fa9e5f13f5e043a13a2bc6d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_1|Recht und Steuern|6|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "4299e212203144bcfda65e51fb83a4128360d276767641a0239b15f335f27b90",
+      "erhaltenerTextLaenge": 465,
+      "erhaltenerTextSha256": "4299e212203144bcfda65e51fb83a4128360d276767641a0239b15f335f27b90",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|1|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 11,
+      "urspruenglicherTextSha256": "1817d7f72c5c5549b77a69d6f9a74eddfa423506eded00c33d4ee30505fb20ff",
+      "erhaltenerTextLaenge": 805,
+      "erhaltenerTextSha256": "1817d7f72c5c5549b77a69d6f9a74eddfa423506eded00c33d4ee30505fb20ff",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|1|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 13,
+      "urspruenglicherTextSha256": "1b5926fbab7268cf6581169523539e0613b7db5dec346bd76a47aad5003eede7",
+      "erhaltenerTextLaenge": 560,
+      "erhaltenerTextSha256": "1b5926fbab7268cf6581169523539e0613b7db5dec346bd76a47aad5003eede7",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|1|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 12,
+      "urspruenglicherTextSha256": "9e2656cc0098b1ba589f4fb8fe356fd1f650b73249befa8b0e64edaaf26b399b",
+      "erhaltenerTextLaenge": 629,
+      "erhaltenerTextSha256": "9e2656cc0098b1ba589f4fb8fe356fd1f650b73249befa8b0e64edaaf26b399b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|2|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "1a66075d264ca3cc8f7ce3908e73217be2a99085c7d6086d97255bd52e256102",
+      "erhaltenerTextLaenge": 639,
+      "erhaltenerTextSha256": "1a66075d264ca3cc8f7ce3908e73217be2a99085c7d6086d97255bd52e256102",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|2|b": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "718b3987406442c72034664cdd28547b233b757746f1506318a4cf3c48e6c637",
+      "erhaltenerTextLaenge": 363,
+      "erhaltenerTextSha256": "718b3987406442c72034664cdd28547b233b757746f1506318a4cf3c48e6c637",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|2|c": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 13,
+      "urspruenglicherTextSha256": "c8e79b1efc7198881a8b1179f8b1f2e836bccb0ea686fa767c0ea4ecaef65e1a",
+      "erhaltenerTextLaenge": 897,
+      "erhaltenerTextSha256": "c8e79b1efc7198881a8b1179f8b1f2e836bccb0ea686fa767c0ea4ecaef65e1a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|2|d": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "a6476905f05e9c984feab73e138d96025e727d96cd99ed9c4c3499c238235c26",
+      "erhaltenerTextLaenge": 194,
+      "erhaltenerTextSha256": "a6476905f05e9c984feab73e138d96025e727d96cd99ed9c4c3499c238235c26",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|3|a": {
+      "punkte": 15,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 17,
+      "urspruenglicherTextSha256": "0f9f6e7c836d25cc6bebf83dc990026f9c7edd15aa51dfce0cac18f2a77b2ea5",
+      "erhaltenerTextLaenge": 966,
+      "erhaltenerTextSha256": "0f9f6e7c836d25cc6bebf83dc990026f9c7edd15aa51dfce0cac18f2a77b2ea5",
+      "aufgabenHtmlSha256": "18347628ff7ee55a5d4b888ad23636ccce7aab292077636bb067371cedbcda02",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|4|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 13,
+      "urspruenglicherTextSha256": "c537ae7d6411c67d2356ccff1413664d0d8adc0b1fdd170e6be5ee371d7bff5d",
+      "erhaltenerTextLaenge": 725,
+      "erhaltenerTextSha256": "c537ae7d6411c67d2356ccff1413664d0d8adc0b1fdd170e6be5ee371d7bff5d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|4|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 12,
+      "urspruenglicherTextSha256": "854821e9d450f4f4d1f57364228fc9f6bb60a6c418a759ac4fad118565e8cf52",
+      "erhaltenerTextLaenge": 766,
+      "erhaltenerTextSha256": "854821e9d450f4f4d1f57364228fc9f6bb60a6c418a759ac4fad118565e8cf52",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|4|c": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "7014552317a83adb01e34449e11d89742b99be25de0b64b5aad3aeba523575e6",
+      "erhaltenerTextLaenge": 609,
+      "erhaltenerTextSha256": "7014552317a83adb01e34449e11d89742b99be25de0b64b5aad3aeba523575e6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|5|a": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "4cf460e317d9e018f5ba1b550d6fc6f21217014af11245171e67213a16fa95f6",
+      "erhaltenerTextLaenge": 526,
+      "erhaltenerTextSha256": "4cf460e317d9e018f5ba1b550d6fc6f21217014af11245171e67213a16fa95f6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_1|Unternehmensführung|5|b": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 12,
+      "urspruenglicherTextSha256": "115480cf9f9d974f829ad585accc964708c77558a65bc9f2b205a56813a20a01",
+      "erhaltenerTextLaenge": 775,
+      "erhaltenerTextSha256": "115480cf9f9d974f829ad585accc964708c77558a65bc9f2b205a56813a20a01",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|1|a": {
+      "punkte": 6,
+      "fragetyp": "diagramm",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "c741d0033a9949504ab83d63a680b34615efde91787275b7d624de0bd74b778c",
+      "erhaltenerTextLaenge": 596,
+      "erhaltenerTextSha256": "c741d0033a9949504ab83d63a680b34615efde91787275b7d624de0bd74b778c",
+      "aufgabenHtmlSha256": "ecc49782d24e45e449febd57da49c157c30144e04d7946d7af7e8103eae108b2",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|1|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "dd19275a6563787f8030fb038a9eaa0e8b79d38371f3407d5d03e6896f6d41dc",
+      "erhaltenerTextLaenge": 812,
+      "erhaltenerTextSha256": "dd19275a6563787f8030fb038a9eaa0e8b79d38371f3407d5d03e6896f6d41dc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|1|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "b66a19c95ed30fe0479822992c8e7dac816815c1f6f20a164f30d74de0a4169d",
+      "erhaltenerTextLaenge": 745,
+      "erhaltenerTextSha256": "b66a19c95ed30fe0479822992c8e7dac816815c1f6f20a164f30d74de0a4169d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|2|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "751a79788482d7c04a0219e368d844c2f3b3e5b0a01e2266bb3d006ff1b28bbd",
+      "erhaltenerTextLaenge": 844,
+      "erhaltenerTextSha256": "751a79788482d7c04a0219e368d844c2f3b3e5b0a01e2266bb3d006ff1b28bbd",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|2|b": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "a6a680ca492c32743e6e314c5d81a5e929edb93e1b80293a03145a8cefbe1bb3",
+      "erhaltenerTextLaenge": 466,
+      "erhaltenerTextSha256": "a6a680ca492c32743e6e314c5d81a5e929edb93e1b80293a03145a8cefbe1bb3",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|2|c": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "7c3fa764a535a2d56d359ad12208baec4446eb2fc9d431f13ed8db556edbbc3f",
+      "erhaltenerTextLaenge": 625,
+      "erhaltenerTextSha256": "7c3fa764a535a2d56d359ad12208baec4446eb2fc9d431f13ed8db556edbbc3f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|3|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "6eafeed1cb773677970839e8b21070aa750e45dd0fc3faa5b5ceea659adc83c8",
+      "erhaltenerTextLaenge": 609,
+      "erhaltenerTextSha256": "6eafeed1cb773677970839e8b21070aa750e45dd0fc3faa5b5ceea659adc83c8",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|3|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "0bc266d9170073b200fbbf1738db985ca45386e833bbbbfb9718d36084043b06",
+      "erhaltenerTextLaenge": 491,
+      "erhaltenerTextSha256": "0bc266d9170073b200fbbf1738db985ca45386e833bbbbfb9718d36084043b06",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|3|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "b040db0da764b79dec2a5cf7003073dd415303844697130ace4ceebe235de9be",
+      "erhaltenerTextLaenge": 599,
+      "erhaltenerTextSha256": "b040db0da764b79dec2a5cf7003073dd415303844697130ace4ceebe235de9be",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|4|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "925ebb15fe8a2b14f6d9dd9ca077ebe7abd41469074e2545971ad0ce36cf0724",
+      "erhaltenerTextLaenge": 757,
+      "erhaltenerTextSha256": "925ebb15fe8a2b14f6d9dd9ca077ebe7abd41469074e2545971ad0ce36cf0724",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|4|b": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "29215e442b909de110955af05fe75cf6a8a6877c62c10b5994380be812d1505a",
+      "erhaltenerTextLaenge": 796,
+      "erhaltenerTextSha256": "29215e442b909de110955af05fe75cf6a8a6877c62c10b5994380be812d1505a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|5|a": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "8b3d03d524b8a3fb2d3ae5ca7a3936d1959e4510b233a5246c55fe4bb62f18c4",
+      "erhaltenerTextLaenge": 905,
+      "erhaltenerTextSha256": "8b3d03d524b8a3fb2d3ae5ca7a3936d1959e4510b233a5246c55fe4bb62f18c4",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|5|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "2c408544db13ca290f843fed33daa04655ad7e333b9166970c3d51484c45b7c9",
+      "erhaltenerTextLaenge": 419,
+      "erhaltenerTextSha256": "2c408544db13ca290f843fed33daa04655ad7e333b9166970c3d51484c45b7c9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|6|a": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "22a9adf0e258d2b338903205d1b035e9cb1fd0df840c3333d3335c4b7ac33a56",
+      "erhaltenerTextLaenge": 280,
+      "erhaltenerTextSha256": "22a9adf0e258d2b338903205d1b035e9cb1fd0df840c3333d3335c4b7ac33a56",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|6|b": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "06963da18c9ffb6c23912527c4e45ef304dad5aaffbc9378be2deb3fbdde7d98",
+      "erhaltenerTextLaenge": 370,
+      "erhaltenerTextSha256": "06963da18c9ffb6c23912527c4e45ef304dad5aaffbc9378be2deb3fbdde7d98",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_1|VWL/BWL|6|c": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "d0b0c7d662179a4d26cff04eb422db248593e257a3e3306f982b1a189b3e0990",
+      "erhaltenerTextLaenge": 767,
+      "erhaltenerTextSha256": "d0b0c7d662179a4d26cff04eb422db248593e257a3e3306f982b1a189b3e0990",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|1|a": {
+      "punkte": 5,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "6fff2744a9f448a7cfdef93d473f05f0c7006b3392aabc04d4726706042fa5ca",
+      "erhaltenerTextLaenge": 265,
+      "erhaltenerTextSha256": "6fff2744a9f448a7cfdef93d473f05f0c7006b3392aabc04d4726706042fa5ca",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|1|b": {
+      "punkte": 5,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "d83f01320cefc5b1c4b71cecb746721e544fc1f368413a4c373a2afbcf7c1591",
+      "erhaltenerTextLaenge": 242,
+      "erhaltenerTextSha256": "d83f01320cefc5b1c4b71cecb746721e544fc1f368413a4c373a2afbcf7c1591",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|2|a": {
+      "punkte": 14,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "884c5b06f376a64e1b3e298208a67d8c5f7e72dcd4b06a8eb103a21265308cbd",
+      "erhaltenerTextLaenge": 230,
+      "erhaltenerTextSha256": "884c5b06f376a64e1b3e298208a67d8c5f7e72dcd4b06a8eb103a21265308cbd",
+      "aufgabenHtmlSha256": "3bd3308e00643c576ee1205a5cfe9628b02dada7c3492660d74f3396d44a9156",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|3|a": {
+      "punkte": 15,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 15,
+      "urspruenglicherTextSha256": "e39fe5e3029606488082dc4adcf00885236cc50b20306de65c2c14e3c65aee32",
+      "erhaltenerTextLaenge": 516,
+      "erhaltenerTextSha256": "e39fe5e3029606488082dc4adcf00885236cc50b20306de65c2c14e3c65aee32",
+      "aufgabenHtmlSha256": "33671e7aacd2ab857a75fb6503a1349c76cb447af14d247d6f05f6daf15d1ebd",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|3|b": {
+      "punkte": 3,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "2c269f3172f0ed8f76dffe558939e59bb5edb3a7feff8cf65c86936299ddae64",
+      "erhaltenerTextLaenge": 128,
+      "erhaltenerTextSha256": "2c269f3172f0ed8f76dffe558939e59bb5edb3a7feff8cf65c86936299ddae64",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|4|a": {
+      "punkte": 12,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "85cbbdd93b3ba1ae70892e2e85ae214697d47d6dc42abb7e597959727790b804",
+      "erhaltenerTextLaenge": 384,
+      "erhaltenerTextSha256": "85cbbdd93b3ba1ae70892e2e85ae214697d47d6dc42abb7e597959727790b804",
+      "aufgabenHtmlSha256": "714b24c3b652cfab2d1afa1eea1652b3f44261f5bad9cf65e6ed45fb6f561a04",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|4|b": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "9b95d1c05bae8ef7703eb2f07f83d8b7a342622890eff392cfb97c90b272ce17",
+      "erhaltenerTextLaenge": 107,
+      "erhaltenerTextSha256": "9b95d1c05bae8ef7703eb2f07f83d8b7a342622890eff392cfb97c90b272ce17",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|4|c": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "1866956966eb2f78327d055789b2fb6f55a0e6c6a7e739563e5e69ce195dc0a1",
+      "erhaltenerTextLaenge": 352,
+      "erhaltenerTextSha256": "1866956966eb2f78327d055789b2fb6f55a0e6c6a7e739563e5e69ce195dc0a1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|5|a": {
+      "punkte": 4,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "0560f1ab4a7230a78418a1a8130ba15487bb73c911518fc91aec29ef39dfd191",
+      "erhaltenerTextLaenge": 174,
+      "erhaltenerTextSha256": "0560f1ab4a7230a78418a1a8130ba15487bb73c911518fc91aec29ef39dfd191",
+      "aufgabenHtmlSha256": "8a63a4ea8230f5d2a8a89977d94f2faa6684a77979d5fbc3f506e069ee52597b",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|5|b": {
+      "punkte": 7,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "8c686a38edd19a9116027b0c5f25b133e1a12e66c0f64ab2fb4cc82e1117a1d5",
+      "erhaltenerTextLaenge": 281,
+      "erhaltenerTextSha256": "8c686a38edd19a9116027b0c5f25b133e1a12e66c0f64ab2fb4cc82e1117a1d5",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|5|c": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "e37c7a73ef65994eb365ae51e3b562ae880ef7c8b292c6c5126fd0b69ebf0ad9",
+      "erhaltenerTextLaenge": 277,
+      "erhaltenerTextSha256": "e37c7a73ef65994eb365ae51e3b562ae880ef7c8b292c6c5126fd0b69ebf0ad9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|6|a": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "590649f60266f72eac1aee07d6c6bccab4df6be7641c12e7bb1a5d785ad3aeba",
+      "erhaltenerTextLaenge": 345,
+      "erhaltenerTextSha256": "590649f60266f72eac1aee07d6c6bccab4df6be7641c12e7bb1a5d785ad3aeba",
+      "aufgabenHtmlSha256": "78e86efd528474fdc5300cf4962db1e1551ab6388e6d1fadfe0efd9aadb4ed9a",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|6|b": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "1c9c23f7d350aa25ec4e9958d9944f95981cc7a81a9203e133f5534b8f69ec49",
+      "erhaltenerTextLaenge": 139,
+      "erhaltenerTextSha256": "1c9c23f7d350aa25ec4e9958d9944f95981cc7a81a9203e133f5534b8f69ec49",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|6|c": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "e530525e0f6f8929d77a2bfab11a1533158b10c68681b542a7ac70042cb222e5",
+      "erhaltenerTextLaenge": 63,
+      "erhaltenerTextSha256": "e530525e0f6f8929d77a2bfab11a1533158b10c68681b542a7ac70042cb222e5",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_2|Rechnungswesen|7|a": {
+      "punkte": 10,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "d681e1d318e2c213b88df57063ab9bb1885b51bfb74d866640ba60f396041a2c",
+      "erhaltenerTextLaenge": 201,
+      "erhaltenerTextSha256": "d681e1d318e2c213b88df57063ab9bb1885b51bfb74d866640ba60f396041a2c",
+      "aufgabenHtmlSha256": "004e5055535ee729220543efa9ed3e960fdfc409bf156c52d85a48267ae5539e",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|1|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "08a1de7a7e8d3249b252b86e2b6053262a157dbc990433ab245a4661227020d2",
+      "erhaltenerTextLaenge": 427,
+      "erhaltenerTextSha256": "cea6fc0928917c5c4facd4ce308e19250e3a5280258ea0d5f728030ddfaefb0d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|1|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "66b1c51a2984fe6e2e11f72924f44ab1a635ac4995dbdcda2f2e9d521342e3b9",
+      "erhaltenerTextLaenge": 508,
+      "erhaltenerTextSha256": "66b1c51a2984fe6e2e11f72924f44ab1a635ac4995dbdcda2f2e9d521342e3b9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|2|a": {
+      "punkte": 15,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "2ec597f41a51025e19bce6ba3167afd6704048691c32ccbf7f8557c924088e03",
+      "erhaltenerTextLaenge": 743,
+      "erhaltenerTextSha256": "414583c39a9256874d615370d6d85d8bd0de70588bfbfe3baa0773eb62eb63e9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|3|a": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "d38d32305184e36b339dedbf904d67eb09e89002af3d5f1c80a307a855292487",
+      "erhaltenerTextLaenge": 162,
+      "erhaltenerTextSha256": "d38d32305184e36b339dedbf904d67eb09e89002af3d5f1c80a307a855292487",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|3|b": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "5e45c453a60a7a8d737b1f4c55d6fa021ebd5c8f7c314df74538ee2aa984a127",
+      "erhaltenerTextLaenge": 296,
+      "erhaltenerTextSha256": "5e45c453a60a7a8d737b1f4c55d6fa021ebd5c8f7c314df74538ee2aa984a127",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|3|c": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "fd2b40caa0966e46b752d43272f85ad1b84dd664914435e416bcc1d61751317e",
+      "erhaltenerTextLaenge": 284,
+      "erhaltenerTextSha256": "fd2b40caa0966e46b752d43272f85ad1b84dd664914435e416bcc1d61751317e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|3|d": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "a3b6fc6af49da94907194e6970f3e204ecaa13518603587a5c6d6899d809b3a2",
+      "erhaltenerTextLaenge": 408,
+      "erhaltenerTextSha256": "a3b6fc6af49da94907194e6970f3e204ecaa13518603587a5c6d6899d809b3a2",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|3|e": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "2e0737d714523d0f6a3c5a49ddd3408f0a9592edf95b7158741d75fbb95e221a",
+      "erhaltenerTextLaenge": 726,
+      "erhaltenerTextSha256": "2e0737d714523d0f6a3c5a49ddd3408f0a9592edf95b7158741d75fbb95e221a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|4|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "70a315d87f5b9c49df3d8c83f2a04468110f1f11d1e6156a9954ad7fe349cd46",
+      "erhaltenerTextLaenge": 360,
+      "erhaltenerTextSha256": "70a315d87f5b9c49df3d8c83f2a04468110f1f11d1e6156a9954ad7fe349cd46",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|4|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "d260625bcb63df5fae599e8f9bbd633016868770df32838a7f9b9153347d7c40",
+      "erhaltenerTextLaenge": 384,
+      "erhaltenerTextSha256": "d260625bcb63df5fae599e8f9bbd633016868770df32838a7f9b9153347d7c40",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|4|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "9d70f9ce44c0eb9dfda530f8271aea161e4bc27260b38f4ab080cf3e119e23ed",
+      "erhaltenerTextLaenge": 502,
+      "erhaltenerTextSha256": "9d70f9ce44c0eb9dfda530f8271aea161e4bc27260b38f4ab080cf3e119e23ed",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|5|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "ac32590e99bceb7bed4999545d8e109f9a7092a762adfeef418178e2794b8854",
+      "erhaltenerTextLaenge": 466,
+      "erhaltenerTextSha256": "ac32590e99bceb7bed4999545d8e109f9a7092a762adfeef418178e2794b8854",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|5|b": {
+      "punkte": 11,
+      "fragetyp": "text",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "fc36830203fa994c3c2aa40ed6a8275187acbe852f5c3ff400d5e7aaf00d8991",
+      "erhaltenerTextLaenge": 514,
+      "erhaltenerTextSha256": "fc36830203fa994c3c2aa40ed6a8275187acbe852f5c3ff400d5e7aaf00d8991",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|5|c": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "bd27f054c408379adc5d794aef8430df1a40856cab9b701c21cb37bca5dc3f1b",
+      "erhaltenerTextLaenge": 595,
+      "erhaltenerTextSha256": "bd27f054c408379adc5d794aef8430df1a40856cab9b701c21cb37bca5dc3f1b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|6|a": {
+      "punkte": 5,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "d3a2e2bf192f5a5ee058eccb8509485f966f5857757abba0001ea116e5678d7f",
+      "erhaltenerTextLaenge": 158,
+      "erhaltenerTextSha256": "d3a2e2bf192f5a5ee058eccb8509485f966f5857757abba0001ea116e5678d7f",
+      "aufgabenHtmlSha256": "0a1383382bad4199d06135c6df9d11969423208a28141fc25bbdbc226149aa28",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|6|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "d9541c83f3031ae5220a61faa22c7c5617da28cba3f0af8a6c5c2865baf6ac3d",
+      "erhaltenerTextLaenge": 580,
+      "erhaltenerTextSha256": "d9541c83f3031ae5220a61faa22c7c5617da28cba3f0af8a6c5c2865baf6ac3d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_2|Recht und Steuern|6|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "8ee07b9cd7899256e2e13cd6a41a9bb1359a0ac5f7dfce1e08a9c37b2e678186",
+      "erhaltenerTextLaenge": 195,
+      "erhaltenerTextSha256": "8ee07b9cd7899256e2e13cd6a41a9bb1359a0ac5f7dfce1e08a9c37b2e678186",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|1|a": {
+      "punkte": 15,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "bd55293070c12528cf457ef2b5981d7b2f5327b251cf6e3db050478a6caaeab1",
+      "erhaltenerTextLaenge": 481,
+      "erhaltenerTextSha256": "bd55293070c12528cf457ef2b5981d7b2f5327b251cf6e3db050478a6caaeab1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|1|b": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "fa4b13d29746b28bd3c5f82b2b4332e08add1d138aa99c3137729569629982ab",
+      "erhaltenerTextLaenge": 369,
+      "erhaltenerTextSha256": "fa4b13d29746b28bd3c5f82b2b4332e08add1d138aa99c3137729569629982ab",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|1|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "dd542c9426b0c2b0769229d47571f67ca6a792d8a4d48a4a5ba37d69fe40c2ba",
+      "erhaltenerTextLaenge": 247,
+      "erhaltenerTextSha256": "dd542c9426b0c2b0769229d47571f67ca6a792d8a4d48a4a5ba37d69fe40c2ba",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|2|a": {
+      "punkte": 16,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "749d91e5a2f9c293d0d2815a550f0ab7441499d19455e8efafcd11d74bdd771c",
+      "erhaltenerTextLaenge": 788,
+      "erhaltenerTextSha256": "749d91e5a2f9c293d0d2815a550f0ab7441499d19455e8efafcd11d74bdd771c",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|3|a": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "c59b2dd4a3259ba08476e814a0baff2f99f67f995a4a695b420f7e66dccb2691",
+      "erhaltenerTextLaenge": 611,
+      "erhaltenerTextSha256": "c59b2dd4a3259ba08476e814a0baff2f99f67f995a4a695b420f7e66dccb2691",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|4|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "2cb443519f23596249a050b1cf33697e07390dd950d2a6c8cdd0226c903f6e54",
+      "erhaltenerTextLaenge": 429,
+      "erhaltenerTextSha256": "2cb443519f23596249a050b1cf33697e07390dd950d2a6c8cdd0226c903f6e54",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|4|b": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 10,
+      "urspruenglicherTextSha256": "bbc689719d699f55cb09f1c0b0c621438a398802dd3f917d79983cf9fe9eac90",
+      "erhaltenerTextLaenge": 423,
+      "erhaltenerTextSha256": "bbc689719d699f55cb09f1c0b0c621438a398802dd3f917d79983cf9fe9eac90",
+      "aufgabenHtmlSha256": "736b630d61bad80dc8a4ae643fe974a1e5e8dbc3ccadf835125917cd490f587c",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|5|a": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "ae762bbd2501fca20a5e26aae4851ff3f6e3e42154231a0d4908d6e300946457",
+      "erhaltenerTextLaenge": 399,
+      "erhaltenerTextSha256": "ae762bbd2501fca20a5e26aae4851ff3f6e3e42154231a0d4908d6e300946457",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|5|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "a47af0b40a5b17e6e947fd60b04b5eda1d19be67623f007b30e8bd3cc0f402be",
+      "erhaltenerTextLaenge": 400,
+      "erhaltenerTextSha256": "a47af0b40a5b17e6e947fd60b04b5eda1d19be67623f007b30e8bd3cc0f402be",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|6|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "8275ae994dfced193fade197c31dd6aed46b37edaba5c16322b0e87fc877d0f5",
+      "erhaltenerTextLaenge": 397,
+      "erhaltenerTextSha256": "8275ae994dfced193fade197c31dd6aed46b37edaba5c16322b0e87fc877d0f5",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_2|Unternehmensführung|6|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "cd4a1305f1955207cb3f99576ba543735b7fdce58c6bc7e8d593c1c2ddcb5e38",
+      "erhaltenerTextLaenge": 490,
+      "erhaltenerTextSha256": "cd4a1305f1955207cb3f99576ba543735b7fdce58c6bc7e8d593c1c2ddcb5e38",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|1|a": {
+      "punkte": 4,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "4efbffde4fa7888c475de7216e724c5aa165e3b1630c92f61ed6d933b8807acb",
+      "erhaltenerTextLaenge": 173,
+      "erhaltenerTextSha256": "4efbffde4fa7888c475de7216e724c5aa165e3b1630c92f61ed6d933b8807acb",
+      "aufgabenHtmlSha256": "7f81cf7026f8975e6ff2edcad77f0f421f4f501834b7c349555f0f48e7db9f7c",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|1|b": {
+      "punkte": 5,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "c780ecd5ff173095a02e006e6ff99632a879f6317d6663e4ec75f810e463f5a6",
+      "erhaltenerTextLaenge": 251,
+      "erhaltenerTextSha256": "c780ecd5ff173095a02e006e6ff99632a879f6317d6663e4ec75f810e463f5a6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|1|c": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "66efa016d71ff57d3fd30159aae364ad9fb9bffe1dab1c7a6a6583d517a94df0",
+      "erhaltenerTextLaenge": 270,
+      "erhaltenerTextSha256": "66efa016d71ff57d3fd30159aae364ad9fb9bffe1dab1c7a6a6583d517a94df0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|2|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "826ee52c685fd26247f052b5f98ab1c963608c6bc1c6642d2e72a1455965ae57",
+      "erhaltenerTextLaenge": 387,
+      "erhaltenerTextSha256": "826ee52c685fd26247f052b5f98ab1c963608c6bc1c6642d2e72a1455965ae57",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|2|b": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "9dacd686bbe62a640e72550f82b2aecbf60ba90ba157b0e8beeb100173f051ce",
+      "erhaltenerTextLaenge": 351,
+      "erhaltenerTextSha256": "9dacd686bbe62a640e72550f82b2aecbf60ba90ba157b0e8beeb100173f051ce",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|3|a": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "fded747a558e367f58e5af68d51649486bba378a9a5395019fbf34cbae4d1697",
+      "erhaltenerTextLaenge": 413,
+      "erhaltenerTextSha256": "fded747a558e367f58e5af68d51649486bba378a9a5395019fbf34cbae4d1697",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|3|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "83a5ac5878be6e8dd03dfdbd06b14c8aedcb83c0bd3f64f11814498c3785b384",
+      "erhaltenerTextLaenge": 396,
+      "erhaltenerTextSha256": "83a5ac5878be6e8dd03dfdbd06b14c8aedcb83c0bd3f64f11814498c3785b384",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|4|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "405149b755c111a4d8761f690e7d0029bf6d7930c3d6de1a3e52fca4e229cb53",
+      "erhaltenerTextLaenge": 337,
+      "erhaltenerTextSha256": "405149b755c111a4d8761f690e7d0029bf6d7930c3d6de1a3e52fca4e229cb53",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|4|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "b7157bc61f3be2e5472843a1bbc334a60fbff6d3bc4ed6c1b00f40047df2d9db",
+      "erhaltenerTextLaenge": 402,
+      "erhaltenerTextSha256": "b7157bc61f3be2e5472843a1bbc334a60fbff6d3bc4ed6c1b00f40047df2d9db",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|5|a": {
+      "punkte": 15,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "bb222663d5e1e22e26f32ca4c7b4a02c02b4598908b6055957769e2b6e7cd6bc",
+      "erhaltenerTextLaenge": 498,
+      "erhaltenerTextSha256": "bb222663d5e1e22e26f32ca4c7b4a02c02b4598908b6055957769e2b6e7cd6bc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|5|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "7c9efac1ffbba2394b167f21c06bba09c4a2f6882020c22a0b78e60f6256e84b",
+      "erhaltenerTextLaenge": 257,
+      "erhaltenerTextSha256": "7c9efac1ffbba2394b167f21c06bba09c4a2f6882020c22a0b78e60f6256e84b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|6|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "bf37c7189080181f3db93e96e207f6e9925121a620aee332546d7cce2b0fe54e",
+      "erhaltenerTextLaenge": 469,
+      "erhaltenerTextSha256": "bf37c7189080181f3db93e96e207f6e9925121a620aee332546d7cce2b0fe54e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|6|b": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "81359f671a6431ba44a7865db0091f12b07c50ef06c4d95242e59ebc5605dded",
+      "erhaltenerTextLaenge": 455,
+      "erhaltenerTextSha256": "81359f671a6431ba44a7865db0091f12b07c50ef06c4d95242e59ebc5605dded",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_2|VWL/BWL|6|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "20985c173372dbcf3dae5bc9e3a5c7eb3e35e3f6672df57fcd8d79a899b81294",
+      "erhaltenerTextLaenge": 394,
+      "erhaltenerTextSha256": "20985c173372dbcf3dae5bc9e3a5c7eb3e35e3f6672df57fcd8d79a899b81294",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|1|a": {
+      "punkte": 20,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "fce98e2a4bc833552b43d196623d4d9a9c17428ce820faff887b34df51dd660d",
+      "erhaltenerTextLaenge": 482,
+      "erhaltenerTextSha256": "fce98e2a4bc833552b43d196623d4d9a9c17428ce820faff887b34df51dd660d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|2|a": {
+      "punkte": 15,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "6d66556b84b1f440a094499a3860426da3d684e200218e74bf8d03dd15990e17",
+      "erhaltenerTextLaenge": 364,
+      "erhaltenerTextSha256": "6d66556b84b1f440a094499a3860426da3d684e200218e74bf8d03dd15990e17",
+      "aufgabenHtmlSha256": "5da778f380e21867e8530b58400ee75a8587a150dd8d3f2267100a54d3bd445d",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|3|a": {
+      "punkte": 14,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "fcbdaacfc3409f2dd64edf1af240de60d48407af8869369c9f1910648747dfda",
+      "erhaltenerTextLaenge": 516,
+      "erhaltenerTextSha256": "fcbdaacfc3409f2dd64edf1af240de60d48407af8869369c9f1910648747dfda",
+      "aufgabenHtmlSha256": "e223ede03aab55642b8c676a8eeaaae9cfc305ca324b48f342006300a602bd56",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|3|b": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "fd644af7707360230536584266e46b7aa911bad63c3b266656d996fcea0b6dbc",
+      "erhaltenerTextLaenge": 274,
+      "erhaltenerTextSha256": "fd644af7707360230536584266e46b7aa911bad63c3b266656d996fcea0b6dbc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|4|a": {
+      "punkte": 4,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "5cd6baaeaab581b465e4b74afc82219ac505b02f4637f62778e8ddfe4587d8e1",
+      "erhaltenerTextLaenge": 122,
+      "erhaltenerTextSha256": "5cd6baaeaab581b465e4b74afc82219ac505b02f4637f62778e8ddfe4587d8e1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|4|b": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "c8e540bdaaeeae42fc79000dc51604fe7cb462af6c24a205880bababc9070651",
+      "erhaltenerTextLaenge": 86,
+      "erhaltenerTextSha256": "c8e540bdaaeeae42fc79000dc51604fe7cb462af6c24a205880bababc9070651",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|4|c": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "9fd82bbfadccab40a90020d969c0b5c1f045aa42c153309a6e8962e041b2c10e",
+      "erhaltenerTextLaenge": 30,
+      "erhaltenerTextSha256": "9fd82bbfadccab40a90020d969c0b5c1f045aa42c153309a6e8962e041b2c10e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|4|d": {
+      "punkte": 4,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "f4e2802a7b7006376256205b6e0ab9723a31e261b271129ae5eac09ae7d2d6ab",
+      "erhaltenerTextLaenge": 35,
+      "erhaltenerTextSha256": "f4e2802a7b7006376256205b6e0ab9723a31e261b271129ae5eac09ae7d2d6ab",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|4|e": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "8fbac72c68afe369bef4833a58dc25e9b7360e643863484ef9108bb594d77955",
+      "erhaltenerTextLaenge": 139,
+      "erhaltenerTextSha256": "8fbac72c68afe369bef4833a58dc25e9b7360e643863484ef9108bb594d77955",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|5|a": {
+      "punkte": 10,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "09be71a1f296ddeede79783c2f927f38de91c534c5ef0876b5304525527b7b9a",
+      "erhaltenerTextLaenge": 266,
+      "erhaltenerTextSha256": "09be71a1f296ddeede79783c2f927f38de91c534c5ef0876b5304525527b7b9a",
+      "aufgabenHtmlSha256": "2288ac8bed5432f25cf266763532e2a142fda04879754ee850eb037f301c22f4",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|5|b": {
+      "punkte": 3,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "0ebec1bc6971164ea0b356746bcac1ea570e794fa73ee78c3af35bc8d0c5df0e",
+      "erhaltenerTextLaenge": 92,
+      "erhaltenerTextSha256": "0ebec1bc6971164ea0b356746bcac1ea570e794fa73ee78c3af35bc8d0c5df0e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|5|c": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "8e67577ceaab48fe0976c449b91607a508a3892f1f8947895d77280d54f751b6",
+      "erhaltenerTextLaenge": 115,
+      "erhaltenerTextSha256": "8e67577ceaab48fe0976c449b91607a508a3892f1f8947895d77280d54f751b6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|6|a": {
+      "punkte": 5,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "04caf309ece048a3fa99be0ef3b019568ba8e7591417572c83361c46bfcbe925",
+      "erhaltenerTextLaenge": 148,
+      "erhaltenerTextSha256": "04caf309ece048a3fa99be0ef3b019568ba8e7591417572c83361c46bfcbe925",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|6|b": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "67d1ba2220a178df7a3b5890f8bcb023b08bebae62e45e07bdf0a0f67f7afcd9",
+      "erhaltenerTextLaenge": 91,
+      "erhaltenerTextSha256": "67d1ba2220a178df7a3b5890f8bcb023b08bebae62e45e07bdf0a0f67f7afcd9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_3|Rechnungswesen|6|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "3034350a6a61c3a06a3c74c272645b1e729fec5e1bbf68fe52ea69cbd16436f8",
+      "erhaltenerTextLaenge": 275,
+      "erhaltenerTextSha256": "3034350a6a61c3a06a3c74c272645b1e729fec5e1bbf68fe52ea69cbd16436f8",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|1|a": {
+      "punkte": 16,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "489fb34224810c4513e21167c2cb57f53592111abad22365257c38a46e5c8605",
+      "erhaltenerTextLaenge": 468,
+      "erhaltenerTextSha256": "f13481da5c33f7972fbb5ae619f9195fa3aa51eedac5622bec308a0286c6b275",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|2|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "07660a7675293f6b4f7a3816968a7a682b5d400beb2891ead42472b327a2da71",
+      "erhaltenerTextLaenge": 206,
+      "erhaltenerTextSha256": "07660a7675293f6b4f7a3816968a7a682b5d400beb2891ead42472b327a2da71",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|2|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "dac8c9118646a445f06089b983e0f31e73a87d46390e595932f2b84416385df4",
+      "erhaltenerTextLaenge": 161,
+      "erhaltenerTextSha256": "dac8c9118646a445f06089b983e0f31e73a87d46390e595932f2b84416385df4",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|2|c": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "0797c3092e4be6d993d1717f4576a3386aa89cb73e0006db89efd2d271570368",
+      "erhaltenerTextLaenge": 312,
+      "erhaltenerTextSha256": "0797c3092e4be6d993d1717f4576a3386aa89cb73e0006db89efd2d271570368",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|2|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "0319681f6eafd4b5f8bb61ddb5822bf98ded634f7f06a848008c9339490e07c8",
+      "erhaltenerTextLaenge": 185,
+      "erhaltenerTextSha256": "eb7fd64d089bce69ef8a43e645648f11514926ca0a78a0250e91ec07448accd0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|3|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "a474a8ba54e3d15ea85df5ce9d115414eed5f6e0fa6ceace3595f65b29e9e705",
+      "erhaltenerTextLaenge": 83,
+      "erhaltenerTextSha256": "a474a8ba54e3d15ea85df5ce9d115414eed5f6e0fa6ceace3595f65b29e9e705",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|3|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "f13dab27e8279284328667e869906ae2d53411ca2b22bb0412a36d11d49c1d06",
+      "erhaltenerTextLaenge": 347,
+      "erhaltenerTextSha256": "f13dab27e8279284328667e869906ae2d53411ca2b22bb0412a36d11d49c1d06",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|4|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "4759c507f4982d079edb7da0bac1c6b233c25a17745882c1297526c3111fdccd",
+      "erhaltenerTextLaenge": 171,
+      "erhaltenerTextSha256": "4759c507f4982d079edb7da0bac1c6b233c25a17745882c1297526c3111fdccd",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|4|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "079607d5b637a23862a0b59d97fc72e9247f25a5aec58cc93a7d412d6bfec5b9",
+      "erhaltenerTextLaenge": 157,
+      "erhaltenerTextSha256": "079607d5b637a23862a0b59d97fc72e9247f25a5aec58cc93a7d412d6bfec5b9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|4|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "f2f3c12b934601f335210806673a0c25ad5238578406c84b2ffb9e08e3363446",
+      "erhaltenerTextLaenge": 191,
+      "erhaltenerTextSha256": "f2f3c12b934601f335210806673a0c25ad5238578406c84b2ffb9e08e3363446",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|4|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "524e999505e8ef6895c01b47710ab7716541259ab585711a27d4cf2861003dc1",
+      "erhaltenerTextLaenge": 210,
+      "erhaltenerTextSha256": "524e999505e8ef6895c01b47710ab7716541259ab585711a27d4cf2861003dc1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|4|e": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "f74beee68b12b17e049affab900e255108f11e014fbcff467b43a6beee7adc6a",
+      "erhaltenerTextLaenge": 271,
+      "erhaltenerTextSha256": "f74beee68b12b17e049affab900e255108f11e014fbcff467b43a6beee7adc6a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|5|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "6be9a91fd6ac97c179907979d43e8cd2028ccaf21e29f57bd60385e840ec1665",
+      "erhaltenerTextLaenge": 310,
+      "erhaltenerTextSha256": "6be9a91fd6ac97c179907979d43e8cd2028ccaf21e29f57bd60385e840ec1665",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|5|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "19648392d7db7c733ddd5bed29bdc4ff5927bd6acd26565f3a87a581b19651f9",
+      "erhaltenerTextLaenge": 561,
+      "erhaltenerTextSha256": "19648392d7db7c733ddd5bed29bdc4ff5927bd6acd26565f3a87a581b19651f9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|5|c": {
+      "punkte": 6,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "dec1bd945576498b8cb38dc1f18afd31386df13dd77c8f1dc415651627d09e84",
+      "erhaltenerTextLaenge": 187,
+      "erhaltenerTextSha256": "dec1bd945576498b8cb38dc1f18afd31386df13dd77c8f1dc415651627d09e84",
+      "aufgabenHtmlSha256": "2545c018db8cafb0af8b3aa7e5b3047c17a591889157c024c7a50df584a86468",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|6|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "99d37554d045c1e885f31240189cf1836f83895de4146f0eff0625670e9b29ac",
+      "erhaltenerTextLaenge": 312,
+      "erhaltenerTextSha256": "99d37554d045c1e885f31240189cf1836f83895de4146f0eff0625670e9b29ac",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|6|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "4930d6496f003a531a67f57ed4cb16986eb4fbd62e343ccbf4b2e1d356a4dc41",
+      "erhaltenerTextLaenge": 207,
+      "erhaltenerTextSha256": "4930d6496f003a531a67f57ed4cb16986eb4fbd62e343ccbf4b2e1d356a4dc41",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|6|c": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "c3b3a69f0bbcd2911f1b66c33af2e80c05392c676c38b340ce6fe3c259de56b2",
+      "erhaltenerTextLaenge": 150,
+      "erhaltenerTextSha256": "c3b3a69f0bbcd2911f1b66c33af2e80c05392c676c38b340ce6fe3c259de56b2",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_3|Recht und Steuern|6|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "ca62537e72e87a8d92220fbfa5f949a69f24587658864cafe08153d4f23413ae",
+      "erhaltenerTextLaenge": 109,
+      "erhaltenerTextSha256": "ca62537e72e87a8d92220fbfa5f949a69f24587658864cafe08153d4f23413ae",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|1|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "89ab8bfe142fa986e2ffa984e88aa710b7590416a53c2964eb5e296b0c85c61f",
+      "erhaltenerTextLaenge": 316,
+      "erhaltenerTextSha256": "89ab8bfe142fa986e2ffa984e88aa710b7590416a53c2964eb5e296b0c85c61f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|1|b": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "fe37080424737c9ebeb40a6b1688d600c338aececd282943962d7742cadd1c23",
+      "erhaltenerTextLaenge": 229,
+      "erhaltenerTextSha256": "fe37080424737c9ebeb40a6b1688d600c338aececd282943962d7742cadd1c23",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|1|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "ca08067561d2a17bacf91343b5b86a5532db0fe8d09d9b54688e01dbb52b262a",
+      "erhaltenerTextLaenge": 332,
+      "erhaltenerTextSha256": "ca08067561d2a17bacf91343b5b86a5532db0fe8d09d9b54688e01dbb52b262a",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|2|a": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "34739e959ab7dc165a7952ce54eb7fc7a9527c93432c6ada33f797ec7cac4990",
+      "erhaltenerTextLaenge": 211,
+      "erhaltenerTextSha256": "34739e959ab7dc165a7952ce54eb7fc7a9527c93432c6ada33f797ec7cac4990",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|2|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "f0f69804c7401988cc528d49b4e2430a53564667ff0b8f0b61c6a98af269d927",
+      "erhaltenerTextLaenge": 208,
+      "erhaltenerTextSha256": "f0f69804c7401988cc528d49b4e2430a53564667ff0b8f0b61c6a98af269d927",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|2|c": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "5a997472375dd8e03d53217048ee67a30de30bf7ecad9296595b58f4f6afd6ee",
+      "erhaltenerTextLaenge": 427,
+      "erhaltenerTextSha256": "5a997472375dd8e03d53217048ee67a30de30bf7ecad9296595b58f4f6afd6ee",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|3|a": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "36d83d6dc76cc4aa1e3d37aa08b51ab2a062391d8a1f7b6ffb1d35320b18c982",
+      "erhaltenerTextLaenge": 424,
+      "erhaltenerTextSha256": "36d83d6dc76cc4aa1e3d37aa08b51ab2a062391d8a1f7b6ffb1d35320b18c982",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|3|b": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "294fc396ffb533cceb889c0b05c9dc82ee72ff04fb3b6f8bceda7b313db8c287",
+      "erhaltenerTextLaenge": 532,
+      "erhaltenerTextSha256": "294fc396ffb533cceb889c0b05c9dc82ee72ff04fb3b6f8bceda7b313db8c287",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|4|a": {
+      "punkte": 15,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "06c6f5dad74ac50fc55b7d1e77c6b49d73111a147f0520c17dac38f0cd3db448",
+      "erhaltenerTextLaenge": 347,
+      "erhaltenerTextSha256": "06c6f5dad74ac50fc55b7d1e77c6b49d73111a147f0520c17dac38f0cd3db448",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|4|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "0fdd8c2e1b387e26a2e1390514d626a83d9a8e55ce96036a98efae424d9dd441",
+      "erhaltenerTextLaenge": 382,
+      "erhaltenerTextSha256": "0fdd8c2e1b387e26a2e1390514d626a83d9a8e55ce96036a98efae424d9dd441",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|5|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "654935827f24d1d373351588cbd2c10a3300a8b1bb711daa7bd1d6ba9803f5e2",
+      "erhaltenerTextLaenge": 448,
+      "erhaltenerTextSha256": "654935827f24d1d373351588cbd2c10a3300a8b1bb711daa7bd1d6ba9803f5e2",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_3|Unternehmensführung|5|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "2628026c7575a665020bcc8ab16cc8ed27da3d5d7260ee120dd44897642d1e83",
+      "erhaltenerTextLaenge": 273,
+      "erhaltenerTextSha256": "2628026c7575a665020bcc8ab16cc8ed27da3d5d7260ee120dd44897642d1e83",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|1|a": {
+      "punkte": 3,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "e9c78d02b1bae598318ce5e1e4449f3f6965c012a2c8a902dfcb1692c3cb11f6",
+      "erhaltenerTextLaenge": 167,
+      "erhaltenerTextSha256": "e9c78d02b1bae598318ce5e1e4449f3f6965c012a2c8a902dfcb1692c3cb11f6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|1|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "98db3dcf29060c05e9aaa0a1f6bc92d623d8252997af1dc140731c2de71e5965",
+      "erhaltenerTextLaenge": 338,
+      "erhaltenerTextSha256": "98db3dcf29060c05e9aaa0a1f6bc92d623d8252997af1dc140731c2de71e5965",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|1|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "d90830dfddf3c7e49232ba95ada0a8e20c270cc97c2859523ba734b4ea8b7bf9",
+      "erhaltenerTextLaenge": 332,
+      "erhaltenerTextSha256": "d90830dfddf3c7e49232ba95ada0a8e20c270cc97c2859523ba734b4ea8b7bf9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|2|a": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "7a60b552052401e8e5870fe4e3a10d82fe03998e9e9b9bfc1d95f36d460c2cf3",
+      "erhaltenerTextLaenge": 400,
+      "erhaltenerTextSha256": "7a60b552052401e8e5870fe4e3a10d82fe03998e9e9b9bfc1d95f36d460c2cf3",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|2|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "8fccf02e83bdf65c2840aed204edd16d4ccc69b8ea2cf88bf3a7d3d20f4c85f9",
+      "erhaltenerTextLaenge": 248,
+      "erhaltenerTextSha256": "8fccf02e83bdf65c2840aed204edd16d4ccc69b8ea2cf88bf3a7d3d20f4c85f9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|3|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "e7bae64e691bba2c7eb6014cb4f982116fe59b7ff067654ed4ea8e143e60e74e",
+      "erhaltenerTextLaenge": 240,
+      "erhaltenerTextSha256": "e7bae64e691bba2c7eb6014cb4f982116fe59b7ff067654ed4ea8e143e60e74e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|3|b": {
+      "punkte": 16,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "d98cb20f98c4dc622599a4cae7d6bb674b0ea99bfd5c1bbcc4f50004138f40e4",
+      "erhaltenerTextLaenge": 553,
+      "erhaltenerTextSha256": "d98cb20f98c4dc622599a4cae7d6bb674b0ea99bfd5c1bbcc4f50004138f40e4",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|4|a": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "6a5ea18ae7c64d6d6b4c9e7037a52e0ce65d5bf0938d0b8c1a43b75495ae03b4",
+      "erhaltenerTextLaenge": 194,
+      "erhaltenerTextSha256": "6a5ea18ae7c64d6d6b4c9e7037a52e0ce65d5bf0938d0b8c1a43b75495ae03b4",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|4|b": {
+      "punkte": 15,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "4c33af6bbe646b6a0c7b2bea82b5b487be7125367be0252ad7b96ad60ff5a60d",
+      "erhaltenerTextLaenge": 592,
+      "erhaltenerTextSha256": "4c33af6bbe646b6a0c7b2bea82b5b487be7125367be0252ad7b96ad60ff5a60d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|5|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "436511c2f726460c5e4487a7c1dea209de1856414268d3bc300ddab533858fac",
+      "erhaltenerTextLaenge": 337,
+      "erhaltenerTextSha256": "436511c2f726460c5e4487a7c1dea209de1856414268d3bc300ddab533858fac",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|5|b": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "8a48d3818dfcf20d113b8be27dd4bbca16e5ee8872f84c329e238243788e687e",
+      "erhaltenerTextLaenge": 293,
+      "erhaltenerTextSha256": "8a48d3818dfcf20d113b8be27dd4bbca16e5ee8872f84c329e238243788e687e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_3|VWL/BWL|6|a": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "6adc2da548df3727341d38b1229c9c65fd327ebdda3c4b37cc51d64e2b4c65c7",
+      "erhaltenerTextLaenge": 253,
+      "erhaltenerTextSha256": "6adc2da548df3727341d38b1229c9c65fd327ebdda3c4b37cc51d64e2b4c65c7",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|1|": {
+      "punkte": 20,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "361f609d377424dfeac7d4732a6ee74fac8b6663358326b8972336c1677ea1b1",
+      "erhaltenerTextLaenge": 648,
+      "erhaltenerTextSha256": "361f609d377424dfeac7d4732a6ee74fac8b6663358326b8972336c1677ea1b1",
+      "aufgabenHtmlSha256": "1ec7d2739f945bcd06e68b570985884e7a53fc592787509aeecc899f25b7b4ff",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|2|": {
+      "punkte": 20,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 12,
+      "urspruenglicherTextSha256": "d2b8ccd66d5ffc1bd60c485b069eb14113cc8bc291c4b5e43566df45a3ac7bfd",
+      "erhaltenerTextLaenge": 693,
+      "erhaltenerTextSha256": "d2b8ccd66d5ffc1bd60c485b069eb14113cc8bc291c4b5e43566df45a3ac7bfd",
+      "aufgabenHtmlSha256": "407d08b3adb0068d810f991f9e839b3efa012dc83450c631b1b2295c6d5922f7",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|3|a": {
+      "punkte": 8,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "a96974f396c7781a532804e99e5c204ca056817e7d0d5fda50c85af90e35ddd2",
+      "erhaltenerTextLaenge": 151,
+      "erhaltenerTextSha256": "a96974f396c7781a532804e99e5c204ca056817e7d0d5fda50c85af90e35ddd2",
+      "aufgabenHtmlSha256": "43e00895b04171bcea3569fe594cbe4afee71c62eb92f074003a659260cd7a8c",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|3|b": {
+      "punkte": 4,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "652ae59350ecf5b135872e77c66d8dbfbb0b00227ccd3b4d8170d265232b536d",
+      "erhaltenerTextLaenge": 212,
+      "erhaltenerTextSha256": "652ae59350ecf5b135872e77c66d8dbfbb0b00227ccd3b4d8170d265232b536d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|3|c": {
+      "punkte": 2,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "b352bb92e409b543935f6900b5c1bf6bf35659c2b81b321451e7ecb766d7d56f",
+      "erhaltenerTextLaenge": 87,
+      "erhaltenerTextSha256": "b352bb92e409b543935f6900b5c1bf6bf35659c2b81b321451e7ecb766d7d56f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|3|d": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "206b0070d980757afe533f06afefc4fac92a752ce571e3f70851e95248363012",
+      "erhaltenerTextLaenge": 320,
+      "erhaltenerTextSha256": "206b0070d980757afe533f06afefc4fac92a752ce571e3f70851e95248363012",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|4|": {
+      "punkte": 9,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "7a4a6c32ac49d7be2f40b579d827dcef7d3865dcb02111ecff6907fedec1a487",
+      "erhaltenerTextLaenge": 200,
+      "erhaltenerTextSha256": "7a4a6c32ac49d7be2f40b579d827dcef7d3865dcb02111ecff6907fedec1a487",
+      "aufgabenHtmlSha256": "aba01d95c4e8a19b20f5e750ea7bc8ad0d8426a9bc78ad49d273fc4520361681",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|5|": {
+      "punkte": 15,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 12,
+      "urspruenglicherTextSha256": "dd9a38bc6ecfb2e75d3861685f26ad176ed3b7c197012fa56df4ac314d0316fa",
+      "erhaltenerTextLaenge": 492,
+      "erhaltenerTextSha256": "dd9a38bc6ecfb2e75d3861685f26ad176ed3b7c197012fa56df4ac314d0316fa",
+      "aufgabenHtmlSha256": "d6b4e8df7232788fd41b2a3a395bc8d6580baa3fe5b78bbff1ae2bfa4272dd51",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|6|a": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "ab19a459f1f7e8324d06a97c81a256bdd4ccfe757059460b64c9299b1c97b8fd",
+      "erhaltenerTextLaenge": 233,
+      "erhaltenerTextSha256": "ab19a459f1f7e8324d06a97c81a256bdd4ccfe757059460b64c9299b1c97b8fd",
+      "aufgabenHtmlSha256": "4bd22d073033013abda1efc9f67ff15545ef785720b70d49b97c1e76b59dbfe5",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|6|b": {
+      "punkte": 6,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 2,
+      "urspruenglicherTextSha256": "fde3829ac7cca5f815deaf5bab8057dec1fb356eccec8adbbfb0f9fb0af5b271",
+      "erhaltenerTextLaenge": 135,
+      "erhaltenerTextSha256": "fde3829ac7cca5f815deaf5bab8057dec1fb356eccec8adbbfb0f9fb0af5b271",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_REWE_SIM_4|Rechnungswesen|6|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "0d8d438e1e008f1713b948bd5f1770f03e97504ce37f866e7d0db7e8eaee7637",
+      "erhaltenerTextLaenge": 267,
+      "erhaltenerTextSha256": "0d8d438e1e008f1713b948bd5f1770f03e97504ce37f866e7d0db7e8eaee7637",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|1|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "14c30a380296dd086726ef2867f9ab875593296b308d6fdf7c53983abea165dc",
+      "erhaltenerTextLaenge": 456,
+      "erhaltenerTextSha256": "14c30a380296dd086726ef2867f9ab875593296b308d6fdf7c53983abea165dc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|1|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "6416f655608729a66a78a48b25ea28b29227cbc3f702184635dbc9303632abf7",
+      "erhaltenerTextLaenge": 236,
+      "erhaltenerTextSha256": "6416f655608729a66a78a48b25ea28b29227cbc3f702184635dbc9303632abf7",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|1|c": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "325ff2082e54eba29c6d443331314e6f295f3b8c8f7cc86ba5411b2c1ff85b53",
+      "erhaltenerTextLaenge": 435,
+      "erhaltenerTextSha256": "325ff2082e54eba29c6d443331314e6f295f3b8c8f7cc86ba5411b2c1ff85b53",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|2|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "093cd31d6950115639b60962b12a14e908f4f7f18080596b32becbd995469638",
+      "erhaltenerTextLaenge": 146,
+      "erhaltenerTextSha256": "093cd31d6950115639b60962b12a14e908f4f7f18080596b32becbd995469638",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|2|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "abc749c8f09563a075bf7dcd95275f01f40f51b13125fd2f9493ace42a0f54e0",
+      "erhaltenerTextLaenge": 288,
+      "erhaltenerTextSha256": "abc749c8f09563a075bf7dcd95275f01f40f51b13125fd2f9493ace42a0f54e0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|2|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "835056ce28bd6c9d5f902d63f62e14c831d2ecff3d56518a37fb2fe70726cb42",
+      "erhaltenerTextLaenge": 320,
+      "erhaltenerTextSha256": "835056ce28bd6c9d5f902d63f62e14c831d2ecff3d56518a37fb2fe70726cb42",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|3|": {
+      "punkte": 15,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "9af8a98241d0d930142697b256dde22762e8cf3d8cbc643f6603b8fa0ba0a58c",
+      "erhaltenerTextLaenge": 668,
+      "erhaltenerTextSha256": "9af8a98241d0d930142697b256dde22762e8cf3d8cbc643f6603b8fa0ba0a58c",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|4|a": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "61a093a56143645f3de0336674c7c90a57555e5fe7d8e3c9c5869f7442cfcf93",
+      "erhaltenerTextLaenge": 133,
+      "erhaltenerTextSha256": "61a093a56143645f3de0336674c7c90a57555e5fe7d8e3c9c5869f7442cfcf93",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|4|b": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "4cea71ee88f7d40c2cad4b3f9e52ab38d453971c5b938238f22d9092afaa72a7",
+      "erhaltenerTextLaenge": 358,
+      "erhaltenerTextSha256": "4cea71ee88f7d40c2cad4b3f9e52ab38d453971c5b938238f22d9092afaa72a7",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|4|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "534f0892815029e13b7731a2d09a7fe6a544ed2fe849958b095fd345d8ea9ec9",
+      "erhaltenerTextLaenge": 369,
+      "erhaltenerTextSha256": "534f0892815029e13b7731a2d09a7fe6a544ed2fe849958b095fd345d8ea9ec9",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|5|a": {
+      "punkte": 13,
+      "fragetyp": "tabelle",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "25a1c47634c5c1137fa9ad1537d99ee3421332cc1e33eca6a2f335d6d834b6b2",
+      "erhaltenerTextLaenge": 625,
+      "erhaltenerTextSha256": "25a1c47634c5c1137fa9ad1537d99ee3421332cc1e33eca6a2f335d6d834b6b2",
+      "aufgabenHtmlSha256": "f367c6c2dbaba49ce7d8f466a52381ec010e7bef9b69c280823215413cabaca2",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|5|b": {
+      "punkte": 7,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "3462b1a6a6449bc1b291333f34de4874041f775bed7ed878c5d149fa655a3b66",
+      "erhaltenerTextLaenge": 199,
+      "erhaltenerTextSha256": "3462b1a6a6449bc1b291333f34de4874041f775bed7ed878c5d149fa655a3b66",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|6|a": {
+      "punkte": 7,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "9da49ea56d73741528521a3676158f0ef6b9eea2dc9fb70c5c006efc0fed3619",
+      "erhaltenerTextLaenge": 443,
+      "erhaltenerTextSha256": "9da49ea56d73741528521a3676158f0ef6b9eea2dc9fb70c5c006efc0fed3619",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|6|b": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "bb748a84bcef6e124f3aa620326baa7ee5960201c808c2ed8674aadc01bdf61d",
+      "erhaltenerTextLaenge": 232,
+      "erhaltenerTextSha256": "bb748a84bcef6e124f3aa620326baa7ee5960201c808c2ed8674aadc01bdf61d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_RS_SIM_4|Recht und Steuern|6|c": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "91b04b3a9d34f0f616f4bc02c24f83200a00f0cb2ec25404c056c7ba781de770",
+      "erhaltenerTextLaenge": 260,
+      "erhaltenerTextSha256": "91b04b3a9d34f0f616f4bc02c24f83200a00f0cb2ec25404c056c7ba781de770",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|1|a": {
+      "punkte": 5,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "edb2b89957c63400361922877ce5f2de0a5ed08cbed4216b079ea466fcbeb945",
+      "erhaltenerTextLaenge": 447,
+      "erhaltenerTextSha256": "edb2b89957c63400361922877ce5f2de0a5ed08cbed4216b079ea466fcbeb945",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|1|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "647d349dcff4d84dc13818aab4d7ab146c13694dfd98302cca7e310bf5f9d85b",
+      "erhaltenerTextLaenge": 453,
+      "erhaltenerTextSha256": "647d349dcff4d84dc13818aab4d7ab146c13694dfd98302cca7e310bf5f9d85b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|1|c": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "8623fcb577a0dfaf6c9560371f8033345d4bb8f74650670863d257515d6b1289",
+      "erhaltenerTextLaenge": 683,
+      "erhaltenerTextSha256": "8623fcb577a0dfaf6c9560371f8033345d4bb8f74650670863d257515d6b1289",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|2|a": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "7f8f7d84e55cde198d5d57a723ac70663737d6cc11b1710569638449412ab069",
+      "erhaltenerTextLaenge": 547,
+      "erhaltenerTextSha256": "7f8f7d84e55cde198d5d57a723ac70663737d6cc11b1710569638449412ab069",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|2|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "307bfc749b726868f7070e543f15c5bf79afb6d2dddb073b61a48603a57164a0",
+      "erhaltenerTextLaenge": 411,
+      "erhaltenerTextSha256": "307bfc749b726868f7070e543f15c5bf79afb6d2dddb073b61a48603a57164a0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|2|c": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "c9bee6f9e6762bb628c3402e6ff3eaa8632c4dd8a3fae6e5994165f547b512a4",
+      "erhaltenerTextLaenge": 281,
+      "erhaltenerTextSha256": "c9bee6f9e6762bb628c3402e6ff3eaa8632c4dd8a3fae6e5994165f547b512a4",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|3|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "32a869812c2a05fb16fa9355e38e0f04c692344b46d16c5895e5d509c845064d",
+      "erhaltenerTextLaenge": 561,
+      "erhaltenerTextSha256": "32a869812c2a05fb16fa9355e38e0f04c692344b46d16c5895e5d509c845064d",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|3|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "db9edf895a9b2d73a9e92076a60bc45ab2ed4a99258fd13120062cf74ebd08b5",
+      "erhaltenerTextLaenge": 788,
+      "erhaltenerTextSha256": "db9edf895a9b2d73a9e92076a60bc45ab2ed4a99258fd13120062cf74ebd08b5",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|4|": {
+      "punkte": 20,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "ad85dbb7a7b7b571ee2c35c66075d1b0612d2d9b02f21d1854b1286016da31c1",
+      "erhaltenerTextLaenge": 1197,
+      "erhaltenerTextSha256": "ad85dbb7a7b7b571ee2c35c66075d1b0612d2d9b02f21d1854b1286016da31c1",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|5|a": {
+      "punkte": 12,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "46995af560dfae226963eae082f35c476192ddcacbd3424cc7e8af75a1d283ae",
+      "erhaltenerTextLaenge": 572,
+      "erhaltenerTextSha256": "46995af560dfae226963eae082f35c476192ddcacbd3424cc7e8af75a1d283ae",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_UF_SIM_4|Unternehmensführung|5|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 9,
+      "urspruenglicherTextSha256": "52c375d43ddd5a0153747ca147f4629116513c548351def200c2e091182b56e0",
+      "erhaltenerTextLaenge": 615,
+      "erhaltenerTextSha256": "52c375d43ddd5a0153747ca147f4629116513c548351def200c2e091182b56e0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|1|a": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "8ff4f59e90af38f8d78e00d13221b6ffdd5d8c9f5ecef904a88461e3bb532502",
+      "erhaltenerTextLaenge": 275,
+      "erhaltenerTextSha256": "8ff4f59e90af38f8d78e00d13221b6ffdd5d8c9f5ecef904a88461e3bb532502",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|1|b": {
+      "punkte": 2,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "4d4e26fdfc841b6d4e30c19d789109fced9ff629dbffda7e95d24a9b1d3ac1cc",
+      "erhaltenerTextLaenge": 168,
+      "erhaltenerTextSha256": "4d4e26fdfc841b6d4e30c19d789109fced9ff629dbffda7e95d24a9b1d3ac1cc",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|1|c": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "2a0b1b833125001b8d7b7ac6ffa0187e9092ecb8e24f191e99535689416ea924",
+      "erhaltenerTextLaenge": 362,
+      "erhaltenerTextSha256": "2a0b1b833125001b8d7b7ac6ffa0187e9092ecb8e24f191e99535689416ea924",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|1|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "f56980fe0aaaf4a66d6934fa3e1640cae902cc29ffb0abd72cf87d0ba5da7181",
+      "erhaltenerTextLaenge": 203,
+      "erhaltenerTextSha256": "f56980fe0aaaf4a66d6934fa3e1640cae902cc29ffb0abd72cf87d0ba5da7181",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|2|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "081c682beb7165ef9b77ff7caeb00964fe37debd1d5a089537497fadf6724420",
+      "erhaltenerTextLaenge": 410,
+      "erhaltenerTextSha256": "081c682beb7165ef9b77ff7caeb00964fe37debd1d5a089537497fadf6724420",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|2|b": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "37f93736e95f71ddb66d50a7fdec0b9a3b0d7faf4395655f279d6aa57e16f39b",
+      "erhaltenerTextLaenge": 349,
+      "erhaltenerTextSha256": "37f93736e95f71ddb66d50a7fdec0b9a3b0d7faf4395655f279d6aa57e16f39b",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|3|a": {
+      "punkte": 8,
+      "fragetyp": "rechnung",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "961c8cde4cdc2a6565cb9e930849b7800b41d9076b04a3208e23ef89dd758ac5",
+      "erhaltenerTextLaenge": 285,
+      "erhaltenerTextSha256": "961c8cde4cdc2a6565cb9e930849b7800b41d9076b04a3208e23ef89dd758ac5",
+      "aufgabenHtmlSha256": "ea5b81b67df68b7cf469acebe4f65146ad9f1e4b4fde961f31418bf0180031a1",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|3|b": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "52001589d14b6b3f7c2ba7fa8003cecadd908c6e05a9b22c495f1e9d6aa2d87e",
+      "erhaltenerTextLaenge": 286,
+      "erhaltenerTextSha256": "52001589d14b6b3f7c2ba7fa8003cecadd908c6e05a9b22c495f1e9d6aa2d87e",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|3|c": {
+      "punkte": 6,
+      "fragetyp": "diagramm",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "4becd6b9d4a1a191da66ceb5d5bcf84889e01b2e4614a7d0a0f617fbcb000f80",
+      "erhaltenerTextLaenge": 251,
+      "erhaltenerTextSha256": "4becd6b9d4a1a191da66ceb5d5bcf84889e01b2e4614a7d0a0f617fbcb000f80",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|4|a": {
+      "punkte": 6,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "b449941d88c555028a51abcec56e1122d058e29a2968cb9f0919fab029812637",
+      "erhaltenerTextLaenge": 304,
+      "erhaltenerTextSha256": "b449941d88c555028a51abcec56e1122d058e29a2968cb9f0919fab029812637",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|4|b": {
+      "punkte": 9,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "56bb01733ed38486da3ea362dc383c74fdd06929783cc01b2f6d19c24b835b23",
+      "erhaltenerTextLaenge": 279,
+      "erhaltenerTextSha256": "56bb01733ed38486da3ea362dc383c74fdd06929783cc01b2f6d19c24b835b23",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|5|a": {
+      "punkte": 3,
+      "fragetyp": "text",
+      "kriterienAnzahl": 3,
+      "urspruenglicherTextSha256": "f05075def0c39dc3825813092c1c5027b0800703c658e042b3e20f11a0f73be0",
+      "erhaltenerTextLaenge": 214,
+      "erhaltenerTextSha256": "f05075def0c39dc3825813092c1c5027b0800703c658e042b3e20f11a0f73be0",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|5|b": {
+      "punkte": 10,
+      "fragetyp": "text",
+      "kriterienAnzahl": 7,
+      "urspruenglicherTextSha256": "37123333d131ff3f223db2ba15f140620d2b2951fb3f4126be420272c863e7ad",
+      "erhaltenerTextLaenge": 437,
+      "erhaltenerTextSha256": "37123333d131ff3f223db2ba15f140620d2b2951fb3f4126be420272c863e7ad",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|6|a": {
+      "punkte": 8,
+      "fragetyp": "text",
+      "kriterienAnzahl": 8,
+      "urspruenglicherTextSha256": "737c9c4fafa206db10e3a8f20df41a1527c208e6ce69ebaf18b772a671c246e6",
+      "erhaltenerTextLaenge": 312,
+      "erhaltenerTextSha256": "737c9c4fafa206db10e3a8f20df41a1527c208e6ce69ebaf18b772a671c246e6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|6|b": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 5,
+      "urspruenglicherTextSha256": "b31f22f07e71a918fb34c4fb4a776a63c4969cfbc28246cbfb81c54903e0f25f",
+      "erhaltenerTextLaenge": 198,
+      "erhaltenerTextSha256": "b31f22f07e71a918fb34c4fb4a776a63c4969cfbc28246cbfb81c54903e0f25f",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|6|c": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 6,
+      "urspruenglicherTextSha256": "76384880502ac80ad4f6e2e84d6da449ea71abb55daf5449ee3b7ac84baa9a30",
+      "erhaltenerTextLaenge": 350,
+      "erhaltenerTextSha256": "76384880502ac80ad4f6e2e84d6da449ea71abb55daf5449ee3b7ac84baa9a30",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    },
+    "WQ_VWL_SIM_4|VWL/BWL|6|d": {
+      "punkte": 4,
+      "fragetyp": "text",
+      "kriterienAnzahl": 4,
+      "urspruenglicherTextSha256": "f2064a362b148c809af7a87df74f5517e08261b0ccfc474b95c93340867ebaf6",
+      "erhaltenerTextLaenge": 358,
+      "erhaltenerTextSha256": "f2064a362b148c809af7a87df74f5517e08261b0ccfc474b95c93340867ebaf6",
+      "aufgabenHtmlSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bilddatei": ""
+    }
+  }
+}

@@ -147,21 +147,26 @@ async function ladePruefungSimulation() {
     const simulation = document.getElementById("pruefungSimulationSelect").value;
     const einheit = document.getElementById("pruefungFachSelect").value;
 
-    const response = await fetch(
-      API_BASE_URL
-      + "?action=getPruefungSimulation"
-      + "&teilbereich=" + encodeURIComponent(teilbereich)
-      + "&simulation=" + encodeURIComponent(simulation)
-      + "&einheit=" + encodeURIComponent(einheit)
-    );
-
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error(result.error || "Fehler");
+    // Redaktionell geprüfte Prüfungsinhalte liegen lokal. Das Google Sheet
+    // bleibt unverändert; Trainer und Lerntexte verwenden weiterhin ihre Quellen.
+    const response = await fetch("data/pruefungssimulation/katalog.json");
+    if (!response.ok) {
+      throw new Error("Der Prüfungskatalog konnte nicht geladen werden.");
     }
 
-    const daten = result.data || [];
+    const katalog = await response.json();
+    const pruefung = Array.isArray(katalog?.einheiten)
+      ? katalog.einheiten.find(function(item) {
+        return item.teilbereich === teilbereich
+          && String(item.simulation) === String(simulation)
+          && item.einheit === einheit;
+      })
+      : null;
+    if (!pruefung || !Array.isArray(pruefung.aufgaben)) {
+      throw new Error("Die gewählte Prüfung fehlt im lokalen Prüfungskatalog.");
+    }
+
+    const daten = pruefung.aufgaben;
     aktuellePruefungsDaten = daten;
 
     const fachSelect = document.getElementById("pruefungFachSelect");
@@ -179,6 +184,7 @@ async function ladePruefungSimulation() {
 
        let html = "";
     let letzteAufgabe = "";
+    let letzteSituation = "";
 
     const hauptSituation = String(
       daten.find(function(item) {
@@ -235,7 +241,14 @@ async function ladePruefungSimulation() {
         `;
 
         letzteAufgabe = item.aufgabe;
+        letzteSituation = String(item.situation || "").trim();
       }
+
+      const situation = String(item.situation || "").trim();
+      const ergaenzendeSituation = situation && situation !== letzteSituation
+        ? `<div style="background:#f4ecff;padding:14px;border-radius:12px;margin-bottom:12px;line-height:1.6;white-space:pre-wrap;">${escapeHtml(situation)}</div>`
+        : "";
+      if (situation) letzteSituation = situation;
 
       html += `
         <div style="
@@ -252,6 +265,8 @@ async function ladePruefungSimulation() {
             ${escapeHtml(item.teilaufgabe)})
             (${escapeHtml(item.punkte)} Punkte)
           </div>
+
+          ${ergaenzendeSituation}
 
           <div style="
             margin-bottom:12px;
