@@ -229,6 +229,9 @@ function setzeAppBeschaeftigt(status) {
       el.style.opacity = status ? "0.65" : "1";
       el.style.cursor = status ? "wait" : "";
     });
+    if (!status && typeof trainerAktualisiereVorherigeSchaltflaeche === "function") {
+      trainerAktualisiereVorherigeSchaltflaeche();
+    }
   }
 
 function setzeStatus(text) {
