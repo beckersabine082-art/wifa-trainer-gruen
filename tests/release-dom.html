@@ -1,0 +1,23 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><title>Lokale Freigabe-Regression</title>
+<h1>HTML-Sicherheitsprüfung</h1><pre id="result">Läuft …</pre>
+<script src="../js/main.js"></script>
+<script>
+// Local DOM regression only: no Firebase, API requests or Analytics.
+try {
+  function check(value, message) { if (!value) throw Error(message); }
+  const box = document.createElement('div');
+  box.innerHTML = sanitizeAufgabenHtml('<table style="width:100%;border-collapse:collapse"><tr><td colspan="2">Text</td><td><input class="pruefung-input" name="A" data-answer="B" value="B" onfocus="window.bad=1"></td></tr></table><select name="Wahl"><option value="A">A</option></select><textarea rows="3"></textarea><img src="javascript:alert(1)" onerror="window.bad=1"><svg onload="window.bad=1"></svg><iframe srcdoc="bad"></iframe><div style="background-image:url(https://example.invalid/x);position:fixed">x</div>');
+  check(box.querySelector('table td').colSpan === 2, 'Tabellenstruktur verloren');
+  check(box.querySelector('table').style.width === '100%', 'Tabellenbreite verloren');
+  check(box.querySelector('input').getAttribute('data-answer') === 'B', 'Lösungsschlüssel verloren');
+  check(box.querySelector('input').name === 'A', 'Zuordnung verloren');
+  check(box.querySelector('select option').value === 'A' && box.querySelector('textarea'), 'Eingabefelder verloren');
+  check(!box.querySelector('svg,iframe,script'), 'Aktives Element verblieben');
+  check(!box.querySelector('[onfocus],[onerror],[src]'), 'Aktives Attribut verblieben');
+  check(!box.innerHTML.includes('url(') && !box.innerHTML.includes('fixed'), 'Unsicherer Stil verblieben');
+  box.innerHTML = formatKilianAntwort('### Titel\n**fett**\n- <img src=x onerror="window.bad=1">');
+  check(box.querySelector('h3') && box.querySelector('strong'), 'Kilian-Formatierung verloren');
+  check(!box.querySelector('img') && box.textContent.includes('<img'), 'Kilian-HTML aktiv');
+  document.getElementById('result').textContent = 'BESTANDEN: 10 DOM-Prüfungen; Tabellen, Eingaben und Formatierung erhalten; ausführbares HTML entfernt.';
+} catch (error) { document.getElementById('result').textContent = 'FEHLGESCHLAGEN: ' + error.message; }
+</script></html>

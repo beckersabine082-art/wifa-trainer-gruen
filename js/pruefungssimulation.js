@@ -257,7 +257,7 @@ async function ladePruefungSimulation() {
             margin-bottom:12px;
             line-height:1.6;
           ">
-            ${item.frage}
+            ${sanitizeAufgabenHtml(item.frage)}
           </div>
 
           ${bauePruefungsZusatzbereich(item, index)}
@@ -319,7 +319,7 @@ function bauePruefungsZusatzbereich(item, index) {
     return `
       <div class="pruefung-zusatzbereich">
         <strong>Tabellen-/Aufgabenstruktur:</strong>
-        <div>${aufgabenHtml}</div>
+        <div>${sanitizeAufgabenHtml(aufgabenHtml)}</div>
       </div>
     `;
   }
@@ -328,7 +328,7 @@ function bauePruefungsZusatzbereich(item, index) {
     return `
       <div class="pruefung-zusatzbereich">
         <strong>Rechen-/Formelstruktur:</strong>
-        <div>${aufgabenHtml}</div>
+        <div>${sanitizeAufgabenHtml(aufgabenHtml)}</div>
       </div>
     `;
   }
@@ -509,7 +509,21 @@ function pruefungBeendenWegenZeitablauf() {
     "Prüfung beendet: Zeit abgelaufen.";
 }
 
+function pruefungsDiagrammeVollstaendig() {
+  const antworten = document.querySelectorAll('#pruefungContainer textarea.pruefung-antwort');
+  for (const textarea of antworten) {
+    if (String(textarea.dataset.fragetyp || '').toLowerCase() !== 'diagramm') continue;
+    const canvas = document.getElementById('skizze-' + textarea.dataset.index);
+    if (!textarea.value.trim() || !canvas || canvas.hasUserDrawing !== true || !canvasHatInhalt(canvas)) {
+      alert('Bitte für jede Diagrammaufgabe eine Skizze und eine schriftliche Beschreibung/Begründung eingeben.');
+      return false;
+    }
+  }
+  return true;
+}
+
 function pruefungManuellAbgeben() {
+  if (!pruefungsDiagrammeVollstaendig()) return;
 
   const bestaetigt = confirm(
     "Möchtest du die Prüfung wirklich abgeben?"
@@ -604,7 +618,7 @@ function renderPruefungsAuswertung(data) {
       ? Math.round((gesamtPunkte / gesamtMaxPunkte) * 100)
       : 0;
 
-  const bestanden = prozent >= 50;
+  const bestanden = gesamtMaxPunkte > 0 && gesamtPunkte / gesamtMaxPunkte >= 0.5;
 
   let html = `
     <div class="card">
@@ -910,6 +924,7 @@ function aktualisierePruefungTimerAnzeige() {
 }
 
 async function startePruefungsAuswertung() {
+  if (!pruefungsDiagrammeVollstaendig()) return;
   try {
     const antworten = document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort");
     const daten = [];

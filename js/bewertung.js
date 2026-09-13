@@ -70,9 +70,7 @@ function bewerteLueckentext(lueckenInputs, loesungsschluessel, maxPunkteOverride
       }
     });
 
-    const maxPunkte = Number.isFinite(maxPunkteOverride) && maxPunkteOverride > 0
-      ? maxPunkteOverride
-      : lueckenInputs.length;
+    const maxPunkte = lueckenInputs.length;
     const ergebnis = punkte + " von " + maxPunkte + " Punkten.\n" +
       (punkte === maxPunkte
         ? "Alle Lücken sind richtig beantwortet."
@@ -302,8 +300,12 @@ async function bewerteAntwort() {
       return Boolean(nurWert(input));
     });
     const diagrammCanvas = istDiagramm ? document.getElementById("skizze-normal") : null;
-    const hatSkizze = Boolean(diagrammCanvas && canvasHatInhalt(diagrammCanvas));
+    const hatSkizze = Boolean(diagrammCanvas && diagrammCanvas.hasUserDrawing === true && canvasHatInhalt(diagrammCanvas));
     const skizze = hatSkizze ? diagrammCanvas.toDataURL("image/png") : "";
+    if (istDiagramm && (!hatSkizze || !antwort)) {
+      alert("Bitte eine Skizze und eine schriftliche Beschreibung/Begründung eingeben.");
+      return;
+    }
 
     if (!aktuellerTeilbereich) {
       alert("Bitte zuerst einen Teilbereich auswählen.");

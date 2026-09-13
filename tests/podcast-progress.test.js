@@ -24,6 +24,7 @@ function createApi() {
     Error,
     Promise,
     window: {},
+    fixtureAuth: {currentUser:{uid:"uid-123",emailVerified:true,getIdToken:async()=>"test-token"},authStateReady:async()=>{}},
     fetch: async (url, options) => {
       calls.push({ url: String(url), options });
       const response = responses.shift();
@@ -35,7 +36,7 @@ function createApi() {
   };
 
   vm.createContext(context);
-  vm.runInContext(apiSource, context);
+  vm.runInContext(apiSource.replace("await import('./firebase-config.js')", '({auth:fixtureAuth})'), context);
 
   return { context, calls, responses };
 }
@@ -118,6 +119,8 @@ function createBackend() {
 
   vm.createContext(context);
   vm.runInContext(source, context);
+  // Router tests below isolate storage; real verifier is covered by release-fixes/usage-backend tests.
+  context.learningAuthorize_ = () => "uid-1";
 
   return {
     context,
@@ -214,10 +217,10 @@ test('PodcastFortschritt sheet, header, filtering, upsert and validation', () =>
   assert.ok(sheet.rows[1][8] instanceof Date);
 });
 
-test('Podcast GET and POST routes expose PodcastFortschritt actions', () => {
+test('Podcast progress is read and written through authenticated POST actions', () => {
   const backend = createBackend();
   const state = validState();
-  const getResult = backend.response('get', { action: 'getPodcastProgress', nutzer: 'uid-1', fach: 'Recht' });
+  const getResult = backend.response('post', { action: 'getPodcastProgress', nutzer: 'uid-1', fach: 'Recht' });
   assert.equal(getResult.success, true);
   assert.deepEqual(getResult.data, []);
 
@@ -225,7 +228,7 @@ test('Podcast GET and POST routes expose PodcastFortschritt actions', () => {
   assert.equal(postResult.success, true);
   assert.equal(postResult.data.firebasePfad, state.firebasePfad);
 
-  const loaded = backend.response('get', { action: 'getPodcastProgress', nutzer: 'uid-1', fach: 'Recht' });
+  const loaded = backend.response('post', { action: 'getPodcastProgress', nutzer: 'uid-1', fach: 'Recht' });
   assert.equal(loaded.data.length, 1);
   assert.equal(loaded.data[0].lerntextHash, state.lerntextHash);
 });
@@ -247,15 +250,11 @@ test('Frontend load wrapper passes explicit user and subject through unchanged',
   );
 
   assert.equal(api.calls.length, 1);
-  const requestUrl = new URL(api.calls[0].url);
-  assert.equal(requestUrl.searchParams.get('action'), 'getPodcastProgress');
-  assert.deepEqual(
-    {
-      nutzer: requestUrl.searchParams.get('nutzer'),
-      fach: requestUrl.searchParams.get('fach')
-    },
-    { nutzer: 'uid-123', fach: 'Recht' }
-  );
+  assert.equal(api.calls[0].options.method, 'POST');
+  assert.equal(new URL(api.calls[0].url).search, '');
+  assert.deepEqual(JSON.parse(api.calls[0].options.body), {
+    action:'getPodcastProgress', nutzer:'uid-123', fach:'Recht', idToken:'test-token'
+  });
 });
 
 test('Frontend load wrapper validates input and propagates API errors', async () => {
@@ -320,7 +319,8 @@ test('Frontend save wrapper passes state unchanged and returns the API response'
   assert.equal(api.calls[0].options.method, 'POST');
   assert.deepEqual(JSON.parse(api.calls[0].options.body), {
     action: 'savePodcastProgress',
-    ...originalState
+    ...originalState,
+    idToken: 'test-token'
   });
   assert.deepEqual(state, originalState);
   assert.equal(JSON.parse(api.calls[0].options.body).aktualisiert, undefined);

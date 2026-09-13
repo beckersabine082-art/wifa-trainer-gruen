@@ -165,6 +165,10 @@ function getPodcastProgress(nutzer, fach) {
   return result;
 }
 
+function sheetLiteral_(value) {
+  return typeof value === 'string' && /^\s*=/.test(value) ? "'" + value : value;
+}
+
 function savePodcastProgress(state) {
   validatePodcastProgressState_(state);
 
@@ -194,9 +198,9 @@ function savePodcastProgress(state) {
   ];
 
   if (existingRowIndex > 0) {
-    sheet.getRange(existingRowIndex, 1, 1, row.length).setValues([row]);
+    sheet.getRange(existingRowIndex, 1, 1, row.length).setValues([row.map(sheetLiteral_)]);
   } else {
-    sheet.appendRow(row);
+    sheet.appendRow(row.map(sheetLiteral_));
   }
 
   return podcastProgressDataFromRow_(row);
@@ -271,7 +275,7 @@ function upsertProgressForKey_(nutzer, bereich, fach, auswahl, frageId) {
       safeAuswahl,
       safeFrageId,
       timestamp
-    ]]);
+    ].map(sheetLiteral_)]);
     return {
       nutzer: safeNutzer,
       bereich: safeBereich,
@@ -289,7 +293,7 @@ function upsertProgressForKey_(nutzer, bereich, fach, auswahl, frageId) {
     safeAuswahl,
     safeFrageId,
     timestamp
-  ]);
+  ].map(sheetLiteral_));
 
   return {
     nutzer: safeNutzer,
@@ -312,40 +316,14 @@ function doGet(e) {
   try {
     let result = {};
 
-    if (action === "podcastAudioTest") {
-      const dryRun = String(e?.parameter?.dryRun || "").trim() === "1" || String(e?.parameter?.dryRun || "").trim().toLowerCase() === "true";
-
-      if (dryRun) {
-        return ContentService
-          .createTextOutput(JSON.stringify({
-            success: true,
-            data: {
-              route: "podcastAudioTest",
-              dryRun: true,
-              ttsCalled: false
-            }
-          }))
-          .setMimeType(ContentService.MimeType.JSON);
-      }
-
-      const fach = String(e?.parameter?.fach || "").trim();
-      const titel = String(e?.parameter?.titel || "").trim();
-      const chapter = String(e?.parameter?.chapter || "").trim();
-      const text = String(e?.parameter?.text || "").trim();
-
-      if (!text) {
-        throw new Error("Kein Test-Text übergeben.");
-      }
-
-      const payload = generatePodcastAudioTestPayload_(fach, chapter, titel, text);
-      return ContentService
-        .createTextOutput(JSON.stringify({
-          success: true,
-          data: payload
-        }))
+    // Public question APIs must never act as readers for private progress tabs.
+    if (['topics','questionById','firstQuestion','nextQuestion','getKarteikarten','quizQuestion'].includes(action) &&
+        !istOeffentlichesFragenFach_(e?.parameter?.fach)) {
+      return ContentService.createTextOutput(JSON.stringify({success:false,error:'invalid_request'}))
         .setMimeType(ContentService.MimeType.JSON);
+    }
 
-    } else if (action === "subjects") {
+    if (action === "subjects") {
       result = {
         success: true,
         data: getFrontendSheetNames()
@@ -402,58 +380,7 @@ function doGet(e) {
         data: getQuestionById(fach, frageId)
       };
 
-    } else if (action === "getProgress") {
-      const nutzer = String(e?.parameter?.nutzer || "").trim();
-      const bereich = String(e?.parameter?.bereich || "").trim();
-      const fach = String(e?.parameter?.fach || "").trim();
-      const auswahl = normalizeProgressSelection_(e?.parameter?.auswahl);
-
-      if (!nutzer || !bereich || !fach) {
-        result = {
-          success: false,
-          error: "Nutzer, Bereich und Fach für getProgress erforderlich."
-        };
-      } else {
-        const progress = getProgressForKey_(nutzer, bereich, fach, auswahl);
-        result = {
-          success: true,
-          data: progress
-            ? {
-                nutzer: progress.nutzer,
-                bereich: progress.bereich,
-                fach: progress.fach,
-                auswahl: progress.auswahl,
-                letzteFrageId: progress.letzteFrageId,
-                aktualisiert: progress.aktualisiert
-              }
-            : null
-        };
-      }
-
-    } else if (action === "getPodcastProgress") {
-      const nutzer = String(e?.parameter?.nutzer || "").trim();
-      const fach = String(e?.parameter?.fach || "").trim();
-
-      if (!nutzer || !fach) {
-        result = {
-          success: false,
-          error: "Nutzer und Fach für getPodcastProgress erforderlich."
-        };
-      } else {
-        result = {
-          success: true,
-          data: getPodcastProgress(nutzer, fach)
-        };
-      }
-
-    } else if (action === "getLernstand") {
-      const nutzer = String(e?.parameter?.nutzer || "").trim();
-
-      result = {
-        success: true,
-        data: getLernstandFrontend(nutzer)
-      };
-} else if (action === "getGlossar") {
+    } else if (action === "getGlossar") {
   result = {
     success: true,
     data: getGlossarFrontend()
@@ -517,61 +444,6 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
-function generatePodcastAudioTestPayload_(fach, chapter, titel, text) {
-  const normalizedText = String(text || "").trim();
-  if (!normalizedText) {
-    throw new Error("Kein Text für die Podcast-Test-Erzeugung vorhanden.");
-  }
-
-  // gpt-4o-mini-tts uses a 2000-token input limit. This PoC intentionally avoids
-  // a fake 4096-character limit and does not add chunking logic for the test text.
-  if (!OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY für TTS-Test fehlt.");
-  }
-
-  const response = UrlFetchApp.fetch("https://api.openai.com/v1/audio/speech", {
-    method: "post",
-    headers: {
-      "Authorization": "Bearer " + OPENAI_API_KEY,
-      "Content-Type": "application/json"
-    },
-    payload: JSON.stringify({
-      model: "gpt-4o-mini-tts",
-      voice: "alloy",
-      input: normalizedText,
-      response_format: "mp3",
-      instructions: "Sprich ruhig, klar und sachlich. Halte den fachlichen Inhalt exakt unverändert. Keine zusätzliche Interpretation oder Umformulierung."
-    }),
-    muteHttpExceptions: true
-  });
-
-  const statusCode = response.getResponseCode();
-  const headers = response.getAllHeaders ? response.getAllHeaders() : {};
-  const contentType = headers["Content-Type"] || headers["content-type"] || "audio/mpeg";
-
-  if (statusCode !== 200) {
-    const bodyText = response.getContentText();
-    throw new Error("OpenAI TTS-Fehler: " + statusCode + " - " + bodyText);
-  }
-
-  if (String(contentType).toLowerCase().indexOf("json") !== -1) {
-    const bodyText = response.getContentText();
-    throw new Error("OpenAI TTS gab keinen Audio-Stream zurück: " + bodyText);
-  }
-
-  const audioBytes = response.getContent();
-  const base64Audio = Utilities.base64Encode(audioBytes);
-
-  return {
-    fach: String(fach || ""),
-    chapter: String(chapter || ""),
-    titel: String(titel || ""),
-    mimeType: "audio/mpeg",
-    audioBase64: base64Audio,
-    byteLength: audioBytes.length
-  };
-}
-
 function getLernstandFrontend(nutzer) {
   const ss = getSpreadsheet_();
   const sheet = ss.getSheetByName("Lernstand");
@@ -631,6 +503,10 @@ function getLernstandFrontend(nutzer) {
 function doPost(e) {
   try {
     let body;
+    if (typeof e?.postData?.contents !== 'string' || e.postData.contents.length > 4000000) {
+      return ContentService.createTextOutput(JSON.stringify({success:false,error:'invalid_request'}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     try { body = JSON.parse(e.postData.contents || "{}"); }
     catch (_) {
       // Never echo malformed request bodies (which may contain authentication tokens).
@@ -641,11 +517,27 @@ function doPost(e) {
       return ContentService.createTextOutput(JSON.stringify(usageHandle_(body)))
         .setMimeType(ContentService.MimeType.JSON);
     }
+    if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid_request');
     const action = String(body.action || "").trim();
+    const protectedActions = ['getLernstand','getProgress','getPodcastProgress','saveProgress',
+      'savePodcastProgress','speichereLernstand','bewerteAntwort','frageKilian','bewertePruefung'];
+    if (!protectedActions.includes(action)) throw new Error('invalid_request');
+    body.action = action;
+    const uid = learningAuthorize_(body);
+    // Never let a client-selected identity choose a user's Sheet rows.
+    body.nutzer = uid;
 
     let result = {};
 
-    if (action === "bewerteAntwort") {
+    if (action === 'getLernstand') {
+      result = {success:true, data:getLernstandFrontend(uid)};
+    } else if (action === 'getProgress') {
+      if (!body.bereich || !body.fach) throw new Error('invalid_request');
+      result = {success:true, data:getProgressForKey_(uid, body.bereich, body.fach, normalizeProgressSelection_(body.auswahl))};
+    } else if (action === 'getPodcastProgress') {
+      result = {success:true, data:getPodcastProgress(uid, body.fach)};
+    } else if (action === "bewerteAntwort") {
+      if (!istOeffentlichesFragenFach_(body.fach)) throw new Error('invalid_request');
       result = {
         success: true,
        data: bewerteAntwortFrontend({
@@ -653,7 +545,7 @@ function doPost(e) {
   frageId: body.frageId,
   antwort: body.antwort,
           skizze: body.skizze,
-  speichereInSheet: body.speichereInSheet
+  speichereInSheet: false
 })
       };
 
@@ -738,7 +630,8 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({
         success: false,
-        error: String(error)
+        error: ['unauthenticated','invalid_request','rate_limited','unavailable'].includes(error?.usageCode || error?.message)
+          ? (error.usageCode || error.message) : 'request_failed'
       }))
       .setMimeType(ContentService.MimeType.JSON);
   }
@@ -746,6 +639,12 @@ function doPost(e) {
 
 function getSheetNames() {
   return getSpreadsheet_().getSheets().map(sheet => sheet.getName().trim());
+}
+
+function istOeffentlichesFragenFach_(fach) {
+  // Include the two subject names already used by main.js, without changing its catalog.
+  return getFrontendSheetNames().concat(['Investition und Finanzierung', 'Betriebliches Rechnungswesen und Controlling'])
+    .includes(String(fach || '').trim());
 }
 
 function getFrontendSheetNames() {
@@ -853,22 +752,17 @@ function wordMatches_(answerWord, criterionWord) {
 // Ignores "nicht nur" pattern as it's not a negation for "und X sondern auch"
 function hasNegationNear_(text, word) {
   const lower = String(text || '').toLocaleLowerCase('de-DE');
-  const wordIdx = lower.indexOf(String(word).toLocaleLowerCase('de-DE'));
-  if (wordIdx === -1) return false;
-  
-  // Look in context window: 30 chars before and after
-  const start = Math.max(0, wordIdx - 30);
-  const end = Math.min(lower.length, wordIdx + word.length + 30);
-  const context = lower.substring(start, end);
-  
-  // Check for negation patterns
-  const hasNone = /keine?|kein[em]?|nicht/.test(context);
-  if (!hasNone) return false;
-  
-  // But exclude "nicht nur" as a negation
-  if (/nicht\s+nur/.test(context)) return false;
-  
-  return true;
+  const target = String(word || '').toLocaleLowerCase('de-DE');
+  if (!target) return false;
+  // Inspect every occurrence; a later negation must not be hidden by an earlier mention.
+  let position = lower.indexOf(target);
+  while (position !== -1) {
+    const context = lower.substring(Math.max(0, position - 30), position + target.length + 30)
+      .replace(/nicht\s+nur/g, '');
+    if (/\b(?:kein(?:e|en|em|er|es)?|nicht|nie|niemals|ohne)\b/.test(context)) return true;
+    position = lower.indexOf(target, position + target.length);
+  }
+  return false;
 }
 
 // Sentence-local fallback: rescue a criterion only if all content words 
@@ -893,6 +787,8 @@ function fallbackErkenneLexikalischVerpassteKriterien_(userAnswer, stichpunkteLi
     
     if (contentWords.length === 0) return;
     
+    let positiveMatch = false;
+    let negativeMatch = false;
     // Try to find ALL content words in the SAME sentence
     for (let i = 0; i < sentences.length; i++) {
       const sentence = sentences[i];
@@ -918,23 +814,45 @@ function fallbackErkenneLexikalischVerpassteKriterien_(userAnswer, stichpunkteLi
         // All words found in this sentence. Check for negation.
         let hasNegation = false;
         for (let j = 0; j < contentWords.length; j++) {
-          if (hasNegationNear_(sentence, contentWords[j])) {
+          if (sentenceWords.some(function(word) {
+            return wordMatches_(word, contentWords[j]) && hasNegationNear_(sentence, word);
+          })) {
             hasNegation = true;
             break;
           }
         }
         
         if (!hasNegation) {
-          erkannteZusaetzlich.push(fehlendId);
+          positiveMatch = true;
         }
-        break;  // Don't check other sentences once we found a match
+        if (hasNegation) negativeMatch = true;
       }
     }
+    if (positiveMatch && !negativeMatch) erkannteZusaetzlich.push(fehlendId);
   });
   
   return {
     erkannteZusaetzlich: erkannteZusaetzlich
   };
+}
+
+function istExakteMusterantwort_(antwort, muster, istDiagramm) {
+  return !istDiagramm && Boolean(antwort) && Boolean(muster) &&
+    normalizeTextForCompare_(antwort) === normalizeTextForCompare_(muster);
+}
+
+function werteKriterienMitFallback_(text, antwort, stichpunkte, ids, istDiagramm) {
+  const result = parseKriterienErgebnis_(text, ids);
+  // A text-only rescue cannot verify a drawing and must not overturn visual rejection.
+  if (istDiagramm) return result;
+  const rescue = fallbackErkenneLexikalischVerpassteKriterien_(antwort, stichpunkte, result.fehlendeIds, ids);
+  result.erkannteIds = [...new Set(result.erkannteIds.concat(rescue.erkannteZusaetzlich))];
+  result.fehlendeIds = result.fehlendeIds.filter(id => !result.erkannteIds.includes(id));
+  return result;
+}
+
+function diagrammBewertungsregel_() {
+  return '- Skizze UND schriftliche Beschreibung/Begründung sind erforderlich. Prüfe die Skizze fachlich anhand von Frage, Musterlösung und Kriterien (Achsen, Kurven, Verläufe, Schnittpunkte und Beschriftungen). Das Vorhandensein von Pixeln ist kein erfülltes Kriterium. Eine falsche Skizze darf nicht durch eine richtige Beschreibung als vollständig richtig bewertet werden. Bewerte ein zeichnungsbezogenes Kriterium nur als erfüllt, wenn die Skizze UND die zugehörige Beschreibung dazu passen; keines ersetzt das andere.';
 }
 
 function getKriterienIdsFuerStichpunkte_(stichpunkteListe) {
@@ -1318,12 +1236,12 @@ const speichereInSheet = payload?.speichereInSheet !== false;
   const stichpunkteListe = getStichpunkteListe_(stichpunkteRaw);
   const maxPunkte = getMaxPunkteFromStichpunkte_(stichpunkteRaw);
 
-  if (!userAnswer && !hatSkizze) {
+  if ((!userAnswer && !hatSkizze) || (istDiagramm && (!userAnswer || !hatSkizze))) {
     return {
       id: frageDaten.id,
       punkte: 0,
       maxPunkte: maxPunkte,
-      ergebnis: "Keine Antwort eingegeben.",
+      ergebnis: istDiagramm ? "Skizze und schriftliche Beschreibung/Begründung erforderlich." : "Keine Antwort eingegeben.",
       musterloesung: muster,
       erkannte: [],
       fehlende: stichpunkteListe
@@ -1372,11 +1290,7 @@ const speichereInSheet = payload?.speichereInSheet !== false;
   }
 
   const antwortIstExakteMusterloesung =
-    Boolean(muster) &&
-    Boolean(userAnswer) &&
-    !istDiagramm &&
-    normalizeTextForCompare_(userAnswer) ===
-      normalizeTextForCompare_(muster);
+    istExakteMusterantwort_(userAnswer, muster, istDiagramm);
 
   if (antwortIstExakteMusterloesung) {
     const feedbackText =
@@ -1456,7 +1370,7 @@ Bewertungsregeln:
 - Wenn kein Kriterium eindeutig erfüllt ist, gib "erfuellt": [] zurück.
 - Unsicherheitsformulierungen wie "ich glaube", "wahrscheinlich", "vielleicht" sind nur dann relevant, wenn sie den fachlichen Inhalt selbst entwerten. Sonst zählt der fachliche Inhalt normal.
 
-${istDiagramm ? "- Bewerte bei DIAGRAMM zusätzlich die übermittelte Skizze auf Achsen, Kurven, Verläufe, Verschiebungen, Schnittpunkte und relevante Beschriftungen. Eine Skizze darf die schriftliche Antwort ergänzen oder ersetzen." : ""}
+${istDiagramm ? diagrammBewertungsregel_() : ""}
 
 Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
 {
@@ -1502,31 +1416,9 @@ Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
   const result = JSON.parse(bodyText);
   const text = result?.choices?.[0]?.message?.content || "";
 
-  const kriterienAuswertung = parseKriterienErgebnis_(text, kriterienIds);
-  let erkannteIds = Array.isArray(kriterienAuswertung.erkannteIds) ? kriterienAuswertung.erkannteIds : [];
-  let fehlendeIds = Array.isArray(kriterienAuswertung.fehlendeIds) ? kriterienAuswertung.fehlendeIds : [];
-
-  // Wende Fallback-Erkennung für verpasste Kriterien an
-  const fallbackResult = fallbackErkenneLexikalischVerpassteKriterien_(
-    userAnswer,
-    stichpunkteListe,
-    fehlendeIds,
-    kriterienIds
-  );
-  
-  if (fallbackResult.erkannteZusaetzlich && fallbackResult.erkannteZusaetzlich.length > 0) {
-    // Addiere erkannte Kriterien hinzu
-    fallbackResult.erkannteZusaetzlich.forEach(function(id) {
-      if (!erkannteIds.includes(id)) {
-        erkannteIds.push(id);
-      }
-    });
-    
-    // Entferne sie aus fehlenden
-    fehlendeIds = fehlendeIds.filter(function(id) {
-      return !fallbackResult.erkannteZusaetzlich.includes(id);
-    });
-  }
+  const kriterienAuswertung = werteKriterienMitFallback_(text, userAnswer, stichpunkteListe, kriterienIds, istDiagramm);
+  const erkannteIds = kriterienAuswertung.erkannteIds;
+  const fehlendeIds = kriterienAuswertung.fehlendeIds;
 
   const erkannte = erkannteIds
     .map(function(id) {
@@ -1913,7 +1805,7 @@ function speichereLernstand(eintrag) {
     prozent,
     String(eintrag.bewertung || "").trim(),
     String(eintrag.antwort || "").trim()
-  ]);
+  ].map(sheetLiteral_));
 }
 
 function speichereLernstandFrontend(
@@ -2354,22 +2246,29 @@ function bewertePruefungFrontend(daten) {
 
     gesamtMaxPunkte += maxPunkte;
 
+    const istDiagramm = fragetyp === "diagramm";
     const hatText = antwort.length > 0;
     const hatSkizze = skizze.length > 0 && skizze.startsWith("data:image");
 
-    if (!hatText && !hatSkizze) {
+    if ((!hatText && !hatSkizze) || (istDiagramm && (!hatText || !hatSkizze)) ||
+        (!istDiagramm && istKeineVerwertbareAntwort_(antwort))) {
       return {
         simulationId: eintrag.simulationId,
         aufgabe: eintrag.aufgabe,
         teilaufgabe: eintrag.teilaufgabe,
         punkte: 0,
         maxPunkte: maxPunkte,
-        ergebnis: "Keine Antwort eingegeben.",
+        ergebnis: istDiagramm ? "Skizze und schriftliche Beschreibung/Begründung erforderlich." : "Keine Antwort eingegeben.",
         erkannte: [],
         fehlende: stichpunkteListe
       };
     }
 
+    if (istExakteMusterantwort_(antwort, muster, istDiagramm)) {
+      gesamtPunkte += maxPunkte;
+      return {simulationId:eintrag.simulationId, aufgabe:eintrag.aufgabe, teilaufgabe:eintrag.teilaufgabe,
+        punkte:maxPunkte, maxPunkte, ergebnis:'vollständig richtig', erkannte:stichpunkteListe, fehlende:[]};
+    }
     const kriterienIds = getKriterienIdsFuerStichpunkte_(stichpunkteListe);
   const promptText = `
 Du bist ein strenger, fachlich genauer Korrektor für eine Prüfungssimulation.
@@ -2400,6 +2299,7 @@ Teilnehmerantwort:
 ${antwort || "(keine schriftliche Ergänzung)"}
 
 Bewertungsregeln:
+${istDiagramm ? diagrammBewertungsregel_() : ""}
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
 - Die Musterlösung und Beispiele dienen als fachliche Referenz. Bei offenen Aufgaben können auch andere fachlich korrekte Lösungen die Kriterien erfüllen. Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt, sofern das Bewertungskriterium allgemein formuliert ist.
@@ -2472,7 +2372,7 @@ const messages = [];
     const result = JSON.parse(bodyText);
     const text = result?.choices?.[0]?.message?.content || "";
 
-    const kriterienAuswertung = parseKriterienErgebnis_(text, kriterienIds);
+    const kriterienAuswertung = werteKriterienMitFallback_(text, antwort, stichpunkteListe, kriterienIds, fragetyp === "diagramm");
     const erkannteIds = Array.isArray(kriterienAuswertung.erkannteIds) ? kriterienAuswertung.erkannteIds : [];
     const fehlendeIds = Array.isArray(kriterienAuswertung.fehlendeIds) ? kriterienAuswertung.fehlendeIds : [];
 

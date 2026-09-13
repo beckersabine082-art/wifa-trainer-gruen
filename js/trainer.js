@@ -666,7 +666,7 @@ function waehleFach(fach) {
       frageHtml += "<div>" + fragePositionsBadge + escapeHtml(aktuelleFrage) + "</div>";
     }
     if (aufgabenHtml) {
-      frageHtml += '<div class="aufgaben-html-bereich">' + aufgabenHtml + "</div>";
+      frageHtml += '<div class="aufgaben-html-bereich">' + sanitizeAufgabenHtml(aufgabenHtml) + "</div>";
     }
     if (fragetyp === "DIAGRAMM") {
       frageHtml += '<div class="pruefung-zusatzbereich normal-diagramm-bereich">' +

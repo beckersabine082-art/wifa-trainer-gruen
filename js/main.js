@@ -249,11 +249,50 @@ function escapeRegExp(text) {
 }
 
 function formatKilianAntwort(text) {
-  return String(text || "")
+  return escapeHtml(text || "")
     .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     .replace(/\n- /g, "<br>• ")
     .replace(/\n/g, "<br>");
+}
+
+function sanitizeAufgabenHtml(html) {
+  const template = document.createElement('template');
+  template.innerHTML = String(html || '');
+  const output = document.createElement('div');
+  const tags = new Set('DIV SPAN P BR HR H1 H2 H3 H4 H5 H6 STRONG B EM I U S SUB SUP UL OL LI TABLE THEAD TBODY TFOOT TR TD TH CAPTION COLGROUP COL INPUT TEXTAREA SELECT OPTION OPTGROUP LABEL IMG'.split(' '));
+  const attributes = new Set('class title colspan rowspan scope headers span width height border cellpadding cellspacing type name value placeholder rows cols min max step maxlength size checked selected disabled readonly multiple required label alt'.split(' '));
+  const styles = new Set('width max-width min-width height max-height min-height margin margin-top margin-bottom margin-left margin-right padding padding-top padding-bottom padding-left padding-right border border-top border-bottom border-left border-right border-width border-style border-color border-radius border-collapse border-spacing background background-color color font-size font-weight font-style font-family text-align vertical-align line-height white-space display table-layout'.split(' '));
+  function copy(parent, node) {
+    if (node.nodeType === 3) { parent.appendChild(document.createTextNode(node.textContent)); return; }
+    if (node.nodeType !== 1 || node.namespaceURI !== 'http://www.w3.org/1999/xhtml' || !tags.has(node.tagName)) return;
+    const clean = document.createElement(node.tagName.toLowerCase());
+    for (const attr of node.attributes) {
+      const name = attr.name.toLowerCase();
+      if (attributes.has(name) || /^data-(answer|index|key)$/.test(name) || /^aria-[a-z-]+$/.test(name)) {
+        if (name === 'type' && !['text','number','checkbox','radio','hidden'].includes(attr.value.toLowerCase())) continue;
+        clean.setAttribute(name, attr.value);
+      } else if (name === 'id' || name === 'for') {
+        clean.setAttribute(name, 'aufgabe-' + attr.value);
+      } else if (name === 'style') {
+        for (const property of node.style) {
+          const value = node.style.getPropertyValue(property);
+          if (styles.has(property) && !/url\s*\(|expression|var\s*\(|[\\<>@]/i.test(value)) clean.style.setProperty(property, value);
+        }
+      } else if (name === 'src' && node.tagName === 'IMG') {
+        // Raster data URLs and ordinary HTTPS/relative image paths only.
+        try {
+          const url = new URL(attr.value, window.location.href);
+          if (url.protocol === 'https:' || (/^data:image\/(png|jpeg|gif|webp);base64,[a-z0-9+/=]+$/i.test(attr.value)) ||
+              (url.origin === window.location.origin && url.protocol === 'http:')) clean.setAttribute('src', attr.value);
+        } catch (_) { /* Invalid image source is omitted. */ }
+      }
+    }
+    for (const child of node.childNodes) copy(clean, child);
+    parent.appendChild(clean);
+  }
+  for (const child of template.content.childNodes) copy(output, child);
+  return output.innerHTML;
 }
 
 function initialisiereHinweis() {

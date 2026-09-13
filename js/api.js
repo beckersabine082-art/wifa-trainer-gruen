@@ -1,6 +1,9 @@
 const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA/exec";
 
 async function apiGet(action, params = {}) {
+    if (["getLernstand", "getProgress", "getPodcastProgress"].includes(action)) {
+      return apiPost(action, params);
+    }
     const url = new URL(API_BASE_URL);
     url.searchParams.set("action", action);
 
@@ -20,14 +23,30 @@ async function apiGet(action, params = {}) {
   }
 
 async function apiPost(action, payload = {}) {
+    const protectedActions = ['getLernstand','getProgress','getPodcastProgress','saveProgress',
+      'savePodcastProgress','speichereLernstand','bewerteAntwort','frageKilian','bewertePruefung'];
+    let idToken;
+    let isCurrentUser = () => true;
+    if (protectedActions.includes(action)) {
+      const {auth} = await import('./firebase-config.js');
+      await auth.authStateReady();
+      const user = auth.currentUser;
+      if (!user || user.emailVerified !== true) throw new Error('Bitte mit einem bestätigten Konto anmelden.');
+      isCurrentUser = () => auth.currentUser === user && user.emailVerified === true;
+      idToken = await user.getIdToken();
+      if (!isCurrentUser()) throw new Error('Anmeldung hat sich geändert. Bitte erneut versuchen.');
+    }
     const response = await fetch(API_BASE_URL, {
       method: "POST",
+      referrerPolicy: "no-referrer",
+      credentials: "omit",
       headers: {
         "Content-Type": "text/plain;charset=utf-8"
       },
       body: JSON.stringify({
+        ...payload,
         action,
-        ...payload
+        ...(idToken ? {idToken} : {})
       })
     });
 
@@ -35,7 +54,9 @@ async function apiPost(action, payload = {}) {
       throw new Error("HTTP-Fehler: " + response.status);
     }
 
-    return await response.json();
+    const result = await response.json();
+    if (!isCurrentUser()) throw new Error("Anmeldung hat sich geändert. Bitte erneut versuchen.");
+    return result;
   }
 
 async function lerntextePodcastFortschrittLaden(nutzer, fach) {
@@ -71,17 +92,5 @@ if (typeof window !== "undefined") {
 }
 
 async function bewertePruefungsAntworten(daten) {
-
-  const response = await fetch(API_BASE_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify({
-      action: "bewertePruefung",
-      daten: daten
-    })
-  });
-
-  return await response.json();
+  return apiPost("bewertePruefung", {daten});
 }

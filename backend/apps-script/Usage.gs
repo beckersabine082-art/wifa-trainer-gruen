@@ -97,7 +97,57 @@ function usageAuthenticate_(idToken, claims, apiKey) {
   // Obtain CURRENT admin rights from authoritative account data, not caller input or a stale JWT claim.
   let attributes={};
   if (typeof user.customAttributes === 'string') attributes=JSON.parse(user.customAttributes);
-  return {admin:attributes?.usageAdmin === true};
+  return {uid:user.localId, admin:attributes?.usageAdmin === true};
+}
+
+// Shared verifier above; separate global budgets keep learning independent of GA/usage consent.
+// Persist counts only, never UID, token, answer text or per-user history.
+function learningAdmit_(key, cost, minuteLimit, dayLimit) {
+  usageWithLock_(function () {
+    const props = PropertiesService.getScriptProperties();
+    const now = Date.now(), minute = Math.floor(now / 60000);
+    const day = Utilities.formatDate(new Date(now), 'Europe/Berlin', 'yyyy-MM-dd');
+    const raw = props.getProperty(key);
+    const old = raw ? JSON.parse(raw) : {day, minute, dayCount:0, minuteCount:0};
+    if (!Number.isSafeInteger(old.dayCount) || old.dayCount < 0 ||
+        !Number.isSafeInteger(old.minuteCount) || old.minuteCount < 0) usageFail_('unavailable');
+    const state = {day, minute, dayCount:old.day === day ? old.dayCount : 0,
+      minuteCount:old.minute === minute ? old.minuteCount : 0};
+    if (state.minuteCount + cost > minuteLimit || state.dayCount + cost > dayLimit) usageFail_('rate_limited');
+    state.minuteCount += cost; state.dayCount += cost;
+    props.setProperty(key, JSON.stringify(state));
+  });
+}
+
+function learningAuthorize_(body) {
+  const claims = usageTokenClaims_(body.idToken);
+  const ai = ['bewerteAntwort','frageKilian','bewertePruefung'].includes(body.action);
+  if (JSON.stringify(body).length > 4000000) usageFail_('invalid_request');
+  const textLimits = {fach:100, bereich:30, teilbereich:10, thema:200, auswahl:200,
+    frageId:100, frage:20000, antwort:20000, bewertung:20000, einheit:200,
+    firebasePfad:500, lerntextHash:200, skizze:400000};
+  function checkText(value, max) {
+    if (value !== undefined && (typeof value !== 'string' || value.length > max)) usageFail_('invalid_request');
+  }
+  Object.keys(textLimits).forEach(key => checkText(body[key], textLimits[key]));
+  let cost = 1;
+  if (body.action === 'bewertePruefung') {
+    if (!Array.isArray(body.daten) || !body.daten.length || body.daten.length > 100) usageFail_('invalid_request');
+    cost = body.daten.length;
+    body.daten.forEach(item => {
+      if (!item || typeof item !== 'object' || Array.isArray(item)) usageFail_('invalid_request');
+      for (const key of ['frage','musterloesung','stichpunkte','antwort']) checkText(item[key], 20000);
+      checkText(item.skizze, 400000);
+      checkText(item.fragetyp, 30);
+      if (!Number.isFinite(Number(item.maxPunkte)) || Number(item.maxPunkte) <= 0) usageFail_('invalid_request');
+    });
+  }
+  // Admission before external verification also bounds invalid signed-token attempts.
+  learningAdmit_('LEARNING_AUTH_ADMISSION', 1, 60, 3000);
+  if (ai) learningAdmit_('LEARNING_AI_ADMISSION', cost, 120, 1000);
+  const apiKey = PropertiesService.getScriptProperties().getProperty('USAGE_FIREBASE_WEB_API_KEY');
+  if (!apiKey) usageFail_('unavailable');
+  return usageAuthenticate_(body.idToken, claims, apiKey).uid;
 }
 function usagePrivateFile_(id) {
   const active=SpreadsheetApp.getActiveSpreadsheet();

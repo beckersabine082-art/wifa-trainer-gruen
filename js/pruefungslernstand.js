@@ -70,7 +70,7 @@ export async function speicherePruefungsAttempt(payload) {
   if (gesamtMaxPunkte <= 0) throw new Error('Die Bewertung enthält keine speicherbaren Punktwerte.');
   const gesamtPunkte = Math.min(Math.max(0, Number(payload.gesamtPunkte || 0)), gesamtMaxPunkte);
   const prozent = Math.round((gesamtPunkte / gesamtMaxPunkte) * 100);
-  const status = prozent >= 50 ? 'bestanden' : 'nicht_bestanden';
+  const status = gesamtPunkte / gesamtMaxPunkte >= 0.5 ? 'bestanden' : 'nicht_bestanden';
 
   const tasks = Array.isArray(payload.tasks) ? payload.tasks.slice(0, MAX_TASKS_PER_ATTEMPT) : [];
   if (!tasks.length) throw new Error('Es liegen keine bewerteten Aufgaben vor.');
