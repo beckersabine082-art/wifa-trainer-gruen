@@ -2155,15 +2155,31 @@ function col() {
       return formelname || ihkFormel || beispiel;
     })
     .map(function(row) {
+      const gespeicherteKurzformel = cKurzformel >= 0 ? String(row[cKurzformel] || "").trim() : "";
+      const fach = cFach >= 0 ? String(row[cFach] || "").trim() : "";
+      const formelname = cFormelname >= 0 ? String(row[cFormelname] || "").trim() : "";
+      const ihkFormel = cIhkFormel >= 0 ? String(row[cIhkFormel] || "").trim() : "";
+      const variablen = cAbkuerzungen >= 0 ? String(row[cAbkuerzungen] || "").trim() : "";
+      const ergaenzung = getErgaenzteKurzformel_(fach, formelname);
+      const kurzformel = istMathematischeKurzformel(gespeicherteKurzformel)
+        ? gespeicherteKurzformel
+        : ergaenzung
+          ? ergaenzung.formel
+          : ableiteteKurzformelOhneExterneAbkuerzung(ihkFormel, variablen);
+      const variablenMitErgaenzung = ergaenzung && ergaenzung.variablen
+        ? ergaenzeVariablen_(variablen, ergaenzung.variablen)
+        : variablen;
+
       return {
-        fach: cFach >= 0 ? String(row[cFach] || "").trim() : "",
+        fach: fach,
         kapitel: cKapitel >= 0 ? String(row[cKapitel] || "").trim() : "",
         unterkapitel: "",
-        formelname: cFormelname >= 0 ? String(row[cFormelname] || "").trim() : "",
+        formelname: formelname,
         ihkSeite: cIhkSeite >= 0 ? String(row[cIhkSeite] || "").trim() : "",
-        ihkFormel: cIhkFormel >= 0 ? String(row[cIhkFormel] || "").trim() : "",
-        kurzformel: cKurzformel >= 0 ? String(row[cKurzformel] || "").trim() : "",
-        variablen: cAbkuerzungen >= 0 ? String(row[cAbkuerzungen] || "").trim() : "",
+        ihkFormel: ihkFormel,
+        kurzformel: kurzformel,
+        kurzformelStatus: kurzformel ? "sicher" : "manuell_pruefen",
+        variablen: variablenMitErgaenzung,
         erklaerung: cErklaerung >= 0 ? String(row[cErklaerung] || "").trim() : "",
         beispiel: cBeispiel >= 0 ? String(row[cBeispiel] || "").trim() : "",
         schwierigkeit: cSchwierigkeit >= 0 ? String(row[cSchwierigkeit] || "").trim() : ""
@@ -2172,6 +2188,209 @@ function col() {
     .sort(function(a, b) {
       return String(a.formelname).localeCompare(String(b.formelname), "de");
     });
+}
+
+const FORMEL_KURZFORMEL_ERGAENZUNGEN_ = {
+  "Rechnungswesen|Abschreibungsquote": {
+    formel: "A / AV * 100",
+    variablen: "A = Abschreibungen; AV = Anlagevermögen"
+  },
+  "Rechnungswesen|Anlagenabnutzungsgrad": {
+    formel: "kA / AV * 100",
+    variablen: "kA = kumulierte Abschreibungen; AV = Anlagevermögen"
+  },
+  "Rechnungswesen|Anlagendeckung II": {
+    formel: "LK / AV * 100",
+    variablen: "LK = langfristiges Kapital; AV = Anlagevermögen"
+  },
+  "Rechnungswesen|Anlagenintensität": {
+    formel: "AV / GV * 100",
+    variablen: "AV = Anlagevermögen; GV = Gesamtvermögen"
+  },
+  "Rechnungswesen|Betriebsergebnis": {
+    formel: "BE = UE - SK",
+    variablen: "BE = Betriebsergebnis; UE = Umsatzerlöse; SK = Selbstkosten des Umsatzes"
+  },
+  "Rechnungswesen|Break-even-Menge": {
+    formel: "x_BEP = Kf / (p - kv)",
+    variablen: "x_BEP = Break-even-Menge; Kf = fixe Kosten; p = Preis je Stück; kv = variable Stückkosten"
+  },
+  "Rechnungswesen|Liquidität 1. Grades": {
+    formel: "LM / KFV * 100",
+    variablen: "LM = liquide Mittel; KFV = kurzfristige Verbindlichkeiten"
+  },
+  "Rechnungswesen|Liquidität 2. Grades": {
+    formel: "(LM + KFO) / KFV * 100",
+    variablen: "LM = liquide Mittel; KFO = kurzfristige Forderungen; KFV = kurzfristige Verbindlichkeiten"
+  },
+  "Rechnungswesen|Liquidität 3. Grades": {
+    formel: "UV / KFV * 100",
+    variablen: "UV = Umlaufvermögen; KFV = kurzfristige Verbindlichkeiten"
+  },
+  "Rechnungswesen|ROI": {
+    formel: "ROI = G / GK * 100",
+    variablen: "ROI = Return on Investment; G = Gewinn; GK = Gesamtkapital"
+  },
+  "Rechnungswesen|Working Capital": {
+    formel: "WC = UV - KFV",
+    variablen: "WC = Working Capital; UV = Umlaufvermögen; KFV = kurzfristige Verbindlichkeiten"
+  },
+  "Rechnungswesen|Wirtschaftlichkeit": {
+    formel: "W = UE / SK",
+    variablen: "W = Wirtschaftlichkeit; UE = Umsatzerlöse; SK = Selbstkosten des Umsatzes"
+  },
+  "Finanzierung und Investition|Amortisationsdauer": {
+    formel: "t_a = (AK - RW) / R",
+    variablen: "t_a = Amortisationsdauer; AK = Anschaffungskosten; RW = Restwert; R = durchschnittlicher Jahresrückfluss"
+  },
+  "Volkswirtschaftslehre|Arbeitslosenquote": {
+    formel: "AL / EP * 100",
+    variablen: "AL = registrierte Arbeitslose; EP = zivile Erwerbspersonen"
+  },
+  "Volkswirtschaftslehre|BIP Entstehungsrechnung": {
+    formel: "BIP = PW - VL",
+    variablen: "BIP = Bruttoinlandsprodukt; PW = Produktionswert; VL = Vorleistungen"
+  },
+  "Volkswirtschaftslehre|BIP Verwendungsrechnung": {
+    formel: "BIP = C + I + G + X - M",
+    variablen: "BIP = Bruttoinlandsprodukt; C = Konsum; I = Investitionen; G = Staatsausgaben; X = Exporte; M = Importe"
+  },
+  "Volkswirtschaftslehre|Zahlungsbilanz": {
+    formel: "LB + KB + DB = 0",
+    variablen: "LB = Leistungsbilanz; KB = Kapitalbilanz; DB = Devisenbilanz"
+  },
+  "Marketing und Vertrieb|Absoluter Marktanteil in %": {
+    formel: "U / MV * 100",
+    variablen: "U = Unternehmensumsatz; MV = Marktvolumen"
+  },
+  "Marketing und Vertrieb|Angebotserfolg in %": {
+    formel: "EA / AA * 100",
+    variablen: "EA = erteilte Aufträge; AA = abgegebene Angebote"
+  },
+  "Marketing und Vertrieb|Werbeerfolg in %": {
+    formel: "UZ / WA * 100",
+    variablen: "UZ = Umsatzzuwachs; WA = Werbekosten"
+  },
+  "Betriebliches Personalwesen|Abwesenheitsstruktur in %": {
+    formel: "AW / M * 100",
+    variablen: "AW = Anzahl Abwesende; M = Anzahl Mitarbeiter"
+  },
+  "Betriebliches Personalwesen|Ausbildungsquote in %": {
+    formel: "AZ / M * 100",
+    variablen: "AZ = Anzahl Auszubildende; M = Anzahl Mitarbeiter"
+  }
+};
+
+function getErgaenzteKurzformel_(fach, formelname) {
+  return FORMEL_KURZFORMEL_ERGAENZUNGEN_[String(fach || "") + "|" + String(formelname || "")] || null;
+}
+
+function ableiteteKurzformelOhneExterneAbkuerzung(ihkFormel, variablenText) {
+  const formel = String(ihkFormel || "").trim();
+  if (!formel) return "";
+
+  if (istMathematischeKurzformel(formel)) return formel;
+
+  const variablen = parseVariablenKuerzel_(variablenText);
+  if (!variablen.length) return "";
+
+  const abkuerzungen = variablen.filter(function(item) {
+    const symbol = item.symbol;
+    if (!symbol) return false;
+    if (symbol.length > 8) return false;
+    if (/\s/.test(symbol)) return false;
+    if (/[+\-*/=]/.test(symbol)) return false;
+    return true;
+  });
+
+  if (!abkuerzungen.length) return "";
+
+  let kandidat = formel;
+  abkuerzungen
+    .filter(function(item) {
+      return item.meaning && item.meaning.length >= 2;
+    })
+    .sort(function(a, b) {
+      return b.meaning.length - a.meaning.length;
+    })
+    .forEach(function(item) {
+      kandidat = ersetzeGanzesWort(kandidat, item.meaning, item.symbol);
+    });
+
+  return istMathematischeKurzformel(kandidat) ? kandidat : "";
+}
+
+function ersetzeGanzesWort(text, quell, ersatz) {
+  if (!text || !quell) return text;
+
+  const escaped = quell
+    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/\s+/g, "\\s+");
+  const regex = new RegExp("(^|[^A-Za-zÄÖÜäöüß0-9_])(" + escaped + ")(?=[^A-Za-zÄÖÜäöüß0-9_]|$)", "gi");
+
+  return text.replace(regex, function(match, prefix, token) {
+    return (prefix || "") + ersatz;
+  });
+}
+
+function parseVariablenKuerzel_(variablenText) {
+  const text = String(variablenText || "").trim();
+  if (!text) return [];
+
+  const teile = String(text)
+    .replace(/;/g, ",")
+    .split(/[,\n]/)
+    .map(function(item) {
+      return String(item || "").trim();
+    })
+    .filter(Boolean);
+
+  return teile
+    .map(function(teil) {
+      const idx = teil.indexOf("=");
+      if (idx <= 0) return null;
+
+      const symbol = teil.substring(0, idx).trim();
+      const meaning = teil.substring(idx + 1).trim();
+      if (!symbol || !meaning) return null;
+      if (/^\d+$/.test(symbol)) return null;
+
+      return { symbol: symbol, meaning: meaning };
+    })
+    .filter(Boolean);
+}
+
+function ergaenzeVariablen_(vorhanden, ergaenzung) {
+  const basis = String(vorhanden || "").trim();
+  const vorhandeneSymbole = parseVariablenKuerzel_(basis).map(function(item) {
+    return item.symbol.toLowerCase();
+  });
+  const neueDefinitionen = parseVariablenKuerzel_(ergaenzung).filter(function(item) {
+    return vorhandeneSymbole.indexOf(item.symbol.toLowerCase()) < 0;
+  }).map(function(item) {
+    return item.symbol + " = " + item.meaning;
+  });
+
+  return [basis, neueDefinitionen.join("; ")].filter(Boolean).join("; ");
+}
+
+function istMathematischeKurzformel(text) {
+  const t = String(text || "").trim();
+  if (!t) return false;
+
+  const hasOperator = /[=+\-*/\u00d7\u00b7\u00f7^()]/.test(t);
+  if (!hasOperator) return false;
+
+  const shortSymbolCount = (t.match(/\b[a-zA-Z]{1,8}(?:\([^)]*\))?|\b[xX]\b/g) || []).length;
+  if (!shortSymbolCount) return false;
+
+  const longWords = t.match(/\b[A-Za-zÄÖÜäöüß]{5,}\b/g) || [];
+  if (longWords.length) return false;
+  if (/\bbzw\.?\b/i.test(t)) return false;
+
+  if (/\b(?:insgesamt|erhöhte|gesamte|gesamten|wird|werden|mit|und|oder|je|pro|nach|wenn|ist|sind|aus|in|bei)\b/i.test(t)) return false;
+
+  return true;
 }
 function getPruefungSimulationFrontend(teilbereich, simulationNr, einheit) {
   const ss = getSpreadsheet_();
