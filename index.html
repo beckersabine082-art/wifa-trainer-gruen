@@ -1456,57 +1456,28 @@
     Nutzungshinweis
   </button>
 
-  <div id="hinweisOverlay" style="
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 20px;
-    box-sizing: border-box;
-  ">
-    <div style="
-      background: #fffdf7;
-      border: 3px solid #f0b429;
-      padding: 22px;
-      border-radius: 18px;
-      max-width: 460px;
-      width: 100%;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.25);
-      text-align: left;
-      font-family: Arial, sans-serif;
-    ">
-      <div style="
-        display: inline-block;
-        background: #fff3cd;
-        color: #8a5a00;
-        font-weight: bold;
-        font-size: 13px;
-        padding: 6px 10px;
-        border-radius: 999px;
-        margin-bottom: 14px;
-      ">
+  <div id="hinweisOverlay" class="hinweis-overlay" aria-hidden="true">
+    <div class="hinweis-dialog" role="dialog" aria-modal="true" aria-labelledby="hinweisTitle">
+      <div class="hinweis-dialog__header">
+        <div class="hinweis-dialog__badge">
         Wichtiger Hinweis
+        </div>
+
+        <h2 id="hinweisTitle">
+        Hinweis zur Nutzung
+        </h2>
       </div>
 
-      <h2 style="margin: 0 0 12px 0; font-size: 22px; color: #5a3e00;">
-        Hinweis zur Nutzung
-      </h2>
-
-      <p style="font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 12px;">
+      <div class="hinweis-dialog__content">
+      <p>
         Die Musterlösungen dienen nur als Vorschläge. Es sind auch andere fachlich korrekte Antworten möglich.
       </p>
 
-      <p style="font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 18px;">
+      <p>
         Das Bewertungssystem bietet lediglich eine Orientierung und stellt keine verbindliche Bewertung im Sinne einer Prüfung dar.
       </p>
 
-      <p style="font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 18px;">
+      <p>
   Die Inhalte des WiFa Trainers basieren auf eigener Lernaufbereitung, fachlicher Prüfungsvorbereitung sowie verschiedenen Lern- und Unterrichtsmaterialien aus kaufmännischen Weiterbildungen.
   <br><br>
   Alle Inhalte wurden für Lernzwecke didaktisch überarbeitet und stellen keine offiziellen Musterlösungen dar.
@@ -1514,42 +1485,22 @@
   Alle genannten Marken, Prüfungsbezeichnungen und Institutionen bleiben Eigentum der jeweiligen Rechteinhaber.
 </p>
 
-      <p style="font-size: 14px; line-height: 1.6; color: #333; margin-bottom: 18px;">
+      <p>
         Dieser Hinweis zur Nutzung ersetzt nicht die verbindlichen <a href="nutzungsbedingungen.html">Nutzungsbedingungen</a> und auch nicht die <a href="datenschutz.html">Datenschutzerklärung</a>.
       </p>
-      <label id="hinweisCheckboxWrap" style="
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        font-size: 14px;
-        color: #333;
-        margin-bottom: 18px;
-        cursor: pointer;
-      ">
-        <input type="checkbox" id="hinweisCheckbox" style="
-          margin-top: 2px;
-          transform: scale(1.15);
-          accent-color: #f0b429;
-        ">
-        <span>Ich habe den Hinweis gelesen.</span>
-      </label>
+      </div>
 
-      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <button id="hinweisButton" onclick="hinweisSchliessen()" disabled style="
-          flex: 1;
-          min-width: 180px;
-          padding: 12px 18px;
-          border: none;
-          border-radius: 12px;
-          background: #d9d9d9;
-          color: #666;
-          font-size: 15px;
-          font-weight: bold;
-          cursor: not-allowed;
-        ">
-          Gelesen und fortfahren
-        </button>
+      <div class="hinweis-dialog__footer">
+        <label id="hinweisCheckboxWrap" class="hinweis-dialog__checkbox">
+          <input type="checkbox" id="hinweisCheckbox">
+          <span>Ich habe den Hinweis gelesen.</span>
+        </label>
 
+        <div class="hinweis-dialog__actions">
+          <button id="hinweisButton" onclick="hinweisSchliessen()" disabled>
+            Gelesen und fortfahren
+          </button>
+        </div>
       </div>
     </div>
   </div>

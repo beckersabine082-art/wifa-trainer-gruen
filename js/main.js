@@ -32,6 +32,7 @@ const faecherNachTeilbereich = {
   let letzteAusgewerteteAntwort = "";
   let ladeToken = 0;
   let appIstBeschaeftigt = false;
+  let hinweisScrollLock = null;
   // Interner Zustand: true, wenn die aktuelle Frage über die Fehleranalyse-Wiederholung geöffnet wurde (nicht anhand von sichtbarem Text erkennen)
   let wiederholungsKontext = null;
 
@@ -475,12 +476,67 @@ function sanitizeAufgabenHtml(html) {
   return output.innerHTML;
 }
 
+function setzeHinweisSichtbarkeit(sichtbar) {
+    const overlay = document.getElementById("hinweisOverlay");
+    const html = document.documentElement;
+    const body = document.body;
+    if (!overlay || !html || !body) return;
+
+    if (sichtbar && !hinweisScrollLock) {
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      hinweisScrollLock = {
+        scrollY,
+        body: {
+          position: body.style.position,
+          top: body.style.top,
+          left: body.style.left,
+          right: body.style.right,
+          width: body.style.width,
+          overflow: body.style.overflow,
+          paddingRight: body.style.paddingRight
+        },
+        htmlOverflow: html.style.overflow
+      };
+
+      const scrollbarWidth = Math.max(0, window.innerWidth - html.clientWidth);
+      body.style.position = "fixed";
+      body.style.top = `-${scrollY}px`;
+      body.style.left = "0";
+      body.style.right = "0";
+      body.style.width = "100%";
+      body.style.overflow = "hidden";
+      if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`;
+      html.style.overflow = "hidden";
+    }
+
+    overlay.style.display = sichtbar ? "flex" : "none";
+    overlay.setAttribute("aria-hidden", sichtbar ? "false" : "true");
+    html.classList.toggle("hinweis-open", sichtbar);
+    body.classList.toggle("hinweis-open", sichtbar);
+
+    if (!sichtbar && hinweisScrollLock) {
+      const lock = hinweisScrollLock;
+      body.style.position = lock.body.position;
+      body.style.top = lock.body.top;
+      body.style.left = lock.body.left;
+      body.style.right = lock.body.right;
+      body.style.width = lock.body.width;
+      body.style.overflow = lock.body.overflow;
+      body.style.paddingRight = lock.body.paddingRight;
+      html.style.overflow = lock.htmlOverflow;
+      hinweisScrollLock = null;
+      window.scrollTo(0, lock.scrollY);
+    }
+  }
+
 function initialisiereHinweis() {
     const checkbox = document.getElementById("hinweisCheckbox");
     const button = document.getElementById("hinweisButton");
 
     if (!localStorage.getItem("hinweisGelesen")) {
-      document.getElementById("hinweisOverlay").style.display = "flex";
+      setzeHinweisSichtbarkeit(true);
+    } else {
+      setzeHinweisSichtbarkeit(false);
     }
 
     checkbox.addEventListener("change", function () {
@@ -499,7 +555,7 @@ function initialisiereHinweis() {
   }
 
 function hinweisAnzeigen() {
-    document.getElementById("hinweisOverlay").style.display = "flex";
+    setzeHinweisSichtbarkeit(true);
 
     const checkboxWrap = document.getElementById("hinweisCheckboxWrap");
     const checkbox = document.getElementById("hinweisCheckbox");
@@ -521,7 +577,7 @@ function hinweisSchliessen() {
       return;
     }
 
-    document.getElementById("hinweisOverlay").style.display = "none";
+    setzeHinweisSichtbarkeit(false);
     localStorage.setItem("hinweisGelesen", "true");
   }
 
