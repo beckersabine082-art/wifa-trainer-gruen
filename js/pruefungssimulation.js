@@ -32,18 +32,164 @@ let pruefungLetzterSpeicherPayload = null;
 let pruefungIstAktiv = false;
 let pruefungAuswertungLaeuft = false;
 let pruefungLadeVersion = 0;
+let pruefungAbgabeWirdGestartet = false;
+let pruefungIstAbgeschlossen = false;
+let pruefungLaufEndzeit = null;
+let pruefungLaufKontext = null;
 
-function verwerfeAktuellePruefung() {
+const PRUEFUNG_LAUF_STORAGE_KEY = "wifa.pruefung.lauf.v1";
+
+function holePruefungLaufSpeicher() {
+  try {
+    if (typeof sessionStorage !== "undefined") return sessionStorage;
+  } catch (error) {}
+
+  try {
+    return window.sessionStorage || null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function leseGespeichertenPruefungslauf() {
+  const speicher = holePruefungLaufSpeicher();
+  if (!speicher) return null;
+
+  try {
+    const rohwert = speicher.getItem(PRUEFUNG_LAUF_STORAGE_KEY);
+    if (!rohwert) return null;
+
+    const lauf = JSON.parse(rohwert);
+    if (!lauf || lauf.version !== 1 || !Number.isFinite(Number(lauf.endTime))) return null;
+    if (!lauf.teilbereich || !lauf.simulation || !lauf.einheit) return null;
+
+    return {
+      ...lauf,
+      endTime: Number(lauf.endTime),
+      antworten: Array.isArray(lauf.antworten) ? lauf.antworten : []
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+function speicherePruefungslauf(lauf) {
+  const speicher = holePruefungLaufSpeicher();
+  if (!speicher) return;
+
+  try {
+    speicher.setItem(PRUEFUNG_LAUF_STORAGE_KEY, JSON.stringify(lauf));
+  } catch (error) {}
+}
+
+function loescheGespeichertenPruefungslauf() {
+  const speicher = holePruefungLaufSpeicher();
+  if (!speicher) return;
+
+  try {
+    speicher.removeItem(PRUEFUNG_LAUF_STORAGE_KEY);
+  } catch (error) {}
+}
+
+function erstellePruefungsLaufKontext(teilbereich, simulation, einheit) {
+  return {
+    teilbereich: String(teilbereich || ""),
+    simulation: String(simulation || ""),
+    einheit: String(einheit || "")
+  };
+}
+
+function pruefungLaufPasstZuKontext(lauf, kontext) {
+  return Boolean(
+    lauf
+    && kontext
+    && String(lauf.teilbereich) === String(kontext.teilbereich)
+    && String(lauf.simulation) === String(kontext.simulation)
+    && String(lauf.einheit) === String(kontext.einheit)
+  );
+}
+
+function pruefungEingabenElemente() {
+  return Array.from(document.querySelectorAll(
+    "#pruefungContainer textarea.pruefung-antwort, #pruefungContainer .pruefung-input"
+  ));
+}
+
+function lesePruefungsEingaben() {
+  return pruefungEingabenElemente().map(function(feld, index) {
+    return {
+      index: index,
+      value: String(feld.value || "")
+    };
+  });
+}
+
+function stelleGespeichertePruefungsEingabenWiederHer(lauf) {
+  if (!lauf || !Array.isArray(lauf.antworten)) return;
+
+  const antwortenNachIndex = new Map(
+    lauf.antworten.map(function(antwort) {
+      return [Number(antwort.index), String(antwort.value || "")];
+    })
+  );
+
+  pruefungEingabenElemente().forEach(function(feld, index) {
+    if (antwortenNachIndex.has(index)) {
+      feld.value = antwortenNachIndex.get(index);
+    }
+  });
+}
+
+function speichereAktuellePruefungsEingaben() {
+  const lauf = leseGespeichertenPruefungslauf();
+  if (!pruefungLaufPasstZuKontext(lauf, pruefungLaufKontext)) return;
+
+  lauf.antworten = lesePruefungsEingaben();
+  speicherePruefungslauf(lauf);
+}
+
+function initialisierePruefungsEingabenSpeicherung() {
+  pruefungEingabenElemente().forEach(function(feld) {
+    if (!feld || typeof feld.addEventListener !== "function") return;
+
+    const speichere = function() {
+      speichereAktuellePruefungsEingaben();
+    };
+
+    feld.addEventListener("input", speichere);
+    feld.addEventListener("change", speichere);
+  });
+}
+
+function bereinigePruefungTimer() {
+  clearInterval(pruefungTimerInterval);
+  pruefungTimerInterval = null;
+  pruefungRestzeitSekunden = 0;
+  pruefungLaufEndzeit = null;
+  pruefungLaufKontext = null;
+
+  const timerText = document.getElementById("pruefungTimerText");
+  const timerBox = document.getElementById("pruefungTimerBox");
+  if (timerText) timerText.textContent = "00:00";
+  if (timerBox) timerBox.style.display = "none";
+}
+
+function verwerfeAktuellePruefung(optionen = {}) {
   pruefungLadeVersion++;
-  stoppePruefungTimer();
+  bereinigePruefungTimer();
+  if (!optionen.gespeichertenLaufBeibehalten) {
+    loescheGespeichertenPruefungslauf();
+  }
   pruefungIstAktiv = false;
+  pruefungAbgabeWirdGestartet = false;
+  pruefungIstAbgeschlossen = false;
   aktuellePruefungsDaten = [];
   letztePruefungsAntworten = [];
 }
 
-function pruefungTeilbereichWaehlen() {
-  if (pruefungAuswertungLaeuft) return;
-  verwerfeAktuellePruefung();
+function pruefungTeilbereichWaehlen(optionen = {}) {
+  if (pruefungAuswertungLaeuft || pruefungIstAktiv) return;
+  verwerfeAktuellePruefung(optionen);
   const teilbereich = document.getElementById("pruefungTeilbereichSelect").value;
   const simulationBereich = document.getElementById("pruefungSimulationBereich");
   const simulationSelect = document.getElementById("pruefungSimulationSelect");
@@ -75,9 +221,9 @@ function pruefungTeilbereichWaehlen() {
     "Teilbereich gewählt. Bitte Simulation auswählen.";
 }
 
-function pruefungSimulationWaehlen() {
-  if (pruefungAuswertungLaeuft) return;
-  verwerfeAktuellePruefung();
+function pruefungSimulationWaehlen(optionen = {}) {
+  if (pruefungAuswertungLaeuft || pruefungIstAktiv) return;
+  verwerfeAktuellePruefung(optionen);
   const teilbereich = document.getElementById("pruefungTeilbereichSelect").value;
   const simulation = document.getElementById("pruefungSimulationSelect").value;
   const fachBereich = document.getElementById("pruefungFachBereich");
@@ -109,14 +255,16 @@ const einheiten = pruefungsEinheitenNachTeilbereich[teilbereich] || [];
     "Simulation gewählt. Bitte Prüfungsfach auswählen.";
 }
 
-function pruefungFachWaehlen() {
-  if (pruefungAuswertungLaeuft) return;
-  verwerfeAktuellePruefung();
+function pruefungFachWaehlen(optionen = {}) {
+  if (pruefungAuswertungLaeuft || pruefungIstAktiv) return;
+  verwerfeAktuellePruefung(optionen);
   document.getElementById("pruefungContainer").innerHTML = "";
   document.getElementById("pruefungStatus").textContent = "Bitte Prüfung starten.";
 }
 
 function startePruefungSimulation() {
+  if (pruefungIstAktiv || pruefungAuswertungLaeuft) return;
+
   const teilbereich = document.getElementById("pruefungTeilbereichSelect").value;
   const simulation = document.getElementById("pruefungSimulationSelect").value;
   const fach = document.getElementById("pruefungFachSelect").value;
@@ -153,9 +301,19 @@ function ermittlePruefungsEinheitTitel(teilbereich, einheitKey) {
   return einheit.label || einheit.key;
 }
 
-async function ladePruefungSimulation() {
-  if (pruefungAuswertungLaeuft) return;
-  verwerfeAktuellePruefung();
+async function ladePruefungSimulation(optionen = {}) {
+  if (pruefungAuswertungLaeuft || pruefungIstAktiv) return;
+
+  const ausgewaehlterKontext = erstellePruefungsLaufKontext(
+    document.getElementById("pruefungTeilbereichSelect").value,
+    document.getElementById("pruefungSimulationSelect").value,
+    document.getElementById("pruefungFachSelect").value
+  );
+  const gespeicherterLauf = leseGespeichertenPruefungslauf();
+  const laufBeibehalten = optionen.gespeichertenLaufBeibehalten
+    || pruefungLaufPasstZuKontext(gespeicherterLauf, ausgewaehlterKontext);
+
+  verwerfeAktuellePruefung({ gespeichertenLaufBeibehalten: laufBeibehalten });
   const ladeVersion = pruefungLadeVersion;
   const usageTicket = window.WifaUsage?.captureTicket();
   const box = document.getElementById("pruefungContainer");
@@ -201,10 +359,6 @@ async function ladePruefungSimulation() {
     if (!daten.length) {
       box.innerHTML = "<div class='status'>Keine Prüfung gefunden.</div>";
       return;
-    }
-
-    if (minuten > 0) {
-      startePruefungTimer(minuten);
     }
 
        let html = "";
@@ -327,9 +481,25 @@ async function ladePruefungSimulation() {
     box.innerHTML = html;
 
     pruefungIstAktiv = true;
-    window.WifaAnalytics?.reset('exam');
-    window.WifaAnalytics?.start('exam', daten.every(item => item.fach === daten[0].fach) ? daten[0].fach : '');
-    if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.record('simulation_start', daten.every(item => item.fach === daten[0].fach) ? daten[0].fach : '', teilbereich);
+    pruefungIstAbgeschlossen = false;
+    pruefungAbgabeWirdGestartet = false;
+
+    const laufKontext = erstellePruefungsLaufKontext(teilbereich, simulation, einheit);
+    const laufVorhanden = pruefungLaufPasstZuKontext(leseGespeichertenPruefungslauf(), laufKontext);
+
+    stelleGespeichertePruefungsEingabenWiederHer(leseGespeichertenPruefungslauf());
+    initialisierePruefungsEingabenSpeicherung();
+    sperrePruefungsAuswahl(true);
+
+    if (!laufVorhanden) {
+      window.WifaAnalytics?.reset('exam');
+      window.WifaAnalytics?.start('exam', daten.every(item => item.fach === daten[0].fach) ? daten[0].fach : '');
+      if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.record('simulation_start', daten.every(item => item.fach === daten[0].fach) ? daten[0].fach : '', teilbereich);
+    }
+
+    if (minuten > 0) {
+      startePruefungTimer(minuten, laufKontext);
+    }
 
     initialisiereAlleSkizzenfelder();
 
@@ -497,95 +667,137 @@ function zeichneAchsenvorlage(index) {
   ctx.fillText("Menge", 690, 395);
 }
 
-function startePruefungTimer(minuten) {
+function sperrePruefungsAuswahl(gesperrt) {
+  ["pruefungTeilbereichSelect", "pruefungSimulationSelect", "pruefungFachSelect"]
+    .forEach(function(id) {
+      const element = document.getElementById(id);
+      if (element) element.disabled = Boolean(gesperrt);
+    });
+}
 
-stoppePruefungTimer();
-      
-  pruefungRestzeitSekunden = minuten * 60;
+function startePruefungTimer(minuten, laufKontext) {
+  bereinigePruefungTimer();
 
-  const timerBox =
-    document.getElementById("pruefungTimerBox");
+  const kontext = laufKontext || erstellePruefungsLaufKontext(
+    document.getElementById("pruefungTeilbereichSelect")?.value,
+    document.getElementById("pruefungSimulationSelect")?.value,
+    document.getElementById("pruefungFachSelect")?.value
+  );
+  const bestehenderLauf = leseGespeichertenPruefungslauf();
+  const lauf = pruefungLaufPasstZuKontext(bestehenderLauf, kontext)
+    ? bestehenderLauf
+    : (() => {
+      const startzeit = Date.now();
+      return {
+        version: 1,
+        ...kontext,
+        startedAt: startzeit,
+        endTime: startzeit + Number(minuten) * 60 * 1000,
+        antworten: []
+      };
+    })();
 
-  const timerText =
-    document.getElementById("pruefungTimerText");
+  pruefungLaufKontext = kontext;
+  pruefungLaufEndzeit = Number(lauf.endTime);
+  speicherePruefungslauf(lauf);
 
-timerBox.style.display = "block";
-  document.getElementById("pruefungTimerStatus").textContent = "Die Prüfung läuft.";
+  const timerBox = document.getElementById("pruefungTimerBox");
+  if (timerBox) timerBox.style.display = "block";
+  const timerStatus = document.getElementById("pruefungTimerStatus");
+  if (timerStatus) timerStatus.textContent = "Die Prüfung läuft.";
+
+  aktualisierePruefungTimerNachEndzeit();
+  if (pruefungRestzeitSekunden > 0) {
+    pruefungTimerInterval = setInterval(function() {
+      aktualisierePruefungTimerNachEndzeit();
+    }, 1000);
+  }
+}
+
+function aktualisierePruefungTimerNachEndzeit() {
+  if (!Number.isFinite(Number(pruefungLaufEndzeit))) return;
+
+  pruefungRestzeitSekunden = Math.max(
+    0,
+    Math.ceil((Number(pruefungLaufEndzeit) - Date.now()) / 1000)
+  );
   aktualisierePruefungTimerAnzeige();
 
-  pruefungTimerInterval = setInterval(function() {
-
-    pruefungRestzeitSekunden--;
-
-    aktualisierePruefungTimerAnzeige();
-
-   if (pruefungRestzeitSekunden <= 0) {
-  pruefungBeendenWegenZeitablauf();
+  if (pruefungRestzeitSekunden <= 0) {
+    clearInterval(pruefungTimerInterval);
+    pruefungTimerInterval = null;
+    pruefungBeendenWegenZeitablauf();
+  }
 }
-  }, 1000);
+
+function sperrePruefungsEingaben() {
+  document.querySelectorAll('#pruefungContainer .skizzen-canvas').forEach(function(canvas) {
+    canvas.drawingLocked = true;
+  });
+
+  document.querySelectorAll(
+    "#pruefungContainer textarea, #pruefungContainer input, #pruefungContainer button"
+  ).forEach(function(element) {
+    element.disabled = true;
+    element.style.background = "#f3f4f6";
+    element.style.cursor = "not-allowed";
+  });
+}
+
+function beendePruefungUndBewerte(statusText, timerStatusText, timerText) {
+  if (pruefungAbgabeWirdGestartet || pruefungAuswertungLaeuft || pruefungIstAbgeschlossen) return;
+
+  pruefungAbgabeWirdGestartet = true;
+  clearInterval(pruefungTimerInterval);
+  pruefungTimerInterval = null;
+  pruefungLaufEndzeit = null;
+  pruefungIstAktiv = false;
+  pruefungIstAbgeschlossen = true;
+  sperrePruefungsEingaben();
+  sperrePruefungsAuswahl(true);
+  loescheGespeichertenPruefungslauf();
+
+  if (typeof zeigeBereich === "function") zeigeBereich("pruefungView");
+
+  const timerTextElement = document.getElementById("pruefungTimerText");
+  if (timerTextElement) timerTextElement.textContent = timerText;
+  const timerStatusElement = document.getElementById("pruefungTimerStatus");
+  if (timerStatusElement) timerStatusElement.textContent = timerStatusText;
+  const statusElement = document.getElementById("pruefungStatus");
+  if (statusElement) statusElement.textContent = statusText;
+
+  if (!document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort").length) return;
+  return startePruefungsAuswertung();
 }
 
 function pruefungBeendenWegenZeitablauf() {
-  clearInterval(pruefungTimerInterval);
-  pruefungTimerInterval = null;
-  pruefungRestzeitSekunden = 0;
-
-  pruefungIstAktiv = false;
-  document.querySelectorAll('#pruefungContainer .skizzen-canvas').forEach(canvas => { canvas.drawingLocked = true; });
-
-  document.getElementById("pruefungTimerText").textContent =
-    "Zeit abgelaufen";
-
-  document.querySelectorAll("#pruefungContainer textarea, #pruefungContainer input").forEach(function(textarea) {
-    textarea.disabled = true;
-    textarea.style.background = "#f3f4f6";
-    textarea.style.cursor = "not-allowed";
-  });
-
-  document.querySelectorAll("#pruefungContainer button").forEach(function(button) {
-    button.disabled = true;
-    button.style.opacity = "0.6";
-    button.style.cursor = "not-allowed";
-  });
-
-  document.getElementById("pruefungTimerStatus").textContent =
-    "Die Bearbeitungszeit ist abgelaufen. Die Prüfung wurde gesperrt.";
-
-  document.getElementById("pruefungStatus").textContent =
-    "Prüfung beendet: Zeit abgelaufen.";
+  return beendePruefungUndBewerte(
+    "Prüfung beendet: Zeit abgelaufen.",
+    "Die Bearbeitungszeit ist abgelaufen. Die Prüfung wurde gesperrt.",
+    "00:00"
+  );
 }
 
 function pruefungManuellAbgeben() {
-  if (pruefungAuswertungLaeuft || !document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort").length) return;
+  if (
+    pruefungAuswertungLaeuft
+    || pruefungAbgabeWirdGestartet
+    || pruefungIstAbgeschlossen
+    || !pruefungIstAktiv
+    || !document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort").length
+  ) return;
 
   const bestaetigt = confirm(
     "Möchtest du die Prüfung wirklich abgeben?"
   );
 
-  if (!bestaetigt) {
-    return;
-  }
+  if (!bestaetigt) return;
 
-  clearInterval(pruefungTimerInterval);
-
-  pruefungIstAktiv = false;
-
-  document.querySelectorAll('#pruefungContainer .skizzen-canvas').forEach(canvas => { canvas.drawingLocked = true; });
-
-  document.querySelectorAll(
-    "#pruefungContainer textarea, #pruefungContainer input, #pruefungContainer button"
-  ).forEach(function(textarea) {
-
-    textarea.disabled = true;
-    textarea.style.background = "#f3f4f6";
-  });
-
-  document.getElementById("pruefungStatus").textContent =
-    "Prüfung manuell abgegeben.";
-
-  document.getElementById("pruefungTimerText").textContent =
-    "Prüfung beendet";
-      return startePruefungsAuswertung();
+  return beendePruefungUndBewerte(
+    "Prüfung manuell abgegeben.",
+    "Die Prüfung wurde manuell abgegeben.",
+    "Prüfung beendet"
+  );
 }
 
 function renderPruefungsPunkteBegründung(item) {
@@ -929,21 +1141,6 @@ function pruefungLernstandErneutSpeichern() {
   fuehrePruefungsSpeicherungDurch();
 }
 
-function stoppePruefungTimer() {
-
-  clearInterval(pruefungTimerInterval);
-
-  pruefungTimerInterval = null;
-
-  pruefungRestzeitSekunden = 0;
-
-  document.getElementById("pruefungTimerText").textContent =
-    "00:00";
-
-  document.getElementById("pruefungTimerBox").style.display =
-    "none";
-}
-
 function aktualisierePruefungTimerAnzeige() {
 
   const minuten =
@@ -961,6 +1158,7 @@ function aktualisierePruefungTimerAnzeige() {
 async function startePruefungsAuswertung() {
   if (pruefungAuswertungLaeuft) return;
   if (!document.querySelectorAll("#pruefungContainer textarea.pruefung-antwort").length) return;
+  pruefungAbgabeWirdGestartet = true;
   pruefungAuswertungLaeuft = true;
   const auswahlFelder = ['pruefungTeilbereichSelect', 'pruefungSimulationSelect', 'pruefungFachSelect'];
   auswahlFelder.forEach(id => { const el = document.getElementById(id); if (el) el.disabled = true; });
@@ -1125,7 +1323,41 @@ function oeffnePruefungMitTeilbereich(teilbereich) {
     zeigeBereich('pruefungView');
   }
 
+  if (pruefungIstAktiv) return;
+
   const select = document.getElementById("pruefungTeilbereichSelect");
   select.value = teilbereich;
   pruefungTeilbereichWaehlen();
+}
+
+async function stelleLaufendePruefungWiederHer() {
+  const lauf = leseGespeichertenPruefungslauf();
+  if (!lauf) return false;
+
+  const teilbereichSelect = document.getElementById("pruefungTeilbereichSelect");
+  const simulationSelect = document.getElementById("pruefungSimulationSelect");
+  const fachSelect = document.getElementById("pruefungFachSelect");
+  if (!teilbereichSelect || !simulationSelect || !fachSelect) return false;
+
+  if (typeof zeigeBereich === "function") zeigeBereich("pruefungView");
+
+  teilbereichSelect.value = lauf.teilbereich;
+  pruefungTeilbereichWaehlen({ gespeichertenLaufBeibehalten: true });
+
+  simulationSelect.value = lauf.simulation;
+  pruefungSimulationWaehlen({ gespeichertenLaufBeibehalten: true });
+
+  fachSelect.value = lauf.einheit;
+  pruefungFachWaehlen({ gespeichertenLaufBeibehalten: true });
+
+  await ladePruefungSimulation({ gespeichertenLaufBeibehalten: true });
+  return true;
+}
+
+window.stelleLaufendePruefungWiederHer = stelleLaufendePruefungWiederHer;
+
+if (typeof window.addEventListener === "function") {
+  window.addEventListener("pageshow", function() {
+    if (pruefungIstAktiv) aktualisierePruefungTimerNachEndzeit();
+  });
 }

@@ -33,7 +33,6 @@ function frontend(fetch) {
   };
   vm.createContext(context);
   vm.runInContext(fs.readFileSync('js/pruefungssimulation.js', 'utf8'), context);
-  context.stoppePruefungTimer = () => {};
   return { context, elements };
 }
 

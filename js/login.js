@@ -635,6 +635,9 @@ onAuthStateChanged(auth, async (user) => {
 		}
 		const target = getDesiredView();
 		if (currentUserVerified && target) { zeigeBereich(target); clearDesiredView(); }
+		if (currentUserVerified && typeof window.stelleLaufendePruefungWiederHer === 'function') {
+			await window.stelleLaufendePruefungWiederHer();
+		}
 	} else {
 		window.aktuellerNutzer = null;
 		currentUserVerified = false;

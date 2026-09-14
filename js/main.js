@@ -65,12 +65,6 @@ let aktuelleKartenIndex = 0;
   });
 
 function zeigeBereich(viewId) {
-    // If leaving pruefungView without proper completion, reset the exam flag
-    const pruefungView = document.getElementById("pruefungView");
-    if (pruefungView && pruefungView.classList.contains("active") && viewId !== "pruefungView" && typeof pruefungIstAktiv !== 'undefined') {
-      pruefungIstAktiv = false;
-    }
-
     if (viewId !== "wissenView" && typeof karteikartenAudioStoppen === "function") {
       karteikartenAudioStoppen();
     }

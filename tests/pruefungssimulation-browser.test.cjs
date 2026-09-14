@@ -76,6 +76,12 @@ test('all 24 local exams render in the real DOM and retain full model solutions 
         assert.equal(rendered.answers[i].question, row.frage.replace(/\r\n?/g, '\n'));
         assert.ok(rendered.text.replace(/\s+/g, ' ').includes(row.situation.replace(/\s+/g, ' ').trim()), `${unit.einheit} ${row.aufgabe}${row.teilaufgabe}: missing case situation`);
       }
+      if (unit === catalog.einheiten[0]) {
+        await page.evaluate(() => zeigeBereich('trainerView'));
+        assert.equal(await page.evaluate(() => pruefungIstAktiv), true);
+        await page.evaluate(() => oeffnePruefungMitTeilbereich('HQ'));
+        assert.equal(await page.locator('#pruefungTeilbereichSelect').inputValue(), unit.teilbereich);
+      }
       if (!unit.aufgaben.length) assert.match(rendered.text, /Keine Prüfung gefunden/);
       if (unit.aufgaben.length) {
         await page.locator('button[onclick="pruefungManuellAbgeben()"]').click();
