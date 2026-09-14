@@ -372,6 +372,14 @@ function audioStoppen() {
   karteikartenAudioStoppen("Audio gestoppt.");
 }
 
+let kilianAnfrageLaeuft = false;
+
+function behandleKilianEingabe(event) {
+  if (!event || event.key !== "Enter" || event.shiftKey) return;
+  event.preventDefault();
+  return frageKilian();
+}
+
 async function frageKilian() {
   const usageTicket = window.WifaUsage?.captureTicket();
   if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
@@ -385,6 +393,8 @@ async function frageKilian() {
     alert("Bitte zuerst eine Frage eingeben.");
     return;
   }
+  if (kilianAnfrageLaeuft) return;
+  kilianAnfrageLaeuft = true;
 
   try {
     document.getElementById("kilianStatus").textContent = "Kilian denkt nach.";
@@ -407,6 +417,8 @@ async function frageKilian() {
   } catch (error) {
     document.getElementById("kilianStatus").textContent =
       "Fehler: " + error.message;
+  } finally {
+    kilianAnfrageLaeuft = false;
   }
 }
 

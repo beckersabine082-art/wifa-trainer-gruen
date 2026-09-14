@@ -251,12 +251,189 @@ function escapeRegExp(text) {
   return String(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function kilianMathFallbackText(source) {
+  return String(source || "")
+    .replace(/\\(?:left|right|text|mathrm|operatorname|frac|sqrt|sum|prod|int|lim)\b/g, "")
+    .replace(/\\([%$&#_{}()[\]\\])/g, "$1")
+    .replace(/\\([a-zA-Z]+)/g, "$1")
+    .replace(/[{}]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function renderKilianMathContent(source) {
+  const input = String(source || "");
+  const state = { index: 0, unsupported: false };
+  const operators = {
+    cdot: "·", times: "×", div: "÷", pm: "±", mp: "∓", le: "≤", leq: "≤",
+    ge: "≥", geq: "≥", neq: "≠", ne: "≠", approx: "≈", equiv: "≡", propto: "∝",
+    in: "∈", notin: "∉", to: "→", rightarrow: "→", leftarrow: "←", leftrightarrow: "↔",
+    mapsto: "↦", infinity: "∞", infty: "∞", sum: "∑", prod: "∏", int: "∫",
+    partial: "∂", nabla: "∇", ldots: "…", cdots: "⋯", dots: "…", alpha: "α",
+    beta: "β", gamma: "γ", delta: "δ", epsilon: "ε", theta: "θ", lambda: "λ",
+    mu: "μ", pi: "π", sigma: "σ", phi: "φ", omega: "ω"
+  };
+  const words = new Set(["sin", "cos", "tan", "log", "ln", "exp", "min", "max", "lim"]);
+
+  function parseSequence(endCharacter) {
+    const nodes = [];
+    while (state.index < input.length) {
+      const character = input[state.index];
+      if (endCharacter && character === endCharacter) {
+        state.index += 1;
+        return { html: nodes.join(""), closed: true };
+      }
+      if (character === "^" || character === "_") {
+        state.index += 1;
+        let trailingSpace = "";
+        while (nodes.length && nodes[nodes.length - 1] === " ") trailingSpace = " " + nodes.pop();
+        const base = nodes.pop();
+        const argument = parseArgument();
+        if (!base || argument === null) {
+          state.unsupported = true;
+          if (argument !== null) nodes.push(argument);
+          continue;
+        }
+        nodes.push(base + "<" + (character === "^" ? "sup" : "sub") + ">" + argument + "</" + (character === "^" ? "sup" : "sub") + ">" + trailingSpace);
+        continue;
+      }
+      if (character === "{") {
+        nodes.push(parseGroup());
+        continue;
+      }
+      if (character === "}") {
+        state.unsupported = true;
+        state.index += 1;
+        continue;
+      }
+      if (character === "\\") {
+        nodes.push(parseCommand());
+        continue;
+      }
+      if (character === "(" || character === "[") {
+        nodes.push(parseDelimited(character, character === "(" ? ")" : "]"));
+        continue;
+      }
+      nodes.push(escapeHtml(character));
+      state.index += 1;
+    }
+    return { html: nodes.join(""), closed: !endCharacter };
+  }
+
+  function parseGroup() {
+    state.index += 1;
+    const result = parseSequence("}");
+    if (!result.closed) state.unsupported = true;
+    return result.html;
+  }
+
+  function parseDelimited(open, close) {
+    state.index += 1;
+    const result = parseSequence(close);
+    if (!result.closed) state.unsupported = true;
+    return escapeHtml(open) + result.html + escapeHtml(close);
+  }
+
+  function parseArgument() {
+    while (input[state.index] === " ") state.index += 1;
+    if (state.index >= input.length) return null;
+    if (input[state.index] === "{") return parseGroup();
+    if (input[state.index] === "\\") return parseCommand();
+    if (input[state.index] === "(" || input[state.index] === "[") {
+      const open = input[state.index];
+      return parseDelimited(open, open === "(" ? ")" : "]");
+    }
+    const character = input[state.index];
+    state.index += 1;
+    return escapeHtml(character);
+  }
+
+  function parseRequiredGroup() {
+    while (input[state.index] === " ") state.index += 1;
+    if (input[state.index] !== "{") {
+      state.unsupported = true;
+      return null;
+    }
+    return parseGroup();
+  }
+
+  function parseCommand() {
+    state.index += 1;
+    if (state.index >= input.length) {
+      state.unsupported = true;
+      return "";
+    }
+    if (!/[A-Za-z]/.test(input[state.index])) {
+      const escaped = escapeHtml(input[state.index]);
+      state.index += 1;
+      return escaped;
+    }
+    const start = state.index;
+    while (state.index < input.length && /[A-Za-z]/.test(input[state.index])) state.index += 1;
+    const command = input.slice(start, state.index);
+    if (command === "frac") {
+      const numerator = parseRequiredGroup();
+      const denominator = parseRequiredGroup();
+      if (numerator === null || denominator === null) return numerator || denominator || "";
+      return '<span class="formula-fraction"><span class="formula-numerator">' + numerator + '</span><span class="formula-denominator">' + denominator + "</span></span>";
+    }
+    if (command === "text" || command === "mathrm" || command === "operatorname") {
+      const content = parseRequiredGroup();
+      if (content === null) return "";
+      return '<span class="formula-text">' + content + "</span>";
+    }
+    if (command === "sqrt") {
+      const content = parseRequiredGroup();
+      if (content === null) return "";
+      return '<span class="formula-sqrt">√<span class="formula-radicand">' + content + "</span></span>";
+    }
+    if (command === "left" || command === "right") return "";
+    if (command === "quad" || command === "qquad" || command === "," || command === ";" || command === "!") return " ";
+    if (Object.prototype.hasOwnProperty.call(operators, command)) return escapeHtml(operators[command]);
+    if (words.has(command)) return '<span class="formula-text">' + escapeHtml(command) + "</span>";
+
+    state.unsupported = true;
+    const fallback = parseArgument();
+    return fallback === null ? escapeHtml(command) : fallback;
+  }
+
+  const parsed = parseSequence(null);
+  return {
+    html: parsed.html || escapeHtml(kilianMathFallbackText(input)),
+    unsupported: state.unsupported
+  };
+}
+
+function renderKilianMathFormula(source, display) {
+  const rendered = renderKilianMathContent(source);
+  const className = (display ? "formula-display" : "formula-inline") + (rendered.unsupported ? " formula-fallback" : "");
+  const content = rendered.html || escapeHtml(kilianMathFallbackText(source)) || "?";
+  return '<span class="' + className + '" role="math">' + content + "</span>";
+}
+
 function formatKilianAntwort(text) {
-  return escapeHtml(text || "")
+  const mathSlots = [];
+  let source = String(text || "");
+  const addMathSlot = function(content, display) {
+    const marker = "KILIAN_MATH_SLOT_" + mathSlots.length + "_END";
+    mathSlots.push({ marker, html: renderKilianMathFormula(content, display) });
+    return marker;
+  };
+  source = source
+    .replace(/\\\[([\s\S]*?)\\\]/g, function(_, content) { return addMathSlot(content, true); })
+    .replace(/\\\(([\s\S]*?)\\\)/g, function(_, content) { return addMathSlot(content, false); })
+    .replace(/\\\[([\s\S]*)$/g, function(_, content) { return addMathSlot(content, true); })
+    .replace(/\\\(([\s\S]*)$/g, function(_, content) { return addMathSlot(content, false); });
+
+  let formatted = escapeHtml(source)
     .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
     .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
     .replace(/\n- /g, "<br>• ")
     .replace(/\n/g, "<br>");
+  mathSlots.forEach(function(slot) {
+    formatted = formatted.split(slot.marker).join(slot.html);
+  });
+  return formatted.replace(/\\(?=[\[\]()])/g, "");
 }
 
 function sanitizeAufgabenHtml(html) {

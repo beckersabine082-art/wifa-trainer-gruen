@@ -18,6 +18,10 @@ try {
   box.innerHTML = formatKilianAntwort('### Titel\n**fett**\n- <img src=x onerror="window.bad=1">');
   check(box.querySelector('h3') && box.querySelector('strong'), 'Kilian-Formatierung verloren');
   check(!box.querySelector('img') && box.textContent.includes('<img'), 'Kilian-HTML aktiv');
-  document.getElementById('result').textContent = 'BESTANDEN: 10 DOM-Prüfungen; Tabellen, Eingaben und Formatierung erhalten; ausführbares HTML entfernt.';
+  box.innerHTML = formatKilianAntwort(String.raw`Ergebnis: \[\text{ROI} = \frac{\text{Gewinn}}{\text{Gesamtkapital}} \cdot 100\%\]`);
+  check(box.querySelector('.formula-display .formula-fraction'), 'Kilian-Bruch nicht gerendert');
+  check(box.querySelector('.formula-text') && box.textContent.includes('ROI'), 'Kilian-Formeltext verloren');
+  check(!box.innerHTML.includes('\\frac') && !box.innerHTML.includes('\\text'), 'LaTeX bleibt sichtbar');
+  document.getElementById('result').textContent = 'BESTANDEN: 13 DOM-Prüfungen; Tabellen, Eingaben, Kilian-Formatierung und Formeln erhalten; ausführbares HTML entfernt.';
 } catch (error) { document.getElementById('result').textContent = 'FEHLGESCHLAGEN: ' + error.message; }
 </script></html>

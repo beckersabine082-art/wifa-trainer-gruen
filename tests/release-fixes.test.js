@@ -157,6 +157,106 @@ test('Kilian escapes raw HTML while retaining simple formatting',()=>{
   assert.ok(r.includes('<h3>Titel</h3>'));assert.ok(r.includes('<strong>fett</strong>'));assert.ok(r.includes('• '));
   assert.ok(r.includes('&lt;img'));assert.ok(!r.includes('<img'));
 });
+test('Kilian formula content escapes HTML before creating formula markup',()=>{
+  const c={window:{addEventListener(){}},document:{addEventListener(){}}};vm.createContext(c);vm.runInContext(read('js/main.js'),c);
+  const r=c.formatKilianAntwort(String.raw`\[\text{<img src=x onerror="window.bad=1">}\]`);
+  assert.ok(r.includes('&lt;img'));
+  assert.ok(!r.includes('<img'));
+});
+test('Kilian renders display fractions and text commands without exposing LaTeX delimiters',()=>{
+  const c={window:{addEventListener(){}},document:{addEventListener(){}}};vm.createContext(c);vm.runInContext(read('js/main.js'),c);
+  const answer=String.raw`\[\text{Verschuldungskoeffizient} = \frac{\text{Fremdkapital}}{\text{Eigenkapital}}\]`;
+  const rendered=c.formatKilianAntwort(answer);
+  assert.ok(rendered.includes('formula-display'));
+  assert.ok(rendered.includes('formula-fraction'));
+  assert.ok(rendered.includes('Verschuldungskoeffizient'));
+  assert.ok(rendered.includes('Fremdkapital'));
+  assert.ok(rendered.includes('Eigenkapital'));
+  assert.doesNotMatch(rendered,/\\(?:frac|text)|\\\[|\\\]/);
+});
+test('Kilian renders mixed inline and display formulas with operators powers indices and percentages',()=>{
+  const c={window:{addEventListener(){}},document:{addEventListener(){}}};vm.createContext(c);vm.runInContext(read('js/main.js'),c);
+  const answer=[
+    String.raw`Der ROI ist \(ROI = \frac{\text{Gewinn}}{\text{Gesamtkapital}} \cdot 100\%\).`,
+    String.raw`\[K(x) = K_f + k_v \cdot x\]`,
+    String.raw`\[\mathrm{KW} = \sum_{t=0}^{n} \frac{Z_t}{(1+i)^t}\]`
+  ].join('\n');
+  const rendered=c.formatKilianAntwort(answer);
+  assert.ok(rendered.includes('formula-inline'));
+  assert.ok((rendered.match(/formula-display/g)||[]).length>=2);
+  assert.ok(rendered.includes('·'));
+  assert.ok(rendered.includes('%'));
+  assert.ok(rendered.includes('∑'));
+  assert.ok(rendered.includes('<sup>t</sup>'));
+  assert.ok(rendered.includes('<sub>f</sub>'));
+  assert.ok(rendered.includes('<sub>t=0</sub>'));
+  assert.doesNotMatch(rendered,/\\(?:frac|text|mathrm|sum)|\\[\\()\[\]]/);
+});
+test('Kilian uses a readable safe fallback for unsupported formula commands',()=>{
+  const c={window:{addEventListener(){}},document:{addEventListener(){}}};vm.createContext(c);vm.runInContext(read('js/main.js'),c);
+  const rendered=c.formatKilianAntwort(String.raw`Unbekannt: \(\unsupported{Wert} + \frac{1}{2}\)`);
+  assert.ok(rendered.includes('formula-fallback'));
+  assert.ok(rendered.includes('Wert'));
+  assert.ok(rendered.includes('1'));
+  assert.ok(rendered.includes('2'));
+  assert.doesNotMatch(rendered,/\\[a-zA-Z]+/);
+});
+function kilianContext({frage,apiPost}={}) {
+  const elements={
+    kilianInput:{value:frage ?? 'Normale Frage',textContent:'',innerHTML:''},
+    kilianStatus:{textContent:''},
+    kilianAntwort:{textContent:'',innerHTML:''},
+    kilianBubbleInput:{value:''},
+    kilianBubbleStatus:{textContent:''},
+    kilianBubbleAntwort:{textContent:'',innerHTML:''},
+    kilianBubbleFenster:{style:{display:'none'}}
+  };
+  const calls=[];
+  const context={
+    console,
+    window:{WifaUsage:{captureTicket:()=>null,isCurrent:()=>true,record:()=>{}}},
+    document:{getElementById:id=>elements[id]},
+    formatKilianAntwort:text=>text,
+    apiPost:apiPost || (async(action,payload)=>(calls.push({action,payload}),{success:true,data:{antwort:'Antwort'}})),
+    alert:()=>{}
+  };
+  vm.createContext(context);vm.runInContext(read('js/wissensdatenbank.js'),context);
+  return {context,elements,calls};
+}
+test('Kilian sends normal, long and formula questions through the same Enter path',async()=>{
+  const frage=String.raw`Bitte erkläre mir ROI = \frac{Gewinn}{Gesamtkapital} und nenne ein Beispiel. ${'Weitere Details '.repeat(100)}`;
+  const h=kilianContext({frage});let prevented=false;
+  await h.context.behandleKilianEingabe({key:'Enter',shiftKey:false,preventDefault:()=>{prevented=true;}});
+  assert.equal(prevented,true);
+  assert.equal(h.calls.length,1);
+  assert.equal(h.calls[0].action,'frageKilian');
+  assert.equal(h.calls[0].payload.frage,frage.trim());
+});
+test('Kilian keeps Shift+Enter as a textarea line break',()=>{
+  const h=kilianContext();let prevented=false;
+  const result=h.context.behandleKilianEingabe({key:'Enter',shiftKey:true,preventDefault:()=>{prevented=true;}});
+  assert.equal(result,undefined);
+  assert.equal(prevented,false);
+  assert.equal(h.calls.length,0);
+});
+test('Kilian does not submit empty input on Enter',async()=>{
+  const h=kilianContext({frage:' \n\t'});let prevented=false;
+  await h.context.behandleKilianEingabe({key:'Enter',shiftKey:false,preventDefault:()=>{prevented=true;}});
+  assert.equal(prevented,true);
+  assert.equal(h.calls.length,0);
+});
+test('Kilian ignores repeated sends while the first request is running',async()=>{
+  let release;
+  const pending=new Promise(resolve=>{release=resolve;});
+  const h=kilianContext({apiPost:async(action,payload)=>(h.calls.push({action,payload}),pending)});
+  const first=h.context.frageKilian();
+  const second=h.context.frageKilian();
+  await Promise.resolve();
+  assert.equal(h.calls.length,1);
+  release({success:true,data:{antwort:'Antwort'}});
+  await Promise.all([first,second]);
+  assert.equal(h.calls.length,1);
+});
 test('exam displayed and stored status uses exact 50 percent threshold',async()=>{
   const el={style:{},innerHTML:''};const writes=[];
   const c={window:{},document:{getElementById:()=>el},auth:{currentUser:{uid:'owner',emailVerified:true}},db:{},doc:()=>({id:'id'}),collection:()=>({}),serverTimestamp:()=>0,writeBatch:()=>({set:(r,v)=>writes.push(v),commit:async()=>{}})};
