@@ -1,0 +1,22 @@
+{
+  "scope": "WQ_RS_SIM_1 / Aufgabe 3b / Prüfungssimulation Zeile 38",
+  "checkedRows": 18,
+  "checkedSimulationTasks": 15,
+  "changedCells": [
+    "I38",
+    "J38",
+    "K38"
+  ],
+  "unexpectedChanges": 0,
+  "pointsBefore": 5,
+  "pointsAfter": 5,
+  "operatorBefore": "Beurteilen",
+  "operatorAfter": "Beurteilen",
+  "situationUnchanged": true,
+  "st0191EntireRowUnchanged": true,
+  "otherTasksUnchanged": true,
+  "cellMetadataUnchanged": true,
+  "answerability": "Eindeutige Antwort auf die ausdrücklich begrenzte Standortfrage: Nein, der Standort allein begründet kein Verbot; keine pauschale Freigabe der vollständigen Firma.",
+  "noInventedForeignActivities": true,
+  "noAssumedDomesticOnlyActivities": true
+}

@@ -1,0 +1,28 @@
+{
+  "checkedCases": 11,
+  "checkedContextRows": 72,
+  "changedCells": 10,
+  "changedCases": 10,
+  "completedCases": 9,
+  "partiallyClarified": 1,
+  "unchangedUnresolved": 1,
+  "remainingUnresolved": 2,
+  "allSolutionsByteIdentical": true,
+  "allCriteriaByteIdentical": true,
+  "pointsUnchanged": true,
+  "originalQuestionSentencesAndOperatorsUnchanged": true,
+  "metadataUnchanged": true,
+  "unexpectedChanges": 0,
+  "changedA1": [
+    "Recht!C231",
+    "Recht!C232",
+    "Recht!C233",
+    "Recht!C235",
+    "Recht!C236",
+    "Recht!C237",
+    "Recht!C238",
+    "Recht!C251",
+    "Recht!C265",
+    "Prüfungssimulation!G38"
+  ]
+}

@@ -1,0 +1,5594 @@
+{
+  "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+  "backupId": "1_zVP5xpQvfKVNdg2crR1LdWmPjYCSNiodkc8YLRuIgU",
+  "edits": [
+    {
+      "sheet": "Recht",
+      "row": 231,
+      "id": "R-0229",
+      "col": 2,
+      "before": "Hat die Waschmaschine einen Sachmangel? Begründen Sie.",
+      "after": "V kauft eine Waschmaschine. Bereits bei der Übergabe kann sie nicht zum gewöhnlichen Waschen von Wäsche verwendet werden; ihre Funktionsfähigkeit entspricht nicht derjenigen üblicher vergleichbarer Waschmaschinen. Eine solche Abweichung wurde nicht vereinbart.\n\nHat die Waschmaschine einen Sachmangel? Begründen Sie.",
+      "source": "E231/F231 nennen fehlende gewöhnliche Verwendbarkeit und unübliche Beschaffenheit. V stammt aus der Folgefrage C232. Übergabebezug und fehlende abweichende Vereinbarung konkretisieren die in E231 vorausgesetzte Mängelhaftung; kein technischer Defekt erfunden.",
+      "answerability": "Ohne Lösung erkennbar: Kaufsache weicht schon bei Übergabe von gewöhnlicher Waschfunktion und üblicher Beschaffenheit ab; §434 kann angewendet werden.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 232,
+      "id": "R-0230",
+      "col": 2,
+      "before": "Kann V statt Reparatur die Lieferung einer neuen Waschmaschine verlangen? Begründen Sie.",
+      "after": "V hat eine Waschmaschine erhalten, die bereits bei Übergabe nicht ordnungsgemäß zum Waschen verwendet werden kann. Der Verkäufer bietet eine vollständige, schnell und kostengünstig durchführbare Reparatur an. Eine Neulieferung wäre demgegenüber unter Berücksichtigung des Werts der mangelfreien Maschine und der Bedeutung des Mangels nur mit unverhältnismäßigen Kosten möglich. Die Reparatur bringt für V keine erheblichen Nachteile mit sich. Der Verkäufer verweigert die Neulieferung aus diesem Grund.\n\nKann V statt Reparatur die Lieferung einer neuen Waschmaschine verlangen? Begründen Sie.",
+      "source": "E232 nennt schnelle, kostengünstige Reparatur und Unverhältnismäßigkeit der Neulieferung; F232 nennt Wahlrecht/§439. Erhebliche Nachteile und ausgeübte Verweigerung werden als Voraussetzungen der in E232 angenommenen Beschränkung auf Reparatur ausdrücklich gemacht. Keine Kostenbeträge erfunden.",
+      "answerability": "Ohne Lösung erkennbar: Wahlrecht trifft auf ausdrücklich feststehende Unverhältnismäßigkeit und ausgeübte Verweigerung; nur vollständige Reparatur bleibt. Für eine offene rechnerische Kostenabwägung fehlen Quellenwerte, daher keine Beträge erfunden.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 233,
+      "id": "R-0231",
+      "col": 2,
+      "before": "Besteht ein Anspruch auf Neulieferung der 1.000 Fliesen? Begründen Sie.",
+      "after": "Ein Käufer bestellt 1.000 Fliesen, die in der gesamten Menge farblich zusammenpassen sollen. Geliefert werden nur 800 Fliesen aus einer Partie. Die fehlenden 200 Fliesen könnten nur aus einer anderen Partie ergänzt werden; wegen möglicher Farbabweichungen lässt sich dadurch keine farblich einheitliche Gesamtlieferung sicherstellen. Eine vollständige Neulieferung von 1.000 zusammenpassenden Fliesen ist möglich.\n\nBesteht ein Anspruch auf Neulieferung der 1.000 Fliesen? Begründen Sie.",
+      "source": "E233 enthält 800 statt 1.000, 200 fehlende Fliesen, Partie/Farbabweichungen und unmögliche mangelfreie Ergänzung. Einheitliche Farbe und mögliche vollständige Ersatzlieferung sind im zugesprochenen Gesamt-Neulieferungsanspruch enthalten.",
+      "answerability": "Ohne Lösung erkennbar: Mindermenge und notwendige Farbeinheit lassen sich durch 200 fremde Partiestücke nicht beheben; vollständige Lieferung ist möglich.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 235,
+      "id": "R-0233",
+      "col": 2,
+      "before": "Ist der Rücktritt vom Kaufvertrag möglich? Begründen Sie.",
+      "after": "Ein Käufer erwirbt eine Sache im Vertrauen auf konkrete öffentliche Werbeaussagen des Herstellers über ihre Eigenschaften. Diese Aussagen prägen die berechtigte Erwartung an die Kaufsache. Bereits bei Übergabe fehlen die beworbenen Eigenschaften; die Abweichung ist nicht nur unerheblich. Weder eine Reparatur noch eine Ersatzlieferung kann den geschuldeten Zustand herstellen. Eine Frist zur Nacherfüllung wurde noch nicht gesetzt.\n\nIst der Rücktritt vom Kaufvertrag möglich? Begründen Sie.",
+      "source": "E235/F235 setzen berechtigte Herstellerwerbung, Sachmangel und Unmöglichkeit der Nacherfüllung voraus. Nicht nur unerhebliche Abweichung ist eine notwendige rechtliche Voraussetzung des bejahten Rücktritts (§323 Abs.5); kein bestimmtes Produkt, Werbeversprechen oder Ausmaß erfunden.",
+      "answerability": "Ohne Lösung erkennbar: beworbene Eigenschaften fehlen erheblich und beide Formen der Nacherfüllung sind unmöglich; Rücktrittsprüfung ohne Frist ist möglich.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 236,
+      "id": "R-0234",
+      "col": 2,
+      "before": "Ist der Rücktritt vom Kaufvertrag wegen des erhöhten Kraftstoffverbrauchs möglich? Begründen Sie.",
+      "after": "Ein Käufer erwirbt ein Fahrzeug im Vertrauen auf die öffentlichen Kraftstoffverbrauchsangaben des Herstellers. Der tatsächliche Verbrauch liegt bereits bei Übergabe unter den für die Herstellerangaben maßgeblichen Bedingungen darüber; die Abweichung ist nicht nur unerheblich. Ursache ist ein serienbedingter Konstruktionsfehler. Weder eine Reparatur noch die Lieferung eines anderen vertragsgemäßen Fahrzeugs kann die Abweichung beseitigen. Eine Frist zur Nacherfüllung wurde noch nicht gesetzt.\n\nIst der Rücktritt vom Kaufvertrag wegen des erhöhten Kraftstoffverbrauchs möglich? Begründen Sie.",
+      "source": "E236/F236 nennen erhöhte Verbrauchswerte, Herstellerwerbung, serienbedingten Konstruktionsfehler und unmögliche Nacherfüllung. Vergleichbare Messbedingungen, Übergabebezug und nicht nur unerhebliche Abweichung konkretisieren die notwendigen Voraussetzungen des bejahten Rücktritts; keine Verbrauchs- oder Prozentwerte erfunden.",
+      "answerability": "Ohne Lösung erkennbar: erheblicher Mehrverbrauch unter vergleichbaren Bedingungen und nicht behebbarer Serienfehler; Rücktrittsvoraussetzungen sind prüfbar.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 237,
+      "id": "R-0235",
+      "col": 2,
+      "before": "Besteht ein Anspruch auf Rücktritt nach §§ 346 Abs. 1, 323 Abs. 1 BGB? Begründen Sie.",
+      "after": "Ein Käufer hat einen Fitnesstrainer als Trainingsgerät gekauft. Das Gerät wurde vollständig, mangelfrei und entsprechend den vertraglichen Verpflichtungen geliefert. Zu prüfen ist allein der Rücktritt hinsichtlich dieser ordnungsgemäß erbrachten Lieferung des Geräts.\n\nBesteht ein Anspruch auf Rücktritt nach §§ 346 Abs. 1, 323 Abs. 1 BGB? Begründen Sie.",
+      "source": "E237/F237 nennen mangelfreie, ordnungsgemäße Trainerlieferung. Der Prüfungsgegenstand wird auf genau diesen vom Lösungstext behandelten Geräteteil begrenzt; die App-/Paketfrage wird separat in R-0236 vollständig beschrieben.",
+      "answerability": "Ohne Lösung erkennbar: nur die mangelfreie Gerätelieferung steht zur Prüfung. Keine Vermischung mit dem anderen Prüfungsgegenstand in R-0236.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 238,
+      "id": "R-0236",
+      "col": 2,
+      "before": "Besteht ein Anspruch auf Vertragsbeendigung nach § 327c Abs. 6 BGB? Begründen Sie.",
+      "after": "Ein Verbraucher schließt mit einem Unternehmer einen Paketvertrag über einen Fitnesstrainer als Trainingsgerät und die Bereitstellung einer App. Das Gerät wird mangelfrei geliefert. Der für die App erforderliche Zugangscode ist fällig, wird aber auch nach einer Aufforderung des Verbrauchers nicht unverzüglich bereitgestellt. Ohne die App hat der Verbraucher kein Interesse am übrigen Paketvertrag.\n\nBesteht ein Anspruch auf Vertragsbeendigung nach § 327c Abs. 6 BGB? Begründen Sie.",
+      "source": "E238/F238 nennen Verbraucher, Unternehmer, Paketvertrag, App, Zugangscode, erfolglose Aufforderung und fehlendes Interesse am Restvertrag. Trainer und mangelfreie Lieferung stammen aus E237/F237. Fälligkeit und nicht unverzügliche Bereitstellung konkretisieren den von E238 vorausgesetzten Tatbestand des §327c Abs.1.",
+      "answerability": "Ohne Lösung erkennbar: fällige App fehlt trotz Aufforderung, Paketvertrag und fehlendes Interesse an dessen restlichem Teil sind angegeben; auch isoliert verwendbar.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 251,
+      "id": "R-0249",
+      "col": 2,
+      "before": "Hat der Mieter einen Anspruch auf Kostenerstattung für die Reparatur der Heizungsanlage? Begründen Sie.",
+      "after": "Ein Mieter lässt eine reparaturbedürftige Heizungsanlage auf eigene Kosten reparieren. Er hat den Vermieter zuvor nicht zur Beseitigung dieses Mangels aufgefordert und beruft sich für einen Verzug des Vermieters lediglich auf einen Hinweis im Mietvertrag. Weitere Umstände, die eine Mahnung entbehrlich machen, liegen nicht vor. Zu prüfen ist der Aufwendungsersatz wegen Verzugs mit der Mängelbeseitigung nach § 536a Abs. 2 Nr. 1 BGB.\n\nHat der Mieter einen Anspruch auf Kostenerstattung für die Reparatur der Heizungsanlage? Begründen Sie.",
+      "source": "E251/F251 nennen §536a Abs.2 Nr.1, fehlenden Verzug, notwendige Mahnung und bloßen Vertragshinweis. Die Frage beschränkt die Anspruchsprüfung deshalb ausdrücklich auf diese Grundlage. Wortlaut des Hinweises, Notfall, konkrete Termine und weitere Anspruchsgrundlagen werden nicht erfunden.",
+      "answerability": "Ohne Lösung erkennbar: keine Mahnung/kein Ersatzgrund; Frage betrifft ausdrücklich nur den in der Musterlösung geprüften Anspruch aus §536a Abs.2 Nr.1.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Recht",
+      "row": 265,
+      "id": "R-0263",
+      "col": 2,
+      "before": "Hat der Kunde sofort Anspruch auf Preisminderung wegen eines mangelhaften Mehrspartenanschlusses?",
+      "after": "Ein Kunde hat aufgrund eines Werkvertrags einen Mehrspartenanschluss herstellen lassen. Das Werk ist mangelhaft. Der Kunde verlangt sofort eine Herabsetzung der Vergütung, ohne dem Unternehmer zuvor eine angemessene Frist zur Nacherfüllung gesetzt zu haben. Die Nacherfüllung ist möglich und dem Kunden zumutbar; sie ist weder fehlgeschlagen noch verweigert worden. Auch sonst liegt kein Grund vor, der eine Fristsetzung entbehrlich macht.\n\nHat der Kunde sofort Anspruch auf Preisminderung wegen eines mangelhaften Mehrspartenanschlusses?",
+      "source": "E265/F265 und Nachbarfrage E264 setzen einen mangelhaften Werkvertrag, fehlende Frist und deshalb noch kein Minderungsrecht voraus. Die nicht eingreifenden Fristausnahmen werden als notwendige Voraussetzungen dieser Aussage ausdrücklich gemacht; keine Mangelursache oder Fristdauer erfunden.",
+      "answerability": "Ohne Lösung erkennbar: Werkmangel, fehlende Frist und keine Fristausnahme; sofortige Minderung kann beurteilt werden.",
+      "status": "vollständig ergänzt"
+    },
+    {
+      "sheet": "Prüfungssimulation",
+      "row": 38,
+      "id": "WQ_RS_SIM_1 / 3b",
+      "col": 6,
+      "before": "Die Ausgangssituation von Circle Harbor und die Angaben der vorherigen Teilaufgabe gelten fort.",
+      "after": "Aus Sicht der Circle Harbor GmbH wird in dieser Teilaufgabe eine rechtlich selbstständige OHG als hypothetischer Vergleichsfall zur Firmierung betrachtet. Der neue Geschäftsbereich in der Frage gehört zu dieser OHG.",
+      "source": "data/pruefungssimulation/katalog.json, WQ_RS_SIM_1 3b situation; PRUEFBERICHT.md beschreibt ausdrücklich OHG-Vergleichsfall. Keine tatsächliche Neugründung ist belegt; diese wird nicht ergänzt.",
+      "answerability": "Nur OHG-Zuordnung geklärt. Weiter offen: Sheet-Lösung und Kriterien leiten Unzulässigkeit aus nur einem Standort ab; lokale fachliche Richtigstellung widerspricht. Fehlende internationale Tätigkeit kann nicht aus dem Standort abgeleitet werden. Ohne erfundene Tatsachen oder Änderung der Lösung ist kein abschließendes Ergebnis wie in der Sheet-Lösung belegbar.",
+      "status": "teilweise geklärt, weiterhin offen"
+    }
+  ],
+  "beforeScope": [
+    {
+      "sheet": "Recht",
+      "row": 231,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0229"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kaufrecht & Verbraucherschutz"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Hat die Waschmaschine einen Sachmangel? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.7137255,
+              "green": 0.84313726,
+              "blue": 0.65882355
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.7137255,
+                "green": 0.84313726,
+                "blue": 0.65882355
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Es liegt ein Sachmangel nach § 434 Abs. 3 Satz 1 Nr. 1 und Nr. 2a BGB vor. Die Waschmaschine eignet sich nicht für die gewöhnliche Verwendung und weist nicht die übliche Beschaffenheit vergleichbarer Sachen auf."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Sachmangel;§434 BGB;gewöhnliche Verwendung;nicht geeignet;Beschaffenheit"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/5"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0229",
+        "Kaufrecht & Verbraucherschutz",
+        "Hat die Waschmaschine einen Sachmangel? Begründen Sie.",
+        "",
+        "Es liegt ein Sachmangel nach § 434 Abs. 3 Satz 1 Nr. 1 und Nr. 2a BGB vor. Die Waschmaschine eignet sich nicht für die gewöhnliche Verwendung und weist nicht die übliche Beschaffenheit vergleichbarer Sachen auf.",
+        "Sachmangel;§434 BGB;gewöhnliche Verwendung;nicht geeignet;Beschaffenheit",
+        "",
+        "0/5",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 232,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0230"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kaufrecht & Verbraucherschutz"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kann V statt Reparatur die Lieferung einer neuen Waschmaschine verlangen? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.8509804,
+              "green": 0.91764706,
+              "blue": 0.827451
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.8509804,
+                "green": 0.91764706,
+                "blue": 0.827451
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "V kann grundsätzlich zwischen Reparatur und Neulieferung wählen. Der Verkäufer darf die gewählte Art der Nacherfüllung verweigern, wenn sie unverhältnismäßig ist. Da die Reparatur schnell und kostengünstig möglich ist, besteht nur ein Anspruch auf Reparatur."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Nacherfüllung;Wahlrecht;Reparatur;Neulieferung;unverhältnismäßig;§439 BGB"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/6"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0230",
+        "Kaufrecht & Verbraucherschutz",
+        "Kann V statt Reparatur die Lieferung einer neuen Waschmaschine verlangen? Begründen Sie.",
+        "",
+        "V kann grundsätzlich zwischen Reparatur und Neulieferung wählen. Der Verkäufer darf die gewählte Art der Nacherfüllung verweigern, wenn sie unverhältnismäßig ist. Da die Reparatur schnell und kostengünstig möglich ist, besteht nur ein Anspruch auf Reparatur.",
+        "Nacherfüllung;Wahlrecht;Reparatur;Neulieferung;unverhältnismäßig;§439 BGB",
+        "",
+        "0/6",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 233,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0231"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kaufrecht & Verbraucherschutz"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Besteht ein Anspruch auf Neulieferung der 1.000 Fliesen? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.7137255,
+              "green": 0.84313726,
+              "blue": 0.65882355
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.7137255,
+                "green": 0.84313726,
+                "blue": 0.65882355
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Die Lieferung von nur 800 statt 1.000 Fliesen stellt einen Sachmangel dar. Grundsätzlich kann der Käufer zwischen Mangelbeseitigung und Neulieferung wählen. Da die Fliesen aus einer Partie stammen und Farbabweichungen möglich sind, kann die Lieferung von 200 weiteren Fliesen keine vollständige mangelfreie Leistung sicherstellen. Daher besteht ein Anspruch auf Neulieferung der gesamten Menge."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Sachmangel;§434 BGB;Mengenabweichung;Neulieferung;§439 BGB;Farbabweichung"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/6"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0231",
+        "Kaufrecht & Verbraucherschutz",
+        "Besteht ein Anspruch auf Neulieferung der 1.000 Fliesen? Begründen Sie.",
+        "",
+        "Die Lieferung von nur 800 statt 1.000 Fliesen stellt einen Sachmangel dar. Grundsätzlich kann der Käufer zwischen Mangelbeseitigung und Neulieferung wählen. Da die Fliesen aus einer Partie stammen und Farbabweichungen möglich sind, kann die Lieferung von 200 weiteren Fliesen keine vollständige mangelfreie Leistung sicherstellen. Daher besteht ein Anspruch auf Neulieferung der gesamten Menge.",
+        "Sachmangel;§434 BGB;Mengenabweichung;Neulieferung;§439 BGB;Farbabweichung",
+        "",
+        "0/6",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 235,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0233"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kaufrecht & Verbraucherschutz"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Ist der Rücktritt vom Kaufvertrag möglich? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.7137255,
+              "green": 0.84313726,
+              "blue": 0.65882355
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.7137255,
+                "green": 0.84313726,
+                "blue": 0.65882355
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Es liegt ein Sachmangel nach § 434 Abs. 3 BGB vor. Die Werbeaussagen des Herstellers begründen eine berechtigte Erwartung des Käufers. Eine Fristsetzung ist hier entbehrlich, da eine Nacherfüllung unmöglich ist. Die Voraussetzungen der §§ 437 Nr. 2 und 346 BGB liegen vor. Der Rücktritt ist möglich."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Sachmangel;§434 BGB;Werbeaussage;Fristsetzung entbehrlich;§326 Abs.5 BGB;§437 Nr.2 BGB;§346 BGB;Rücktritt möglich"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/8"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0233",
+        "Kaufrecht & Verbraucherschutz",
+        "Ist der Rücktritt vom Kaufvertrag möglich? Begründen Sie.",
+        "",
+        "Es liegt ein Sachmangel nach § 434 Abs. 3 BGB vor. Die Werbeaussagen des Herstellers begründen eine berechtigte Erwartung des Käufers. Eine Fristsetzung ist hier entbehrlich, da eine Nacherfüllung unmöglich ist. Die Voraussetzungen der §§ 437 Nr. 2 und 346 BGB liegen vor. Der Rücktritt ist möglich.",
+        "Sachmangel;§434 BGB;Werbeaussage;Fristsetzung entbehrlich;§326 Abs.5 BGB;§437 Nr.2 BGB;§346 BGB;Rücktritt möglich",
+        "",
+        "0/8",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 236,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0234"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kaufrecht & Verbraucherschutz"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Ist der Rücktritt vom Kaufvertrag wegen des erhöhten Kraftstoffverbrauchs möglich? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.8509804,
+              "green": 0.91764706,
+              "blue": 0.827451
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.8509804,
+                "green": 0.91764706,
+                "blue": 0.827451
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Der erhöhte Kraftstoffverbrauch stellt einen Sachmangel nach § 434 Abs. 3 Satz 1 Nr. 2b BGB dar. Die Werbeaussagen des Herstellers begründen eine berechtigte Käufererwartung. Eine Nacherfüllung ist wegen des serienbedingten Konstruktionsfehlers unmöglich. Die Fristsetzung ist daher entbehrlich. Die Voraussetzungen der §§ 437 Nr. 2 und 346 BGB liegen vor. Der Rücktritt ist möglich."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Sachmangel;§434 BGB;Werbeaussage;Konstruktionsfehler;Nacherfüllung unmöglich;Fristsetzung entbehrlich;§437 Nr.2 BGB;§346 BGB"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/8"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0234",
+        "Kaufrecht & Verbraucherschutz",
+        "Ist der Rücktritt vom Kaufvertrag wegen des erhöhten Kraftstoffverbrauchs möglich? Begründen Sie.",
+        "",
+        "Der erhöhte Kraftstoffverbrauch stellt einen Sachmangel nach § 434 Abs. 3 Satz 1 Nr. 2b BGB dar. Die Werbeaussagen des Herstellers begründen eine berechtigte Käufererwartung. Eine Nacherfüllung ist wegen des serienbedingten Konstruktionsfehlers unmöglich. Die Fristsetzung ist daher entbehrlich. Die Voraussetzungen der §§ 437 Nr. 2 und 346 BGB liegen vor. Der Rücktritt ist möglich.",
+        "Sachmangel;§434 BGB;Werbeaussage;Konstruktionsfehler;Nacherfüllung unmöglich;Fristsetzung entbehrlich;§437 Nr.2 BGB;§346 BGB",
+        "",
+        "0/8",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 237,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0235"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kaufrecht & Verbraucherschutz"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Besteht ein Anspruch auf Rücktritt nach §§ 346 Abs. 1, 323 Abs. 1 BGB? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.7137255,
+              "green": 0.84313726,
+              "blue": 0.65882355
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.7137255,
+                "green": 0.84313726,
+                "blue": 0.65882355
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Ein Rücktritt nach §§ 346 Abs. 1, 323 Abs. 1 BGB kommt nicht in Betracht. Der Fitnesstrainer wurde mangelfrei geliefert. Die Leistungspflicht des Verkäufers hinsichtlich des Trainers wurde ordnungsgemäß erfüllt."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "mangelfrei;Fitnesstrainer;ordnungsgemäß geliefert;kein Sachmangel;kein Rücktritt"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/5"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0235",
+        "Kaufrecht & Verbraucherschutz",
+        "Besteht ein Anspruch auf Rücktritt nach §§ 346 Abs. 1, 323 Abs. 1 BGB? Begründen Sie.",
+        "",
+        "Ein Rücktritt nach §§ 346 Abs. 1, 323 Abs. 1 BGB kommt nicht in Betracht. Der Fitnesstrainer wurde mangelfrei geliefert. Die Leistungspflicht des Verkäufers hinsichtlich des Trainers wurde ordnungsgemäß erfüllt.",
+        "mangelfrei;Fitnesstrainer;ordnungsgemäß geliefert;kein Sachmangel;kein Rücktritt",
+        "",
+        "0/5",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 238,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0236"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Kaufrecht & Verbraucherschutz"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Besteht ein Anspruch auf Vertragsbeendigung nach § 327c Abs. 6 BGB? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.8509804,
+              "green": 0.91764706,
+              "blue": 0.827451
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.8509804,
+                "green": 0.91764706,
+                "blue": 0.827451
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Ja. Es handelt sich um einen Paketvertrag mit einem digitalen Produkt. Der Unternehmer hat den Zugangscode trotz Aufforderung nicht bereitgestellt. Der Verbraucher kann deshalb den Vertrag über das digitale Produkt beenden. Da der Verbraucher ohne die App kein Interesse mehr am Gesamtvertrag hat, kann er auch den übrigen Vertrag beenden."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Paketvertrag;digitales Produkt;App;Zugangscode;nicht bereitgestellt;§327c BGB;Vertragsbeendigung"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/7"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0236",
+        "Kaufrecht & Verbraucherschutz",
+        "Besteht ein Anspruch auf Vertragsbeendigung nach § 327c Abs. 6 BGB? Begründen Sie.",
+        "",
+        "Ja. Es handelt sich um einen Paketvertrag mit einem digitalen Produkt. Der Unternehmer hat den Zugangscode trotz Aufforderung nicht bereitgestellt. Der Verbraucher kann deshalb den Vertrag über das digitale Produkt beenden. Da der Verbraucher ohne die App kein Interesse mehr am Gesamtvertrag hat, kann er auch den übrigen Vertrag beenden.",
+        "Paketvertrag;digitales Produkt;App;Zugangscode;nicht bereitgestellt;§327c BGB;Vertragsbeendigung",
+        "",
+        "0/7",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 251,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0249"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Weitere Vertragstypen, E-Commerce & Leistungsstörungen"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Hat der Mieter einen Anspruch auf Kostenerstattung für die Reparatur der Heizungsanlage? Begründen Sie."
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.7137255,
+              "green": 0.84313726,
+              "blue": 0.65882355
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.7137255,
+                "green": 0.84313726,
+                "blue": 0.65882355
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Nein. Ein Anspruch aus § 536a Abs. 2 Nr. 1 BGB setzt voraus, dass sich der Vermieter in Verzug befindet. Dafür wäre grundsätzlich eine Mahnung erforderlich. Der Hinweis im Mietvertrag ersetzt die Mahnung nicht."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "kein Verzug;Mahnung;§286 BGB;§536a BGB;Hinweis reicht nicht"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/5"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0249",
+        "Weitere Vertragstypen, E-Commerce & Leistungsstörungen",
+        "Hat der Mieter einen Anspruch auf Kostenerstattung für die Reparatur der Heizungsanlage? Begründen Sie.",
+        "",
+        "Nein. Ein Anspruch aus § 536a Abs. 2 Nr. 1 BGB setzt voraus, dass sich der Vermieter in Verzug befindet. Dafür wäre grundsätzlich eine Mahnung erforderlich. Der Hinweis im Mietvertrag ersetzt die Mahnung nicht.",
+        "kein Verzug;Mahnung;§286 BGB;§536a BGB;Hinweis reicht nicht",
+        "",
+        "0/5",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Recht",
+      "row": 265,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "R-0263"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Weitere Vertragstypen, E-Commerce & Leistungsstörungen"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Hat der Kunde sofort Anspruch auf Preisminderung wegen eines mangelhaften Mehrspartenanschlusses?"
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.7137255,
+              "green": 0.84313726,
+              "blue": 0.65882355
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.7137255,
+                "green": 0.84313726,
+                "blue": 0.65882355
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Nein. Vor einer Preisminderung muss der Besteller dem Unternehmer grundsätzlich eine angemessene Frist zur Nacherfüllung setzen. Da dies nicht erfolgt ist, besteht kein Anspruch auf Preisminderung."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "keine Preisminderung;Fristsetzung;Nacherfüllung;§634 BGB;Sachmangel"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/5"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 13,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "R-0263",
+        "Weitere Vertragstypen, E-Commerce & Leistungsstörungen",
+        "Hat der Kunde sofort Anspruch auf Preisminderung wegen eines mangelhaften Mehrspartenanschlusses?",
+        "",
+        "Nein. Vor einer Preisminderung muss der Besteller dem Unternehmer grundsätzlich eine angemessene Frist zur Nacherfüllung setzen. Da dies nicht erfolgt ist, besteht kein Anspruch auf Preisminderung.",
+        "keine Preisminderung;Fristsetzung;Nacherfüllung;§634 BGB;Sachmangel",
+        "",
+        "0/5",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Steuern",
+      "row": 193,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "ST-0191"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Abgabenordnung & Besteuerungsverfahren"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Bis wann hätte Steuerbürger A seine Einkommensteuererklärung 00 abgeben müssen?"
+          },
+          "userEnteredFormat": {
+            "backgroundColor": {
+              "red": 0.8509804,
+              "green": 0.91764706,
+              "blue": 0.827451
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true,
+              "italic": true
+            },
+            "backgroundColorStyle": {
+              "rgbColor": {
+                "red": 0.8509804,
+                "green": 0.91764706,
+                "blue": 0.827451
+              }
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Wenn mit „Einkommensteuererklärung 00“ tatsächlich die Einkommensteuererklärung für das Kalenderjahr 2000 gemeint ist, galt damals grundsätzlich die gesetzliche Fünfmonatsfrist des § 149 Abs. 2 AO in der damaligen Fassung. Ohne eine allgemeine oder individuelle Fristverlängerung war die Erklärung daher grundsätzlich bis zum 31.05.2001 abzugeben. Die heutige Siebenmonatsfrist bis 31. Juli gilt erst für spätere Veranlagungszeiträume und darf nicht rückwirkend auf das Jahr 2000 angewendet werden."
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Einkommensteuererklärung 2000; damalige Fassung § 149 Abs. 2 AO; Fünfmonatsfrist; grundsätzlich 31.05.2001; Fristverlängerung gesondert; heutige 31.-Juli-Regel nicht rückwirkend"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "0/2"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12,
+              "bold": true
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "TEXT"
+          },
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredValue": {
+            "numberValue": 37103
+          },
+          "userEnteredFormat": {
+            "numberFormat": {
+              "type": "DATE",
+              "pattern": "dd.mm.yy"
+            },
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "borders": {
+              "top": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "bottom": {
+                "style": "SOLID",
+                "width": 1
+              },
+              "left": {
+                "style": "SOLID_MEDIUM",
+                "width": 2
+              },
+              "right": {
+                "style": "SOLID",
+                "width": 1
+              }
+            },
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP",
+            "textFormat": {
+              "fontSize": 12
+            }
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "ST-0191",
+        "Abgabenordnung & Besteuerungsverfahren",
+        "Bis wann hätte Steuerbürger A seine Einkommensteuererklärung 00 abgeben müssen?",
+        "",
+        "Wenn mit „Einkommensteuererklärung 00“ tatsächlich die Einkommensteuererklärung für das Kalenderjahr 2000 gemeint ist, galt damals grundsätzlich die gesetzliche Fünfmonatsfrist des § 149 Abs. 2 AO in der damaligen Fassung. Ohne eine allgemeine oder individuelle Fristverlängerung war die Erklärung daher grundsätzlich bis zum 31.05.2001 abzugeben. Die heutige Siebenmonatsfrist bis 31. Juli gilt erst für spätere Veranlagungszeiträume und darf nicht rückwirkend auf das Jahr 2000 angewendet werden.",
+        "Einkommensteuererklärung 2000; damalige Fassung § 149 Abs. 2 AO; Fünfmonatsfrist; grundsätzlich 31.05.2001; Fristverlängerung gesondert; heutige 31.-Juli-Regel nicht rückwirkend",
+        "",
+        "0/2",
+        "ja",
+        "",
+        "WQ",
+        "TEXT",
+        "",
+        37103,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sheet": "Prüfungssimulation",
+      "row": 38,
+      "cells": [
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ_RS_SIM_1"
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "WQ"
+          },
+          "userEnteredFormat": {
+            "horizontalAlignment": "LEFT",
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Recht und Steuern"
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "numberValue": 3
+          },
+          "userEnteredFormat": {
+            "horizontalAlignment": "LEFT",
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "b"
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "numberValue": 5
+          },
+          "userEnteredFormat": {
+            "horizontalAlignment": "LEFT",
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Die Ausgangssituation von Circle Harbor und die Angaben der vorherigen Teilaufgabe gelten fort."
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Firmenrecht"
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Ein Unternehmen plant, einen neuen Geschäftsbereich unter einer eigenständigen Firma zu führen. Der neue Geschäftsbereich soll weiterhin am bisherigen Unternehmensstandort betrieben werden. Die neue Firma soll den Zusatz „International OHG“ tragen.\n\nBeurteilen Sie, ob die Firmierung handelsrechtlich zulässig ist."
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Die Firmierung mit dem Zusatz „International OHG“ ist handelsrechtlich nicht zulässig. Nach § 18 Absatz 2 HGB darf eine Firma keine Angaben enthalten, die geeignet sind, über geschäftliche Verhältnisse irrezuführen. Der Begriff „International“ kann irreführend sein, wenn die Geschäftstätigkeit tatsächlich überwiegend nur an einem Standort erfolgt. Dadurch entsteht ein falscher Eindruck über Größe oder internationale Ausrichtung des Unternehmens. Die gewählte Firmierung verstößt daher gegen die Vorschriften des Firmenrechts."
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "Firmierung nicht zulässig; irreführende Angaben verboten; Begriff International irreführend; Geschäftstätigkeit nur an einem Standort; falscher Eindruck über Unternehmensgröße oder Ausrichtung; Verstoß gegen Firmenrecht; § 18 Absatz 2 HGB"
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "ja"
+          },
+          "userEnteredFormat": {
+            "horizontalAlignment": "LEFT",
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredValue": {
+            "stringValue": "text"
+          },
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        },
+        {
+          "userEnteredFormat": {
+            "verticalAlignment": "TOP",
+            "wrapStrategy": "WRAP"
+          }
+        }
+      ],
+      "v": [
+        "WQ_RS_SIM_1",
+        "WQ",
+        "Recht und Steuern",
+        3,
+        "b",
+        5,
+        "Die Ausgangssituation von Circle Harbor und die Angaben der vorherigen Teilaufgabe gelten fort.",
+        "Firmenrecht",
+        "Ein Unternehmen plant, einen neuen Geschäftsbereich unter einer eigenständigen Firma zu führen. Der neue Geschäftsbereich soll weiterhin am bisherigen Unternehmensstandort betrieben werden. Die neue Firma soll den Zusatz „International OHG“ tragen.\n\nBeurteilen Sie, ob die Firmierung handelsrechtlich zulässig ist.",
+        "Die Firmierung mit dem Zusatz „International OHG“ ist handelsrechtlich nicht zulässig. Nach § 18 Absatz 2 HGB darf eine Firma keine Angaben enthalten, die geeignet sind, über geschäftliche Verhältnisse irrezuführen. Der Begriff „International“ kann irreführend sein, wenn die Geschäftstätigkeit tatsächlich überwiegend nur an einem Standort erfolgt. Dadurch entsteht ein falscher Eindruck über Größe oder internationale Ausrichtung des Unternehmens. Die gewählte Firmierung verstößt daher gegen die Vorschriften des Firmenrechts.",
+        "Firmierung nicht zulässig; irreführende Angaben verboten; Begriff International irreführend; Geschäftstätigkeit nur an einem Standort; falscher Eindruck über Unternehmensgröße oder Ausrichtung; Verstoß gegen Firmenrecht; § 18 Absatz 2 HGB",
+        "ja",
+        "text",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    }
+  ]
+}

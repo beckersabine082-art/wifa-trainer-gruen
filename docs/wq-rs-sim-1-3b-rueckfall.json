@@ -1,0 +1,835 @@
+{
+  "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+  "existingBackup": "1_zVP5xpQvfKVNdg2crR1LdWmPjYCSNiodkc8YLRuIgU",
+  "beforeRow": {
+    "sheet": "Prüfungssimulation",
+    "row": 38,
+    "cells": [
+      {
+        "userEnteredValue": {
+          "stringValue": "WQ_RS_SIM_1"
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "WQ"
+        },
+        "userEnteredFormat": {
+          "horizontalAlignment": "LEFT",
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Recht und Steuern"
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "numberValue": 3
+        },
+        "userEnteredFormat": {
+          "horizontalAlignment": "LEFT",
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "b"
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "numberValue": 5
+        },
+        "userEnteredFormat": {
+          "horizontalAlignment": "LEFT",
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Aus Sicht der Circle Harbor GmbH wird in dieser Teilaufgabe eine rechtlich selbstständige OHG als hypothetischer Vergleichsfall zur Firmierung betrachtet. Der neue Geschäftsbereich in der Frage gehört zu dieser OHG."
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Firmenrecht"
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Ein Unternehmen plant, einen neuen Geschäftsbereich unter einer eigenständigen Firma zu führen. Der neue Geschäftsbereich soll weiterhin am bisherigen Unternehmensstandort betrieben werden. Die neue Firma soll den Zusatz „International OHG“ tragen.\n\nBeurteilen Sie, ob die Firmierung handelsrechtlich zulässig ist."
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Die Firmierung mit dem Zusatz „International OHG“ ist handelsrechtlich nicht zulässig. Nach § 18 Absatz 2 HGB darf eine Firma keine Angaben enthalten, die geeignet sind, über geschäftliche Verhältnisse irrezuführen. Der Begriff „International“ kann irreführend sein, wenn die Geschäftstätigkeit tatsächlich überwiegend nur an einem Standort erfolgt. Dadurch entsteht ein falscher Eindruck über Größe oder internationale Ausrichtung des Unternehmens. Die gewählte Firmierung verstößt daher gegen die Vorschriften des Firmenrechts."
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Firmierung nicht zulässig; irreführende Angaben verboten; Begriff International irreführend; Geschäftstätigkeit nur an einem Standort; falscher Eindruck über Unternehmensgröße oder Ausrichtung; Verstoß gegen Firmenrecht; § 18 Absatz 2 HGB"
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "ja"
+        },
+        "userEnteredFormat": {
+          "horizontalAlignment": "LEFT",
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "text"
+        },
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      }
+    ],
+    "v": [
+      "WQ_RS_SIM_1",
+      "WQ",
+      "Recht und Steuern",
+      3,
+      "b",
+      5,
+      "Aus Sicht der Circle Harbor GmbH wird in dieser Teilaufgabe eine rechtlich selbstständige OHG als hypothetischer Vergleichsfall zur Firmierung betrachtet. Der neue Geschäftsbereich in der Frage gehört zu dieser OHG.",
+      "Firmenrecht",
+      "Ein Unternehmen plant, einen neuen Geschäftsbereich unter einer eigenständigen Firma zu führen. Der neue Geschäftsbereich soll weiterhin am bisherigen Unternehmensstandort betrieben werden. Die neue Firma soll den Zusatz „International OHG“ tragen.\n\nBeurteilen Sie, ob die Firmierung handelsrechtlich zulässig ist.",
+      "Die Firmierung mit dem Zusatz „International OHG“ ist handelsrechtlich nicht zulässig. Nach § 18 Absatz 2 HGB darf eine Firma keine Angaben enthalten, die geeignet sind, über geschäftliche Verhältnisse irrezuführen. Der Begriff „International“ kann irreführend sein, wenn die Geschäftstätigkeit tatsächlich überwiegend nur an einem Standort erfolgt. Dadurch entsteht ein falscher Eindruck über Größe oder internationale Ausrichtung des Unternehmens. Die gewählte Firmierung verstößt daher gegen die Vorschriften des Firmenrechts.",
+      "Firmierung nicht zulässig; irreführende Angaben verboten; Begriff International irreführend; Geschäftstätigkeit nur an einem Standort; falscher Eindruck über Unternehmensgröße oder Ausrichtung; Verstoß gegen Firmenrecht; § 18 Absatz 2 HGB",
+      "ja",
+      "text",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "unchangedTax": {
+    "sheet": "Steuern",
+    "row": 193,
+    "cells": [
+      {
+        "userEnteredValue": {
+          "stringValue": "ST-0191"
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12,
+            "bold": true
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Abgabenordnung & Besteuerungsverfahren"
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Bis wann hätte Steuerbürger A seine Einkommensteuererklärung 00 abgeben müssen?"
+        },
+        "userEnteredFormat": {
+          "backgroundColor": {
+            "red": 0.8509804,
+            "green": 0.91764706,
+            "blue": 0.827451
+          },
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12,
+            "bold": true,
+            "italic": true
+          },
+          "backgroundColorStyle": {
+            "rgbColor": {
+              "red": 0.8509804,
+              "green": 0.91764706,
+              "blue": 0.827451
+            }
+          }
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Wenn mit „Einkommensteuererklärung 00“ tatsächlich die Einkommensteuererklärung für das Kalenderjahr 2000 gemeint ist, galt damals grundsätzlich die gesetzliche Fünfmonatsfrist des § 149 Abs. 2 AO in der damaligen Fassung. Ohne eine allgemeine oder individuelle Fristverlängerung war die Erklärung daher grundsätzlich bis zum 31.05.2001 abzugeben. Die heutige Siebenmonatsfrist bis 31. Juli gilt erst für spätere Veranlagungszeiträume und darf nicht rückwirkend auf das Jahr 2000 angewendet werden."
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "Einkommensteuererklärung 2000; damalige Fassung § 149 Abs. 2 AO; Fünfmonatsfrist; grundsätzlich 31.05.2001; Fristverlängerung gesondert; heutige 31.-Juli-Regel nicht rückwirkend"
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "0/2"
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12,
+            "bold": true
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "ja"
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "WQ"
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "stringValue": "TEXT"
+        },
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredValue": {
+          "numberValue": 37103
+        },
+        "userEnteredFormat": {
+          "numberFormat": {
+            "type": "DATE",
+            "pattern": "dd.mm.yy"
+          },
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "borders": {
+            "top": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "bottom": {
+              "style": "SOLID",
+              "width": 1
+            },
+            "left": {
+              "style": "SOLID_MEDIUM",
+              "width": 2
+            },
+            "right": {
+              "style": "SOLID",
+              "width": 1
+            }
+          },
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP",
+          "textFormat": {
+            "fontSize": 12
+          }
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      },
+      {
+        "userEnteredFormat": {
+          "verticalAlignment": "TOP",
+          "wrapStrategy": "WRAP"
+        }
+      }
+    ],
+    "v": [
+      "ST-0191",
+      "Abgabenordnung & Besteuerungsverfahren",
+      "Bis wann hätte Steuerbürger A seine Einkommensteuererklärung 00 abgeben müssen?",
+      "",
+      "Wenn mit „Einkommensteuererklärung 00“ tatsächlich die Einkommensteuererklärung für das Kalenderjahr 2000 gemeint ist, galt damals grundsätzlich die gesetzliche Fünfmonatsfrist des § 149 Abs. 2 AO in der damaligen Fassung. Ohne eine allgemeine oder individuelle Fristverlängerung war die Erklärung daher grundsätzlich bis zum 31.05.2001 abzugeben. Die heutige Siebenmonatsfrist bis 31. Juli gilt erst für spätere Veranlagungszeiträume und darf nicht rückwirkend auf das Jahr 2000 angewendet werden.",
+      "Einkommensteuererklärung 2000; damalige Fassung § 149 Abs. 2 AO; Fünfmonatsfrist; grundsätzlich 31.05.2001; Fristverlängerung gesondert; heutige 31.-Juli-Regel nicht rückwirkend",
+      "",
+      "0/2",
+      "ja",
+      "",
+      "WQ",
+      "TEXT",
+      "",
+      37103,
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "edits": [
+    {
+      "sheet": "Prüfungssimulation",
+      "row": 38,
+      "id": "WQ_RS_SIM_1 / 3b",
+      "col": 8,
+      "before": "Ein Unternehmen plant, einen neuen Geschäftsbereich unter einer eigenständigen Firma zu führen. Der neue Geschäftsbereich soll weiterhin am bisherigen Unternehmensstandort betrieben werden. Die neue Firma soll den Zusatz „International OHG“ tragen.\n\nBeurteilen Sie, ob die Firmierung handelsrechtlich zulässig ist.",
+      "after": "Die rechtlich selbstständige OHG des Vergleichsfalls plant, einen neuen Geschäftsbereich weiterhin am bisherigen Unternehmensstandort zu betreiben. Ihre Firma soll künftig den Bestandteil „International“ enthalten; der Rechtsformzusatz „OHG“ bleibt bestehen. Angaben zur tatsächlichen internationalen Geschäftstätigkeit der OHG liegen nicht vor. Gegenstand dieser Teilaufgabe ist ausschließlich, ob sich aus dem unveränderten Unternehmensstandort ein Verbot des Firmenbestandteils „International“ ergibt.\n\nBeurteilen Sie, ob der Firmenzusatz „International“ allein wegen des unveränderten Unternehmensstandorts handelsrechtlich unzulässig ist."
+    },
+    {
+      "sheet": "Prüfungssimulation",
+      "row": 38,
+      "id": "WQ_RS_SIM_1 / 3b",
+      "col": 9,
+      "before": "Die Firmierung mit dem Zusatz „International OHG“ ist handelsrechtlich nicht zulässig. Nach § 18 Absatz 2 HGB darf eine Firma keine Angaben enthalten, die geeignet sind, über geschäftliche Verhältnisse irrezuführen. Der Begriff „International“ kann irreführend sein, wenn die Geschäftstätigkeit tatsächlich überwiegend nur an einem Standort erfolgt. Dadurch entsteht ein falscher Eindruck über Größe oder internationale Ausrichtung des Unternehmens. Die gewählte Firmierung verstößt daher gegen die Vorschriften des Firmenrechts.",
+      "after": "Nein. Allein der unveränderte Unternehmensstandort rechtfertigt nicht die Unzulässigkeit des Firmenbestandteils „International“.\n\nNach § 18 Abs. 2 HGB darf eine Firma nicht über wesentliche geschäftliche Verhältnisse irreführen. Entscheidend sind die Erwartungen der angesprochenen Verkehrskreise und die tatsächliche Geschäftstätigkeit der OHG. Der Standort allein belegt weder das Vorliegen noch das Fehlen einer internationalen Ausrichtung: Auch von einem einzigen Standort aus können grenzüberschreitende Geschäfte betrieben werden. Solche Geschäfte werden der OHG hier jedoch nicht unterstellt.\n\nDa Angaben zur internationalen Tätigkeit fehlen, lässt sich eine konkrete Irreführung durch „International“ aus dem Sachverhalt nicht feststellen. Der geprüfte Standort-Einwand trägt daher nicht. Daraus folgt keine uneingeschränkte Zulässigkeit der gesamten Firmierung. Dafür müssten insbesondere die tatsächliche Tätigkeit und das Verständnis der angesprochenen Verkehrskreise sowie die übrigen Anforderungen an die Firma geprüft werden, darunter Kennzeichnungs- und Unterscheidungskraft nach § 18 Abs. 1 HGB.\n\nDer Rechtsformzusatz „OHG“ entspricht der ausdrücklich vorgegebenen rechtlich selbstständigen offenen Handelsgesellschaft (§ 19 Abs. 1 Nr. 2 HGB). Er bezeichnet diese Gesellschaft, nicht die Circle Harbor GmbH."
+    },
+    {
+      "sheet": "Prüfungssimulation",
+      "row": 38,
+      "id": "WQ_RS_SIM_1 / 3b",
+      "col": 10,
+      "before": "Firmierung nicht zulässig; irreführende Angaben verboten; Begriff International irreführend; Geschäftstätigkeit nur an einem Standort; falscher Eindruck über Unternehmensgröße oder Ausrichtung; Verstoß gegen Firmenrecht; § 18 Absatz 2 HGB",
+      "after": "Standort allein begründet kein Verbot von International; § 18 Abs. 2 HGB: Irreführung über wesentliche geschäftliche Verhältnisse; Verkehrserwartung und tatsächliche Geschäftstätigkeit maßgeblich; ein Standort schließt grenzüberschreitende Tätigkeit nicht aus; internationale Tätigkeit der OHG nicht unterstellen; konkrete Irreführung mangels Angaben nicht feststellbar; Standort-Einwand trägt nicht; keine pauschale Freigabe der gesamten Firma; weitere Firmenanforderungen einschließlich § 18 Abs. 1 HGB beachten; OHG als eigenständige Gesellschaft: passender Rechtsformzusatz nach § 19 Abs. 1 Nr. 2 HGB"
+    }
+  ]
+}
