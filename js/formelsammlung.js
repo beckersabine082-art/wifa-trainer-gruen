@@ -22,7 +22,7 @@ async function ladeFormelsammlung() {
     if (!formelDaten.length) {
       status.textContent = "Keine aktiven Formeln gefunden.";
       liste.className = "result-list-empty";
-      liste.innerHTML = "Im Sheet „Formelsammlung“ wurden keine aktiven Formeln gefunden.";
+      liste.innerHTML = "Im Sheet \u201eFormelsammlung\u201d wurden keine aktiven Formeln gefunden.";
       return;
     }
 
@@ -46,12 +46,17 @@ function ermittleKurzformel(eintrag) {
     "kompakt",
     "kompaktformel",
     "kompakteformel",
-    "compactformula",
     "shortformula",
-    "formelkuerzel",
-    "formel_kuerzel",
+    "short_formula",
+    "formelkurz",
+    "formel_kurz",
+    "compactformula",
+    "compact_formula",
+    "formel_abkuerzung",
     "formelabkuerzung",
-    "formel_abkuerzung"
+    "kurzFormel",
+    "formulaShort",
+    "formula_short"
   ];
 
   const direkteKurzformel = kurzformelFelder
@@ -62,14 +67,25 @@ function ermittleKurzformel(eintrag) {
       return wert.length > 0;
     });
 
-  if (direkteKurzformel) return direkteKurzformel;
+  if (!direkteKurzformel) return "";
+  if (!istMathematischeFormel(direkteKurzformel)) return "";
+  return direkteKurzformel;
+}
 
-  const variablen = String(eintrag.variablen || "").trim();
-  if (variablen.includes("=")) {
-    return variablen;
-  }
+function istMathematischeFormel(formelText) {
+  const text = String(formelText || "").trim();
+  if (!text) return false;
 
-  return "";
+  const hatOperator = /[=+\-*/\u00d7\u00b7\u00f7^()]/.test(text) || /\b(?:div|mal|plus|minus)\b/i.test(text);
+  if (!hatOperator) return false;
+
+  const kurzsymbole = text.match(/\b[a-zA-Z]{1,4}(?:\([^)]*\))?|\d+(?:[.,]\d+)?|\b[xX]\b/g) || [];
+  if (!kurzsymbole.length) return false;
+
+  const langTokens = text.match(/\b[a-zA-Z]{5,}\b/g) || [];
+  if (langTokens.length >= 4) return false;
+
+  return true;
 }
 
 function baueFormelFilter() {

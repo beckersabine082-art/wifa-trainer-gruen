@@ -2113,6 +2113,17 @@ function col() {
   const cFormelname = col("formelname", "formel name", "bezeichnung");
   const cIhkSeite = col("ihk seite", "ihk 2025", "ihk", "ihk-seite");
   const cIhkFormel = col("ihk formel", "ihk-formel", "formel");
+  const cKurzformel = col(
+    "kurzformel",
+    "kurz formel",
+    "kurz-formel",
+    "kompakt",
+    "kompaktformel",
+    "kompakteformel",
+    "formelkurz",
+    "formel kurz",
+    "formel kurzformel"
+  );
  const cAbkuerzungen = col(
   "abkürzungen",
   "abkuerzungen",
@@ -2151,6 +2162,7 @@ function col() {
         formelname: cFormelname >= 0 ? String(row[cFormelname] || "").trim() : "",
         ihkSeite: cIhkSeite >= 0 ? String(row[cIhkSeite] || "").trim() : "",
         ihkFormel: cIhkFormel >= 0 ? String(row[cIhkFormel] || "").trim() : "",
+        kurzformel: cKurzformel >= 0 ? String(row[cKurzformel] || "").trim() : "",
         variablen: cAbkuerzungen >= 0 ? String(row[cAbkuerzungen] || "").trim() : "",
         erklaerung: cErklaerung >= 0 ? String(row[cErklaerung] || "").trim() : "",
         beispiel: cBeispiel >= 0 ? String(row[cBeispiel] || "").trim() : "",
