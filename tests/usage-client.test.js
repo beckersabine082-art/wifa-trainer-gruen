@@ -94,7 +94,7 @@ test('client ignores prelogin and clears batches at logout or account change', a
 test('confirmed email on the same signed-in account enables usage on token change without reload', () => {
   let tokenCallback;
   const user = {uid:'same',emailVerified:false};
-  const ctx = load('usage-client.js', {auth:{currentUser:user},window:{location:new URL('https://beckersabine082-art.github.io/wifa-trainer-gruen/')},
+  const ctx = load('usage-client.js', {auth:{currentUser:user},window:{location:new URL('https://wifa-trainer.de/')},
     onIdTokenChanged:(_,callback) => {tokenCallback=callback;},
     onAuthStateChanged:(_,callback) => callback(user),
     document:{addEventListener(){}},setInterval(){}});
@@ -131,8 +131,8 @@ test('queue accepts at most ten unique sanitized keys without extra metadata', a
 });
 test('production gate excludes previews, local hosts and query strings do not enter request', () => {
   const ctx = load('usage-client.js');
-  assert.equal(ctx.usageProductionLocation(new URL('https://beckersabine082-art.github.io/wifa-trainer-gruen/?x=secret')), true);
-  for (const url of ['http://localhost/wifa-trainer-gruen/','https://beckersabine082-art.github.io/preview/','https://evil.example/wifa-trainer-gruen/']) assert.equal(ctx.usageProductionLocation(new URL(url)),false);
+  assert.equal(ctx.usageProductionLocation(new URL('https://wifa-trainer.de/?x=secret')), true);
+  for (const url of ['http://localhost/','https://wifa-trainer.de/tests/preview/','https://evil.example/']) assert.equal(ctx.usageProductionLocation(new URL(url)),false);
 });
 test('dashboard aggregates events and subjects, fills days and rejects unsupported periods', () => {
   const ctx = load('usage-dashboard.js');

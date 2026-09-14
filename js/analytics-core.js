@@ -44,7 +44,7 @@
         lastView = id; contents.clear();
         const [view, feature] = views[id];
         emit('page_view', {view_id: view, page_title: 'WiFa – ' + view,
-          page_location: 'https://beckersabine082-art.github.io/wifa-trainer-gruen/' + view,
+          page_location: 'https://wifa-trainer.de/' + view,
           page_referrer: ''});
         if (feature) emit('feature_use', {feature_id: feature});
       },

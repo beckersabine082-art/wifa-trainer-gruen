@@ -14,9 +14,9 @@ async function start() {
   // Defaults cover SDK-generated session_start/first_visit/user_engagement as well.
   const privacy = {
     send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false,
-    page_location: 'https://beckersabine082-art.github.io/wifa-trainer-gruen/',
+    page_location: 'https://wifa-trainer.de/',
     page_referrer: '', page_title: 'WiFa Trainer', ignore_referrer: true,
-    cookie_domain: window.location.hostname, cookie_path: '/wifa-trainer-gruen/',
+    cookie_domain: window.location.hostname, cookie_path: '/',
     cookie_expires: 15552000, cookie_update: false, cookie_flags: 'SameSite=Lax;Secure'
   };
   sdk.setConsent({analytics_storage:'granted', ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied'});

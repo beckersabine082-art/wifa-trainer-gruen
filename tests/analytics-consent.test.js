@@ -2,7 +2,7 @@ const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-function boot({origin = 'https://beckersabine082-art.github.io', pathname='/wifa-trainer-gruen/', consent, blocked = false} = {}) {
+function boot({origin = 'https://wifa-trainer.de', pathname='/', consent, blocked = false} = {}) {
   const storage = new Map(consent ? [['wifa.analytics.consent.v1', JSON.stringify(consent)]] : []);
   const frames = [], elements = new Map(), timers = [];
   class Element extends EventTarget {
@@ -19,7 +19,7 @@ function boot({origin = 'https://beckersabine082-art.github.io', pathname='/wifa
   });
   const win = Object.assign(new EventTarget(), {
     location: {origin, pathname, hostname: new URL(origin).hostname},
-    WIFA_ANALYTICS_SETTINGS: {enabled:true, measurementId:'G-TEST123', productionOrigin:'https://beckersabine082-art.github.io', productionPath:'/wifa-trainer-gruen/'},
+    WIFA_ANALYTICS_SETTINGS: {enabled:true, measurementId:'G-TEST123', productionOrigin:'https://wifa-trainer.de', productionPath:'/'},
     localStorage: {getItem:k => storage.get(k) || null, setItem(k,v) {if (blocked) throw Error(); storage.set(k,v);}},
   });
   const ctx = {window:win, document:doc, Date, Set, Map, WeakMap, URL, setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length;}, clearTimeout:()=>{}};
@@ -73,6 +73,6 @@ test('failed persistence must never undo a withdrawal on the next refresh', () =
   assert.equal(b.frames.length,1);
 });
 test('published test and preview pages are excluded even on the production host', () => {
-  const b=boot({pathname:'/wifa-trainer-gruen/tests/analytics-browser.html'});
+  const b=boot({pathname:'/tests/analytics-browser.html'});
   b.win.WifaAnalytics.choose(true); assert.equal(b.frames.length,0);
 });

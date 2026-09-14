@@ -40,14 +40,14 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 function getReturnUrl() {
-  // Verwende lokal die aktuelle Origin, sonst die GitHub-Pages-URL
+  // Verwende lokal die aktuelle Origin, sonst die produktive Domain.
   try {
     const host = window.location.hostname;
     if (host === 'localhost' || host === '127.0.0.1') {
       return window.location.origin;
     }
   } catch (e) {}
-  return 'https://beckersabine082-art.github.io/wifa-trainer-gruen/';
+  return 'https://wifa-trainer.de/';
 }
 
 export {

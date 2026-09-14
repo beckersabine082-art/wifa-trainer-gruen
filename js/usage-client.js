@@ -1,8 +1,8 @@
 import { auth, onIdTokenChanged } from './firebase-config.js?v=usage-20260912';
 
 export function usageProductionLocation(location) {
-  return location.origin === 'https://beckersabine082-art.github.io' &&
-    (location.pathname === '/wifa-trainer-gruen/' || location.pathname === '/wifa-trainer-gruen/index.html');
+  return location.origin === 'https://wifa-trainer.de' &&
+    (location.pathname === '/' || location.pathname === '/index.html');
 }
 
 export function createUsageClient({getUser,send,now = Date.now}) {

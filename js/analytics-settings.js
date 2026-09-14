@@ -2,6 +2,6 @@
 window.WIFA_ANALYTICS_SETTINGS = Object.freeze({
   measurementId: 'G-PJ9Y1NC4SH',
   enabled: true,
-  productionOrigin: 'https://beckersabine082-art.github.io',
-  productionPath: '/wifa-trainer-gruen/'
+  productionOrigin: 'https://wifa-trainer.de',
+  productionPath: '/'
 });
