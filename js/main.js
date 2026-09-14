@@ -135,13 +135,19 @@ if (viewId === "formelView") {
     if (viewId === "pruefungView") document.getElementById("navPruefung").classList.add("active");
     if (viewId === "wissenView") {
       const bereich = window.wissenAktiverBereich === "karteikarten" ? "karteikarten" : "links";
+      const wissenViewTitle = document.getElementById("wissenViewTitle");
+      const wissenViewIntro = document.getElementById("wissenViewIntro");
       const linksBereich = document.getElementById("wissenLinksBereich");
       const kartenBereich = document.getElementById("wissenKarteikartenBereich");
       if (linksBereich) linksBereich.style.display = bereich === "links" ? "" : "none";
       if (kartenBereich) kartenBereich.style.display = bereich === "karteikarten" ? "" : "none";
       if (bereich === "karteikarten") {
+        if (wissenViewTitle) wissenViewTitle.textContent = "Karteikarten";
+        if (wissenViewIntro) wissenViewIntro.textContent = "Lernkarten auf Basis deiner aktiven Fragen mit Musterl\u00f6sung.";
         document.getElementById("navLernenUeben").classList.add("active");
       } else {
+        if (wissenViewTitle) wissenViewTitle.textContent = "Gesetzeslinks";
+        if (wissenViewIntro) wissenViewIntro.textContent = "Hier findest du hilfreiche zus\u00e4tzliche Seiten und weiterf\u00fchrende Lernlinks.";
         document.getElementById("navNachschlagen").classList.add("active");
       }
     }

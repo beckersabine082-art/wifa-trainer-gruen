@@ -37,6 +37,41 @@ async function ladeFormelsammlung() {
   }
 }
 
+function ermittleKurzformel(eintrag) {
+  const kurzformelFelder = [
+    "kurzformel",
+    "kurzformeltext",
+    "kurz-formel",
+    "kurz formel",
+    "kompakt",
+    "kompaktformel",
+    "kompakteformel",
+    "compactformula",
+    "shortformula",
+    "formelkuerzel",
+    "formel_kuerzel",
+    "formelabkuerzung",
+    "formel_abkuerzung"
+  ];
+
+  const direkteKurzformel = kurzformelFelder
+    .map(function(key) {
+      return String(eintrag?.[key] || "").trim();
+    })
+    .find(function(wert) {
+      return wert.length > 0;
+    });
+
+  if (direkteKurzformel) return direkteKurzformel;
+
+  const variablen = String(eintrag.variablen || "").trim();
+  if (variablen.includes("=")) {
+    return variablen;
+  }
+
+  return "";
+}
+
 function baueFormelFilter() {
   const themaSelect = document.getElementById("formelThemaFilter");
 
@@ -44,7 +79,7 @@ function baueFormelFilter() {
     return String(eintrag.fach || "").trim();
   }).filter(Boolean))].sort();
 
-  themaSelect.innerHTML = '<option value="">Alle Fächer</option>';
+  themaSelect.innerHTML = '<option value="">Alle F\u00e4cher</option>';
 
   faecher.forEach(function(fach) {
     const option = document.createElement("option");
@@ -116,6 +151,7 @@ function renderFormeln(daten) {
     const kapitelAnzeige = eintrag.unterkapitel
       ? escapeHtml(eintrag.kapitel) + " / " + escapeHtml(eintrag.unterkapitel)
       : escapeHtml(eintrag.kapitel);
+    const kurzformel = ermittleKurzformel(eintrag);
 
     return `
       <div class="result-mini-entry">
@@ -134,14 +170,21 @@ function renderFormeln(daten) {
           ${escapeHtml(eintrag.ihkFormel)}
         </div>
 
+        ${kurzformel ? `
+          <div style="font-size:14px; line-height:1.6; color:#4a3970; margin-top:10px;">
+            <strong>Kurzformel:</strong><br>
+            ${escapeHtml(kurzformel)}
+          </div>
+        ` : ""}
+
         <div style="font-size:14px; line-height:1.6; color:#4a3970; margin-top:10px;">
-          <strong>Variablen / Kürzel:</strong><br>
+          <strong>Variablen / K\u00fcrzel:</strong><br>
           ${escapeHtml(eintrag.variablen || "keine hinterlegt")}
         </div>
 
         <div style="font-size:14px; line-height:1.6; color:#4a3970; margin-top:10px;">
-          <strong>Kurz-Erklärung:</strong><br>
-          ${escapeHtml(eintrag.erklaerung || "keine Erklärung hinterlegt")}
+          <strong>Kurz-Erkl\u00e4rung:</strong><br>
+          ${escapeHtml(eintrag.erklaerung || "keine Erkl\u00e4rung hinterlegt")}
         </div>
 
         <div style="font-size:14px; line-height:1.6; color:#4a3970; margin-top:10px;">

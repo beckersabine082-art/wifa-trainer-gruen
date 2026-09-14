@@ -58,8 +58,15 @@ async function kartenFachWaehlen() {
 
     themen.forEach(function(thema) {
       const option = document.createElement("option");
-      option.value = thema;
-      option.textContent = thema;
+      const themaName = typeof thema === "string"
+        ? thema
+        : String(thema?.thema || "").trim();
+      const anzahl = typeof thema === "object" ? Number(thema?.anzahl || 0) : 0;
+
+      option.value = themaName;
+      option.textContent = anzahl > 0
+        ? themaName + " (" + anzahl + " Fragen)"
+        : themaName;
       themaSelect.appendChild(option);
     });
 
