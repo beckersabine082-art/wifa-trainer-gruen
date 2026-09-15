@@ -3445,7 +3445,7 @@ select:focus {
 
 .quiz-option {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   border: 1px solid #b7dec2;
   border-radius: 12px;
@@ -3465,11 +3465,15 @@ select:focus {
   color: #245c3a;
   font-weight: 700;
   font-size: 13px;
+  flex-shrink: 0;
 }
 
 .quiz-option-text {
   flex: 1 1 0;
+  min-width: 0;
   line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .quiz-option-selected {
