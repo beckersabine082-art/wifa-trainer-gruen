@@ -481,7 +481,17 @@ function toggleKilianBubble() {
   if (fenster.style.display === "block") window.WifaUsage?.record('kilian_open');
 }
 
+let kilianBubbleAnfrageLaeuft = false;
+
+function behandleKilianBubbleEingabe(event) {
+  if (!event || event.key !== "Enter" || event.shiftKey) return;
+  event.preventDefault();
+  return frageKilianBubble();
+}
+
 async function frageKilianBubble() {
+  if (kilianBubbleAnfrageLaeuft) return;
+
   const usageTicket = window.WifaUsage?.captureTicket();
   if (typeof pruefungIstAktiv !== 'undefined' && pruefungIstAktiv === true) {
     alert("Sorry – Betrug auf diesem Weg nicht möglich.\n\nDie Prüfung soll deinen tatsächlichen Wissensstand zeigen.\nIn den anderen Lernbereichen unterstütze ich dich danach gerne wieder.");
@@ -494,6 +504,10 @@ async function frageKilianBubble() {
     alert("Bitte zuerst eine Frage eingeben.");
     return;
   }
+
+  const sendenButton = document.querySelector('#kilianBubbleFenster button[onclick="frageKilianBubble()"]');
+  kilianBubbleAnfrageLaeuft = true;
+  if (sendenButton) sendenButton.disabled = true;
 
   try {
     document.getElementById("kilianBubbleStatus").textContent =
@@ -523,6 +537,9 @@ async function frageKilianBubble() {
   } catch (error) {
     document.getElementById("kilianBubbleStatus").textContent =
       "Fehler: " + error.message;
+  } finally {
+    kilianBubbleAnfrageLaeuft = false;
+    if (sendenButton) sendenButton.disabled = false;
   }
 }
 
