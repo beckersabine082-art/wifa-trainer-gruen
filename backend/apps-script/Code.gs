@@ -317,7 +317,7 @@ function doGet(e) {
     let result = {};
 
     // Public question APIs must never act as readers for private progress tabs.
-    if (['topics','questionById','firstQuestion','nextQuestion','getKarteikarten','quizQuestion'].includes(action) &&
+    if (['topics','questionById','firstQuestion','nextQuestion','questionsForTopic','getKarteikarten','quizQuestion'].includes(action) &&
         !istOeffentlichesFragenFach_(e?.parameter?.fach)) {
       return ContentService.createTextOutput(JSON.stringify({success:false,error:'invalid_request'}))
         .setMimeType(ContentService.MimeType.JSON);
@@ -370,6 +370,15 @@ function doGet(e) {
       result = {
         success: true,
         data: getFirstActiveQuestion(fach, thema)
+      };
+
+    } else if (action === "questionsForTopic") {
+      const fach = String(e?.parameter?.fach || "").trim();
+      const thema = String(e?.parameter?.thema || "").trim();
+
+      result = {
+        success: true,
+        data: getQuestionsForTopic(fach, thema)
       };
 
     } else if (action === "questionById") {
@@ -976,6 +985,26 @@ function getQuestionById(sheetName, questionId) {
     musterloesung: "",
     stichpunkte: ""
   };
+}
+
+function getQuestionsForTopic(sheetName, thema) {
+  const activeQuestions = getActiveQuestions(sheetName);
+  const gefilterteFragen = filterQuestionsByThema_(activeQuestions, thema);
+
+  return gefilterteFragen.map(function(frage) {
+    return {
+      row: frage.row,
+      id: frage.id,
+      thema: frage.thema,
+      frage: frage.frage,
+      musterloesung: frage.musterloesung,
+      stichpunkte: frage.stichpunkte,
+      fragetyp: frage.fragetyp,
+      aufgabenHtml: frage.aufgabenHtml,
+      loesungsschluessel: frage.loesungsschluessel,
+      bilddatei: frage.bilddatei
+    };
+  });
 }
 
 function getFirstActiveQuestion(sheetName, thema) {
