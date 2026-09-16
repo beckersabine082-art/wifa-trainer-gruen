@@ -24,8 +24,25 @@ let ladeToken = 0;
 let quizInteraktionenGebunden = false;
 let quizFach = '';
 let quizShuffleAktiv = false;
+const QUIZ_REQUEST_TIMEOUT_MS = Number(window.QUIZ_REQUEST_TIMEOUT_MS) || 10000;
 
 const sitzungsStatistik = { richtig: 0, falsch: 0 };
+
+function quizRequestMitTimeout(promise, fehlermeldung) {
+  return new Promise((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error(fehlermeldung)), QUIZ_REQUEST_TIMEOUT_MS);
+    promise.then(
+      value => {
+        window.clearTimeout(timer);
+        resolve(value);
+      },
+      error => {
+        window.clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
+}
 
 function quizProgressContext() {
   return {
@@ -44,13 +61,16 @@ async function speichereQuizFortschritt(frageId) {
   }
 
   const context = quizProgressContext();
-  const result = await window.apiPost('saveProgress', {
-    nutzer: user.uid,
-    bereich: context.bereich,
-    fach: context.fach,
-    auswahl: context.auswahl,
-    frageId: safeFrageId
-  });
+  const result = await quizRequestMitTimeout(
+    window.apiPost('saveProgress', {
+      nutzer: user.uid,
+      bereich: context.bereich,
+      fach: context.fach,
+      auswahl: context.auswahl,
+      frageId: safeFrageId
+    }),
+    'Das Speichern des Quiz-Fortschritts hat zu lange gedauert.'
+  );
 
   return Boolean(result && result.success);
 }
@@ -352,21 +372,27 @@ async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket(
   if (status) status.textContent = 'Frage wird geladen. Beim ersten Aufruf einer Frage kann dies einige Sekunden dauern...';
 
   try {
-    const result = await window.apiGet('quizQuestion', { fach: eintrag.fach, frageId: eintrag.frageId });
+    const result = await quizRequestMitTimeout(
+      window.apiGet('quizQuestion', { fach: eintrag.fach, frageId: eintrag.frageId }),
+      'Das Laden der Quizfrage hat zu lange gedauert.'
+    );
     if (token !== ladeToken) return;
     if (!result.success) throw new Error(result.error || 'Die Quizfrage konnte nicht geladen werden.');
     aktuelleFrage = result.data || {};
     renderFrage();
-    if (aktuelleFrage && String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim()) {
-      await speichereQuizFortschritt(String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim());
-    }
     if (status) status.textContent = '';
     if (karte) karte.hidden = false;
+    if (aktuelleFrage && String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim()) {
+      speichereQuizFortschritt(String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim())
+        .catch(error => console.warn('Quiz-Fortschritt konnte nicht gespeichert werden.', error));
+    }
     window.WifaAnalytics?.start('quiz', quizFach);
     if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.start('quiz', quizFach);
     window.WifaAnalytics?.content('quiz', aktuelleFrage.fach, aktuelleFrage.thema);
   } catch (error) {
     if (token !== ladeToken) return;
+    setQuizButtonsDisabled(false);
+    setNaechsteSichtbar(false);
     if (status) status.textContent = `Frage konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
   }
 }
