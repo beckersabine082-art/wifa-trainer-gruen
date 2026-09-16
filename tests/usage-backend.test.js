@@ -55,6 +55,22 @@ test('verified event writes only aggregate counters and no personal data',()=>{
   assert.equal(h.calls.fetch,1); assert.equal(h.calls.flush,1); assert.equal(h.isLocked(),false);
   assert.doesNotMatch(JSON.stringify([h.rows,h.props]),/private-uid|example|signature|idToken|email|antwort/);
 });
+test('empty or missing user-hash cells are legacy-compatible while non-empty values remain strict',()=>{
+  const h=setup(), validHash='a'.repeat(43);
+  for (const value of [undefined,null,'','   ','[]']) assert.deepEqual(plain(h.ctx.usageUserHashes_(value)),[]);
+  assert.deepEqual(plain(h.ctx.usageUserHashes_(JSON.stringify([validHash]))),[validHash]);
+  assert.throws(()=>h.ctx.usageUserHashes_('{'),error=>error.usageCode==='unavailable');
+  assert.throws(()=>h.ctx.usageUserHashes_(JSON.stringify(['short'])),error=>error.usageCode==='unavailable');
+});
+test('usageRead accepts existing daily rows with an empty userHashes cell',()=>{
+  const h=setup({admin:true});
+  h.rows.push(['2026-09-12','{"trainer_start|recht|none":4}','']);
+  const result=plain(h.ctx.usageHandle_({action:'usageRead',idToken:token(),period:'7'}));
+  assert.equal(result.success,true);
+  assert.equal(result.data.days.at(-1).authenticatedUsers,0);
+  assert.equal(result.data.totals['trainer_start|recht|none'],4);
+  assert.equal(h.rows[1][2],'');
+});
 test('all main events have validated counters and dimensions',()=>{
   const h=setup();
   const events=['trainer_start','quiz_start','simulation_start','podcast_start','learning_text_open','flashcards_start','glossary_open','formulas_open','progress_open','kilian_open','kilian_use'];
@@ -114,6 +130,7 @@ test('disabled/unconfigured/shared storage and lock failures do not expose or wr
 test('repeated accepted writes increment same daily row and flush before unlocking',()=>{
   const h=setup(); for(let i=0;i<20;i++)assert.equal(h.record().success,true);
   assert.equal(h.rows.length,2);assert.equal(JSON.parse(h.rows[1][1])['trainer_start|recht|none'],20);assert.equal(h.calls.flush,20);
+  const storedHashes=JSON.parse(h.rows[1][2]); assert.equal(storedHashes.length,1); assert.match(storedHashes[0],/^[A-Za-z0-9_-]{43}$/);
 });
 test('authenticated accounts are counted once per Berlin day and uniquely across the selected period',()=>{
   const h=setup({admin:true}); h.props.USAGE_USER_HASH_SECRET='test-private-secret';

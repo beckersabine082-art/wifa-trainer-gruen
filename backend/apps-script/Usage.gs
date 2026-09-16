@@ -183,7 +183,7 @@ function usageCounts_(raw) {
   return counts;
 }
 function usageUserHashes_(raw) {
-  if (raw === undefined) return [];
+  if (raw === undefined || raw === null || (typeof raw === 'string' && raw.trim() === '')) return [];
   if (typeof raw === 'string') {
     try { raw = JSON.parse(raw); } catch (_) { usageFail_('unavailable'); }
   }
