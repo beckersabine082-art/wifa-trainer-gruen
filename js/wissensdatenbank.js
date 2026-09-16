@@ -374,6 +374,40 @@ function audioStoppen() {
 
 let kilianAnfrageLaeuft = false;
 
+function quizKilianFrageMitKontext(frage) {
+  const kontext = window.quizKilianKontext;
+  if (!kontext || !String(kontext.frage || '').trim()) return frage;
+
+  return String(frage || '') +
+    "\n\nKontext der aktuell angezeigten Quizfrage:\n" +
+    "Fach: " + String(kontext.fach || '') + "\n" +
+    "Thema: " + String(kontext.thema || '') + "\n" +
+    "Frage-ID: " + String(kontext.frageId || '') + "\n" +
+    "Fragetext: " + String(kontext.frage || '');
+}
+
+function kilianQuizKontextLeeren() {
+  window.quizKilianKontext = null;
+  kilianLeeren();
+
+  const bubbleInput = document.getElementById("kilianBubbleInput");
+  const bubbleStatus = document.getElementById("kilianBubbleStatus");
+  const bubbleAntwort = document.getElementById("kilianBubbleAntwort");
+  if (bubbleInput) bubbleInput.value = "";
+  if (bubbleStatus) bubbleStatus.textContent = "Kilian wartet auf deine Frage.";
+  if (bubbleAntwort) bubbleAntwort.textContent = "Hier erscheint die Antwort von Kilian.";
+}
+
+function kilianQuizKontextSetzen(kontext) {
+  kilianQuizKontextLeeren();
+  window.quizKilianKontext = kontext ? {
+    fach: String(kontext.fach || ''),
+    thema: String(kontext.thema || ''),
+    frageId: String(kontext.frageId || ''),
+    frage: String(kontext.frage || '')
+  } : null;
+}
+
 function behandleKilianEingabe(event) {
   if (!event || event.key !== "Enter" || event.shiftKey) return;
   event.preventDefault();
@@ -401,7 +435,7 @@ async function frageKilian() {
     document.getElementById("kilianAntwort").textContent = "Antwort wird geladen.";
 
     const kilianResult = await apiPost("frageKilian", {
-      frage: frage
+      frage: quizKilianFrageMitKontext(frage)
     });
 
     if (!kilianResult.success) {
@@ -467,7 +501,7 @@ async function frageKilianBubble() {
       "Antwort wird geladen...";
 
     const result = await apiPost("frageKilian", {
-      frage: frage
+      frage: quizKilianFrageMitKontext(frage)
     });
 
     if (!result.success) {

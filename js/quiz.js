@@ -155,6 +155,8 @@ async function quizVonVorne() {
 
 function quizShuffleMix() {
   quizShuffleAktiv = !quizShuffleAktiv;
+  window.kilianQuizKontextLeeren?.();
+  if (aktuelleFrage) window.kilianQuizKontextSetzen?.(aktuelleFrage);
   const btn = document.getElementById('quizShuffleBtn');
   if (btn) {
     btn.classList.toggle('active', quizShuffleAktiv);
@@ -374,6 +376,7 @@ async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket(
   letzteAuswahl = null;
   const token = ++ladeToken;
 
+  window.kilianQuizKontextLeeren?.();
   setQuizButtonsDisabled(true);
   setNaechsteSichtbar(false);
   hideErgebnis();
@@ -389,6 +392,7 @@ async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket(
     if (!result.success) throw new Error(result.error || 'Die Quizfrage konnte nicht geladen werden.');
     aktuelleFrage = result.data || {};
     renderFrage();
+    window.kilianQuizKontextSetzen?.(aktuelleFrage);
     if (status) status.textContent = '';
     if (karte) karte.hidden = false;
     if (aktuelleFrage && String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim()) {
