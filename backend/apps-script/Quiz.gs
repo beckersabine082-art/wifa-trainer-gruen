@@ -28,6 +28,7 @@ function parseStaticQuizEntry_(row, rowNumber) {
   const quizfrage = normalizeStaticQuizValue_(row[10]);
   const geprueft = normalizeStaticQuizValue_(row[11]);
   const hinweis = normalizeStaticQuizValue_(row[12]);
+  const schwierigkeitsgrad = normalizeStaticQuizValue_(row[13]);
 
   const entry = {
     rowNumber: Number(rowNumber) || 0,
@@ -40,7 +41,8 @@ function parseStaticQuizEntry_(row, rowNumber) {
     erstelltAm: erstelltAm,
     quizfrage: quizfrage,
     geprueft: geprueft,
-    hinweis: hinweis
+    hinweis: hinweis,
+    schwierigkeitsgrad: schwierigkeitsgrad
   };
 
   if (!isValidStaticQuizEntry_(entry)) {
@@ -99,7 +101,7 @@ function getStaticQuizEntries_() {
     return STATIC_QUIZ_CACHE_;
   }
 
-  const values = sheet.getRange(2, 1, lastRow - 1, 13).getValues();
+  const values = sheet.getRange(2, 1, lastRow - 1, 14).getValues();
   const uniqueEntriesByKey = {};
 
   for (let i = 0; i < values.length; i++) {
@@ -151,7 +153,8 @@ function getQuizCatalogFrontend() {
       teilbereich: String(meta.teilbereich || "").trim(),
       fach: entry.fach,
       thema: String(meta.thema || "").trim(),
-      frageId: entry.frageId
+      frageId: entry.frageId,
+      schwierigkeitsgrad: entry.schwierigkeitsgrad
     };
   });
 }
@@ -233,7 +236,7 @@ function getSubjectMetadataMap_(sheetName) {
   }
 }
 
-function getQuizQuestionFrontend(fach, frageId) {
+function getQuizQuestionFrontend(fach, frageId, schwierigkeitsgrad) {
   const requestedFach = normalizeStaticQuizValue_(fach);
   const requestedId = normalizeStaticQuizValue_(frageId);
 
@@ -246,6 +249,14 @@ function getQuizQuestionFrontend(fach, frageId) {
 
   if (!entry) {
     throw new Error("Die Quizfrage ist nicht vollständig geprüft oder freigegeben.");
+  }
+
+  const requestedDifficulty = normalizeStaticQuizValue_(schwierigkeitsgrad);
+  if (requestedDifficulty && ["Einsteiger", "Fortgeschritten", "Profi"].indexOf(requestedDifficulty) === -1) {
+    throw new Error("Ungültige Schwierigkeitsstufe.");
+  }
+  if (requestedDifficulty && entry.schwierigkeitsgrad !== requestedDifficulty) {
+    throw new Error("Die Quizfrage gehört nicht zur ausgewählten Schwierigkeitsstufe.");
   }
 
   const meta = getSubjectMetadataMap_(requestedFach);

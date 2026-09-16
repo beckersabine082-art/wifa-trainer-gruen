@@ -3942,6 +3942,60 @@ select:focus {
   }
 }
 
+.quiz-setup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 14px 22px;
+  margin-bottom: 14px;
+}
+
+.quiz-difficulty {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.quiz-difficulty legend {
+  margin-bottom: 6px;
+  color: #245c3a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.quiz-difficulty-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quiz-difficulty-options label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid #9fcdb0;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+@media (max-width: 520px) {
+  .quiz-setup,
+  .quiz-mode,
+  .quiz-mode select {
+    width: 100%;
+    max-width: none;
+  }
+
+  .quiz-difficulty-options label {
+    flex: 1 1 100%;
+  }
+}
+
 /* Responsive Nutzungshinweis: Nur der Hinweisinhalt darf scrollen. */
 .hinweis-overlay {
   position: fixed;

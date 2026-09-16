@@ -23,8 +23,13 @@ let letzteAuswahl = null;
 let ladeToken = 0;
 let quizInteraktionenGebunden = false;
 let quizFach = '';
+let quizSchwierigkeitsgrad = '';
 let quizShuffleAktiv = false;
+const letzteAntwortReihenfolge = new Map();
+let sichtbareQuizPositionen = new Map();
+const QUIZ_SCHWIERIGKEITEN = ['Einsteiger', 'Fortgeschritten', 'Profi'];
 const QUIZ_REQUEST_TIMEOUT_MS = Number(window.QUIZ_REQUEST_TIMEOUT_MS) || 90000;
+const QUIZ_PROGRESS_TIMEOUT_MS = Number(window.QUIZ_PROGRESS_TIMEOUT_MS) || 15000;
 const QUIZ_SESSION_STORAGE_PREFIX = 'wifa.quiz.session.v1';
 const QUIZ_LADEFACTS = {
   allgemein: [
@@ -127,9 +132,9 @@ function setzeQuizLadehinweis(fach = '', ladeart = 'frage') {
   status.appendChild(factElement);
 }
 
-function quizRequestMitTimeout(promise, fehlermeldung) {
+function quizRequestMitTimeout(promise, fehlermeldung, timeoutMs = QUIZ_REQUEST_TIMEOUT_MS) {
   return new Promise((resolve, reject) => {
-    const timer = window.setTimeout(() => reject(new Error(fehlermeldung)), QUIZ_REQUEST_TIMEOUT_MS);
+    const timer = window.setTimeout(() => reject(new Error(fehlermeldung)), timeoutMs);
     promise.then(
       value => {
         window.clearTimeout(timer);
@@ -143,11 +148,63 @@ function quizRequestMitTimeout(promise, fehlermeldung) {
   });
 }
 
+function quizQuestionMitDiagnose(fach, frageId, schwierigkeitsgrad = '') {
+  const startzeit = Date.now();
+  const kennung = {
+    fach: String(fach || '').trim(),
+    frageId: String(frageId || '').trim(),
+    ...(schwierigkeitsgrad ? {schwierigkeitsgrad} : {})
+  };
+  let timeoutErreicht = false;
+  const timeoutTimer = window.setTimeout(() => {
+    timeoutErreicht = true;
+    console.warn('[quizQuestion Diagnose] Timeout erreicht', {
+      ...kennung,
+      timeoutNachMs: QUIZ_REQUEST_TIMEOUT_MS
+    });
+  }, QUIZ_REQUEST_TIMEOUT_MS);
+
+  const request = window.apiGet('quizQuestion', kennung);
+  request.then(
+    result => {
+      window.clearTimeout(timeoutTimer);
+      const dauerMs = Date.now() - startzeit;
+      if (timeoutErreicht) {
+        console.warn('[quizQuestion Diagnose] Antwort nach Timeout', {
+          ...kennung,
+          timeoutNachMs: QUIZ_REQUEST_TIMEOUT_MS,
+          zurueckNachMs: dauerMs,
+          erfolg: Boolean(result && result.success),
+          apiFehler: result && result.success ? undefined : String(result && result.error || '')
+        });
+      } else {
+        console.info('[quizQuestion Diagnose] Antwort erhalten', {
+          ...kennung,
+          dauerMs,
+          erfolg: Boolean(result && result.success),
+          apiFehler: result && result.success ? undefined : String(result && result.error || '')
+        });
+      }
+    },
+    error => {
+      window.clearTimeout(timeoutTimer);
+      console.warn('[quizQuestion Diagnose] Request-Fehler', {
+        ...kennung,
+        dauerMs: Date.now() - startzeit,
+        timeoutErreicht,
+        fehler: error && error.message ? error.message : String(error)
+      });
+    }
+  );
+
+  return request;
+}
+
 function quizProgressContext() {
   return {
     bereich: 'quiz',
     fach: String(quizFach || '').trim() || '__ALL__',
-    auswahl: '__ALL__'
+    auswahl: quizSchwierigkeitsgrad ? `__ALL__:${quizSchwierigkeitsgrad}` : '__ALL__'
   };
 }
 
@@ -301,7 +358,10 @@ async function ladeKatalog() {
 
 function neuerFragenpool() {
   const pool = Array.isArray(katalog) ? katalog : [];
-  const gefiltert = quizFach ? pool.filter(item => String(item?.fach || '').trim() === String(quizFach || '').trim()) : pool;
+  const gefiltert = pool.filter(item =>
+    (!quizFach || String(item?.fach || '').trim() === String(quizFach || '').trim()) &&
+    (!quizSchwierigkeitsgrad || String(item?.schwierigkeitsgrad || '').trim() === quizSchwierigkeitsgrad)
+  );
   return [...new Map(gefiltert.map(item => [String(item.quizKey || '').trim(), item])).values()].filter(Boolean);
 }
 
@@ -331,29 +391,81 @@ function befuelleQuizModus() {
   modus.value = quizFach;
 }
 
-async function wechsleQuizmodus(event) {
-  quizFach = event.target.value;
+async function ladeQuizNachAuswahl(usageTicket = window.WifaUsage?.captureTicket()) {
+  if (!quizSchwierigkeitsgrad) return;
   ladeToken += 1;
+  const auswahlToken = ladeToken;
   aktuelleFrage = null;
   aktuellerKatalogEintrag = null;
   antwortGespeichert = false;
   letzteAuswahl = null;
+  const status = document.getElementById('quizStatus');
+  const karte = document.getElementById('quizKarte');
+  if (karte) karte.hidden = true;
+  setQuizButtonsDisabled(true);
+  setNaechsteSichtbar(false);
+  document.querySelectorAll('input[name="quizOption"]').forEach(input => {
+    input.checked = false;
+    input.disabled = true;
+  });
+  hideErgebnis();
+  setzeQuizLadehinweis(quizFach, 'frage');
   letzteFrageAlterRunde = null;
   rundenNummer = 0;
   neueRunde();
+  if (!rundenReihenfolge.length) {
+    if (status) status.textContent = `Für ${quizFach || 'alle Fächer'} sind keine aktiven Fragen mit der Stufe „${quizSchwierigkeitsgrad}“ verfügbar.`;
+    return;
+  }
   const savedSessionIndex = ladeQuizSitzung();
   if (savedSessionIndex === null) {
-    const savedIndex = await ladeQuizFortschritt();
+    let savedIndex = null;
+    try {
+      savedIndex = await quizRequestMitTimeout(
+        ladeQuizFortschritt(),
+        'Das Laden des Quiz-Fortschritts hat zu lange gedauert.',
+        QUIZ_PROGRESS_TIMEOUT_MS
+      );
+    } catch (error) {
+      if (auswahlToken !== ladeToken) return;
+      console.warn('Quiz-Fortschritt konnte nicht geladen werden; die Session startet bei Frage 1.', error);
+    }
+    if (auswahlToken !== ladeToken) return;
     if (typeof savedIndex === 'number' && savedIndex >= 0 && savedIndex < rundenReihenfolge.length) {
       fragenIndex = savedIndex;
     }
   }
 
-  const status = document.getElementById('quizStatus');
-  const karte = document.getElementById('quizKarte');
-  if (karte) karte.hidden = true;
   if (status) status.textContent = '';
-  await zeigeAktuelleFrage();
+  await zeigeAktuelleFrage(usageTicket);
+}
+
+function ladeQuizAuswahlMitFehlerbehandlung() {
+  ladeQuizNachAuswahl().catch(error => {
+    const karte = document.getElementById('quizKarte');
+    const status = document.getElementById('quizStatus');
+    if (karte) karte.hidden = true;
+    setQuizButtonsDisabled(false);
+    setNaechsteSichtbar(false);
+    if (status) status.textContent = `Frage konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
+  });
+}
+
+function wechsleQuizmodus(event) {
+  quizFach = event.target.value;
+  if (!quizSchwierigkeitsgrad) {
+    const status = document.getElementById('quizStatus');
+    if (status) status.textContent = 'Bitte wähle zuerst einen Schwierigkeitsgrad.';
+    return;
+  }
+  ladeQuizAuswahlMitFehlerbehandlung();
+}
+
+function wechsleQuizSchwierigkeitsgrad(event) {
+  const value = String(event.target?.value || '').trim();
+  if (!QUIZ_SCHWIERIGKEITEN.includes(value)) return;
+  quizSchwierigkeitsgrad = value;
+  ladeQuizAuswahlMitFehlerbehandlung();
 }
 
 function setQuizButtonsDisabled(disabled) {
@@ -377,7 +489,8 @@ function hideErgebnis() {
 function zeigeErgebnis(richtig, richtigeOption) {
   const ergebnisBereich = document.getElementById('quizErgebnisBereich');
   if (!ergebnisBereich) return;
-  ergebnisBereich.textContent = richtig ? 'Richtig!' : `Falsch. Die richtige Antwort ist Option ${richtigeOption}.`;
+  const richtigePosition = sichtbareQuizPositionen.get(richtigeOption) || richtigeOption;
+  ergebnisBereich.textContent = richtig ? 'Richtig!' : `Falsch. Die richtige Antwort ist Option ${richtigePosition}.`;
   ergebnisBereich.classList.toggle('quiz-ergebnis-richtig', richtig);
   ergebnisBereich.classList.toggle('quiz-ergebnis-falsch', !richtig);
   ergebnisBereich.hidden = false;
@@ -427,9 +540,20 @@ function renderFrage() {
   if (container) {
     container.innerHTML = '';
     const antworten = Array.isArray(q.antworten) ? q.antworten : [];
-    antworten.forEach(option => {
-      const optionId = String(option?.id || '').trim();
-      if (!OPTION_IDS.includes(optionId)) return;
+    const antwortObjekte = antworten
+      .map(option => ({ originalOption: String(option?.id || '').trim(), text: String(option?.text || '') }))
+      .filter(option => OPTION_IDS.includes(option.originalOption));
+    const frageKey = String(q.quizKey || q.frageId || '').trim();
+    sichtbareQuizPositionen = new Map();
+    let gemischt = mischen(antwortObjekte);
+    const vorigeReihenfolge = letzteAntwortReihenfolge.get(frageKey);
+    if (gemischt.length > 1 && vorigeReihenfolge === gemischt.map(option => option.originalOption).join('')) {
+      gemischt = [gemischt[1], gemischt[0], ...gemischt.slice(2)];
+    }
+    letzteAntwortReihenfolge.set(frageKey, gemischt.map(option => option.originalOption).join(''));
+    gemischt.forEach((option, index) => {
+      const optionId = option.originalOption;
+      sichtbareQuizPositionen.set(optionId, OPTION_IDS[index]);
 
       const label = document.createElement('label');
       label.className = 'quiz-option';
@@ -443,11 +567,11 @@ function renderFrage() {
 
       const letter = document.createElement('span');
       letter.className = 'quiz-option-letter';
-      letter.textContent = optionId;
+      letter.textContent = OPTION_IDS[index];
 
       const text = document.createElement('span');
       text.className = 'quiz-option-text';
-      text.textContent = String(option?.text || '');
+      text.textContent = option.text;
 
       label.appendChild(input);
       label.appendChild(letter);
@@ -483,7 +607,7 @@ async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket(
 
   try {
     const result = await quizRequestMitTimeout(
-      window.apiGet('quizQuestion', { fach: eintrag.fach, frageId: eintrag.frageId }),
+      quizQuestionMitDiagnose(eintrag.fach, eintrag.frageId, quizSchwierigkeitsgrad),
       'Das Laden der Quizfrage hat zu lange gedauert.'
     );
     if (token !== ladeToken) return;
@@ -513,7 +637,7 @@ function quizSessionStorageKey() {
   const user = currentVerifiedUser();
   const fach = String(quizFach || '').trim();
   if (!user || !fach) return null;
-  return `${QUIZ_SESSION_STORAGE_PREFIX}:${user.uid}:${fach}`;
+  return `${QUIZ_SESSION_STORAGE_PREFIX}:${user.uid}:${fach}:${quizSchwierigkeitsgrad || 'legacy'}`;
 }
 
 function speichereQuizSitzung() {
@@ -682,12 +806,14 @@ function bindeQuizInteraktionen() {
   const naechsteBtn = document.getElementById('quizNaechsteBtn');
   const optionenContainer = document.getElementById('quizOptionen');
   const modus = document.getElementById('quizModus');
+  const schwierigkeitsgradRadios = document.querySelectorAll('input[name="quizSchwierigkeitsgrad"]');
   const shuffleBtn = document.getElementById('quizShuffleBtn');
   const vonVorneBtn = document.getElementById('quizVonVorneBtn');
 
   if (pruefenBtn) pruefenBtn.addEventListener('click', pruefeAntwort);
   if (naechsteBtn) naechsteBtn.addEventListener('click', naechsteFrageHandler);
   if (modus) modus.addEventListener('change', wechsleQuizmodus);
+  schwierigkeitsgradRadios.forEach(radio => radio.addEventListener('change', wechsleQuizSchwierigkeitsgrad));
   if (shuffleBtn) shuffleBtn.addEventListener('click', quizShuffleMix);
   if (vonVorneBtn) vonVorneBtn.addEventListener('click', quizVonVorne);
   if (optionenContainer) {
@@ -733,15 +859,14 @@ export async function initialisiereQuiz() {
       return;
     }
     befuelleQuizModus();
-    neueRunde(usageTicket);
-    const savedSessionIndex = ladeQuizSitzung();
-    if (savedSessionIndex === null) {
-      const savedIndex = await ladeQuizFortschritt();
-      if (typeof savedIndex === 'number' && savedIndex >= 0 && savedIndex < rundenReihenfolge.length) {
-        fragenIndex = savedIndex;
-      }
+    const radios = document.querySelectorAll('input[name="quizSchwierigkeitsgrad"]');
+    const selectedDifficulty = Array.from(radios).find(radio => radio.checked);
+    if (selectedDifficulty && QUIZ_SCHWIERIGKEITEN.includes(selectedDifficulty.value)) {
+      quizSchwierigkeitsgrad = selectedDifficulty.value;
+      await ladeQuizNachAuswahl(usageTicket);
+    } else {
+      status.textContent = 'Bitte wähle einen Schwierigkeitsgrad, um das Quiz zu starten.';
     }
-    await zeigeAktuelleFrage(usageTicket);
   } catch (error) {
     status.textContent = `Quizkatalog konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
   }

@@ -346,10 +346,11 @@ function doGet(e) {
     } else if (action === "quizQuestion") {
       const fach = String(e?.parameter?.fach || "").trim();
       const frageId = String(e?.parameter?.frageId || "").trim();
+      const schwierigkeitsgrad = String(e?.parameter?.schwierigkeitsgrad || "").trim();
 
       result = {
         success: true,
-        data: getQuizQuestionFrontend(fach, frageId)
+        data: getQuizQuestionFrontend(fach, frageId, schwierigkeitsgrad)
       };
 
     } else if (action === "nextQuestion") {

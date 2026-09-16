@@ -555,13 +555,23 @@
       <section class="view" id="quizView">
         <div class="header"><h1>Quiz</h1></div>
         <div id="quizStatus" class="status">Quiz wird geladen.</div>
-        <div class="card quiz-card" id="quizKarte" hidden>
+        <div class="quiz-setup">
           <div class="quiz-mode">
             <label for="quizModus">Quizmodus</label>
             <select id="quizModus">
               <option value="">🎲 Alle Fächer – Zufallsmix</option>
             </select>
           </div>
+          <fieldset class="quiz-difficulty">
+            <legend>Schwierigkeitsgrad</legend>
+            <div class="quiz-difficulty-options">
+              <label><input type="radio" name="quizSchwierigkeitsgrad" value="Einsteiger"> Einsteiger</label>
+              <label><input type="radio" name="quizSchwierigkeitsgrad" value="Fortgeschritten"> Fortgeschritten</label>
+              <label><input type="radio" name="quizSchwierigkeitsgrad" value="Profi"> Profi</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="card quiz-card" id="quizKarte" hidden>
           <div class="quiz-progress">Runde <span id="quizRunde">1</span> · Frage <span id="quizFragenNummer">1</span> von <span id="quizRundenGroesse">-</span></div>
           <div class="question-meta">
             <span class="badge" id="quizBadgeTeilbereich"></span>
