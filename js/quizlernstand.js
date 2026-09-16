@@ -9,6 +9,7 @@ import {
 
 const MODULE_ID = 'quiz';
 const BERLIN_TIME_ZONE = 'Europe/Berlin';
+const QUIZ_SCHWIERIGKEITEN = ['Einsteiger', 'Fortgeschritten', 'Profi'];
 let quizLernstandDaten = null;
 
 function currentVerifiedUser() {
@@ -31,6 +32,31 @@ function latestPerQuizKey(attempts) {
     if (key && !latest.has(key)) latest.set(key, attempt);
   });
   return [...latest.values()];
+}
+
+function summarizeByDifficulty(attempts, katalog, fach = '') {
+  const catalogByKey = new Map((Array.isArray(katalog) ? katalog : [])
+    .map(item => [String(item.quizKey || '').trim(), item]));
+  const fachAttempts = fach ? attempts.filter(attempt => String(attempt.fach || '').trim() === fach) : attempts;
+  const latest = latestPerQuizKey(fachAttempts);
+
+  return QUIZ_SCHWIERIGKEITEN.map(schwierigkeitsgrad => {
+    const questions = latest.filter(attempt => {
+      const quizKey = String(attempt.quizKey || '').trim();
+      const catalogEntry = catalogByKey.get(quizKey);
+      const attemptDifficulty = String(attempt.schwierigkeitsgrad || catalogEntry?.schwierigkeitsgrad || '').trim();
+      return attemptDifficulty === schwierigkeitsgrad;
+    });
+    const richtig = questions.filter(attempt => attempt.richtig === true).length;
+    const bearbeitet = questions.length;
+    return {
+      schwierigkeitsgrad,
+      richtig,
+      falsch: bearbeitet - richtig,
+      bearbeitet,
+      prozent: bearbeitet ? Math.round((richtig / bearbeitet) * 100) : 0
+    };
+  });
 }
 
 function timestampMillis(timestamp) {
@@ -115,6 +141,34 @@ function renderDonut(richtigAnzahl, falschAnzahl) {
   container.appendChild(wrapper);
   container.appendChild(legende);
   return container;
+}
+
+function renderDifficultyCards(attempts, katalog, fach = '') {
+  const section = document.createElement('section');
+  section.className = 'quizlernstand-difficulty-section';
+  const heading = document.createElement('h2');
+  heading.className = 'section-title';
+  heading.textContent = 'Auswertung nach Schwierigkeitsgrad';
+  section.appendChild(heading);
+
+  const grid = document.createElement('div');
+  grid.className = 'quizlernstand-difficulty-grid';
+  summarizeByDifficulty(attempts, katalog, fach).forEach(summary => {
+    const card = document.createElement('article');
+    const levelClass = summary.schwierigkeitsgrad.toLowerCase();
+    card.className = `quizlernstand-difficulty-card quizlernstand-difficulty-${levelClass}`;
+    const title = document.createElement('h3');
+    title.textContent = fach ? `${fach} · ${summary.schwierigkeitsgrad}` : summary.schwierigkeitsgrad;
+    card.appendChild(title);
+    card.appendChild(renderDonut(summary.richtig, summary.falsch));
+    const bearbeitet = document.createElement('p');
+    bearbeitet.className = 'quizlernstand-difficulty-attempted';
+    bearbeitet.textContent = `Bearbeitet: ${summary.bearbeitet}`;
+    card.appendChild(bearbeitet);
+    grid.appendChild(card);
+  });
+  section.appendChild(grid);
+  return section;
 }
 
 function renderDailyChart(title, days, valueLabel, valueMax, type) {
@@ -228,6 +282,7 @@ function renderQuizLernstand(attempts, katalogGroesse) {
   if (!fach) inhalt.appendChild(renderSubjectSummary(attempts));
   if (!gefiltert.length) {
     inhalt.innerHTML = '<div class="result-list-empty">Noch keine Quizfragen für dieses Fach beantwortet.</div>';
+    inhalt.appendChild(renderDifficultyCards(attempts, katalogGroesse, fach));
     return;
   }
   const letzteAktivitaet = [...gefiltert].sort((first, second) => timestampMillis(second.timestamp) - timestampMillis(first.timestamp))[0];
@@ -241,6 +296,7 @@ function renderQuizLernstand(attempts, katalogGroesse) {
   const fachKatalogGroesse = fach ? katalogGroesse.filter(item => item.fach === fach).length : katalogGroesse.length;
   progress.textContent = `${latest.length} von ${fachKatalogGroesse} Fragen bearbeitet`;
   inhalt.appendChild(progress);
+  inhalt.appendChild(renderDifficultyCards(attempts, katalogGroesse, fach));
   inhalt.appendChild(renderDailyCharts(gefiltert));
 }
 

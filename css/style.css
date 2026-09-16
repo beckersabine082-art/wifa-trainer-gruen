@@ -3776,6 +3776,86 @@ select:focus {
   color: #245c3a;
 }
 
+.quizlernstand-difficulty-section {
+  margin: 22px 0 26px;
+}
+
+.quizlernstand-difficulty-section > .section-title {
+  margin: 0 0 12px;
+}
+
+.quizlernstand-difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.quizlernstand-difficulty-card {
+  min-width: 0;
+  padding: 16px 12px 12px;
+  border: 1px solid #abc8e5;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.quizlernstand-difficulty-card h3 {
+  margin: 0;
+  color: #173f62;
+  font-size: 16px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.quizlernstand-difficulty-einsteiger {
+  background: #edf6ff;
+  border-color: #c7def5;
+}
+
+.quizlernstand-difficulty-fortgeschritten {
+  background: #dfedfa;
+  border-color: #a9c9e8;
+}
+
+.quizlernstand-difficulty-profi {
+  background: #d1e1f1;
+  border-color: #8daecc;
+}
+
+.quizlernstand-difficulty-card .quizlernstand-chart {
+  gap: 8px;
+  padding: 10px 0 0;
+}
+
+.quizlernstand-difficulty-card .quizlernstand-donut-wrap {
+  width: 116px;
+}
+
+.quizlernstand-difficulty-card .quizlernstand-donut-hole {
+  inset: 15px;
+}
+
+.quizlernstand-difficulty-card .quizlernstand-donut-hole strong {
+  font-size: 18px;
+}
+
+.quizlernstand-difficulty-card .quizlernstand-legende {
+  gap: 4px;
+  font-size: 13px;
+}
+
+.quizlernstand-difficulty-attempted {
+  margin: 8px 0 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .quizlernstand-difficulty-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* =========================================================
    Circle Harbor Company Info (details/summary)
    ========================================================= */
