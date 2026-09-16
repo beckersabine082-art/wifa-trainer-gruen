@@ -101,13 +101,30 @@ const QUIZ_LADEFACTS = {
 
 const sitzungsStatistik = { richtig: 0, falsch: 0 };
 
-function setzeQuizLadehinweis(fach = '') {
+function setzeQuizLadehinweis(fach = '', ladeart = 'frage') {
   const status = document.getElementById('quizStatus');
   if (!status) return;
 
   const pool = QUIZ_LADEFACTS[String(fach || '').trim()] || QUIZ_LADEFACTS.allgemein;
   const fact = pool[Math.floor(Math.random() * pool.length)];
-  status.textContent = `Frage wird geladen. Beim ersten Aufruf einer Frage kann dies einige Sekunden dauern. ${fact}`;
+  const hinweis = ladeart === 'katalog' ? 'Quiz lädt …' : 'Frage lädt …';
+  status.replaceChildren();
+
+  const hinweisElement = document.createElement('div');
+  hinweisElement.className = 'quiz-loading-hinweis';
+  hinweisElement.textContent = hinweis;
+
+  const factLabel = document.createElement('div');
+  factLabel.className = 'quiz-loading-fact-label';
+  factLabel.textContent = 'Wusstest du schon?';
+
+  const factElement = document.createElement('div');
+  factElement.className = 'quiz-loading-fact';
+  factElement.textContent = fact;
+
+  status.appendChild(hinweisElement);
+  status.appendChild(factLabel);
+  status.appendChild(factElement);
 }
 
 function quizRequestMitTimeout(promise, fehlermeldung) {
@@ -706,7 +723,7 @@ export async function initialisiereQuiz() {
     return;
   }
 
-  status.textContent = 'Quizkatalog wird geladen...';
+  setzeQuizLadehinweis('', 'katalog');
   if (karte) karte.hidden = true;
 
   try {

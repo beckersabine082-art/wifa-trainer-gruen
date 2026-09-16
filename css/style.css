@@ -3410,6 +3410,24 @@ select:focus {
   gap: 14px;
 }
 
+.quiz-loading-hinweis {
+  margin-bottom: 12px;
+}
+
+.quiz-loading-fact-label {
+  color: #5a4a80;
+  font-size: 0.9em;
+  margin-bottom: 3px;
+}
+
+.quiz-loading-fact {
+  color: #4a3970;
+  font-size: 1.08em;
+  font-weight: 700;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 .quiz-mode {
   display: grid;
   gap: 6px;
