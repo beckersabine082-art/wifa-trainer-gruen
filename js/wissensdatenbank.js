@@ -410,6 +410,8 @@ function kilianQuizKontextSetzen(kontext) {
 
 function behandleKilianEingabe(event) {
   if (!event || event.key !== "Enter" || event.shiftKey) return;
+  const sendenButton = event.target?.closest?.('.card')?.querySelector?.('button[onclick="frageKilian()"]');
+  if (sendenButton?.disabled) return;
   event.preventDefault();
   return frageKilian();
 }
