@@ -24,7 +24,7 @@ let ladeToken = 0;
 let quizInteraktionenGebunden = false;
 let quizFach = '';
 let quizShuffleAktiv = false;
-const QUIZ_REQUEST_TIMEOUT_MS = Number(window.QUIZ_REQUEST_TIMEOUT_MS) || 10000;
+const QUIZ_REQUEST_TIMEOUT_MS = Number(window.QUIZ_REQUEST_TIMEOUT_MS) || 90000;
 const QUIZ_SESSION_STORAGE_PREFIX = 'wifa.quiz.session.v1';
 const QUIZ_LADEFACTS = {
   allgemein: [
