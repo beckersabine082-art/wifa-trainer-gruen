@@ -60,7 +60,17 @@ function translateError(code) {
 }
 
 function setBusy(flag) {
-	document.querySelectorAll('#authView button, #authView input').forEach(el => {
+	const authControls = [
+		'#authTabLogin',
+		'#authTabRegister',
+		'#authLoginForm button',
+		'#authLoginForm input',
+		'#authRegisterForm button',
+		'#authRegisterForm input',
+		'#authProfile button',
+		'#authProfile input'
+	].join(', ');
+	document.querySelectorAll(authControls).forEach(el => {
 		el.disabled = flag;
 		el.style.opacity = flag ? '0.6' : '';
 		el.style.cursor = flag ? 'wait' : '';
