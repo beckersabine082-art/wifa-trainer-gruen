@@ -13,12 +13,13 @@ function token(overrides = {}) {
 }
 function setup(options = {}) {
   const props = {USAGE_ENABLED:'true', USAGE_SPREADSHEET_ID:'private-sheet', USAGE_FIREBASE_WEB_API_KEY:'test-key'};
-  const rows = [['date','counts']]; let locked = false;
+  const rows = [['date','counts','userHashes']]; let locked = false;
   const calls = {fetch:0, flush:0, write:0, read:0, lock:0};
   const sheet = {
     getLastRow:() => rows.length,
     getRange(row, col, n, width) { return {
       getValues() { assert.ok(locked); calls.read++; return rows.slice(row-1,row-1+n).map(r => r.slice(col-1,col-1+width)); },
+      setValue(value) { assert.ok(locked); rows[row-1][col-1]=value; return this; },
       setNumberFormat() { return this; },
       setValues(values) { assert.ok(locked); calls.write++; if (options.writeError) throw Error('secret write error'); values.forEach((r,i) => { rows[row-1+i] = [...r]; }); return this; }
     }; }
@@ -29,7 +30,8 @@ function setup(options = {}) {
     PropertiesService:{getScriptProperties:()=>({getProperty:k=>props[k]??null, setProperty(k,v){props[k]=v;},setProperties(v){Object.assign(props,v);}})},
     LockService:{getScriptLock:()=>({tryLock(){calls.lock++; if(options.busy||locked) return false; locked=true;return true;},releaseLock(){assert.ok(locked);locked=false;}})},
     Utilities:{base64DecodeWebSafe:x=>Buffer.from(x,'base64url'),newBlob:b=>({getDataAsString:()=>b.toString('utf8')}),
-      formatDate:()=> '2026-09-12'},
+      getUuid:()=> 'random-secret-', computeHmacSha256Signature:(message,key)=>Array.from(require('node:crypto').createHmac('sha256',key).update(message).digest()),
+      base64EncodeWebSafe:b=>Buffer.from(b).toString('base64url'), formatDate:()=> '2026-09-12'},
     UrlFetchApp:{fetch(url,args){ calls.fetch++; assert.match(url,/^https:\/\/identitytoolkit\.googleapis\.com\/v1\/accounts:lookup\?key=/);
       assert.deepEqual(Object.keys(JSON.parse(args.payload)),['idToken']); assert.equal(args.followRedirects,false);
       if(options.networkError) throw Error('private token and email');
@@ -49,7 +51,7 @@ function setup(options = {}) {
 }
 test('verified event writes only aggregate counters and no personal data',()=>{
   const h=setup(); assert.deepEqual(plain(h.record()),{success:true});
-  assert.deepEqual(h.rows,[['date','counts'],['2026-09-12','{"trainer_start|recht|none":1}']]);
+  assert.deepEqual(h.rows,[['date','counts','userHashes'],['2026-09-12','{"trainer_start|recht|none":1}',JSON.stringify([h.ctx.usageUserHash_('private-uid')])]]);
   assert.equal(h.calls.fetch,1); assert.equal(h.calls.flush,1); assert.equal(h.isLocked(),false);
   assert.doesNotMatch(JSON.stringify([h.rows,h.props]),/private-uid|example|signature|idToken|email|antwort/);
 });
@@ -112,6 +114,24 @@ test('disabled/unconfigured/shared storage and lock failures do not expose or wr
 test('repeated accepted writes increment same daily row and flush before unlocking',()=>{
   const h=setup(); for(let i=0;i<20;i++)assert.equal(h.record().success,true);
   assert.equal(h.rows.length,2);assert.equal(JSON.parse(h.rows[1][1])['trainer_start|recht|none'],20);assert.equal(h.calls.flush,20);
+});
+test('authenticated accounts are counted once per Berlin day and uniquely across the selected period',()=>{
+  const h=setup({admin:true}); h.props.USAGE_USER_HASH_SECRET='test-private-secret';
+  const recordAs=(uid)=>h.ctx.usageHandle_({action:'usageRecord',idToken:token({sub:uid}),events:[{event:'trainer_start',subject:'recht',area:'none'}]});
+  assert.equal(recordAs('private-uid').success,true); assert.equal(recordAs('private-uid').success,true);
+  const originalFetch=h.ctx.UrlFetchApp.fetch;
+  h.ctx.UrlFetchApp.fetch=(url,args)=>{const sub=JSON.parse(args.payload).idToken.split('.')[1];const uid=JSON.parse(Buffer.from(sub,'base64url').toString()).sub;
+    const response=originalFetch(url,args);const data=JSON.parse(response.getContentText());data.users[0].localId=uid;return {...response,getContentText:()=>JSON.stringify(data)};};
+  assert.equal(recordAs('second-user').success,true); assert.equal(recordAs('private-uid').success,true);
+  assert.doesNotMatch(JSON.stringify([h.rows,h.props]),/private-uid|second-user/);
+  const result=plain(h.ctx.usageHandle_({action:'usageRead',idToken:token(),period:'7'}));
+  assert.equal(result.data.days.at(-1).authenticatedUsers,2);
+  assert.equal(result.data.authenticatedUsers,2);
+  h.rows.push(['2026-09-11','{}',JSON.stringify([h.ctx.usageUserHash_('private-uid')])]);
+  const acrossDays=plain(h.ctx.usageHandle_({action:'usageRead',idToken:token(),period:'7'}));
+  assert.equal(acrossDays.data.days.at(-2).authenticatedUsers,1);
+  assert.equal(acrossDays.data.authenticatedUsers,2);
+  assert.equal(h.rows.length,3);
 });
 test('admin 30-day and all-time sums derive from daily rows, not user histories',()=>{
   const h=setup({admin:true});h.rows.push(['2026-08-01','{"trainer_start|recht|none":2}'],['2026-09-01','{"quiz_start|bwl|none":3}']);

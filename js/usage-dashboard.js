@@ -17,14 +17,16 @@ export function usageSummary(data, period) {
   const today = Date.parse(data.today + 'T00:00:00Z');
   if (!Number.isFinite(today)) throw Error('invalid_data');
   const byDate = new Map();
+  const sourceDays = new Map();
   for (const day of data.days) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(day.date) || day.date > data.today || !day.counts || typeof day.counts !== 'object') continue;
     byDate.set(day.date, day.counts);
+    sourceDays.set(day.date, day);
   }
   const first = period === 'all' ? ([...byDate.keys()].sort()[0] || data.today) : new Date(today - (Number(period)-1)*86400000).toISOString().slice(0,10);
   const features = Object.fromEntries(Object.keys(featureLabels).map(key => [key,0]));
   const subjects = {}, subjectFeatures = {}, areas = {WQ:0,HQ:0}, days = [];
-  let total = 0;
+  let total = 0, authenticatedUsers = Number.isSafeInteger(data.authenticatedUsers) && data.authenticatedUsers >= 0 ? data.authenticatedUsers : 0;
   for (let date = Date.parse(first + 'T00:00:00Z'); date <= today; date += 86400000) {
     const key = new Date(date).toISOString().slice(0,10); let dayTotal = 0;
     for (const [dimensions,count] of Object.entries(byDate.get(key) || {})) {
@@ -38,9 +40,11 @@ export function usageSummary(data, period) {
       }
       if (event === 'simulation_start' && Object.hasOwn(areas,area)) areas[area] += count;
     }
-    days.push({date:key,total:dayTotal}); total += dayTotal;
+    const sourceDay = sourceDays.get(key);
+    const dayUsers = Number.isSafeInteger(sourceDay?.authenticatedUsers) && sourceDay.authenticatedUsers >= 0 ? sourceDay.authenticatedUsers : 0;
+    days.push({date:key,total:dayTotal,authenticatedUsers:dayUsers}); total += dayTotal;
   }
-  return {total,features,subjects,subjectFeatures,areas,days};
+  return {total,authenticatedUsers,features,subjects,subjectFeatures,areas,days};
 }
 
 if (typeof document !== 'undefined') {
@@ -60,6 +64,7 @@ if (typeof document !== 'undefined') {
     const requestRevision = ++revision, user = auth.currentUser, selected = period.value;
     content.hidden = true; refresh.disabled = true;
     document.getElementById('usageTotal').textContent = '0';
+    document.getElementById('usageAuthenticatedUsers').textContent = '0';
     for (const id of ['usageFeatures','usageSubjects','usageSubjectDetails','usageAreas','usageDays','usageTrend']) document.getElementById(id).replaceChildren();
     if (!user || !user.emailVerified) {
       status.textContent = 'Bitte melde dich zuerst im Trainer mit deinem bestätigten Administrationskonto an.';
@@ -80,6 +85,7 @@ if (typeof document !== 'undefined') {
       }
       const summary = usageSummary(result.data,selected);
       document.getElementById('usageTotal').textContent = number(summary.total);
+      document.getElementById('usageAuthenticatedUsers').textContent = number(summary.authenticatedUsers);
       rows('usageFeatures', Object.entries(summary.features).sort((a,b) => b[1]-a[1]).map(([key,value]) => [featureLabels[key],value]));
       rows('usageSubjects', Object.entries(summary.subjects).sort((a,b) => b[1]-a[1]).map(([key,value]) => [subjectLabels[key],value]));
       const subjectDetails = document.getElementById('usageSubjectDetails');
@@ -90,13 +96,18 @@ if (typeof document !== 'undefined') {
         subjectDetails.append(row);
       }
       rows('usageAreas', [['WQ',summary.areas.WQ],['HQ',summary.areas.HQ]]);
-      rows('usageDays', summary.days.slice().reverse().map(day => [day.date + (day.date === result.data.today ? ' (läuft)' : ''),day.total]));
+      const dailyBody = document.getElementById('usageDays');
+      for (const day of summary.days.slice().reverse()) {
+        const row = document.createElement('tr'), date = document.createElement('th'), usage = document.createElement('td'), users = document.createElement('td');
+        date.scope = 'row'; date.textContent = day.date + (day.date === result.data.today ? ' (läuft)' : '');
+        usage.textContent = number(day.total); users.textContent = number(day.authenticatedUsers); row.append(date,usage,users); dailyBody.append(row);
+      }
       const chart = document.getElementById('usageTrend'); chart.replaceChildren();
       const maximum = Math.max(1,...summary.days.map(day => day.total));
       for (const day of summary.days) {
         const bar = document.createElement('span'); bar.className = 'usage-bar';
         bar.style.height = (day.total / maximum * 100) + '%';
-        bar.title = day.date + ': ' + number(day.total); chart.append(bar);
+        bar.title = day.date + ': ' + number(day.total) + ' Nutzungen, ' + number(day.authenticatedUsers) + ' angemeldete Nutzer'; chart.append(bar);
       }
       content.hidden = false;
       status.textContent = summary.total ? 'Aggregierte Nutzungen im gewählten Zeitraum. Heute ist noch nicht abgeschlossen (Europe/Berlin).' : 'Für diesen Zeitraum liegen noch keine Nutzungen vor.';

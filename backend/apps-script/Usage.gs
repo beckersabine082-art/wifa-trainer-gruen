@@ -162,13 +162,14 @@ function usageSheet_(id) {
   usagePrivateFile_(id);
   const sheet=SpreadsheetApp.openById(id).getSheetByName('usageDaily');
   if (!sheet || sheet.getLastRow() < 1 || sheet.getLastRow() > 10001) usageFail_('unavailable');
-  const header=sheet.getRange(1,1,1,2).getValues()[0];
-  if (header[0] !== 'date' || header[1] !== 'counts') usageFail_('unavailable');
+  const header=sheet.getRange(1,1,1,3).getValues()[0];
+  if (header[0] !== 'date' || header[1] !== 'counts' || (header[2] && header[2] !== 'userHashes')) usageFail_('unavailable');
+  if (!header[2]) sheet.getRange(1,3).setValue('userHashes');
   return sheet;
 }
 function usageRows_(sheet) {
   const last=sheet.getLastRow();
-  return last > 1 ? sheet.getRange(2,1,last-1,2).getValues() : [];
+  return last > 1 ? sheet.getRange(2,1,last-1,3).getValues() : [];
 }
 function usageCounts_(raw) {
   if (typeof raw !== 'string' || raw.length > 40000) usageFail_('unavailable');
@@ -181,20 +182,46 @@ function usageCounts_(raw) {
   });
   return counts;
 }
+function usageUserHashes_(raw) {
+  if (raw === undefined) return [];
+  if (typeof raw === 'string') {
+    try { raw = JSON.parse(raw); } catch (_) { usageFail_('unavailable'); }
+  }
+  if (!Array.isArray(raw) || raw.length > 50000) usageFail_('unavailable');
+  const seen = new Set();
+  raw.forEach(value => {
+    if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(value) || seen.has(value)) usageFail_('unavailable');
+    seen.add(value);
+  });
+  return [...seen];
+}
+function usageUserHash_(uid) {
+  const properties = PropertiesService.getScriptProperties();
+  let secret = properties.getProperty('USAGE_USER_HASH_SECRET');
+  if (!secret) {
+    secret = Utilities.getUuid() + Utilities.getUuid();
+    properties.setProperty('USAGE_USER_HASH_SECRET', secret);
+  }
+  const digest = Utilities.computeHmacSha256Signature(uid, secret);
+  return Utilities.base64EncodeWebSafe(digest).replace(/=+$/, '');
+}
 function usageDate_(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
     Number.isFinite(Date.parse(value+'T00:00:00Z')) && new Date(value+'T00:00:00Z').toISOString().slice(0,10) === value;
 }
-function usageRecord_(id,keys) {
+function usageRecord_(id,keys,uid) {
   return usageWithLock_(function () {
     const today=Utilities.formatDate(new Date(),'Europe/Berlin','yyyy-MM-dd');
     const sheet=usageSheet_(id), rows=usageRows_(sheet);
     const matches=rows.map((row,index)=>({row,index})).filter(item=>item.row[0] === today);
     if (matches.length > 1) usageFail_('unavailable');
     const counts=matches.length ? usageCounts_(matches[0].row[1]) : {};
+    const users=matches.length && matches[0].row.length > 2 ? usageUserHashes_(matches[0].row[2]) : [];
+    const userHash=usageUserHash_(uid);
+    if (!users.includes(userHash)) users.push(userHash);
     keys.forEach(key=>{const value=(counts[key]||0)+1;if(!Number.isSafeInteger(value))usageFail_('unavailable');counts[key]=value;});
     const row=matches.length ? matches[0].index+2 : sheet.getLastRow()+1;
-    sheet.getRange(row,1,1,2).setNumberFormat('@').setValues([[today,JSON.stringify(counts)]]);
+    sheet.getRange(row,1,1,3).setNumberFormat('@').setValues([[today,JSON.stringify(counts),JSON.stringify(users)]]);
     SpreadsheetApp.flush(); // Persist before releasing lock; only one authoritative daily row changes.
     return {success:true};
   });
@@ -202,19 +229,23 @@ function usageRecord_(id,keys) {
 function usageRead_(id,period) {
   return usageWithLock_(function () {
     const today=Utilities.formatDate(new Date(),'Europe/Berlin','yyyy-MM-dd');
-    const rows=usageRows_(usageSheet_(id)), byDay={}, totals={};
+    const rows=usageRows_(usageSheet_(id)), byDay={}, totals={}, periodUsers=new Set();
     rows.forEach(row=>{
       if (!usageDate_(row[0]) || row[0] > today || Object.prototype.hasOwnProperty.call(byDay,row[0])) usageFail_('unavailable');
-      byDay[row[0]]=usageCounts_(row[1]);
+      byDay[row[0]]={counts:usageCounts_(row[1]),users:usageUserHashes_(row[2])};
     });
     let dates;
     if (period === 'all') dates=Object.keys(byDay).sort();
     else dates=Array.from({length:Number(period)},(_,i)=>new Date(Date.parse(today+'T00:00:00Z')-(Number(period)-1-i)*86400000).toISOString().slice(0,10));
-    const days=dates.map(date=>({date,counts:byDay[date]||{}}));
+    const days=dates.map(date=>{
+      const entry=byDay[date]||{counts:{},users:[]};
+      entry.users.forEach(user=>periodUsers.add(user));
+      return {date,counts:entry.counts,authenticatedUsers:entry.users.length};
+    });
     days.forEach(day=>Object.keys(day.counts).forEach(key=>{
       const total=(totals[key]||0)+day.counts[key];if(!Number.isSafeInteger(total))usageFail_('unavailable');totals[key]=total;
     }));
-    return {success:true,data:{today,period,days,totals}};
+    return {success:true,data:{today,period,days,totals,authenticatedUsers:periodUsers.size}};
   });
 }
 function usageHandle_(body) {
@@ -226,7 +257,7 @@ function usageHandle_(body) {
       if (!access.admin) usageFail_('forbidden');
       return usageRead_(config.id,body.period);
     }
-    return usageRecord_(config.id,keys);
+    return usageRecord_(config.id,keys,access.uid);
   } catch (error) {
     const allowed=['invalid_request','unauthenticated','forbidden','rate_limited','unavailable'];
     return {success:false,error:allowed.includes(error?.usageCode) ? error.usageCode : 'unavailable'};
@@ -260,7 +291,7 @@ function setupUsageStatistics_() {
       props.setProperty('USAGE_SPREADSHEET_ID',id);
       DriveApp.getFileById(id).setSharing(DriveApp.Access.PRIVATE,DriveApp.Permission.NONE);
       const sheet=book.getSheets()[0];sheet.setName('usageDaily');
-      sheet.getRange(1,1,1,2).setValues([['date','counts']]);
+      sheet.getRange(1,1,1,3).setValues([['date','counts','userHashes']]);
       sheet.setFrozenRows(1);SpreadsheetApp.flush();
     }
     usageSheet_(id); // Owner, sharing, separate file and schema checks must all pass.

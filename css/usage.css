@@ -19,6 +19,7 @@ section { background: #fff; border: 1px solid #dbe4dc; border-radius: 16px; padd
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
 .total { background: #e1eee4; }
 .total p { font-size: 3rem; font-weight: 700; margin: 0; }
+.totals { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 22px; }
 table { width: 100%; border-collapse: collapse; font-size: .95rem; }
 th, td { text-align: left; padding: 12px 5px; border-bottom: 1px solid #e4ebe5; }
 tbody th { font-weight: 450; }
@@ -31,4 +32,4 @@ td, thead th:last-child { text-align: right; font-variant-numeric: tabular-nums;
 summary { cursor: pointer; font-weight: 600; padding: 10px 0; }
 footer { color: #506358; max-width: 840px; font-size: .9rem; }
 [hidden] { display: none !important; }
-@media (max-width: 760px) { .grid { grid-template-columns: 1fr; gap: 0; } main { padding: 24px 16px; } section { padding: 18px; } }
+@media (max-width: 760px) { .grid, .totals { grid-template-columns: 1fr; gap: 0; } main { padding: 24px 16px; } section { padding: 18px; } }

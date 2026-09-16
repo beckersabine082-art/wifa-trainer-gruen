@@ -142,6 +142,14 @@ test('dashboard aggregates events and subjects, fills days and rejects unsupport
   assert.equal(result.subjectFeatures.recht.trainer_start,3); assert.equal(result.subjectFeatures.recht.quiz_start,2);
   assert.throws(() => ctx.usageSummary({today:'2026-09-12',days:[]},'bad'));
 });
+test('dashboard uses the backend period union and displays per-day authenticated accounts', () => {
+  const ctx = load('usage-dashboard.js');
+  const result = plain(ctx.usageSummary({today:'2026-09-12',authenticatedUsers:2,days:[
+    {date:'2026-09-11',counts:{},authenticatedUsers:1},
+    {date:'2026-09-12',counts:{},authenticatedUsers:2}],totals:{}},'7'));
+  assert.equal(result.authenticatedUsers,2);
+  assert.deepEqual(result.days.slice(-2).map(day=>day.authenticatedUsers),[1,2]);
+});
 test('learning hooks keep usage independent of analytics and only count successful card/answer loads', async () => {
   const events = [], elements = new Map();
   const element = id => { if (!elements.has(id)) elements.set(id,{value:id === 'kartenFachSelect' ? 'Recht' : 'Question',style:{},textContent:'',innerHTML:''}); return elements.get(id); };
