@@ -26,8 +26,89 @@ let quizFach = '';
 let quizShuffleAktiv = false;
 const QUIZ_REQUEST_TIMEOUT_MS = Number(window.QUIZ_REQUEST_TIMEOUT_MS) || 10000;
 const QUIZ_SESSION_STORAGE_PREFIX = 'wifa.quiz.session.v1';
+const QUIZ_LADEFACTS = {
+  allgemein: [
+    'Lernen gelingt oft besser in kurzen, konzentrierten Einheiten.',
+    'Beim Wiederholen hilft es, Begriffe mit eigenen Beispielen zu verknüpfen.',
+    'Ein klarer Überblick erleichtert das Einordnen neuer Fachbegriffe.'
+  ],
+  Marketing: [
+    'AIDA steht für Attention, Interest, Desire und Action.',
+    'Ein USP beschreibt ein besonderes Merkmal oder einen Nutzen, der ein Angebot vom Wettbewerb unterscheidet.',
+    'Marktsegmentierung teilt einen Gesamtmarkt in unterscheidbare Gruppen.'
+  ],
+  Recht: [
+    'Ein Vertrag entsteht grundsätzlich durch zwei übereinstimmende Willenserklärungen.',
+    'Eine Frist bezeichnet einen Zeitraum, während ein Termin einen Zeitpunkt bezeichnet.',
+    'Ansprüche können unter bestimmten Voraussetzungen verjähren.'
+  ],
+  Rechnungswesen: [
+    'Das Eigenkapital steht auf der Passivseite der Bilanz.',
+    'Planmäßige Abschreibungen verteilen die Anschaffungs- oder Herstellungskosten eines abnutzbaren Anlageguts über seine Nutzungsdauer.',
+    'Eine Bilanz stellt Vermögen und Kapital zu einem Stichtag gegenüber.'
+  ],
+  Logistik: [
+    'Die Lieferzeit beschreibt die Zeit zwischen Bestellung und Lieferung.',
+    'Lagerbestände binden Kapital und verursachen Lagerkosten.',
+    'Ein Warenfluss verbindet Beschaffung, Lagerung und Absatz.'
+  ],
+  BWL: [
+    'Das ökonomische Prinzip beschreibt den sparsamen Umgang mit knappen Mitteln.',
+    'Eine Unternehmung kombiniert Produktionsfaktoren zur Leistungserstellung.',
+    'Liquidität bezeichnet die Fähigkeit, fällige Zahlungen leisten zu können.'
+  ],
+  VWL: [
+    'Angebot und Nachfrage beeinflussen gemeinsam die Preisbildung am Markt.',
+    'Das Bruttoinlandsprodukt misst den Wert der im Inland erzeugten Waren und Dienstleistungen unter Berücksichtigung der Vorleistungen.',
+    'Inflation bezeichnet einen anhaltenden Anstieg des allgemeinen Preisniveaus.'
+  ],
+  Steuern: [
+    'Steuern werden ohne individuelle Gegenleistung zur Finanzierung öffentlicher Aufgaben erhoben.',
+    'Die Einkommensteuer ist eine Personensteuer.',
+    'Die Umsatzsteuer knüpft grundsätzlich an Lieferungen und sonstige Leistungen an.'
+  ],
+  Unternehmensführung: [
+    'Strategische Entscheidungen richten sich auf die langfristige Entwicklung eines Unternehmens.',
+    'Ziele machen gewünschte Ergebnisse überprüfbar.',
+    'Führung verbindet Aufgaben, Verantwortung und Zusammenarbeit.'
+  ],
+  'Führung und Zusammenarbeit': [
+    'Feedback wirkt besonders hilfreich, wenn es konkret und zeitnah ist.',
+    'Delegation überträgt Aufgaben, aber nicht automatisch die Gesamtverantwortung.',
+    'Gute Zusammenarbeit braucht gemeinsame Ziele und klare Absprachen.'
+  ],
+  'Betriebliches Management': [
+    'Prozesse beschreiben wiederkehrende Abläufe mit einem Ziel.',
+    'Kennzahlen machen Entwicklungen messbar und vergleichbar.',
+    'Planung verbindet Ziele mit Maßnahmen und Ressourcen.'
+  ],
+  Vertrieb: [
+    'Vertrieb verbindet ein Angebot mit potenziellen und bestehenden Kunden.',
+    'Kundenbedarf und Kundennutzen sind zentrale Bezugspunkte im Verkauf.',
+    'Ein Verkaufsgespräch besteht typischerweise aus Vorbereitung, Gespräch und Nachbereitung.'
+  ],
+  'Investition und Finanzierung': [
+    'Investitionen binden heute Mittel, um künftig Nutzen oder Erträge zu erzielen.',
+    'Finanzierung beschreibt die Beschaffung von Kapital.',
+    'Bei der Innenfinanzierung stammen die Mittel aus dem Unternehmen selbst.'
+  ],
+  'Betriebliches Rechnungswesen und Controlling': [
+    'Controlling unterstützt die Unternehmensführung durch Informationen und Analysen.',
+    'Kostenrechnung untersucht den Werteverzehr innerhalb eines Unternehmens.',
+    'Soll-Ist-Vergleiche zeigen Abweichungen zwischen Planung und tatsächlicher Entwicklung.'
+  ]
+};
 
 const sitzungsStatistik = { richtig: 0, falsch: 0 };
+
+function setzeQuizLadehinweis(fach = '') {
+  const status = document.getElementById('quizStatus');
+  if (!status) return;
+
+  const pool = QUIZ_LADEFACTS[String(fach || '').trim()] || QUIZ_LADEFACTS.allgemein;
+  const fact = pool[Math.floor(Math.random() * pool.length)];
+  status.textContent = `Frage wird geladen. Beim ersten Aufruf einer Frage kann dies einige Sekunden dauern. ${fact}`;
+}
 
 function quizRequestMitTimeout(promise, fehlermeldung) {
   return new Promise((resolve, reject) => {
@@ -381,7 +462,7 @@ async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket(
   setNaechsteSichtbar(false);
   hideErgebnis();
   if (karte) karte.hidden = true;
-  if (status) status.textContent = 'Frage wird geladen. Beim ersten Aufruf einer Frage kann dies einige Sekunden dauern...';
+  setzeQuizLadehinweis(eintrag?.fach);
 
   try {
     const result = await quizRequestMitTimeout(
