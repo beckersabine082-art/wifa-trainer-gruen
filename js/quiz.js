@@ -25,6 +25,7 @@ let quizInteraktionenGebunden = false;
 let quizFach = '';
 let quizShuffleAktiv = false;
 const QUIZ_REQUEST_TIMEOUT_MS = Number(window.QUIZ_REQUEST_TIMEOUT_MS) || 10000;
+const QUIZ_SESSION_STORAGE_PREFIX = 'wifa.quiz.session.v1';
 
 const sitzungsStatistik = { richtig: 0, falsch: 0 };
 
@@ -147,6 +148,7 @@ async function quizVonVorne() {
   aktuelleFrage = null;
   antwortGespeichert = false;
   letzteAuswahl = null;
+  speichereQuizSitzung();
 
   await zeigeAktuelleFrage(usageTicket);
 }
@@ -239,6 +241,13 @@ async function wechsleQuizmodus(event) {
   letzteFrageAlterRunde = null;
   rundenNummer = 0;
   neueRunde();
+  const savedSessionIndex = ladeQuizSitzung();
+  if (savedSessionIndex === null) {
+    const savedIndex = await ladeQuizFortschritt();
+    if (typeof savedIndex === 'number' && savedIndex >= 0 && savedIndex < rundenReihenfolge.length) {
+      fragenIndex = savedIndex;
+    }
+  }
 
   const status = document.getElementById('quizStatus');
   const karte = document.getElementById('quizKarte');
@@ -386,6 +395,7 @@ async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket(
       speichereQuizFortschritt(String(aktuelleFrage.frageId || aktuellerKatalogEintrag.frageId || '').trim())
         .catch(error => console.warn('Quiz-Fortschritt konnte nicht gespeichert werden.', error));
     }
+    speichereQuizSitzung();
     window.WifaAnalytics?.start('quiz', quizFach);
     if (window.WifaUsage?.isCurrent(usageTicket)) window.WifaUsage.start('quiz', quizFach);
     window.WifaAnalytics?.content('quiz', aktuelleFrage.fach, aktuelleFrage.thema);
@@ -395,6 +405,69 @@ async function zeigeAktuelleFrage(usageTicket = window.WifaUsage?.captureTicket(
     setNaechsteSichtbar(false);
     if (status) status.textContent = `Frage konnte nicht geladen werden: ${error.message || 'Unbekannter Fehler.'}`;
   }
+}
+
+function quizSessionStorageKey() {
+  const user = currentVerifiedUser();
+  const fach = String(quizFach || '').trim();
+  if (!user || !fach) return null;
+  return `${QUIZ_SESSION_STORAGE_PREFIX}:${user.uid}:${fach}`;
+}
+
+function speichereQuizSitzung() {
+  if (quizShuffleAktiv) return false;
+
+  const key = quizSessionStorageKey();
+  const current = rundenReihenfolge[fragenIndex];
+  const order = rundenReihenfolge
+    .map(item => String(item?.quizKey || '').trim())
+    .filter(Boolean);
+  const currentQuizKey = String(current?.quizKey || '').trim();
+
+  if (!key || !order.length || !currentQuizKey) return false;
+
+  try {
+    window.localStorage.setItem(key, JSON.stringify({ order, currentQuizKey, rundenNummer }));
+    return true;
+  } catch (error) {
+    console.warn('Quiz-Sitzung konnte nicht gespeichert werden.', error);
+    return false;
+  }
+}
+
+function ladeQuizSitzung() {
+  if (quizShuffleAktiv) return null;
+
+  const key = quizSessionStorageKey();
+  if (!key) return null;
+
+  let saved;
+  try {
+    saved = JSON.parse(window.localStorage.getItem(key) || 'null');
+  } catch (error) {
+    return null;
+  }
+
+  if (!saved || !Array.isArray(saved.order) || !saved.order.length) return null;
+
+  const pool = neuerFragenpool();
+  const entriesByKey = new Map(pool.map(item => [String(item.quizKey || '').trim(), item]));
+  const order = saved.order.map(item => String(item || '').trim());
+  const uniqueOrder = new Set(order);
+  if (uniqueOrder.size !== pool.length || order.length !== pool.length ||
+      order.some(quizKey => !entriesByKey.has(quizKey))) {
+    return null;
+  }
+
+  const restoredIndex = order.indexOf(String(saved.currentQuizKey || '').trim());
+  if (restoredIndex < 0) return null;
+
+  rundenReihenfolge = order.map(quizKey => entriesByKey.get(quizKey));
+  fragenIndex = restoredIndex;
+  if (Number.isInteger(saved.rundenNummer) && saved.rundenNummer > 0) {
+    rundenNummer = saved.rundenNummer;
+  }
+  return restoredIndex;
 }
 
 async function speichereQuizAttempt({ quizKey, frageId, teilbereich, fach, thema, ausgewaehlteOption, richtigeOption, richtig }) {
@@ -559,9 +632,12 @@ export async function initialisiereQuiz() {
     }
     befuelleQuizModus();
     neueRunde(usageTicket);
-    const savedIndex = await ladeQuizFortschritt();
-    if (typeof savedIndex === 'number' && savedIndex >= 0 && savedIndex < rundenReihenfolge.length) {
-      fragenIndex = savedIndex;
+    const savedSessionIndex = ladeQuizSitzung();
+    if (savedSessionIndex === null) {
+      const savedIndex = await ladeQuizFortschritt();
+      if (typeof savedIndex === 'number' && savedIndex >= 0 && savedIndex < rundenReihenfolge.length) {
+        fragenIndex = savedIndex;
+      }
     }
     await zeigeAktuelleFrage(usageTicket);
   } catch (error) {
