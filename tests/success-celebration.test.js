@@ -63,7 +63,7 @@ test('scores from different user accounts cannot combine', () => {
 test('navigation placeholder and quiz button hierarchy are present', () => {
   const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
   const css = fs.readFileSync(path.join(__dirname, '../css/style.css'), 'utf8');
-  assert.match(html, /id="navPraesentation"[^>]*>PRÄSENTATION<\/button>/);
+  assert.match(html, /<button[^>]*id="navPraesentation"[^>]*>[\s\S]*<img src="images\/presentation-icon\.png"[\s\S]*<span>Präsentation<\/span><\/button>/);
   assert.match(html, /id="praesentationView"[\s\S]*?Dieser Bereich wird vorbereitet/);
   const evaluateButton = html.match(/<button[^>]*quiz-auswerten-btn[^>]*>/)?.[0] || '';
   const restartButton = html.match(/<button[^>]*quiz-von-vorne-btn[^>]*>/)?.[0] || '';
@@ -75,4 +75,5 @@ test('navigation placeholder and quiz button hierarchy are present', () => {
   assert.match(css, /\.erfolg-konfetti-zweite-welle\s*\{[^}]*1\.7s/s);
   assert.match(css, /\.erfolg-ueber80-quote\s*\{[^}]*white-space:\s*nowrap/s);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
+  assert.match(css, /\.nav-btn-praesentation img\s*\{[^}]*width:\s*35px[^}]*height:\s*35px[^}]*object-fit:\s*contain/s);
 });

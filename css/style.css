@@ -156,6 +156,20 @@
       text-align: left;
     }
 
+    .nav-btn-praesentation {
+      box-sizing: border-box;
+      height: 40px;
+      padding: 2px 14px;
+    }
+
+    .nav-btn-praesentation img {
+      display: block;
+      flex: 0 0 35px;
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+    }
+
     .nav-btn:hover,
     .nav-btn.active {
       background: #b794f6;
