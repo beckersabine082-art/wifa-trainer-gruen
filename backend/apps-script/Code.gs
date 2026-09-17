@@ -568,7 +568,10 @@ function doPost(e) {
           .replace(/(token|password|api[_-]?key)\s*[:=]\s*[^\s,;]+/gi, '$1=[REDACTED]')
           .slice(0, 300);
         console.error('sendFeedback failed at ' + feedbackStage + ': ' + errorName + ': ' + safeMessage);
-        throw error;
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: 'request_failed_' + feedbackStage
+        })).setMimeType(ContentService.MimeType.JSON);
       }
     }
     const protectedActions = ['getLernstand','getProgress','getPodcastProgress','saveProgress',
