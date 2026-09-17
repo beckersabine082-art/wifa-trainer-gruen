@@ -56,15 +56,18 @@ const faecherNachTeilbereich = {
     meldung.id = 'erfolgUeber80';
     meldung.className = 'erfolg-ueber80-overlay';
     meldung.setAttribute('role', 'status');
-    const konfetti = Array.from({ length: 36 }, (_, index) => {
-      const x = (index * 37) % 100;
-      const hue = (index * 47) % 360;
-      const delay = (index % 9) * 0.055;
-      const drift = ((index * 29) % 44) - 22;
-      const spin = 240 + ((index * 71) % 480);
-      return `<i class="erfolg-konfetti-teil" style="--x:${x}vw;--hue:${hue};--delay:${delay}s;--drift:${drift}vw;--spin:${spin}deg"></i>`;
+    const konfetti = Array.from({ length: 72 }, (_, index) => {
+      const teilIndex = index % 36;
+      const zweiteWelle = index >= 36;
+      const x = (teilIndex * 37) % 100;
+      const hue = (teilIndex * 47) % 360;
+      const delay = (teilIndex % 9) * 0.055;
+      const drift = ((teilIndex * 29) % 44) - 22;
+      const spin = 240 + ((teilIndex * 71) % 480);
+      const wellenKlasse = zweiteWelle ? ' erfolg-konfetti-zweite-welle' : '';
+      return `<i class="erfolg-konfetti-teil${wellenKlasse}" style="--x:${x}vw;--hue:${hue};--delay:${delay}s;--drift:${drift}vw;--spin:${spin}deg"></i>`;
     }).join('');
-    meldung.innerHTML = `<div class="erfolg-konfetti-feld" aria-hidden="true">${konfetti}<span class="erfolg-feuerwerk erfolg-feuerwerk-links">✦</span><span class="erfolg-feuerwerk erfolg-feuerwerk-rechts">✦</span></div><section class="erfolg-ueber80-karte"><div class="erfolg-ueber80-glanz" aria-hidden="true">🎆　✨　🎇</div><strong>Stark! In Trainer, Quiz und Prüfungssimulation liegst du über 80 %.</strong><span>Die erfolgreiche Prüfung ist zum Greifen nah.</span></section>`;
+    meldung.innerHTML = `<div class="erfolg-konfetti-feld" aria-hidden="true">${konfetti}<span class="erfolg-feuerwerk erfolg-feuerwerk-links">✦</span><span class="erfolg-feuerwerk erfolg-feuerwerk-rechts">✦</span></div><section class="erfolg-ueber80-karte"><div class="erfolg-ueber80-glanz" aria-hidden="true">🎆　✨　🎇</div><strong>Stark! In Trainer, Quiz und Prüfungssimulation liegst du über <span class="erfolg-ueber80-quote">80&nbsp;%</span>.</strong><span>Die erfolgreiche Prüfung ist zum Greifen nah.</span></section>`;
     document.body.appendChild(meldung);
     window.setTimeout(() => {
       meldung.classList.add('erfolg-ueber80-schliessen');

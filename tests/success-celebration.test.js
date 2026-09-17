@@ -43,7 +43,9 @@ test('success celebration waits for three scores strictly above 80 and appears o
   assert.equal(fixture.children.length, 1);
   assert.match(fixture.children[0].innerHTML, /Stark!/);
   assert.equal(fixture.children[0].className, 'erfolg-ueber80-overlay');
-  assert.equal((fixture.children[0].innerHTML.match(/erfolg-konfetti-teil/g) || []).length, 36);
+  assert.equal((fixture.children[0].innerHTML.match(/erfolg-konfetti-teil/g) || []).length, 72);
+  assert.equal((fixture.children[0].innerHTML.match(/erfolg-konfetti-zweite-welle/g) || []).length, 36);
+  assert.match(fixture.children[0].innerHTML, /80&nbsp;%/);
   report('quiz', 100, 'user-1');
   assert.equal(fixture.children.length, 1);
   assert.equal(fixture.storage.get('wifa.erfolg.ueber80.v1.user-1'), 'true');
@@ -70,5 +72,7 @@ test('navigation placeholder and quiz button hierarchy are present', () => {
   assert.match(css, /\.quiz-actions \.quiz-auswerten-btn\s*\{[^}]*min-height:\s*48px/s);
   assert.match(css, /\.quiz-actions \.quiz-von-vorne-btn\s*\{[^}]*font-size:\s*0\.85rem/s);
   assert.match(css, /\.erfolg-ueber80-overlay\s*\{[^}]*z-index:\s*12000/s);
+  assert.match(css, /\.erfolg-konfetti-zweite-welle\s*\{[^}]*1\.7s/s);
+  assert.match(css, /\.erfolg-ueber80-quote\s*\{[^}]*white-space:\s*nowrap/s);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
 });
