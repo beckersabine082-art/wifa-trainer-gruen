@@ -310,6 +310,8 @@ export async function ladePruefungsLernstand() {
   try {
     const attempts = await loadExamAttempts(user);
     if (auth.currentUser !== user) return;
+    const examStats = aggregateStats(attempts);
+    if (examStats.count) window.meldeErfolgsFortschritt?.('pruefung', examStats.avg, user.uid);
 
     const katalog = typeof window.getPruefungsEinheitenNachTeilbereich === 'function'
       ? window.getPruefungsEinheitenNachTeilbereich() || {}

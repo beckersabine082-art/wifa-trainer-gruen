@@ -142,6 +142,7 @@
             </div>
 
             <button class="nav-btn" id="navKilian" type="button" onclick="requireAuth('kilianView'); closeMainMenu();"><svg class="kilian-menu-icon" viewBox="0 0 150 120" aria-hidden="true"><use href="#kilianBearIllustration"></use></svg> Frag Kilian</button>
+            <button class="nav-btn" id="navPraesentation" type="button" onclick="zeigeBereich('praesentationView'); closeMainMenu();">PRÄSENTATION</button>
             <button class="nav-btn" type="button" onclick="hinweisAnzeigen(); closeMainMenu();">ℹ️ Nutzungshinweise</button>
           </div>
         </div>
@@ -581,9 +582,9 @@
           <div class="question-box" id="quizFrageText"></div>
           <div class="quiz-optionen" id="quizOptionen" role="radiogroup" aria-label="Antwortmöglichkeiten"></div>
           <div class="quiz-actions">
-            <button type="button" class="primary-btn" id="quizPruefenBtn">Antwort prüfen</button>
+            <button type="button" class="primary-btn quiz-auswerten-btn" id="quizPruefenBtn">Auswerten</button>
             <button type="button" class="secondary-btn" id="quizNaechsteBtn" hidden>Nächste Frage</button>
-            <button type="button" class="secondary-btn" id="quizVonVorneBtn">Von vorne</button>
+            <button type="button" class="secondary-btn quiz-von-vorne-btn" id="quizVonVorneBtn">Von vorne</button>
             <button type="button" class="secondary-btn" id="quizShuffleBtn">Shuffle Mix</button>
           </div>
           <div class="quiz-ergebnis" id="quizErgebnisBereich" hidden></div>
@@ -591,6 +592,13 @@
             <span class="quiz-stat-richtig">Richtig: <strong id="quizAnzahlRichtig">0</strong></span>
             <span class="quiz-stat-falsch">Falsch: <strong id="quizAnzahlFalsch">0</strong></span>
           </div>
+        </div>
+      </section>
+
+      <section class="view" id="praesentationView">
+        <div class="header">
+          <h1>Präsentation</h1>
+          <p>Dieser Bereich wird vorbereitet. Hier findest du später Unterstützung für Präsentation und Fachgespräch der mündlichen Prüfung.</p>
         </div>
       </section>
 

@@ -882,6 +882,9 @@ export async function ladeWifaLernstand() {
     const basis = await loadActiveAttemptBasis(attempts, catalog);
     if (auth.currentUser !== user) return;
     renderLearningProgress(basis.activeAttempts, catalog, attempts);
+    const latest = latestAttempts(basis.activeAttempts);
+    const current = aggregate(latest);
+    window.meldeErfolgsFortschritt?.('trainer', current.performance, user.uid);
     // BEGIN TEMP [LERNSTAND DEBUG]
     debugLearningProgress(debugDocuments, attempts, catalog, basis);
     // END TEMP [LERNSTAND DEBUG]

@@ -331,6 +331,11 @@ export async function ladeQuizLernstand() {
     if (auth.currentUser !== user) return;
 
     quizLernstandDaten = { attempts, katalog };
+    const latest = latestPerQuizKey(attempts);
+    const quizPercent = latest.length
+      ? Math.round((latest.filter(attempt => attempt.richtig === true).length / latest.length) * 100)
+      : null;
+    if (quizPercent !== null) window.meldeErfolgsFortschritt?.('quiz', quizPercent, user.uid);
     populateSubjectFilter(attempts, quizLernstandDaten.katalog);
     if (!attempts.length) {
       inhalt.innerHTML = '<div class="result-list-empty">Noch keine Quizfragen beantwortet.</div>';

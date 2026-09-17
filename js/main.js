@@ -36,6 +36,31 @@ const faecherNachTeilbereich = {
   // Interner Zustand: true, wenn die aktuelle Frage über die Fehleranalyse-Wiederholung geöffnet wurde (nicht anhand von sichtbarem Text erkennen)
   let wiederholungsKontext = null;
 
+  const erfolgsFortschritt = {};
+  window.meldeErfolgsFortschritt = function(bereich, prozent, userId) {
+    const schluessel = String(userId || '');
+    if (!schluessel || !['trainer', 'quiz', 'pruefung'].includes(bereich)) return;
+    const wert = Number(prozent);
+    if (!Number.isFinite(wert)) return;
+    erfolgsFortschritt[bereich] = { prozent: wert, userId: schluessel };
+    const alleBereiche = ['trainer', 'quiz', 'pruefung'];
+    if (!alleBereiche.every(name => erfolgsFortschritt[name]?.userId === schluessel
+      && erfolgsFortschritt[name].prozent > 80)) return;
+    const gespeichert = `wifa.erfolg.ueber80.v1.${schluessel}`;
+    try {
+      if (window.localStorage.getItem(gespeichert)) return;
+      window.localStorage.setItem(gespeichert, 'true');
+    } catch (_) { return; }
+    if (document.getElementById('erfolgUeber80')) return;
+    const meldung = document.createElement('aside');
+    meldung.id = 'erfolgUeber80';
+    meldung.className = 'erfolg-ueber80';
+    meldung.setAttribute('role', 'status');
+    meldung.innerHTML = '<span class="erfolg-ueber80-konfetti" aria-hidden="true">🎉 ✨ 🎊</span><strong>Stark! In Trainer, Quiz und Prüfungssimulation liegst du über 80 %.</strong><span>Die erfolgreiche Prüfung ist zum Greifen nah.</span>';
+    document.body.appendChild(meldung);
+    window.setTimeout(() => meldung.remove(), 8000);
+  };
+
   // Aktueller Nutzer (UID) wird in `window.aktuellerNutzer` verwaltet von `js/login.js`.
   // Stelle sicher, dass kein lokales `aktuellerNutzer` existiert.
   if (typeof window.aktuellerNutzer === 'undefined') window.aktuellerNutzer = null;
@@ -113,6 +138,7 @@ function zeigeBereich(viewId) {
     if (viewId === "lerntextePodcastView" && typeof window.initialisiereLerntexteAnsicht === "function") {
       window.initialisiereLerntexteAnsicht();
     }
+    if (viewId === "praesentationView") document.getElementById("navPraesentation")?.classList.add("active");
     if (viewId === "glossarView") {
   document.getElementById("navNachschlagen").classList.add("active");
 
