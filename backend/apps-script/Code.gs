@@ -511,6 +511,7 @@ function getLernstandFrontend(nutzer) {
   return gefiltert;
 }
 function doPost(e) {
+  let requestAction = '';
   try {
     let body;
     if (typeof e?.postData?.contents !== 'string' || e.postData.contents.length > 4000000) {
@@ -529,6 +530,7 @@ function doPost(e) {
     }
     if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid_request');
     const action = String(body.action || "").trim();
+    requestAction = action;
     if (action === 'sendFeedback') {
       let feedbackStage = 'validation';
       let feedbackUser = null;
@@ -685,7 +687,8 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({
         success: false,
-        error: ['unauthenticated','invalid_request','rate_limited','unavailable'].includes(error?.usageCode || error?.message)
+        error: requestAction === 'sendFeedback' ? 'request_failed_outer_feedback'
+          : ['unauthenticated','invalid_request','rate_limited','unavailable'].includes(error?.usageCode || error?.message)
           ? (error.usageCode || error.message) : 'request_failed'
       }))
       .setMimeType(ContentService.MimeType.JSON);
