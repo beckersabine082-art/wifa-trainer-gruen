@@ -351,6 +351,19 @@
               <div>Noch nicht eingerichtet.</div>
             </section>
 
+            <section class="account-section" aria-labelledby="feedbackToggle">
+              <button id="feedbackToggle" class="small-link account-edit-link" type="button" aria-expanded="false" aria-controls="feedbackPanel">Feedback</button>
+              <div id="feedbackPanel" class="account-feedback" hidden>
+                <p>Dein Feedback hilft mir, den WiFa Trainer besser zu machen. Hier kannst du Hinweise zu Inhalten, Korrekturbedarf, Fehlern, Bedienbarkeit sowie Wünsche und Verbesserungsvorschläge hinterlassen.</p>
+                <div class="account-feedback-compose">
+                  <label class="sr-only" for="feedbackText">Dein Feedback</label>
+                  <textarea id="feedbackText" rows="3" maxlength="3000" placeholder="Dein Feedback …"></textarea>
+                  <button id="feedbackSend" class="action-btn account-feedback-send" type="button" aria-label="Feedback senden" title="Feedback senden">➤</button>
+                </div>
+                <div id="feedbackStatus" class="account-feedback-status" role="status" aria-live="polite" hidden></div>
+              </div>
+            </section>
+
             <div class="button-row account-actions">
               <button id="signOutBtn" class="danger-btn" type="button">Abmelden</button>
             </div>

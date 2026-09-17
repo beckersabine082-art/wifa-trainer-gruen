@@ -550,6 +550,65 @@ function bindAuthUI() {
 		});
 	}
 
+	const feedbackToggle = $('feedbackToggle');
+	const feedbackPanel = $('feedbackPanel');
+	const feedbackText = $('feedbackText');
+	const feedbackSend = $('feedbackSend');
+	const feedbackStatus = $('feedbackStatus');
+	if (feedbackToggle && feedbackPanel && feedbackText && feedbackSend && feedbackStatus) {
+		feedbackToggle.addEventListener('click', () => {
+			const expanded = feedbackToggle.getAttribute('aria-expanded') === 'true';
+			feedbackToggle.setAttribute('aria-expanded', String(!expanded));
+			feedbackPanel.hidden = expanded;
+			if (!expanded) feedbackText.focus();
+		});
+
+		feedbackText.addEventListener('input', () => {
+			feedbackText.style.height = 'auto';
+			feedbackText.style.height = Math.min(feedbackText.scrollHeight, 240) + 'px';
+			feedbackText.style.overflowY = feedbackText.scrollHeight > 240 ? 'auto' : 'hidden';
+		});
+
+		feedbackSend.addEventListener('click', async () => {
+			const feedback = feedbackText.value.trim();
+			if (!feedback) {
+				feedbackStatus.textContent = 'Bitte gib zuerst dein Feedback ein.';
+				feedbackStatus.dataset.error = 'true';
+				feedbackStatus.hidden = false;
+				feedbackText.focus();
+				return;
+			}
+			if (feedback.length > 3000 || feedbackSend.disabled) return;
+			feedbackSend.disabled = true;
+			feedbackStatus.hidden = true;
+			try {
+				const activeView = document.querySelector('.view.active');
+				const result = await window.apiPost('sendFeedback', {
+					feedback,
+					page: `${location.pathname}${location.hash}${activeView ? ` | ${activeView.id}` : ''}`.slice(0, 300)
+				});
+				if (!result || result.success !== true) throw new Error(result && result.error || 'request_failed');
+				feedbackText.value = '';
+				feedbackText.style.height = '';
+				feedbackText.style.overflowY = 'hidden';
+				feedbackStatus.textContent = 'Danke! Dein Feedback wurde gesendet.';
+				feedbackStatus.dataset.error = 'false';
+			} catch (error) {
+				const messages = {
+					unauthenticated: 'Bitte melde dich mit einem bestätigten Konto an und versuche es erneut.',
+					invalid_request: 'Das Feedback ist ungültig oder zu lang. Bitte prüfe deine Eingabe.',
+					rate_limited: 'Du hast gerade sehr viele Anfragen gesendet. Bitte versuche es später erneut.',
+					unavailable: 'Der Feedbackversand ist gerade nicht verfügbar. Bitte versuche es später erneut.'
+				};
+				feedbackStatus.textContent = messages[error && error.message] || 'Feedback konnte nicht gesendet werden. Bitte prüfe deine Verbindung und versuche es erneut.';
+				feedbackStatus.dataset.error = 'true';
+			} finally {
+				feedbackStatus.hidden = false;
+				feedbackSend.disabled = false;
+			}
+		});
+	}
+
 	const saveDisplayNameBtn = $('saveDisplayNameBtn');
 	if (saveDisplayNameBtn) {
 		saveDisplayNameBtn.addEventListener('click', async () => {

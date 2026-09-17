@@ -97,7 +97,16 @@ function usageAuthenticate_(idToken, claims, apiKey) {
   // Obtain CURRENT admin rights from authoritative account data, not caller input or a stale JWT claim.
   let attributes={};
   if (typeof user.customAttributes === 'string') attributes=JSON.parse(user.customAttributes);
-  return {uid:user.localId, admin:attributes?.usageAdmin === true};
+  return {uid:user.localId, email:String(user.email || ''), admin:attributes?.usageAdmin === true};
+}
+
+function feedbackAuthorize_(body) {
+  const claims = usageTokenClaims_(body.idToken);
+  learningAdmit_('LEARNING_AUTH_ADMISSION', 1, 60, 3000);
+  const apiKey = PropertiesService.getScriptProperties().getProperty('USAGE_FIREBASE_WEB_API_KEY');
+  if (!apiKey) usageFail_('unavailable');
+  const user = usageAuthenticate_(body.idToken, claims, apiKey);
+  return {uid:user.uid, email:user.email};
 }
 
 // Shared verifier above; separate global budgets keep learning independent of GA/usage consent.

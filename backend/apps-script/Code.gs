@@ -529,6 +529,25 @@ function doPost(e) {
     }
     if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid_request');
     const action = String(body.action || "").trim();
+    if (action === 'sendFeedback') {
+      if (Object.keys(body).some(key => !['action','idToken','feedback','page'].includes(key)) ||
+          typeof body.feedback !== 'string' || body.feedback.length > 3000 || !body.feedback.trim() ||
+          (body.page !== undefined && (typeof body.page !== 'string' || body.page.length > 300))) {
+        throw new Error('invalid_request');
+      }
+      const user = feedbackAuthorize_(body);
+      const timestamp = Utilities.formatDate(new Date(), 'Europe/Berlin', 'dd.MM.yyyy HH:mm:ss z');
+      const page = String(body.page || '').replace(/[\r\n\t]/g, ' ').trim() || 'Unbekannt';
+      const recipient = 'biene-becks@web.de';
+      MailApp.sendEmail({
+        to: recipient,
+        subject: 'WiFa Trainer – neues Feedback',
+        body: 'Feedback:\n' + body.feedback.trim() + '\n\nE-Mail: ' + (user.email || 'Nicht verfügbar') +
+          '\nNutzer-ID: ' + user.uid + '\nDatum/Uhrzeit: ' + timestamp + '\nSeite/Bereich: ' + page
+      });
+      return ContentService.createTextOutput(JSON.stringify({success:true}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     const protectedActions = ['getLernstand','getProgress','getPodcastProgress','saveProgress',
       'savePodcastProgress','speichereLernstand','bewerteAntwort','frageKilian','bewertePruefung'];
     if (!protectedActions.includes(action)) throw new Error('invalid_request');

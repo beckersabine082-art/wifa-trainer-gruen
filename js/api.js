@@ -24,7 +24,7 @@ async function apiGet(action, params = {}) {
 
 async function apiPost(action, payload = {}) {
     const protectedActions = ['getLernstand','getProgress','getPodcastProgress','saveProgress',
-      'savePodcastProgress','speichereLernstand','bewerteAntwort','frageKilian','bewertePruefung'];
+      'savePodcastProgress','speichereLernstand','bewerteAntwort','frageKilian','bewertePruefung','sendFeedback'];
     let idToken;
     let isCurrentUser = () => true;
     if (protectedActions.includes(action)) {
