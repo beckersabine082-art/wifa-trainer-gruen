@@ -3425,6 +3425,7 @@ select:focus {
 }
 
 .account-feedback { margin-top: 10px; }
+.account-feedback-toggle { max-width: 420px; min-height: 48px; text-align: left; }
 .account-feedback > p { margin: 0 0 9px; font-size: 13px; line-height: 1.45; }
 .account-feedback-compose { display: flex; align-items: flex-end; gap: 8px; }
 .account-feedback-compose textarea {
