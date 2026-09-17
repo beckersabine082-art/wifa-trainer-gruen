@@ -121,6 +121,17 @@ test('global limit is persisted and checked before lookup, including rejected to
   const h=setup({status:400});for(let i=0;i<35;i++) h.record();assert.equal(h.calls.fetch,30);assert.equal(h.calls.write,0);
   assert.equal(h.record().error,'rate_limited');
 });
+test('feedback admission uses its own rate-limit bucket without consuming learning admission',()=>{
+  const h=setup();
+  for(let i=0;i<10;i++) assert.equal(h.ctx.feedbackAuthorize_({idToken:token()}).uid,'private-uid');
+  assert.equal(JSON.parse(h.props.FEEDBACK_ADMISSION).minuteCount,10);
+  assert.equal(h.props.LEARNING_AUTH_ADMISSION,undefined);
+  assert.throws(()=>h.ctx.feedbackAuthorize_({idToken:token()}),error=>error.usageCode==='rate_limited');
+  assert.equal(h.calls.fetch,10);
+  assert.equal(h.ctx.learningAuthorize_({action:'getLernstand',idToken:token()}),'private-uid');
+  assert.equal(JSON.parse(h.props.LEARNING_AUTH_ADMISSION).minuteCount,1);
+  assert.equal(JSON.parse(h.props.FEEDBACK_ADMISSION).minuteCount,10);
+});
 test('disabled/unconfigured/shared storage and lock failures do not expose or write data',()=>{
   for(const options of [{shared:true},{editor:true},{sameSheet:true},{busy:true},{writeError:true}]){
     const h=setup(options); assert.equal(h.record().success,false);assert.equal(h.isLocked(),false);

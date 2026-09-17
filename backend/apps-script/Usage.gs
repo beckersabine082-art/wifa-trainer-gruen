@@ -102,7 +102,7 @@ function usageAuthenticate_(idToken, claims, apiKey) {
 
 function feedbackAuthorize_(body) {
   const claims = usageTokenClaims_(body.idToken);
-  learningAdmit_('LEARNING_AUTH_ADMISSION', 1, 60, 3000);
+  learningAdmit_('FEEDBACK_ADMISSION', 1, 10, 100);
   const apiKey = PropertiesService.getScriptProperties().getProperty('USAGE_FIREBASE_WEB_API_KEY');
   if (!apiKey) usageFail_('unavailable');
   const user = usageAuthenticate_(body.idToken, claims, apiKey);
