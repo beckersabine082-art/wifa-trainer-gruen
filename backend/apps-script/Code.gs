@@ -511,7 +511,6 @@ function getLernstandFrontend(nutzer) {
   return gefiltert;
 }
 function doPost(e) {
-  let requestAction = '';
   try {
     let body;
     if (typeof e?.postData?.contents !== 'string' || e.postData.contents.length > 4000000) {
@@ -530,19 +529,13 @@ function doPost(e) {
     }
     if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid_request');
     const action = String(body.action || "").trim();
-    requestAction = action;
     if (action === 'sendFeedback') {
-      let feedbackStage = 'validation';
-      let feedbackUser = null;
-      try {
       if (Object.keys(body).some(key => !['action','idToken','feedback','page'].includes(key)) ||
           typeof body.feedback !== 'string' || body.feedback.length > 3000 || !body.feedback.trim() ||
           (body.page !== undefined && (typeof body.page !== 'string' || body.page.length > 300))) {
         throw new Error('invalid_request');
       }
-      feedbackStage = 'authorization';
-      feedbackUser = feedbackAuthorize_(body);
-      feedbackStage = 'mail_preparation';
+      const feedbackUser = feedbackAuthorize_(body);
       const timestamp = Utilities.formatDate(new Date(), 'Europe/Berlin', 'dd.MM.yyyy HH:mm:ss z');
       const page = String(body.page || '').replace(/[\r\n\t]/g, ' ').trim() || 'Unbekannt';
       const recipient = 'biene-becks@web.de';
@@ -552,29 +545,9 @@ function doPost(e) {
         body: 'Feedback:\n' + body.feedback.trim() + '\n\nE-Mail: ' + (feedbackUser.email || 'Nicht verfügbar') +
           '\nNutzer-ID: ' + feedbackUser.uid + '\nDatum/Uhrzeit: ' + timestamp + '\nSeite/Bereich: ' + page
       };
-      feedbackStage = 'mail_send';
       MailApp.sendEmail(message);
       return ContentService.createTextOutput(JSON.stringify({success:true}))
         .setMimeType(ContentService.MimeType.JSON);
-      } catch (error) {
-        const errorName = String(error && error.name || 'Error').slice(0, 80);
-        const sensitiveValues = [body.idToken, body.feedback, body.page,
-          feedbackUser && feedbackUser.uid, feedbackUser && feedbackUser.email]
-          .filter(value => typeof value === 'string' && value.length > 0);
-        let safeMessage = String(error && error.message || 'Unknown error');
-        sensitiveValues.forEach(value => { safeMessage = safeMessage.split(value).join('[REDACTED]'); });
-        safeMessage = safeMessage
-          .replace(/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, '[REDACTED_TOKEN]')
-          .replace(/AIza[0-9A-Za-z_-]{20,}/g, '[REDACTED_KEY]')
-          .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[REDACTED_EMAIL]')
-          .replace(/(token|password|api[_-]?key)\s*[:=]\s*[^\s,;]+/gi, '$1=[REDACTED]')
-          .slice(0, 300);
-        console.error('sendFeedback failed at ' + feedbackStage + ': ' + errorName + ': ' + safeMessage);
-        return ContentService.createTextOutput(JSON.stringify({
-          success: false,
-          error: 'request_failed_' + feedbackStage
-        })).setMimeType(ContentService.MimeType.JSON);
-      }
     }
     const protectedActions = ['getLernstand','getProgress','getPodcastProgress','saveProgress',
       'savePodcastProgress','speichereLernstand','bewerteAntwort','frageKilian','bewertePruefung'];
@@ -687,8 +660,7 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({
         success: false,
-        error: requestAction === 'sendFeedback' ? 'request_failed_outer_feedback'
-          : ['unauthenticated','invalid_request','rate_limited','unavailable'].includes(error?.usageCode || error?.message)
+        error: ['unauthenticated','invalid_request','rate_limited','unavailable'].includes(error?.usageCode || error?.message)
           ? (error.usageCode || error.message) : 'request_failed'
       }))
       .setMimeType(ContentService.MimeType.JSON);
