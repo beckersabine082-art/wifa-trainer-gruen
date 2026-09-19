@@ -176,6 +176,57 @@ function usageSheet_(id) {
   if (!header[2]) sheet.getRange(1,3).setValue('userHashes');
   return sheet;
 }
+function usageOptOutSheet_() {
+  const id=PropertiesService.getScriptProperties().getProperty('USAGE_OPTOUT_SPREADSHEET_ID');
+  if (!id) usageFail_('unavailable');
+  usagePrivateFile_(id);
+  const sheet=SpreadsheetApp.openById(id).getSheetByName('usageOptOut');
+  if (!sheet || sheet.getLastRow() > 50000) usageFail_('unavailable');
+  const header=sheet.getRange(1,1,1,1).getValues()[0];
+  if (header[0] !== 'userHash') usageFail_('unavailable');
+  return sheet;
+}
+function usageOptOutHashes_(sheet) {
+  const last=sheet.getLastRow();
+  if (last <= 1) return [];
+  const values=sheet.getRange(2,1,last-1,1).getValues();
+  const hashes=[]; const seen=new Set();
+  values.forEach(row=>{
+    const value=row[0];
+    if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(value) || seen.has(value)) usageFail_('unavailable');
+    seen.add(value); hashes.push(value);
+  });
+  return hashes;
+}
+function usageOptOutHas_(sheet,userHash) { return usageOptOutHashes_(sheet).includes(userHash); }
+function usageOptOutChange_(uid,accepted) {
+  return usageWithLock_(function () {
+    const optSheet=usageOptOutSheet_(), hash=usageUserHash_(uid), hashes=usageOptOutHashes_(optSheet);
+    const has=hashes.includes(hash);
+    if (accepted && !has) optSheet.getRange(optSheet.getLastRow()+1,1,1,1).setValues([[hash]]);
+    if (!accepted && has) {
+      const remaining=hashes.filter(value=>value !== hash);
+      if (optSheet.getLastRow() > 1) optSheet.getRange(2,1,optSheet.getLastRow()-1,1).setValues(remaining.map(value=>[value]));
+      if (remaining.length < hashes.length) optSheet.deleteRows(2+remaining.length,hashes.length-remaining.length);
+    }
+    if (accepted) {
+      const stats=usageSheet_(PropertiesService.getScriptProperties().getProperty('USAGE_SPREADSHEET_ID'));
+      const rows=usageRows_(stats);
+      rows.forEach((row,index)=>{
+        const users=usageUserHashes_(row[2]);
+        const remaining=users.filter(value=>value !== hash);
+        if (remaining.length !== users.length) stats.getRange(index+2,3,1,1).setValues([[JSON.stringify(remaining)]]);
+      });
+      SpreadsheetApp.flush();
+    }
+    return {success:true,optedOut:accepted};
+  });
+}
+function usageOptOutStatus_(uid) {
+  return usageWithLock_(function () {
+    return {success:true,optedOut:usageOptOutHas_(usageOptOutSheet_(),usageUserHash_(uid))};
+  });
+}
 function usageRows_(sheet) {
   const last=sheet.getLastRow();
   return last > 1 ? sheet.getRange(2,1,last-1,3).getValues() : [];
@@ -220,6 +271,8 @@ function usageDate_(value) {
 }
 function usageRecord_(id,keys,uid) {
   return usageWithLock_(function () {
+    const optOut=usageOptOutSheet_();
+    if (usageOptOutHas_(optOut,usageUserHash_(uid))) return {success:true,optedOut:true};
     const today=Utilities.formatDate(new Date(),'Europe/Berlin','yyyy-MM-dd');
     const sheet=usageSheet_(id), rows=usageRows_(sheet);
     const matches=rows.map((row,index)=>({row,index})).filter(item=>item.row[0] === today);
@@ -259,9 +312,15 @@ function usageRead_(id,period) {
 }
 function usageHandle_(body) {
   try {
-    const keys=usageValidate_(body), config=usageConfig_(), claims=usageTokenClaims_(body.idToken);
+    const optOutAction=body && ['usageOptOut','usageOptIn','usageOptOutStatus'].includes(body.action);
+    if (optOutAction && !usageObject_(body,['action','idToken'])) usageFail_('invalid_request');
+    const keys=optOutAction ? [] : usageValidate_(body), config=usageConfig_(), claims=usageTokenClaims_(body.idToken);
     usageAdmit_();
     const access=usageAuthenticate_(body.idToken,claims,config.apiKey);
+    if (optOutAction) {
+      if (body.action === 'usageOptOutStatus') return usageOptOutStatus_(access.uid);
+      return usageOptOutChange_(access.uid,body.action === 'usageOptOut');
+    }
     if (body.action === 'usageRead') {
       if (!access.admin) usageFail_('forbidden');
       return usageRead_(config.id,body.period);
@@ -304,6 +363,15 @@ function setupUsageStatistics_() {
       sheet.setFrozenRows(1);SpreadsheetApp.flush();
     }
     usageSheet_(id); // Owner, sharing, separate file and schema checks must all pass.
+    let optOutId=props.getProperty('USAGE_OPTOUT_SPREADSHEET_ID');
+    if (!optOutId) {
+      const optBook=SpreadsheetApp.create('WiFa – interne Statistik-Widersprüche');
+      optOutId=optBook.getId(); props.setProperty('USAGE_OPTOUT_SPREADSHEET_ID',optOutId);
+      DriveApp.getFileById(optOutId).setSharing(DriveApp.Access.PRIVATE,DriveApp.Permission.NONE);
+      const optSheet=optBook.getSheets()[0]; optSheet.setName('usageOptOut');
+      optSheet.getRange(1,1,1,1).setValues([['userHash']]); optSheet.setFrozenRows(1); SpreadsheetApp.flush();
+    }
+    usageOptOutSheet_();
     return 'Private Statistik vorbereitet. Sammlung bleibt deaktiviert.';
   });
 }

@@ -82,6 +82,11 @@
     '<div class="analytics-choices"><button type="button" id="analyticsAccept">Annehmen</button>' +
     '<button type="button" id="analyticsReject">Ablehnen / Widerrufen</button></div>' +
     '<p><label><input type="checkbox" id="analyticsExclude"> Diesen Browser dauerhaft von der Messung ausschließen (eigene Tests)</label></p>' +
+    '<hr><h3>Interne Nutzungsstatistik</h3>' +
+    '<p>Unabhängig von Google Analytics können für angemeldete Nutzer aggregierte Nutzungsdaten mit einer pseudonymisierten Kennung verarbeitet werden. Es werden keine Antworten, Punktestände oder freien Texte gespeichert.</p>' +
+    '<p id="internalUsageStatus" role="status">Status wird geladen …</p>' +
+    '<div class="analytics-choices"><button type="button" id="internalUsageOptOut" disabled>Interner Nutzungsstatistik widersprechen</button>' +
+    '<button type="button" id="internalUsageOptIn" disabled>Widerspruch zurücknehmen</button></div>' +
     '<button type="button" id="analyticsClose">Schließen</button>';
   document.body.appendChild(dialog);
   const opener = document.createElement('button');
@@ -92,6 +97,39 @@
     document.getElementById('analyticsStatus').textContent = read(EXCLUDE) === 'true'
       ? 'Dieser Browser ist von der Messung ausgeschlossen.'
       : authorized() ? 'Nutzungsanalyse ist erlaubt.' : 'Nutzungsanalyse ist aus.';
+  }
+  const internalUsageStatus = document.getElementById('internalUsageStatus');
+  const internalUsageOptOut = document.getElementById('internalUsageOptOut');
+  const internalUsageOptIn = document.getElementById('internalUsageOptIn');
+  let internalUsageState = null;
+  async function refreshInternalUsageStatus() {
+    internalUsageState = null;
+    internalUsageStatus.textContent = 'Status wird geladen …';
+    internalUsageOptOut.disabled = true; internalUsageOptIn.disabled = true;
+    try {
+      const result = await window.apiPost('usageOptOutStatus');
+      if (!result || result.success !== true || typeof result.optedOut !== 'boolean') throw new Error('unavailable');
+      internalUsageState = result.optedOut;
+      internalUsageStatus.textContent = result.optedOut
+        ? 'Interne Nutzungsstatistik ist für dieses Konto deaktiviert.'
+        : 'Interne Nutzungsstatistik ist für dieses Konto aktiviert.';
+      internalUsageOptOut.disabled = result.optedOut;
+      internalUsageOptIn.disabled = !result.optedOut;
+    } catch (_) {
+      internalUsageStatus.textContent = 'Status nicht verfügbar. Zur Sicherheit wird keine Änderung angenommen.';
+    }
+  }
+  async function setInternalUsageOptOut(optedOut) {
+    internalUsageOptOut.disabled = true; internalUsageOptIn.disabled = true;
+    try {
+      const action = optedOut ? 'usageOptOut' : 'usageOptIn';
+      const result = await window.apiPost(action);
+      if (!result || result.success !== true || result.optedOut !== optedOut) throw new Error('unavailable');
+      await refreshInternalUsageStatus();
+    } catch (_) {
+      internalUsageState = null;
+      internalUsageStatus.textContent = 'Änderung nicht bestätigt. Bitte später erneut versuchen.';
+    }
   }
   function choose(accepted) {
     memoryVeto = !accepted;
@@ -114,11 +152,13 @@
       }
     }
   });
-  opener.addEventListener('click', () => { updateUI(); dialog.showModal(); });
+  opener.addEventListener('click', () => { updateUI(); dialog.showModal(); void refreshInternalUsageStatus(); });
   document.getElementById('analyticsAccept').addEventListener('click', () => choose(true));
   document.getElementById('analyticsReject').addEventListener('click', () => choose(false));
   document.getElementById('analyticsClose').addEventListener('click', () => dialog.close());
   document.getElementById('analyticsExclude').addEventListener('change', event => exclude(event.target.checked));
+  internalUsageOptOut.addEventListener('click', () => { void setInternalUsageOptOut(true); });
+  internalUsageOptIn.addEventListener('click', () => { void setInternalUsageOptOut(false); });
   window.addEventListener('storage', () => { refresh(); updateUI(); });
   document.addEventListener('visibilitychange', () => { refresh(); updateUI(); });
   refresh(); updateUI();

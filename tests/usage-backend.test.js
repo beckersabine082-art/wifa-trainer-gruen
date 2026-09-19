@@ -12,8 +12,9 @@ function token(overrides = {}) {
   return [JSON.stringify({alg:'RS256',kid:'test-key'}), JSON.stringify(claims), 'signature'].map(x => Buffer.from(x).toString('base64url')).join('.');
 }
 function setup(options = {}) {
-  const props = {USAGE_ENABLED:'true', USAGE_SPREADSHEET_ID:'private-sheet', USAGE_FIREBASE_WEB_API_KEY:'test-key'};
-  const rows = [['date','counts','userHashes']]; let locked = false;
+  const props = {USAGE_ENABLED:'true', USAGE_SPREADSHEET_ID:'private-sheet', USAGE_OPTOUT_SPREADSHEET_ID:'optout-sheet', USAGE_FIREBASE_WEB_API_KEY:'test-key'};
+  const rows = [['date','counts','userHashes']];
+  const optOutRows = [['userHash']]; let locked = false;
   const calls = {fetch:0, flush:0, write:0, read:0, lock:0};
   const sheet = {
     getLastRow:() => rows.length,
@@ -21,7 +22,7 @@ function setup(options = {}) {
       getValues() { assert.ok(locked); calls.read++; return rows.slice(row-1,row-1+n).map(r => r.slice(col-1,col-1+width)); },
       setValue(value) { assert.ok(locked); rows[row-1][col-1]=value; return this; },
       setNumberFormat() { return this; },
-      setValues(values) { assert.ok(locked); calls.write++; if (options.writeError) throw Error('secret write error'); values.forEach((r,i) => { rows[row-1+i] = [...r]; }); return this; }
+      setValues(values) { assert.ok(locked); calls.write++; if (options.writeError) throw Error('secret write error'); values.forEach((r,i) => { const target=rows[row-1+i] || []; r.forEach((value,j)=>{target[col-1+j]=value;}); rows[row-1+i]=target; }); return this; }
     }; }
   };
   const file = {getSharingAccess:() => options.shared ? 'ANYONE':'PRIVATE', getEditors:() => options.editor ? ['other']:[],
@@ -38,16 +39,23 @@ function setup(options = {}) {
       return {getResponseCode:()=>options.status||200,getContentText:()=>JSON.stringify(options.response || {users:[{
         localId:'private-uid',emailVerified:true,validSince:String(now/1000-120),customAttributes:JSON.stringify({usageAdmin:!!options.admin}), ...options.user
       }]})}; }},
-    DriveApp:{Access:{PRIVATE:'PRIVATE'},getFileById:id=>{assert.equal(id,'private-sheet');return file;}},
+DriveApp:{Access:{PRIVATE:'PRIVATE'},getFileById:id=>{assert.ok(['private-sheet','optout-sheet'].includes(id));return file;}},
     Session:{getEffectiveUser:()=>({getEmail:()=>'owner@example.test'})},
     SpreadsheetApp:{getActiveSpreadsheet:()=>({getId:()=>options.sameSheet?'private-sheet':'learning-sheet'}),
-      openById:id=>{assert.equal(id,'private-sheet');return {getSheetByName:name=>{assert.equal(name,'usageDaily');return sheet;}};},
+      openById:id=>{assert.ok(['private-sheet','optout-sheet'].includes(id));return {getSheetByName:name=>{
+        if (id === 'optout-sheet') return {getLastRow:()=>optOutRows.length,deleteRows(start,count){optOutRows.splice(start-1,count);},getRange(row,col,n,width){return {
+          getValues:()=>optOutRows.slice(row-1,row-1+n).map(r=>r.slice(col-1,col-1+width)),
+          setValues(values){values.forEach((r,i)=>{optOutRows[row-1+i]=[...r];});return this;},
+          deleteRows() { optOutRows.splice(row-1, arguments[1] || 1); },
+          setNumberFormat(){return this;},setValue(value){optOutRows[row-1][col-1]=value;return this;}
+        };}};
+        assert.equal(name,'usageDaily');return sheet;}};},
       flush(){assert.ok(locked);calls.flush++;}}
   };
   assert.ok(fs.existsSync(sourcePath), 'secure usage backend must exist');
   vm.runInNewContext(fs.readFileSync(sourcePath,'utf8'),ctx);
   const record = (extra={}) => ctx.usageHandle_({action:'usageRecord',idToken:token(),events:[{event:'trainer_start',subject:'recht',area:'none'}],...extra});
-  return {ctx,props,rows,calls,record,isLocked:()=>locked};
+  return {ctx,props,rows,optOutRows,calls,record,isLocked:()=>locked};
 }
 test('verified event writes only aggregate counters and no personal data',()=>{
   const h=setup(); assert.deepEqual(plain(h.record()),{success:true});
@@ -208,4 +216,36 @@ test('visible editor setup is restricted to the actual bound workbook owner',()=
   h.ctx.Session.getEffectiveUser=h.ctx.Session.getActiveUser;assert.throws(()=>h.ctx.setupUsageStatistics());
   h.ctx.Session.getActiveUser=()=>({getEmail:()=> 'owner@example.test'});
   h.ctx.Session.getEffectiveUser=h.ctx.Session.getActiveUser;h.ctx.setupUsageStatistics();assert.equal(h.props.USAGE_ENABLED,'false');
+});
+
+test('usage opt-out blocks recording and removes the user hash from all daily rows',()=>{
+  const h=setup();
+  const hash=h.ctx.usageUserHash_('private-uid');
+  h.rows.push(['2026-09-11','{"trainer_start|recht|none":2}',JSON.stringify([hash,'b'.repeat(43)])]);
+  const result=h.ctx.usageHandle_({action:'usageOptOut',idToken:token()});
+  assert.equal(result.success,true);
+  assert.equal(h.rows[1][2],JSON.stringify(['b'.repeat(43)]));
+  assert.equal(h.record().optedOut,true);
+  assert.equal(h.rows.length,2);
+});
+
+test('usage opt-out is fail-closed for recording and legacy rows without hashes remain valid',()=>{
+  const h=setup();
+  h.rows.push(['2026-09-11','{"trainer_start|recht|none":2}']);
+  h.props.USAGE_OPTOUT_SHEET_ID='optout-sheet';
+  h.optOutRows.push(['hash']);
+  const result=h.record();
+  assert.equal(result.success,false);
+  assert.equal(result.error,'unavailable');
+  assert.equal(h.rows.length,2);
+});
+
+test('usage opt-out can be withdrawn and does not restore removed historical hashes',()=>{
+  const h=setup();
+  const hash=h.ctx.usageUserHash_('private-uid');
+  h.rows.push(['2026-09-11','{}',JSON.stringify([hash])]);
+  assert.equal(h.ctx.usageHandle_({action:'usageOptOut',idToken:token()}).success,true);
+  assert.equal(h.ctx.usageHandle_({action:'usageOptIn',idToken:token()}).success,true);
+  assert.equal(h.record().success,true);
+  assert.equal(h.rows.length,3);
 });
