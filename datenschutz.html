@@ -75,7 +75,7 @@
       <div class="card">
         <h2 class="section-title">2. Hosting über GitHub Pages</h2>
         <div class="privacy-text">
-          <p>Das Frontend des WiFa Trainers wird über GitHub Pages bereitgestellt (Dienst von GitHub).</p>
+          <p>Das Frontend des WiFa Trainers wird über GitHub Pages bereitgestellt (Dienst von GitHub) und ist unter <code>https://wifa-trainer.de</code> erreichbar. Beim Aufruf werden die für die Verbindung erforderlichen technischen Daten an den Hostinganbieter übertragen.</p>
           <p>Beim Aufruf einer GitHub-Pages-Seite können insbesondere technische Verbindungsdaten wie die IP-Adresse verarbeitet und zu Sicherheitszwecken protokolliert werden. Diese Verarbeitung erfolgt technisch durch GitHub.</p>
           <p>Rechtsgrundlage für die technisch erforderliche Bereitstellung und die IT-Sicherheit ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und zuverlässigen Bereitstellung der Website).</p>
         </div>
@@ -136,6 +136,14 @@
       </div>
 
       <div class="card">
+        <h2 class="section-title">5a. Firebase Storage für Podcast-Audiodateien</h2>
+        <div class="privacy-text">
+          <p>Podcast- und Audiodateien werden aus Firebase Storage (Google) geladen. Der Browser fordert beim Öffnen bzw. Abspielen einer Podcast-Einheit die zugehörige MP3-Datei und gegebenenfalls ein JSON-Manifest einschließlich technischer Metadaten über die von Firebase erzeugte Download-URL an.</p>
+          <p>Aus dem vorliegenden Frontend-Code ergibt sich kein Upload durch Nutzer. Die Audioabrufe enthalten den im Browser üblichen technischen Verbindungsverkehr; eine Firebase-Nutzer-ID wird für den Abruf der öffentlichen Audiodatei nicht als Anwendungsparameter übergeben. Podcast-Fortschritte werden davon getrennt über den Google-Apps-Script-Dienst verarbeitet und dem angemeldeten Firebase-Konto zugeordnet.</p>
+        </div>
+      </div>
+
+      <div class="card">
         <h2 class="section-title">6. Google Apps Script und Google Sheets</h2>
         <div class="privacy-text">
           <p>Für Backend-Funktionen nutzt der WiFa Trainer einen Google-Apps-Script-Webdienst. Darüber werden unter anderem Themen, Fragen, Quizdaten, Prüfungssimulationen, Karteikarten, Glossar- und Formelsammlungsinhalte bereitgestellt und KI-Funktionen ausgelöst.</p>
@@ -147,6 +155,16 @@
             <li>Lernstandsrelevante Inhaltsdaten der jeweiligen Anfrage</li>
           </ul>
           <p>Google Sheets ist in diesem Projekt als technischer Datenspeicher im Kontext der Google-Apps-Script-Funktionen eingebunden.</p>
+          <p>Beim Lesen und Speichern des Podcast-Fortschritts werden insbesondere Firebase-UID, Fach, Podcast-/Einheitenkennung, Zeitstempel und Wiedergabefortschritt an diesen Dienst übertragen. Eine automatische Löschfrist ist im Frontend-Code nicht erkennbar.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title">6a. Feedbackfunktion und E-Mail-Versand</h2>
+        <div class="privacy-text">
+          <p>Angemeldete Nutzer können über die Feedbackfunktion eine eigene Nachricht mit bis zu 3.000 Zeichen und den aktuellen Seiten-/Bereichskontext an den Google-Apps-Script-Dienst senden. Voraussetzung ist ein bestätigtes Firebase-Konto.</p>
+          <p>Der Dienst prüft das Anmeldetoken und versendet die Nachricht per Google Apps Script MailApp an <a href="mailto:biene-becks@web.de">biene-becks@web.de</a>. Die E-Mail enthält neben dem eingegebenen Feedback die im Token ermittelte E-Mail-Adresse, die Firebase-UID sowie Datum/Uhrzeit und Seiten-/Bereichsangabe. Der Code belegt keinen separaten dauerhaften Feedback-Speicher; der E-Mail-Versand und die Verarbeitung durch Google bleiben davon unberührt.</p>
+          <p>Bitte übermitteln Sie über das Feedbackfeld keine sensiblen oder nicht erforderlichen personenbezogenen Daten.</p>
         </div>
       </div>
 
@@ -168,6 +186,7 @@
             <li>bei „Frag Kilian“ die vom Nutzer eingegebene Frage</li>
           </ul>
           <p>E-Mail-Adresse, Passwort oder vollständige Nutzerkontodaten werden im vorliegenden Frontend-Code nicht an OpenAI übermittelt.</p>
+          <p>Bei „Frag Kilian“ wird die eingegebene Frage über Google Apps Script an die OpenAI-API weitergegeben. Bei Antwortbewertungen werden die jeweilige Frage, Musterlösung, Bewertungskriterien, Nutzerantwort und – bei Diagrammaufgaben – ein als Data-URL übermitteltes Bild an OpenAI weitergegeben. Der konkrete Code belegt keine Übermittlung der Firebase-UID an OpenAI.</p>
           <p class="privacy-note">Bitte geben Sie in Freitextfeldern keine sensiblen oder nicht erforderlichen personenbezogenen Daten ein.</p>
           <p>Nach aktuellen offiziellen OpenAI-Angaben werden API-Eingaben und -Ausgaben standardmäßig nicht zum Training oder zur Verbesserung der Modelle verwendet, sofern nicht ausdrücklich eine Datenfreigabe aktiviert wurde. Protokolle zur Missbrauchsüberwachung können grundsätzlich bis zu 30 Tage gespeichert werden, sofern keine gesetzliche Pflicht oder produktspezifische Abweichung gilt.</p>
           <p>Für Nutzer im Europäischen Wirtschaftsraum ist für entsprechende OpenAI-Vertragsbeziehungen grundsätzlich OpenAI Ireland Ltd. relevant. Internationale Übermittlungen können nach den OpenAI-Datenschutzbedingungen auf Angemessenheitsbeschlüssen oder Standardvertragsklauseln beruhen.</p>
@@ -267,7 +286,7 @@
     <p>Zweck ist die zusammengefasste Auswertung von Besuchen, wiederkehrender Nutzung, angezeigten Ansichten, Lernfunktionen, Fächern, Themen und Abschlüssen sowie Podcast-Starts, erreichten Wiedergabepositionen und technischen Audiofehlern. Ein Trainer-Abschluss bezeichnet das Durchlaufen der Fragen, keine bestandene Prüfung.</p>
     <p>Erfasst werden pseudonyme Cookie-/Gerätekennungen, Sitzungsinformationen, Ereigniszeitpunkte und technische Angaben wie Browser, Gerät und Sprache. Die IP-Adresse wird bei der Verbindung technisch an Google übertragen; laut Google wird sie in GA4 nicht protokolliert oder gespeichert. Die Daten sind deshalb nicht als vollständig anonym zu verstehen. Wir senden keine Namen, E-Mail-Adressen, Firebase-Nutzer-IDs, Lernantworten oder andere Freitexte an Analytics. Fach und Thema werden ausschließlich über fest hinterlegte Kennungen übermittelt. Tatsächliche URL-Parameter, URL-Fragmente und Verweis-URLs werden nicht in die Messdaten übernommen.</p>
     <p>Vor Zustimmung wird die Messkomponente nicht geladen. Bei Ablehnung oder Widerruf senden wir auch keine cookielosen Analytics-Pings. Werbefunktionen und Google Signals werden in der Messkonfiguration deaktiviert. Es erfolgt keine Verknüpfung mit Ihrem Lernkonto und kein zusätzlicher Analytics-Schreibzugriff auf die Lernstands-Datenbank.</p>
-    <p>Die Entscheidung wird mit Zeitpunkt für höchstens 180 Tage unter <code>wifa.analytics.consent.v1</code> im lokalen Browserspeicher hinterlegt. Ein freiwilliger Testausschluss wird unter <code>wifa.analytics.exclude.v1</code> bis zur Aufhebung oder Löschung des Browserspeichers gespeichert. Bei Zustimmung können die Cookies <code>_ga</code> und <code>_ga_…</code> gesetzt werden; ihre konfigurierte Höchstdauer beträgt 180 Tage ohne laufende Verlängerung. Beim Widerruf werden diese Analytics-Cookies für diese Installation gelöscht. Bereits übermittelte Daten werden durch einen Widerruf nicht rückwirkend entfernt.</p>
+          <p>Die Entscheidung wird mit Zeitpunkt für höchstens 180 Tage unter <code>wifa.analytics.consent.v1</code> im lokalen Browserspeicher hinterlegt. Ein freiwilliger Testausschluss wird unter <code>wifa.analytics.exclude.v1</code> bis zur Aufhebung oder Löschung des Browserspeichers gespeichert. Bei Zustimmung können die Cookies <code>_ga</code> und <code>_ga_…</code> gesetzt werden; ihre konfigurierte Höchstdauer beträgt 180 Tage ohne laufende Verlängerung. Beim Widerruf werden diese Analytics-Cookies für diese Installation gelöscht. Bereits übermittelte Daten werden durch einen Widerruf nicht rückwirkend entfernt.</p>
     <p>Die Schaltfläche „Datenschutz-Einstellungen“ am Seitenende ist jederzeit erreichbar. Dort können Sie gleichwertig annehmen oder ablehnen bzw. eine Zustimmung widerrufen. Eine erneute Zustimmung ist jederzeit möglich. Bei gesperrtem lokalem Speicher bleibt Analytics aus. Die Einwilligung betrifft nur Analytics; technisch erforderliche Anmelde- und Lernstandsfunktionen sind davon unabhängig.</p>
     <p>Vorgesehene Rechtsgrundlagen sind Art. 6 Abs. 1 lit. a DSGVO für die freiwillige Analyse und § 25 Abs. 1 TDDDG für den einwilligungspflichtigen Zugriff auf das Endgerät. Der Widerruf berührt nicht die Rechtmäßigkeit der Verarbeitung vor dem Widerruf.</p>
     <p>Verantwortlich ist Sabine Becker, Wegefährels 44, 21706 Drochtersen, E-Mail: biene-becks@web.de. Diese Angaben stammen aus dem vorhandenen Impressum. Für Google Analytics nennen die <a href="https://marketingplatform.google.com/about/analytics/terms/de/" rel="noreferrer">deutschen Nutzungsbedingungen</a> Google Ireland Limited als Vertragspartner. Google beschreibt die Auftragsverarbeitung in seinen <a href="https://support.google.com/analytics/answer/3379636?hl=de" rel="noreferrer">Datenverarbeitungsbedingungen</a>; für im Europäischen Wirtschaftsraum ansässige Kunden sind diese nach Googles Angaben Bestandteil der Analytics-Bedingungen.</p>
@@ -277,9 +296,17 @@
   </div>
 </div>
 
+<div class="card" id="local-storage">
+  <h2 class="section-title">16. Lokale Speicherung im Browser</h2>
+  <div class="privacy-text">
+    <p>Das Frontend verwendet je nach Funktion lokalen Browserspeicher: LocalStorage für die Analytics-Entscheidung und den Testausschluss, bereits gelesene Hinweise und lokale Quiz-Sitzungsdaten sowie eine lokale Markierung für bestimmte Erfolgshinweise. Für eine laufende Prüfungssimulation wird SessionStorage verwendet, damit der aktuelle Lauf nach einem Seitenwechsel innerhalb der Sitzung fortgesetzt werden kann.</p>
+    <p>Bei aktivierter Analytics-Einwilligung können zusätzlich die Google-Analytics-Cookies <code>_ga</code> und <code>_ga_…</code> gesetzt werden. Ohne Analytics-Einwilligung werden diese Messkomponenten nicht geladen. Das Frontend setzt nach dem geprüften Code-Stand keine eigenen sonstigen Cookies für Anmeldung oder Lernfortschritt; Firebase kann für die Authentifizierung technisch erforderliche Browser-Speichermechanismen verwenden.</p>
+  </div>
+</div>
+
 <!-- Aggregate usage notice: identical in both privacy pages. -->
 <div class="card" id="aggregate-usage">
-  <h2 class="section-title">16. Interne aggregierte Nutzungsstatistik</h2>
+  <h2 class="section-title">17. Interne aggregierte Nutzungsstatistik</h2>
   <div class="privacy-text">
     <p>Nach serverseitiger Freischaltung verwenden wir zusätzlich zu der freiwilligen Google-Analyse eine eigene aggregierte Statistik, um die Nutzung der Lernfunktionen einzuschätzen. Sie ist von Ihrer Google-Analytics-Entscheidung unabhängig und berücksichtigt auch Nutzungen angemeldeter Konten, die Google Analytics ablehnen. Ohne Anmeldung werden keine Meldungen dieser Statistik versendet.</p>
     <p>Gespeichert werden ausschließlich Tageszähler für Trainer, Quiz, Prüfungssimulation, Podcast, Lerntext, Karteikarten, Glossar, Formelsammlung, Lernstand und Frag Kilian, gegebenenfalls nach festen Fachkennungen bzw. WQ/HQ. In der Statistik stehen keine Namen, E-Mail-Adressen, Klartext-Firebase-UIDs, Lernantworten, Punktestände, Chat-Inhalte, IP-Adressen, User-Agents, Gerätekennungen, Fingerprints oder URLs. Für angemeldete Konten wird serverseitig eine mit einem geheimen Schlüssel gebildete HMAC-Kennung gespeichert. Sie ist nicht die UID, ermöglicht aber die Deduplizierung pro Kalendertag und das Erkennen desselben Kontos über den ausgewählten Zeitraum. Einzelne Ereignisse und persönliche Nutzungsverläufe werden nicht gespeichert. Tageswerte bleiben für den Vergleich über den Gesamtzeitraum erhalten.</p>
