@@ -622,11 +622,95 @@ function hebeStichpunkteHervor(text, stichpunkte) {
   const quelle = String(text);
   const kriterien = [...new Set(normalisiereKriterien(stichpunkte))].sort((a, b) => b.length - a.length);
   if (!kriterien.length) return escapeHtml(quelle);
-  // Match the original text once, then escape each segment. Never search generated HTML
-  // or append absent criteria; overlapping criteria prefer the longer source match.
-  const muster = new RegExp("(" + kriterien.map(escapeRegExp).join("|") + ")", "gi");
-  return quelle.split(muster).map(function(teil, index) {
-    const html = escapeHtml(teil);
-    return index % 2 ? '<strong class="musterloesung-kriterium">' + html + '</strong>' : html;
-  }).join("");
+
+  const ranges = [];
+  kriterien.forEach(function(kriterium) {
+    const direct = new RegExp(escapeRegExp(kriterium), "gi");
+    let match, directFound = false;
+    while ((match = direct.exec(quelle))) {
+      directFound = true;
+      ranges.push({start: match.index, end: match.index + match[0].length});
+    }
+
+    if (!directFound) {
+      const semantic = findeSemantischenKriteriumstreffer(quelle, kriterium);
+      if (semantic) ranges.push(semantic);
+    }
+  });
+
+  const merged = ranges.sort((a, b) => a.start - b.start || b.end - a.end).reduce(function(result, range) {
+    const last = result[result.length - 1];
+    if (last && range.start <= last.end) last.end = Math.max(last.end, range.end);
+    else result.push({start: range.start, end: range.end});
+    return result;
+  }, []);
+  let cursor = 0;
+  return merged.map(function(range) {
+    const before = escapeHtml(quelle.slice(cursor, range.start));
+    const highlighted = '<strong class="musterloesung-kriterium">' + escapeHtml(quelle.slice(range.start, range.end)) + '</strong>';
+    cursor = range.end;
+    return before + highlighted;
+  }).join("") + escapeHtml(quelle.slice(cursor));
+}
+
+function findeSemantischenKriteriumstreffer(quelle, kriterium) {
+  const stopwoerter = new Set(['der','die','das','den','dem','des','ein','eine','einer','einem','einen','eines','in','im','an','am','auf','zu','von','mit','und','oder','für','fuer','bei']);
+  const tokenisiere = function(text) {
+    const tokens = [], regex = /[\p{L}\p{N}]+/gu;
+    let match;
+    while ((match = regex.exec(String(text)))) tokens.push({text: match[0], start: match.index, end: regex.lastIndex});
+    return tokens;
+  };
+  const kriteriumTokens = tokenisiere(kriterium).filter(t => !stopwoerter.has(t.text.toLocaleLowerCase('de-DE')) && t.text.length >= 5);
+  const quelleTokens = tokenisiere(quelle);
+  if (!kriteriumTokens.length || !quelleTokens.length) return null;
+
+  const aehnlich = function(a, b) {
+    a = a.toLocaleLowerCase('de-DE'); b = b.toLocaleLowerCase('de-DE');
+    if (a === b || a.startsWith(b.slice(0, 6)) || b.startsWith(a.slice(0, 6))) return true;
+    let laengste = 0;
+    for (let i = 0; i < a.length; i++) for (let j = 0; j < b.length; j++) {
+      let k = 0; while (a[i + k] && a[i + k] === b[j + k]) k++;
+      laengste = Math.max(laengste, k);
+    }
+    const matrix = Array.from({length: a.length + 1}, (_, i) => [i]);
+    for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+    }
+    const lcs = Array.from({length: a.length + 1}, () => Array(b.length + 1).fill(0));
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+      lcs[i][j] = a[i - 1] === b[j - 1] ? lcs[i - 1][j - 1] + 1 : Math.max(lcs[i - 1][j], lcs[i][j - 1]);
+    }
+    return laengste >= 4 && (laengste / Math.max(a.length, b.length) >= 0.35 ||
+      1 - matrix[a.length][b.length] / Math.max(a.length, b.length) >= 0.4 ||
+      lcs[a.length][b.length] / Math.max(a.length, b.length) >= 0.6);
+  };
+
+  for (let start = 0; start < quelleTokens.length; start++) {
+    if (!aehnlich(kriteriumTokens[0].text, quelleTokens[start].text)) continue;
+    let position = start, letzter = null;
+    let matched = true;
+    for (const kriteriumToken of kriteriumTokens) {
+      while (position < quelleTokens.length && !aehnlich(kriteriumToken.text, quelleTokens[position].text) && position - start < 7) position++;
+      if (position >= quelleTokens.length || position - start >= 7) { matched = false; break; }
+      letzter = quelleTokens[position++];
+    }
+    if (matched && letzter) return {start: quelleTokens[start].start, end: letzter.end};
+  }
+  for (let start = 0; start < quelleTokens.length; start++) {
+    for (let end = start; end < Math.min(quelleTokens.length, start + 10); end++) {
+      const fenster = quelleTokens.slice(start, end + 1);
+      if (kriteriumTokens.every(function(kriteriumToken) {
+        return fenster.some(function(quellToken) { return aehnlich(kriteriumToken.text, quellToken.text); });
+      })) {
+        return {start: fenster[0].start, end: fenster[fenster.length - 1].end};
+      }
+    }
+  }
+  return null;
 }

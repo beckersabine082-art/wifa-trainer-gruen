@@ -29,6 +29,14 @@ test('overlapping and repeated criteria produce one highlight per source occurre
   assert.equal((html.match(/<strong /g)||[]).length,2);
   assert.equal(html.replace(/<[^>]+>/g,''),'Langfristige Ziele, langfristige Ziele.');
 });
+test('semantic criterion wording highlights inflected and reordered solution wording',()=>{
+  const html=render(
+    'Arbeitnehmer leisten weisungsgebundene Arbeit und sind regelmäßig in den Betrieb eingegliedert.',
+    ['Eingliederung in den Betrieb']
+  );
+  assert.match(html,/regelmäßig in den Betrieb eingegliedert/);
+  assert.equal((html.match(/class="musterloesung-kriterium"/g)||[]).length,1);
+});
 test('trainer no longer contains manual solution, clear-answer or separate criteria controls',()=>{
   const html=read('index.html');
   for(const id of ['btnMusterloesungAnzeigen','btnAntwortLeeren','bewertungskriterien']) assert.ok(!html.includes(`id="${id}"`),id);

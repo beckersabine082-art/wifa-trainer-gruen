@@ -286,6 +286,10 @@ test('Bewertungsprompt enthält die Regel für generische Kriterien und alternat
     promptText.includes('Musterlösung nicht als Checkliste'),
     'Prompt muss eine Musterlösungs-Ankerung verhindern'
   );
+  assert.ok(
+    promptText.includes('Vermeide Doppelabzüge'),
+    'Prompt darf überlappende Kriterien nicht mehrfach abwerten'
+  );
 });
 
 test('fortschrittsspeicher normalisiert leere Auswahl auf __ALL__ und aktualisiert vorhandene Zeile', () => {
