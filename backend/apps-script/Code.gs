@@ -2128,7 +2128,10 @@ function frageKilianFrontend(frage, trainerKontext) {
   }
 
   const trainerContextText = trainerKontext && String(trainerKontext.frage || '').trim()
-    ? "\n\nKontext der aktuell sichtbaren Traineraufgabe (verbindlich berücksichtigen):\n" +
+    ? "\n\nVerbindliche Regeln für die aktuell sichtbare Traineraufgabe:\n" +
+      "Beziehe Formulierungen wie 'hier', 'meine Antwort', 'diese Frage', 'warum 0 Punkte', 'warum falsch' oder 'was fehlt' immer auf genau diese Traineraufgabe. Frage bei vorhandenem Trainerkontext nicht erneut nach Frage, Thema oder Antwort.\n" +
+      "Analysiere den konkreten Fragetext und die konkrete Nutzerantwort fachlich. Vergleiche die Nutzerantwort mit Musterlösung und Bewertungskriterien. Benenne ausdrücklich, welche Teile der Nutzerantwort richtig oder als relevanter Ansatz erkennbar sind, was fehlt oder fachlich ungenau ist und wie die angezeigte Bewertung zustande gekommen sein könnte. Behandle die gespeicherte Punktzahl nicht als automatisch fachlich richtig: Wenn die Bewertung anhand des vorliegenden Kontexts möglicherweise zu streng oder fachlich fragwürdig ist, sage das klar. Antworte konkret auf die vorliegende Aufgabe und nicht allgemein über mögliche Bewertungsgründe.\n\n" +
+      "Kontext der aktuell sichtbaren Traineraufgabe (verbindlich berücksichtigen):\n" +
       "Teilbereich: " + String(trainerKontext.bereich || '') + "\n" +
       "Fach: " + String(trainerKontext.fach || '') + "\n" +
       "Thema/Kategorie: " + String(trainerKontext.thema || '') + "\n" +
