@@ -35,83 +35,216 @@ const QUIZ_LADEFACTS = {
   allgemein: [
     'Lernen gelingt oft besser in kurzen, konzentrierten Einheiten.',
     'Beim Wiederholen hilft es, Begriffe mit eigenen Beispielen zu verknüpfen.',
-    'Ein klarer Überblick erleichtert das Einordnen neuer Fachbegriffe.'
+    'Ein klarer Überblick erleichtert das Einordnen neuer Fachbegriffe.',
+    'Wer Begriffe laut erklärt, erkennt Wissenslücken oft schneller.',
+    'Skizzen können Zusammenhänge oft schneller sichtbar machen als lange Texte.',
+    'Regelmäßige kurze Wiederholungen festigen Wissen besser als einmaliges Auswendiglernen.',
+    'Prüfungsfragen lassen sich leichter lösen, wenn zuerst die Schlüsselbegriffe markiert werden.',
+    'Ein Beispiel aus dem Betriebsalltag macht abstrakte Modelle greifbarer.',
+    'Der Vergleich ähnlicher Begriffe hilft, typische Verwechslungen zu vermeiden.',
+    'Pausen unterstützen die Konzentration bei längeren Lerneinheiten.'
   ],
   Marketing: [
     'AIDA steht für Attention, Interest, Desire und Action.',
     'Ein USP beschreibt ein besonderes Merkmal oder einen Nutzen, der ein Angebot vom Wettbewerb unterscheidet.',
-    'Marktsegmentierung teilt einen Gesamtmarkt in unterscheidbare Gruppen.'
+    'Marktsegmentierung teilt einen Gesamtmarkt in unterscheidbare Gruppen.',
+    'Marketing-Mix wird klassisch mit Product, Price, Place und Promotion beschrieben.',
+    'Eine Positionierung beschreibt, wofür ein Angebot im Kopf der Zielgruppe stehen soll.',
+    'Marktforschung liefert Informationen über Märkte, Kunden und Wettbewerber.',
+    'Kundenzufriedenheit entsteht, wenn die wahrgenommene Leistung die Erwartungen erfüllt oder übertrifft.',
+    'Eine Zielgruppe umfasst Personen mit ähnlichen relevanten Bedürfnissen oder Merkmalen.',
+    'Die Marke bündelt Vorstellungen und Erwartungen, die Kunden mit einem Angebot verbinden.',
+    'Push-Strategien richten Verkaufsimpulse eher an Absatzmittler, Pull-Strategien eher an Endkunden.',
+    'Kundenbindung kann Wiederkäufe fördern und die Beziehung zum Unternehmen stabilisieren.',
+    'Der Produktlebenszyklus beschreibt typische Phasen von der Einführung bis zur Marktsättigung oder zum Rückgang.'
   ],
   Recht: [
     'Ein Vertrag entsteht grundsätzlich durch zwei übereinstimmende Willenserklärungen.',
     'Eine Frist bezeichnet einen Zeitraum, während ein Termin einen Zeitpunkt bezeichnet.',
-    'Ansprüche können unter bestimmten Voraussetzungen verjähren.'
+    'Ansprüche können unter bestimmten Voraussetzungen verjähren.',
+    'Die Geschäftsfähigkeit beschreibt, ob jemand rechtlich wirksam handeln kann.',
+    'Bei Pflichtverletzungen können je nach Voraussetzungen unterschiedliche Rechtsfolgen eintreten.',
+    'Eine Willenserklärung kann ausdrücklich oder durch schlüssiges Verhalten abgegeben werden.',
+    'Eigentum und Besitz sind rechtlich unterschiedliche Positionen.',
+    'Die Beweislast legt fest, wer eine für ihn günstige Tatsache nachweisen muss.',
+    'Eine juristische Person kann selbst Trägerin von Rechten und Pflichten sein.',
+    'AGB werden nur unter bestimmten Voraussetzungen Bestandteil eines Vertrags.',
+    'Schadensersatz setzt grundsätzlich einen ersatzfähigen Schaden und weitere rechtliche Voraussetzungen voraus.',
+    'Das Handelsrecht enthält besondere Regeln für Kaufleute und Handelsgeschäfte.'
   ],
   Rechnungswesen: [
     'Das Eigenkapital steht auf der Passivseite der Bilanz.',
     'Planmäßige Abschreibungen verteilen die Anschaffungs- oder Herstellungskosten eines abnutzbaren Anlageguts über seine Nutzungsdauer.',
-    'Eine Bilanz stellt Vermögen und Kapital zu einem Stichtag gegenüber.'
+    'Eine Bilanz stellt Vermögen und Kapital zu einem Stichtag gegenüber.',
+    'Gewinn erhöht grundsätzlich das Eigenkapital, Verlust vermindert es.',
+    'Fixkosten bleiben innerhalb eines relevanten Beschäftigungsbereichs zunächst unabhängig von der Produktionsmenge.',
+    'Der Deckungsbeitrag zeigt, welchen Beitrag ein Produkt zur Deckung der Fixkosten leistet.',
+    'Aufwendungen gehören zur Gewinn- und Verlustrechnung, Ausgaben betreffen den Zahlungsmittelbestand.',
+    'Rückstellungen berücksichtigen ungewisse Verpflichtungen oder Aufwendungen.',
+    'Die Inventur erfasst Vermögensgegenstände und Schulden zu einem bestimmten Zeitpunkt.',
+    'Die Gewinn- und Verlustrechnung erklärt, wie sich das Ergebnis einer Periode zusammensetzt.',
+    'Umsatzerlöse entstehen grundsätzlich aus dem Verkauf von Waren oder Leistungen.',
+    'Die Kostenartenrechnung fragt, welche Kosten angefallen sind.'
   ],
   Logistik: [
     'Die Lieferzeit beschreibt die Zeit zwischen Bestellung und Lieferung.',
     'Lagerbestände binden Kapital und verursachen Lagerkosten.',
-    'Ein Warenfluss verbindet Beschaffung, Lagerung und Absatz.'
+    'Ein Warenfluss verbindet Beschaffung, Lagerung und Absatz.',
+    'Die richtige Menge zur richtigen Zeit am richtigen Ort ist ein zentrales Logistikziel.',
+    'Ein Sicherheitsbestand soll Schwankungen bei Bedarf oder Lieferzeit abfedern.',
+    'Die Umschlagshäufigkeit zeigt, wie oft ein durchschnittlicher Bestand in einer Periode umgesetzt wird.',
+    'Cross-Docking reduziert Lagerzeiten, indem Waren möglichst direkt weitergeleitet werden.',
+    'Die ABC-Analyse ordnet Objekte nach ihrer Bedeutung für einen ausgewählten Wertmaßstab.',
+    'Die Beschaffungslogistik verbindet Lieferanten mit dem Unternehmen.',
+    'Die Distributionslogistik befasst sich mit dem Weg zum Kunden.',
+    'Ein Lager kann Versorgungssicherheit erhöhen, aber zusätzliche Kosten verursachen.',
+    'Routenplanung soll Wege, Zeit und Kosten unter gegebenen Bedingungen sinnvoll ausbalancieren.'
   ],
   BWL: [
     'Das ökonomische Prinzip beschreibt den sparsamen Umgang mit knappen Mitteln.',
     'Eine Unternehmung kombiniert Produktionsfaktoren zur Leistungserstellung.',
-    'Liquidität bezeichnet die Fähigkeit, fällige Zahlungen leisten zu können.'
+    'Liquidität bezeichnet die Fähigkeit, fällige Zahlungen leisten zu können.',
+    'Produktivität setzt die Ausbringungsmenge ins Verhältnis zu eingesetzten Produktionsfaktoren.',
+    'Wirtschaftlichkeit vergleicht den erzielten Erfolg mit dem dafür eingesetzten Aufwand.',
+    'Rentabilität setzt den Erfolg ins Verhältnis zu einer Bezugsgröße wie Kapital oder Umsatz.',
+    'Unternehmen verfolgen häufig mehrere Ziele, die miteinander in Konflikt stehen können.',
+    'Die Aufbauorganisation beschreibt Stellen, Instanzen und ihre Beziehungen.',
+    'Die Ablauforganisation ordnet Tätigkeiten, Reihenfolgen und Zuständigkeiten in Prozessen.',
+    'Ein Unternehmen kann durch Spezialisierung Effizienzvorteile erzielen.',
+    'Stakeholder sind Gruppen, die vom Unternehmen betroffen sind oder Einfluss auf es ausüben.',
+    'Der Cashflow beschreibt die aus Geschäftsvorgängen resultierenden Zahlungsströme.'
   ],
   VWL: [
     'Angebot und Nachfrage beeinflussen gemeinsam die Preisbildung am Markt.',
     'Das Bruttoinlandsprodukt misst den Wert der im Inland erzeugten Waren und Dienstleistungen unter Berücksichtigung der Vorleistungen.',
-    'Inflation bezeichnet einen anhaltenden Anstieg des allgemeinen Preisniveaus.'
+    'Inflation bezeichnet einen anhaltenden Anstieg des allgemeinen Preisniveaus.',
+    'Opportunitätskosten beschreiben den entgangenen Nutzen der besten nicht gewählten Alternative.',
+    'Bei normaler Nachfrage sinkt die nachgefragte Menge meist, wenn der Preis steigt.',
+    'Das magische Viereck umfasst Preisstabilität, hohen Beschäftigungsstand, außenwirtschaftliches Gleichgewicht und angemessenes Wirtschaftswachstum.',
+    'Knappheit zwingt dazu, zwischen konkurrierenden Verwendungsmöglichkeiten zu wählen.',
+    'Konjunktur beschreibt Schwankungen der gesamtwirtschaftlichen Aktivität.',
+    'Arbeitslosigkeit kann verschiedene Ursachen haben, etwa konjunkturelle oder strukturelle.',
+    'Die Geldpolitik beeinflusst über Geldangebot und Zinsen die wirtschaftlichen Rahmenbedingungen.',
+    'Ein Monopol ist durch einen einzigen Anbieter auf einem Markt gekennzeichnet.',
+    'Außenhandel ermöglicht Spezialisierung und den Austausch von Gütern und Dienstleistungen.',
+    'Das Volkseinkommen betrachtet die Einkommen, die in einer Volkswirtschaft entstehen.'
   ],
   Steuern: [
     'Steuern werden ohne individuelle Gegenleistung zur Finanzierung öffentlicher Aufgaben erhoben.',
     'Die Einkommensteuer ist eine Personensteuer.',
-    'Die Umsatzsteuer knüpft grundsätzlich an Lieferungen und sonstige Leistungen an.'
+    'Die Umsatzsteuer knüpft grundsätzlich an Lieferungen und sonstige Leistungen an.',
+    'Die Gewerbesteuer knüpft grundsätzlich an den Gewerbebetrieb eines Unternehmens an.',
+    'Direkte Steuern werden vom Steuerschuldner grundsätzlich selbst getragen.',
+    'Indirekte Steuern werden typischerweise über den Preis an andere weitergegeben.',
+    'Bemessungsgrundlage und Steuersatz bestimmen gemeinsam die Höhe einer Steuer.',
+    'Betrieblich veranlasste Aufwendungen können unter den gesetzlichen Voraussetzungen steuerlich berücksichtigt werden.',
+    'Die Umsatzsteuer wird im Unternehmen regelmäßig als Vorsteuer und Umsatzsteuer getrennt betrachtet.',
+    'Steuerpflicht, Steuergegenstand und Steuerschuldner sind unterschiedliche Begriffe.',
+    'Das Steuerrecht unterscheidet unter anderem zwischen Personen- und Objektsteuern.',
+    'Steuerliche Dokumentations- und Aufbewahrungspflichten unterstützen die Nachprüfbarkeit.'
   ],
   Unternehmensführung: [
     'Strategische Entscheidungen richten sich auf die langfristige Entwicklung eines Unternehmens.',
     'Ziele machen gewünschte Ergebnisse überprüfbar.',
-    'Führung verbindet Aufgaben, Verantwortung und Zusammenarbeit.'
+    'Führung verbindet Aufgaben, Verantwortung und Zusammenarbeit.',
+    'Eine Vision beschreibt ein gewünschtes Zukunftsbild des Unternehmens.',
+    'Eine Mission beschreibt den grundlegenden Auftrag eines Unternehmens.',
+    'Strategische Planung betrachtet Chancen, Risiken, Stärken und Schwächen.',
+    'Operative Planung übersetzt übergeordnete Ziele in konkrete Maßnahmen.',
+    'Unternehmenskultur zeigt sich in gemeinsam gelebten Werten und Verhaltensweisen.',
+    'Entscheidungen unter Unsicherheit benötigen Annahmen und eine Bewertung möglicher Folgen.',
+    'Corporate Governance beschreibt Grundsätze für verantwortungsvolle Unternehmensleitung und -überwachung.',
+    'Nachhaltige Unternehmensführung berücksichtigt neben wirtschaftlichen auch ökologische und soziale Aspekte.',
+    'Kontrolle vergleicht Ziele oder Pläne mit erreichten Ergebnissen.'
   ],
   'Führung und Zusammenarbeit': [
     'Feedback wirkt besonders hilfreich, wenn es konkret und zeitnah ist.',
     'Delegation überträgt Aufgaben, aber nicht automatisch die Gesamtverantwortung.',
-    'Gute Zusammenarbeit braucht gemeinsame Ziele und klare Absprachen.'
+    'Gute Zusammenarbeit braucht gemeinsame Ziele und klare Absprachen.',
+    'Aktives Zuhören bedeutet, Aussagen aufmerksam aufzunehmen und Verständnis zu sichern.',
+    'Konflikte können sachlich bearbeitet werden, wenn Positionen und Interessen getrennt betrachtet werden.',
+    'Ein Team profitiert von unterschiedlichen Fähigkeiten und klaren Rollen.',
+    'Motivation kann durch Gestaltung der Aufgabe, Anerkennung und Entwicklungsmöglichkeiten unterstützt werden.',
+    'Situative Führung berücksichtigt unter anderem Aufgabe, Person und Situation.',
+    'Moderation hilft, Gespräche zu strukturieren und Beteiligung zu fördern.',
+    'Ziele nach dem SMART-Prinzip sollen unter anderem spezifisch und messbar sein.',
+    'Vertrauen wächst durch Verlässlichkeit, Transparenz und eingehaltene Vereinbarungen.',
+    'Kooperation gelingt leichter, wenn Erwartungen und Verantwortlichkeiten offen geklärt sind.'
   ],
   'Betriebliches Management': [
     'Prozesse beschreiben wiederkehrende Abläufe mit einem Ziel.',
     'Kennzahlen machen Entwicklungen messbar und vergleichbar.',
-    'Planung verbindet Ziele mit Maßnahmen und Ressourcen.'
+    'Planung verbindet Ziele mit Maßnahmen und Ressourcen.',
+    'Qualitätsmanagement richtet Abläufe auf die Erfüllung festgelegter Anforderungen aus.',
+    'Ein Risiko ist die Möglichkeit, dass ein Ereignis Ziele beeinträchtigt.',
+    'Projektmanagement koordiniert einmalige Vorhaben mit definiertem Ziel und begrenzten Ressourcen.',
+    'Eine Schnittstelle verbindet Verantwortungsbereiche und braucht klare Übergaben.',
+    'Kontinuierliche Verbesserung setzt oft bei kleinen, systematischen Änderungen an.',
+    'Dokumentation macht Abläufe nachvollziehbar und unterstützt die Qualitätssicherung.',
+    'Zeitmanagement ordnet Aufgaben nach Wichtigkeit, Dringlichkeit und verfügbarem Zeitbudget.',
+    'Benchmarking vergleicht Leistungen oder Prozesse mit geeigneten Vergleichsmaßstäben.',
+    'Ein Regelkreis verbindet Planung, Umsetzung, Kontrolle und Anpassung.'
   ],
   Vertrieb: [
     'Vertrieb verbindet ein Angebot mit potenziellen und bestehenden Kunden.',
     'Kundenbedarf und Kundennutzen sind zentrale Bezugspunkte im Verkauf.',
-    'Ein Verkaufsgespräch besteht typischerweise aus Vorbereitung, Gespräch und Nachbereitung.'
+    'Ein Verkaufsgespräch besteht typischerweise aus Vorbereitung, Gespräch und Nachbereitung.',
+    'Bedarfsfragen helfen, Anforderungen und Motive eines Kunden zu verstehen.',
+    'Ein Einwand ist nicht automatisch eine Ablehnung, sondern kann weiteren Klärungsbedarf zeigen.',
+    'Cross-Selling bezeichnet den Verkauf ergänzender Produkte oder Leistungen.',
+    'Up-Selling zielt auf eine höherwertige Variante oder einen größeren Leistungsumfang.',
+    'Ein CRM-System unterstützt die strukturierte Pflege von Kundenbeziehungen.',
+    'Verkaufsziele sollten eindeutig, messbar und realistisch formuliert sein.',
+    'Die Nachkaufbetreuung kann Zufriedenheit und Kundenbindung stärken.',
+    'Ein Angebot sollte Leistung, Preis, Bedingungen und Gültigkeit klar ausweisen.',
+    'Vertriebswege beschreiben, wie ein Angebot vom Anbieter zum Kunden gelangt.'
   ],
   'Investition und Finanzierung': [
     'Investitionen binden heute Mittel, um künftig Nutzen oder Erträge zu erzielen.',
     'Finanzierung beschreibt die Beschaffung von Kapital.',
-    'Bei der Innenfinanzierung stammen die Mittel aus dem Unternehmen selbst.'
+    'Bei der Innenfinanzierung stammen die Mittel aus dem Unternehmen selbst.',
+    'Eine Investitionsrechnung vergleicht erwartete Einzahlungen und Auszahlungen eines Vorhabens.',
+    'Liquidität ist Voraussetzung dafür, fällige Zahlungen leisten zu können.',
+    'Eigenfinanzierung stärkt grundsätzlich die Eigenkapitalbasis eines Unternehmens.',
+    'Fremdfinanzierung begründet typischerweise Rückzahlungs- und Zinsverpflichtungen.',
+    'Der Kapitalbedarf hängt unter anderem von Investitionen und laufender Geschäftstätigkeit ab.',
+    'Amortisation beschreibt, wann sich eine Investition durch ihre Rückflüsse ausgeglichen hat.',
+    'Eine längere Kapitalbindung kann das Liquiditätsrisiko erhöhen.',
+    'Finanzierungsentscheidungen beeinflussen Kosten, Risiko und Unabhängigkeit eines Unternehmens.',
+    'Bei der Auswahl einer Investition spielen neben Erträgen auch Unsicherheit und Zeit eine Rolle.'
   ],
   'Betriebliches Rechnungswesen und Controlling': [
     'Controlling unterstützt die Unternehmensführung durch Informationen und Analysen.',
     'Kostenrechnung untersucht den Werteverzehr innerhalb eines Unternehmens.',
-    'Soll-Ist-Vergleiche zeigen Abweichungen zwischen Planung und tatsächlicher Entwicklung.'
+    'Soll-Ist-Vergleiche zeigen Abweichungen zwischen Planung und tatsächlicher Entwicklung.',
+    'Kostenartenrechnung fragt, welche Kosten angefallen sind.',
+    'Kostenstellenrechnung untersucht, wo Kosten im Unternehmen entstanden sind.',
+    'Kostenträgerrechnung fragt, wofür Kosten entstanden sind.',
+    'Ein Budget legt finanzielle oder mengenmäßige Planwerte für einen Bereich fest.',
+    'Abweichungsanalysen suchen nach Ursachen für Unterschiede zwischen Plan und Ist.',
+    'Deckungsbeiträge helfen bei kurzfristigen Entscheidungen über Produkte oder Aufträge.',
+    'Variable Kosten verändern sich grundsätzlich mit der Beschäftigungs- oder Produktionsmenge.',
+    'Ein Bericht sollte relevante Informationen adressatengerecht und verständlich aufbereiten.',
+    'Controlling liefert Entscheidungsgrundlagen, ersetzt aber nicht die Verantwortung der Führung.'
   ]
 };
 
 const sitzungsStatistik = { richtig: 0, falsch: 0 };
+const letzterLadefactJeFach = new Map();
 
 function setzeQuizLadehinweis(fach = '', ladeart = 'frage') {
   const status = document.getElementById('quizStatus');
   if (!status) return;
 
   const pool = QUIZ_LADEFACTS[String(fach || '').trim()] || QUIZ_LADEFACTS.allgemein;
-  const fact = pool[Math.floor(Math.random() * pool.length)];
+  const fachSchluessel = String(fach || '').trim() || 'allgemein';
+  const letzterFact = letzterLadefactJeFach.get(fachSchluessel);
+  let fact = pool[Math.floor(Math.random() * pool.length)];
+  if (pool.length > 1 && fact === letzterFact) {
+    const alternative = pool.filter(item => item !== letzterFact);
+    fact = alternative[Math.floor(Math.random() * alternative.length)];
+  }
+  letzterLadefactJeFach.set(fachSchluessel, fact);
   const hinweis = ladeart === 'katalog' ? 'Quiz lädt …' : 'Frage lädt …';
   status.replaceChildren();
 

@@ -70,3 +70,33 @@ test('Shuffle/Mix nutzt bei bekanntem Fach den Fach-Fact, sonst den allgemeinen 
   vm.runInContext("setzeQuizLadehinweis('')", fixture.context);
   assert.match(rendered(fixture.status)[2], /Lernen|Wiederholen|Überblick/);
 });
+
+test('jeder vorhandene Fach-Pool enthält deutlich mehr als drei Facts', () => {
+  const fixture = loadQuizLoadingView();
+  const expectedSubjects = [
+    'allgemein', 'Marketing', 'Recht', 'Rechnungswesen', 'Logistik', 'BWL', 'VWL', 'Steuern',
+    'Unternehmensführung', 'Führung und Zusammenarbeit', 'Betriebliches Management', 'Vertrieb',
+    'Investition und Finanzierung', 'Betriebliches Rechnungswesen und Controlling'
+  ];
+  for (const subject of expectedSubjects) {
+    const pool = vm.runInContext(`QUIZ_LADEFACTS[${JSON.stringify(subject)}]`, fixture.context);
+    assert.ok(Array.isArray(pool), subject);
+    assert.ok(pool.length >= 10, subject);
+    assert.equal(new Set(pool).size, pool.length, subject);
+  }
+});
+
+test('unmittelbare Fact-Wiederholung desselben Fachs wird vermieden', () => {
+  const fixture = loadQuizLoadingView();
+  vm.runInContext("setzeQuizLadehinweis('Marketing')", fixture.context);
+  const first = rendered(fixture.status)[2];
+  vm.runInContext("setzeQuizLadehinweis('Marketing')", fixture.context);
+  assert.notEqual(rendered(fixture.status)[2], first);
+});
+
+test('unbekanntes Fach verwendet weiterhin den allgemeinen Pool', () => {
+  const fixture = loadQuizLoadingView();
+  vm.runInContext("setzeQuizLadehinweis('Unbekannt')", fixture.context);
+  const generalPool = vm.runInContext('QUIZ_LADEFACTS.allgemein', fixture.context);
+  assert.ok(generalPool.includes(rendered(fixture.status)[2]));
+});
