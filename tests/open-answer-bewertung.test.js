@@ -196,6 +196,33 @@ test('bewerteAntwortFrontend übergibt Trainer-Teilbewertung deterministisch an 
   assert.equal(result.maxPunkte, 5);
 });
 
+test('betriebliche Übung – alternativer Vermeidungsweg bleibt als Teilbewertung erhalten', () => {
+  let capturedPrompt = '';
+  context.getQuestionById = () => ({
+    id: 'r-1', row: 7, frage: 'Wie kann ein Arbeitgeber die Entstehung einer betrieblichen Übung verhindern?',
+    musterloesung: 'Durch einen Freiwilligkeitsvorbehalt.',
+    stichpunkte: 'Freiwilligkeitsvorbehalt', fragetyp: 'text'
+  });
+  context.UrlFetchApp.fetch = (url, options) => {
+    capturedPrompt = JSON.parse(options.payload).messages[0].content;
+    return { getResponseCode: () => 200, getContentText: () => JSON.stringify({choices: [{message: {
+      content: '{"bewertungen":{"K1":"teilweise_erfuellt"}}'
+    }}]}) };
+  };
+  const result = context.bewerteAntwortFrontend({
+    fach: 'Recht', frageId: 'r-1',
+    antwort: 'indem er keine regelmäßige gleiche Objektive zuwendungen an die Arbeitnehmer herausgibt',
+    speichereInSheet: false
+  });
+  assert.equal(result.punkte, 1);
+  assert.equal(context.parseTrainerKriterienErgebnis_(
+    '{"bewertungen":{"K1":"teilweise_erfuellt"}}', ['K1']
+  ).K1, 'teilweise_erfuellt');
+  assert.match(capturedPrompt, /alternative fachlich richtige Wege|mehrere fachlich richtige Wege/i);
+  assert.match(capturedPrompt, /richtiger fachlicher Kern.*teilweise_erfuellt/i);
+  assert.doesNotMatch(capturedPrompt, /Ein Kriterium mit fachlichem Fehler.*höchstens "nicht_erfuellt"/i);
+});
+
 test('ungültige KI-Antwort wird kontrolliert behandelt', () => {
   const result = context.parseKriterienErgebnis_('gar nichts brauchbares', ['K1', 'K2']);
   assert.equal(result.erkannteIds.length, 0);

@@ -1448,6 +1448,7 @@ Bewertungsregeln:
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
 - Die Musterlösung und Beispiele dienen als fachliche Referenz. Die Musterlösung nicht als Checkliste und nicht als Wortlautvorlage verwenden. Bei offenen Aufgaben können auch andere fachlich korrekte Lösungen die Kriterien erfüllen. Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt, sofern das Bewertungskriterium allgemein formuliert ist.
+- Die konkrete Frage kann mehrere fachlich richtige Wege zulassen. Berücksichtige alternative fachlich richtige Wege auch dann, wenn sie nicht ausdrücklich in der Musterlösung oder im einzelnen Stichpunkt genannt sind; prüfe sie anhand der Frage und des fachlichen Zusammenhangs.
 - Prüfe jedes Kriterium (K1...Kn) einzeln und unabhängig in der gesamten Teilnehmerantwort: Suche in der gesamten Antwort nach einer fachlich gleichwertigen Aussage und entscheide für jedes Kriterium eigenständig.
 - Inhalt vor Wortlaut: Ein Kriterium gilt als erfüllt, wenn der fachliche Inhalt eindeutig vorhanden ist – auch bei anderen Wörtern, Synonymen, veränderter Satzstellung, abweichendem Singular/Plural, Umschreibungen oder Alltagssprache statt Fachbuchbegriffen (z. B. gelten Aussagen wie "wertvoll für Kunden und Verbraucher", "Mehrwert für Kunden", "Kunden profitieren davon", "Vorteile für Kunden schaffen" oder "den Kunden etwas Wertvolles bieten" als Erfüllung des Kriteriums "Nutzen für Kunden").
 - Nicht überstreng auf bestimmte Einzelwörter bestehen: Wenn der fachliche Sinn eindeutig getroffen ist, darf ein Kriterium nicht abgelehnt werden, nur weil ein bestimmtes Wort (z. B. "Nutzen") nicht wörtlich vorkommt.
@@ -1458,7 +1459,7 @@ Bewertungsregeln:
 - Keine zusätzlichen Anforderungen erfinden: Bewerte nur die tatsächlich vorgegebenen Kriterien. Verlange keine zusätzlichen Voraussetzungen oder Lehrbuchdetails, die nicht Teil des Kriteriums sind, und ziehe keine Punkte für fehlende Zusatzdetails ab, die nicht im Kriterium stehen.
 - Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema. Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
 - Verwende ausschließlich die vorgegebenen Kriterien-IDs. Erfinde keine neuen IDs.
-- Verwende pro Kriterium genau einen Status: "voll_erfuellt", "teilweise_erfuellt" oder "nicht_erfuellt". Ein Kriterium mit fachlichem Fehler, Widerspruch oder Negation ist höchstens "nicht_erfuellt". Bereits korrekt erfüllte andere Kriterien bleiben davon unberührt.
+- Verwende pro Kriterium genau einen Status: "voll_erfuellt", "teilweise_erfuellt" oder "nicht_erfuellt". Ein echter Fehler, Widerspruch oder eine Negation entwertet das Kriterium nur dann vollständig, wenn dadurch sein fachlicher Kern aufgehoben wird; bleibt der Kern erkennbar richtig, ist das Kriterium "teilweise_erfuellt". Bereits korrekt erfüllte andere Kriterien bleiben davon unberührt.
 - "teilweise_erfuellt" darf nur vergeben werden, wenn ein wesentlicher Teil des Kriteriums fachlich richtig erfasst ist; bloße Schlagwörter ohne Zusammenhang sind "nicht_erfuellt".
 - Unsicherheitsformulierungen wie "ich glaube", "wahrscheinlich", "vielleicht" sind nur dann relevant, wenn sie den fachlichen Inhalt selbst entwerten. Sonst zählt der fachliche Inhalt normal.
 
