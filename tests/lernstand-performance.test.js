@@ -7,6 +7,7 @@ const vm = require('node:vm');
 function loadLernstand() {
   const list = { innerHTML: '', addEventListener() {} };
   const context = {
+    auth: { currentUser: null },
     window: { faecherNachTeilbereich: { WQ: ['Recht', 'Steuern', 'Rechnungswesen'] } },
     document: { getElementById: () => list, querySelector: () => list },
     mountSubjectAccordion: (grid, subjects) => { list.innerHTML += subjects.map(s => typeof s === 'string' ? s : s.card + s.panel).join(''); return { destroy() {} }; }
@@ -39,6 +40,10 @@ function attempt(id, reached, maximum, overrides = {}) {
     status: reached === maximum ? 'richtig' : reached > 0 ? 'teilweise richtig' : 'falsch',
     ...overrides
   };
+}
+
+function historyAttempt(id, reached, maximum, timestamp, overrides = {}) {
+  return attempt(id, reached, maximum, { timestamp: { toMillis: () => timestamp }, ...overrides });
 }
 function subjectPerformance(html) {
   return Number(html.match(/lernstand-subject-stats"><span>(\d+)%/)[1]);
@@ -129,4 +134,44 @@ test('subject and topic performance share the same visible label', () => {
   const { context } = loadLernstand();
   const html = context.renderSubject(subject, [attempt('a', 1, 1)], catalog);
   assert.equal((html.match(/Aktuelle Punktleistung/g) || []).length, 3);
+});
+
+test('open errors require the latest attempt to be below 50 percent', () => {
+  const { context } = loadLernstand();
+  const cases = [
+    [2, 5, true], [2, 4, false], [3, 5, false], [4, 6, false], [0, 5, true]
+  ];
+  for (const [reached, maximum, expected] of cases) {
+    const entry = context.groupErrorHistory([historyAttempt(`boundary-${reached}-${maximum}`, reached, maximum, 1)])[0];
+    assert.equal(Boolean(entry?.isOpen), expected, `${reached}/${maximum}`);
+    assert.equal(context.aggregate([attempt(`aggregate-${reached}-${maximum}`, reached, maximum)]).errors.length, expected ? 1 : 0);
+  }
+});
+
+test('resolved errors require an earlier below-50-percent attempt', () => {
+  const { context } = loadLernstand();
+  const resolved = context.groupErrorHistory([
+    historyAttempt('resolved', 2, 5, 1), historyAttempt('resolved', 3, 5, 2)
+  ])[0];
+  const neverOpen = context.groupErrorHistory([
+    historyAttempt('never-open', 3, 5, 1), historyAttempt('never-open', 4, 5, 2)
+  ]);
+  assert.equal(resolved.isOpen, false);
+  assert.equal(neverOpen.length, 0);
+});
+
+test('next open error follows a stable question order after repeated attempts', async () => {
+  const { context } = loadLernstand();
+  const open = ['A', 'B', 'C', 'D'].flatMap((id, index) => [
+    historyAttempt(id, 2, 5, 100 - index),
+    historyAttempt(id, 2, 5, 200 + index)
+  ]);
+  context.auth.currentUser = { emailVerified: true };
+  context.loadAttempts = async () => open;
+  context.loadQuestionCatalog = async () => [];
+  context.loadActiveAttemptBasis = async attempts => ({ activeAttempts: attempts });
+  for (const [current, expected] of [['A', 'B'], ['B', 'C'], ['C', 'D']]) {
+    const result = await context.ermittleNaechstenOffenenFehler(`Recht::${current}`);
+    assert.equal(result.nextEntry?.latestAttempt?.frageId, expected);
+  }
 });

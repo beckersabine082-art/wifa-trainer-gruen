@@ -313,6 +313,12 @@ function normalizedAttemptStatus(attempt) {
   return String(attempt.status || '').trim().toLowerCase();
 }
 
+function isBelowHalf(attempt) {
+  const points = Number(attempt.erreichtePunkte);
+  const maximum = Number(attempt.maximalPunkte);
+  return Number.isFinite(points) && Number.isFinite(maximum) && maximum > 0 && points / maximum < 0.5;
+}
+
 function aggregate(attempts) {
   const reached = attempts.reduce((sum, attempt) => sum + Number(attempt.erreichtePunkte || 0), 0);
   const maximum = attempts.reduce((sum, attempt) => sum + Number(attempt.maximalPunkte || 0), 0);
@@ -321,7 +327,7 @@ function aggregate(attempts) {
     reached,
     maximum,
     performance: roundedPercentage(reached, maximum),
-    errors: attempts.filter(attempt => attempt.status !== 'richtig')
+    errors: attempts.filter(isBelowHalf)
   };
 }
 
@@ -605,14 +611,14 @@ function groupErrorHistory(attempts) {
   return [...grouped.entries()].map(([key, history]) => {
     const chronologicalAttempts = [...history].sort((first, second) => timestampMillis(first.timestamp) - timestampMillis(second.timestamp));
     const latestAttempt = chronologicalAttempts[chronologicalAttempts.length - 1];
-    const hasIncorrectAttempt = chronologicalAttempts.some(attempt => normalizedAttemptStatus(attempt) !== 'richtig');
+    const hasIncorrectAttempt = chronologicalAttempts.some(isBelowHalf);
     return {
       key,
       attempts: chronologicalAttempts,
       latestAttempt,
       repetitions: Math.max(0, chronologicalAttempts.length - 1),
       hasIncorrectAttempt,
-      isOpen: hasIncorrectAttempt && normalizedAttemptStatus(latestAttempt) !== 'richtig'
+      isOpen: hasIncorrectAttempt && isBelowHalf(latestAttempt)
     };
   }).filter(entry => entry.hasIncorrectAttempt);
 }
@@ -699,7 +705,7 @@ export async function ermittleNaechstenOffenenFehler(aktuellerSchluessel) {
   const { activeAttempts: attempts } = await loadActiveAttemptBasis(history, catalog);
   if (auth.currentUser !== user) throw new Error('Die Anmeldung hat sich geändert.');
   const errorHistory = groupErrorHistory(attempts);
-  const openErrors = errorHistory.filter(entry => entry.isOpen);
+  const openErrors = errorHistory.filter(entry => entry.isOpen).sort((first, second) => first.key.localeCompare(second.key));
   const currentIndex = openErrors.findIndex(entry => entry.key === aktuellerSchluessel);
   const otherOpenErrors = openErrors.filter(entry => entry.key !== aktuellerSchluessel);
 
@@ -757,7 +763,7 @@ function bindErrorAnalysisInteractions() {
 
 async function renderErrorAnalysis(attempts) {
   const errorHistory = groupErrorHistory(attempts);
-  const openErrors = errorHistory.filter(entry => entry.isOpen);
+  const openErrors = errorHistory.filter(entry => entry.isOpen).sort((first, second) => first.key.localeCompare(second.key));
   const resolvedErrors = errorHistory.filter(entry => !entry.isOpen);
   const partial = openErrors.filter(entry => normalizedAttemptStatus(entry.latestAttempt) === 'teilweise richtig').length;
   const incorrect = openErrors.filter(entry => normalizedAttemptStatus(entry.latestAttempt) === 'falsch').length;
