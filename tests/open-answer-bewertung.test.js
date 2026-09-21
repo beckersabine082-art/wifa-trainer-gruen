@@ -221,6 +221,8 @@ test('betriebliche Übung – alternativer Vermeidungsweg bleibt als Teilbewertu
   assert.match(capturedPrompt, /alternative fachlich richtige Wege|mehrere fachlich richtige Wege/i);
   assert.match(capturedPrompt, /richtiger fachlicher Kern.*teilweise_erfuellt/i);
   assert.doesNotMatch(capturedPrompt, /Ein Kriterium mit fachlichem Fehler.*höchstens "nicht_erfuellt"/i);
+  assert.match(capturedPrompt, /offene Maßnahmen-\/Lösungsfrage/i);
+  assert.match(capturedPrompt, /Musterlösung.*keine abschließende Liste/i);
 });
 
 test('ungültige KI-Antwort wird kontrolliert behandelt', () => {

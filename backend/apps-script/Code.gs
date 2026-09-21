@@ -1445,6 +1445,11 @@ Teilnehmerantwort:
 ${userAnswer}
 
 Bewertungsregeln:
+- Ordne die Aufgabe zunächst intern ein: geschlossene Wissens-/Begriffsfrage, Nennen-/Aufzählungsaufgabe, offene Maßnahmen-/Lösungsfrage, Erklären-/Begründen-/Erläutern-Aufgabe, Berechnungsaufgabe oder mehrteilige/kombinierte Aufgabe. Gib diese Einordnung nicht aus.
+- Bestimme den erwarteten fachlichen Inhalt gemeinsam aus Frage, Musterlösung, Kriterien und allgemeinem Fachwissen. Die Musterlösung ist eine Referenzlösung und die Stichpunkte sind Bewertungsanker, aber bei offenen Aufgaben keine abschließende Liste aller zulässigen Lösungen.
+- Bei offenen Maßnahmen-/Lösungsfragen prüfe zuerst, ob die Antwort die konkrete Frage auf einem fachlich vertretbaren Weg beantwortet. Eine alternative fachlich richtige Maßnahme darf nicht allein deshalb abgelehnt werden, weil sie nicht in Musterlösung oder Stichpunkten steht.
+- Bei geschlossenen Fragen gelten ausdrücklich verlangte Begriffe, gesetzliche Voraussetzungen, Werte, Rechenschritte oder Anzahlen weiterhin als verbindlich. Ein nur thematisch ähnlicher Inhalt ersetzt diese Anforderung nicht.
+- Bei Erklärungs- und Begründungsfragen ist der fachlich richtige Zusammenhang entscheidend. Bei Berechnungen können Ansatz, Rechenweg und Ergebnis getrennte fachliche Leistungen sein; ein begrenzter Rechenfehler am Ende entwertet einen richtigen Ansatz nicht automatisch.
 - Bewerte ausschließlich die Teilnehmerantwort.
 - Musterlösung und Kriterien zählen NICHT als vom Teilnehmer genannt.
 - Die Musterlösung und Beispiele dienen als fachliche Referenz. Die Musterlösung nicht als Checkliste und nicht als Wortlautvorlage verwenden. Bei offenen Aufgaben können auch andere fachlich korrekte Lösungen die Kriterien erfüllen. Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt, sofern das Bewertungskriterium allgemein formuliert ist.
