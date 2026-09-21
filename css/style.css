@@ -860,7 +860,10 @@ white-space: normal;
     }
 
     .trainer-hint-header {
-      display: none;
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      z-index: 1;
     }
 
     .trainer-hint-close {
@@ -872,18 +875,21 @@ white-space: normal;
       cursor: pointer;
       font-size: 18px;
       color: #9a7bd1;
-      padding: 0;
+      padding: 2px;
       width: 20px;
       height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 3px;
+      border-radius: 50%;
       transition: background 200ms;
     }
 
-    .trainer-hint-close:hover {
-      background: #f5f0ff;
+    .trainer-hint-close:hover,
+    .trainer-hint-close:focus-visible {
+      background: #efe7ff;
+      color: #4a3970;
+      outline: none;
     }
 
     .trainer-hint-content {
