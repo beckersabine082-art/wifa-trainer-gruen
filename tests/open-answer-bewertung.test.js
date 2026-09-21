@@ -249,6 +249,14 @@ test('Bewertungsprompt enthält die Regel für generische Kriterien und alternat
     promptText.includes('Verlange nicht, dass die Nutzerantwort ein Beispiel aus der Musterlösung wörtlich oder inhaltlich identisch übernimmt'),
     'Prompt muss regeln, dass alternative fachlich korrekte Beispiele zulässig sind'
   );
+  assert.ok(
+    promptText.includes('Ein richtiger fachlicher Kern bleibt teilweise_erfuellt'),
+    'Prompt muss richtige Teilaspekte trotz begrenzter Ungenauigkeit erhalten'
+  );
+  assert.ok(
+    promptText.includes('Musterlösung nicht als Checkliste'),
+    'Prompt muss eine Musterlösungs-Ankerung verhindern'
+  );
 });
 
 test('fortschrittsspeicher normalisiert leere Auswahl auf __ALL__ und aktualisiert vorhandene Zeile', () => {
