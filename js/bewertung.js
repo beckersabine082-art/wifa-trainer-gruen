@@ -392,6 +392,14 @@ const bewertungText = bereinigeBewertungText(
         findeKriterien(data, ["fehlendeKriterien", "nichtErfuellteKriterien", "fehlendeStichpunkte", "fehlende"]),
         ausErgebnis.erkannte, ausErgebnis.fehlende, aktuelleStichpunkte
       );
+      window.trainerKilianKontextAktualisieren?.({
+        antwort,
+        musterloesung: aktuelleMusterloesung,
+        punkte,
+        maxPunkte,
+        ergebnis: bewertungText,
+        bewertungskriterien: bewertungskriterien.join('; ')
+      });
       document.getElementById("solutionBox").style.display = aktuelleMusterloesung ? "block" : "none";
       document.getElementById("musterloesungText").innerHTML =
         hebeStichpunkteHervor(aktuelleMusterloesung, bewertungskriterien);

@@ -36,6 +36,10 @@ function setQuizContext(context, value) {
   context.quizKilianKontext = value;
 }
 
+function setTrainerContext(context, value) {
+  context.trainerKilianKontext = value;
+}
+
 test('verwendet die aktuelle offene Quizfrage als Kilian-Kontext', async () => {
   const kilian = loadKilian();
   setQuizContext(kilian.context, {
@@ -87,4 +91,27 @@ test('Fachwechsel und Shuffle setzen den Quiz-Kilian-Kontext zurück', () => {
   assert.equal(kilian.context.quizKilianKontext.fach, 'Recht');
   kilian.context.kilianQuizKontextLeeren();
   assert.equal(kilian.context.quizKilianKontext, null);
+});
+
+test('übermittelt den aktuell sichtbaren Trainerkontext einschließlich Bewertung intern', async () => {
+  const kilian = loadKilian();
+  setTrainerContext(kilian.context, {
+    bereich: 'WQ', fach: 'Recht', thema: 'Betriebliche Übung', frageId: 'r-1',
+    frage: 'Wie kann ein Arbeitgeber die Entstehung einer betrieblichen Übung verhindern?',
+    antwort: 'indem er keine regelmäßige gleiche Objektive zuwendungen herausgibt',
+    musterloesung: 'Durch einen Freiwilligkeitsvorbehalt.', punkte: 0, maxPunkte: 5,
+    ergebnis: 'Falsch', bewertungskriterien: 'Freiwilligkeitsvorbehalt'
+  });
+  kilian.context.document.getElementById('kilianInput').value = 'Warum habe ich hier 0 Punkte bekommen?';
+
+  await kilian.context.frageKilian();
+
+  assert.deepEqual(JSON.parse(JSON.stringify(kilian.calls[0].payload.trainerKontext)), {
+    bereich: 'WQ', fach: 'Recht', thema: 'Betriebliche Übung', frageId: 'r-1',
+    frage: 'Wie kann ein Arbeitgeber die Entstehung einer betrieblichen Übung verhindern?',
+    antwort: 'indem er keine regelmäßige gleiche Objektive zuwendungen herausgibt',
+    musterloesung: 'Durch einen Freiwilligkeitsvorbehalt.', punkte: 0, maxPunkte: 5,
+    ergebnis: 'Falsch', bewertungskriterien: 'Freiwilligkeitsvorbehalt'
+  });
+  assert.equal(kilian.calls[0].payload.frage, 'Warum habe ich hier 0 Punkte bekommen?');
 });

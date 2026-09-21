@@ -715,6 +715,7 @@ function ergaenzeLeereTabellenAntwortfelder() {
   }
 
 function resetFrageAnzeige() {
+    window.trainerKilianKontextLeeren?.();
     trainerTippTimerAbbrechen();
     // Close hint bubble when moving to another question
     if (typeof schliesseTrainerHint === "function") {
@@ -1032,6 +1033,16 @@ function waehleFach(fach) {
         : "";
 
     resetFrageAnzeige();
+
+    window.trainerKilianKontextSetzen?.({
+      bereich: aktuellerTeilbereich,
+      fach: aktuellesFach,
+      thema: aktuellesThema,
+      frageId: aktuelleFrageId,
+      frage: aktuelleFrage,
+      musterloesung: aktuelleMusterloesung,
+      bewertungskriterien: aktuelleStichpunkte.join('; ')
+    });
 
     let frageHtml = "";
     if (aktuelleFrage) {

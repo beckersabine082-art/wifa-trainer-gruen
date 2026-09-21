@@ -374,6 +374,26 @@ function audioStoppen() {
 
 let kilianAnfrageLaeuft = false;
 
+function trainerKilianKontextSetzen(kontext) {
+  window.trainerKilianKontext = kontext ? { ...kontext } : null;
+}
+
+function trainerKilianKontextAktualisieren(aenderungen) {
+  if (!window.trainerKilianKontext) return;
+  window.trainerKilianKontext = { ...window.trainerKilianKontext, ...aenderungen };
+}
+
+function trainerKilianKontextLeeren() {
+  window.trainerKilianKontext = null;
+}
+
+function trainerKilianKontextFuerAnfrage() {
+  const kontext = window.trainerKilianKontext;
+  if (!kontext || !String(kontext.frage || '').trim()) return null;
+  const antwort = document.getElementById('antwortInput')?.value?.trim() || kontext.antwort || '';
+  return { ...kontext, antwort };
+}
+
 function quizKilianFrageMitKontext(frage) {
   const kontext = window.quizKilianKontext;
   if (!kontext || !String(kontext.frage || '').trim()) return frage;
@@ -437,7 +457,8 @@ async function frageKilian() {
     document.getElementById("kilianAntwort").textContent = "Antwort wird geladen.";
 
     const kilianResult = await apiPost("frageKilian", {
-      frage: quizKilianFrageMitKontext(frage)
+      frage: quizKilianFrageMitKontext(frage),
+      trainerKontext: trainerKilianKontextFuerAnfrage()
     });
 
     if (!kilianResult.success) {
@@ -517,7 +538,8 @@ async function frageKilianBubble() {
       "Antwort wird geladen...";
 
     const result = await apiPost("frageKilian", {
-      frage: quizKilianFrageMitKontext(frage)
+      frage: quizKilianFrageMitKontext(frage),
+      trainerKontext: trainerKilianKontextFuerAnfrage()
     });
 
     if (!result.success) {

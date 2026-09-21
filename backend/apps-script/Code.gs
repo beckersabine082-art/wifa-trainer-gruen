@@ -636,7 +636,7 @@ function doPost(e) {
     } else if (action === "frageKilian") {
   result = {
     success: true,
-    data: frageKilianFrontend(body.frage)
+    data: frageKilianFrontend(body.frage, body.trainerKontext)
   };
 
 } else if (action === "bewertePruefung") {
@@ -2117,7 +2117,7 @@ function getLerntexte(fach) {
       return a.reihenfolgeFach - b.reihenfolgeFach;
     });
 }
-function frageKilianFrontend(frage) {
+function frageKilianFrontend(frage, trainerKontext) {
   const userFrage = String(frage || "").trim();
 
   if (!userFrage) {
@@ -2125,6 +2125,21 @@ function frageKilianFrontend(frage) {
       antwort: "Keine Frage übergeben."
     };
   }
+
+  const trainerContextText = trainerKontext && String(trainerKontext.frage || '').trim()
+    ? "\n\nKontext der aktuell sichtbaren Traineraufgabe (verbindlich berücksichtigen):\n" +
+      "Teilbereich: " + String(trainerKontext.bereich || '') + "\n" +
+      "Fach: " + String(trainerKontext.fach || '') + "\n" +
+      "Thema/Kategorie: " + String(trainerKontext.thema || '') + "\n" +
+      "Frage-ID: " + String(trainerKontext.frageId || '') + "\n" +
+      "Exakter Fragetext: " + String(trainerKontext.frage || '') + "\n" +
+      "Aktuelle Nutzerantwort: " + String(trainerKontext.antwort || '') + "\n" +
+      "Musterlösung: " + String(trainerKontext.musterloesung || '') + "\n" +
+      "Punkte: " + (trainerKontext.punkte == null ? '' : String(trainerKontext.punkte)) +
+      " / " + (trainerKontext.maxPunkte == null ? '' : String(trainerKontext.maxPunkte)) + "\n" +
+      "Ergebnis/Bewertungsstatus: " + String(trainerKontext.ergebnis || '') + "\n" +
+      "Bewertungskriterien: " + String(trainerKontext.bewertungskriterien || '')
+    : '';
 
   const systemPrompt =
   "Du bist Kilian, ein verständlicher Lernassistent für Lern- und Bildungsinhalte. " +
@@ -2142,7 +2157,7 @@ function frageKilianFrontend(frage) {
 
   "Antworte sachlich, freundlich und verständlich. " +
 
-  "Nutze bei Erklärungen gerne Beispiele und einfache Sprache.";
+  "Nutze bei Erklärungen gerne Beispiele und einfache Sprache." + trainerContextText;
 
   const response = UrlFetchApp.fetch("https://api.openai.com/v1/chat/completions", {
     method: "post",
