@@ -141,6 +141,61 @@ test('Kriterienanzahl größer/anders als maxPunkte skaliert sauber und bleibt i
   assert.equal(context.berechnePunkteAusKriterien_(5, 5, 10), 10);
 });
 
+test('Trainerkriterien unterscheiden volle und teilweise Erfüllung deterministisch', () => {
+  const result = context.berechneTrainerPunkteAusKriterien_(
+    {K1: 'voll_erfuellt', K2: 'teilweise_erfuellt', K3: 'nicht_erfuellt'},
+    ['K1', 'K2', 'K3'],
+    5
+  );
+  assert.equal(result.punkte, 3);
+  assert.deepEqual(Array.from(result.erkannte), ['K1']);
+  assert.deepEqual(Array.from(result.teilweise), ['K2']);
+  assert.deepEqual(Array.from(result.fehlende), ['K3']);
+});
+
+test('Trainerbewertung akzeptiert nur gueltige Statuswerte und begrenzt auf Maximalpunkte', () => {
+  const result = context.berechneTrainerPunkteAusKriterien_(
+    {K1: 'voll_erfuellt', K2: 'fachlicher_fehler', K3: 'teilweise_erfuellt', K99: 'voll_erfuellt'},
+    ['K1', 'K2', 'K3'],
+    2
+  );
+  assert.equal(result.punkte, 1);
+  assert.ok(result.punkte >= 0 && result.punkte <= 2);
+});
+
+test('Trainerantwort zur betrieblichen Übung erhält bei drei von fünf Kernaspekten Teilpunkte', () => {
+  const result = context.berechneTrainerPunkteAusKriterien_(
+    {K1: 'voll_erfuellt', K2: 'voll_erfuellt', K3: 'voll_erfuellt', K4: 'nicht_erfuellt', K5: 'nicht_erfuellt'},
+    ['K1', 'K2', 'K3', 'K4', 'K5'],
+    5
+  );
+  assert.equal(result.punkte, 3);
+  assert.ok(result.punkte > 0 && result.punkte < 5);
+});
+
+test('bewerteAntwortFrontend übergibt Trainer-Teilbewertung deterministisch an die Punkteausgabe', () => {
+  context.getQuestionById = () => ({
+    id: 'RECHT-BU', row: 3, frage: 'Erläutern Sie die betriebliche Übung.',
+    musterloesung: 'Wiederholte gleichförmige Leistung ohne wirksamen Vorbehalt kann einen Anspruch begründen.',
+    stichpunkte: 'wiederholte Leistung;Beispiel Sonderzahlung;Bindungswirkung/Anspruch;kein wirksamer Vorbehalt;Vertrauenstatbestand',
+    fragetyp: 'text'
+  });
+  context.UrlFetchApp.fetch = () => ({
+    getResponseCode: () => 200,
+    getContentText: () => JSON.stringify({choices: [{message: {content: JSON.stringify({bewertungen: {
+      K1: 'voll_erfuellt', K2: 'voll_erfuellt', K3: 'voll_erfuellt',
+      K4: 'nicht_erfuellt', K5: 'nicht_erfuellt'
+    }})}}]})
+  });
+  const result = context.bewerteAntwortFrontend({
+    fach: 'Recht', frageId: 'RECHT-BU',
+    antwort: 'Eine Sonderzahlung wie Weihnachtsgeld wird wiederholt gezahlt und kann dann verpflichtend werden.',
+    speichereInSheet: false
+  });
+  assert.equal(result.punkte, 3);
+  assert.equal(result.maxPunkte, 5);
+});
+
 test('ungültige KI-Antwort wird kontrolliert behandelt', () => {
   const result = context.parseKriterienErgebnis_('gar nichts brauchbares', ['K1', 'K2']);
   assert.equal(result.erkannteIds.length, 0);

@@ -1248,6 +1248,46 @@ function berechnePunkteAusKriterien_(erfuellt, anzahlKriterien, maxPunkte) {
   return Math.max(0, Math.min(maxPunkteNum, gerundet));
 }
 
+function parseTrainerKriterienErgebnis_(text, kriterienIds) {
+  const ids = Array.isArray(kriterienIds) ? kriterienIds.map(String) : [];
+  let parsed = {};
+  const rawText = String(text || '').trim();
+  if (rawText) {
+    try { parsed = JSON.parse(rawText); } catch (error) {
+      const match = rawText.match(/```(?:json)?\s*([\s\S]*?)```/i);
+      if (match && match[1]) { try { parsed = JSON.parse(match[1]); } catch (innerError) { parsed = {}; } }
+    }
+  }
+  const bewertungen = parsed && parsed.bewertungen && typeof parsed.bewertungen === 'object' ? parsed.bewertungen : {};
+  const statusById = {};
+  ids.forEach(function(id) {
+    const status = String(bewertungen[id] || '').trim().toLowerCase();
+    statusById[id] = ['voll_erfuellt', 'teilweise_erfuellt', 'nicht_erfuellt'].includes(status) ? status : 'nicht_erfuellt';
+  });
+  if (Object.keys(bewertungen).length === 0 && Array.isArray(parsed.erfuellt)) {
+    parsed.erfuellt.map(String).forEach(function(id) {
+      if (Object.prototype.hasOwnProperty.call(statusById, id)) statusById[id] = 'voll_erfuellt';
+    });
+  }
+  return statusById;
+}
+
+function berechneTrainerPunkteAusKriterien_(statusById, kriterienIds, maxPunkte) {
+  const ids = Array.isArray(kriterienIds) ? kriterienIds.map(String) : [];
+  const maxPunkteNum = Number(maxPunkte || 0);
+  if (!ids.length || !Number.isFinite(maxPunkteNum) || maxPunkteNum <= 0) return { punkte: 0, erkannte: [], teilweise: [], fehlende: ids };
+  let anteil = 0;
+  const erkannte = [], teilweise = [], fehlende = [];
+  ids.forEach(function(id) {
+    const status = statusById && statusById[id];
+    if (status === 'voll_erfuellt') { anteil += 1; erkannte.push(id); }
+    else if (status === 'teilweise_erfuellt') { anteil += 0.5; teilweise.push(id); }
+    else fehlende.push(id);
+  });
+  const punkte = Math.max(0, Math.min(maxPunkteNum, Math.round((anteil / ids.length) * maxPunkteNum)));
+  return { punkte: punkte, erkannte: erkannte, teilweise: teilweise, fehlende: fehlende };
+}
+
 function bewerteAntwortFrontend(payload) {
   const sheetName = String(payload?.fach || "").trim();
   const questionId = String(payload?.frageId || "").trim();
@@ -1418,15 +1458,19 @@ Bewertungsregeln:
 - Keine zusätzlichen Anforderungen erfinden: Bewerte nur die tatsächlich vorgegebenen Kriterien. Verlange keine zusätzlichen Voraussetzungen oder Lehrbuchdetails, die nicht Teil des Kriteriums sind, und ziehe keine Punkte für fehlende Zusatzdetails ab, die nicht im Kriterium stehen.
 - Die Antwort muss zur konkreten Frage passen, nicht nur grob zum gleichen Thema. Wenn die Antwort eine andere Aufgabenstellung beantwortet, ist sie falsch.
 - Verwende ausschließlich die vorgegebenen Kriterien-IDs. Erfinde keine neuen IDs.
-- Wenn kein Kriterium eindeutig erfüllt ist, gib "erfuellt": [] zurück.
+- Verwende pro Kriterium genau einen Status: "voll_erfuellt", "teilweise_erfuellt" oder "nicht_erfuellt". Ein Kriterium mit fachlichem Fehler, Widerspruch oder Negation ist höchstens "nicht_erfuellt". Bereits korrekt erfüllte andere Kriterien bleiben davon unberührt.
+- "teilweise_erfuellt" darf nur vergeben werden, wenn ein wesentlicher Teil des Kriteriums fachlich richtig erfasst ist; bloße Schlagwörter ohne Zusammenhang sind "nicht_erfuellt".
 - Unsicherheitsformulierungen wie "ich glaube", "wahrscheinlich", "vielleicht" sind nur dann relevant, wenn sie den fachlichen Inhalt selbst entwerten. Sonst zählt der fachliche Inhalt normal.
 
 ${istDiagramm ? diagrammBewertungsregel_() : ""}
 
 Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
 {
-  "erfuellt": ["K1", "K3"],
-  "nicht_erfuellt": ["K2", "K4"]
+  "bewertungen": {
+    "K1": "voll_erfuellt",
+    "K2": "teilweise_erfuellt",
+    "K3": "nicht_erfuellt"
+  }
 }
 `;
 
@@ -1467,9 +1511,15 @@ Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
   const result = JSON.parse(bodyText);
   const text = result?.choices?.[0]?.message?.content || "";
 
-  const kriterienAuswertung = werteKriterienMitFallback_(text, userAnswer, stichpunkteListe, kriterienIds, istDiagramm);
-  const erkannteIds = kriterienAuswertung.erkannteIds;
-  const fehlendeIds = kriterienAuswertung.fehlendeIds;
+  const statusById = parseTrainerKriterienErgebnis_(text, kriterienIds);
+  if (!/"bewertungen"\s*:/.test(String(text || ''))) {
+    const legacy = werteKriterienMitFallback_(text, userAnswer, stichpunkteListe, kriterienIds, istDiagramm);
+    legacy.erkannteIds.forEach(function(id) { statusById[id] = 'voll_erfuellt'; });
+  }
+  const trainerPunkte = berechneTrainerPunkteAusKriterien_(statusById, kriterienIds, maxPunkte);
+  const erkannteIds = trainerPunkte.erkannte;
+  const teilweiseIds = trainerPunkte.teilweise;
+  const fehlendeIds = trainerPunkte.fehlende;
 
   const erkannte = erkannteIds
     .map(function(id) {
@@ -1490,7 +1540,12 @@ Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
     return !uniqueErkannte.includes(item);
   }))];
 
-  const erreichtePunkte = berechnePunkteAusKriterien_(uniqueErkannte.length, stichpunkteListe.length, maxPunkte);
+  const teilweise = teilweiseIds.map(function(id) {
+    const index = kriterienIds.indexOf(id);
+    return index >= 0 ? stichpunkteListe[index] : id;
+  }).filter(Boolean);
+
+  const erreichtePunkte = trainerPunkte.punkte;
   const gesamtPunkte = maxPunkte;
 
   let ergebnisText = "";
@@ -1512,6 +1567,10 @@ Gib das Ergebnis exakt als JSON zurück, ohne Markdown-Codeblock:
     feedbackText += "Erkannte Stichpunkte:\n- " + uniqueErkannte.join("\n- ") + "\n\n";
   } else {
     feedbackText += "Erkannte Stichpunkte:\n- keine\n\n";
+  }
+
+  if (teilweise.length) {
+    feedbackText += "Teilweise erkannte Stichpunkte:\n- " + teilweise.join("\n- ") + "\n\n";
   }
 
   if (uniqueFehlende.length) {
