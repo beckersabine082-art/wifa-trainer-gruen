@@ -68,7 +68,7 @@ test('lerntext is the only playlist audio source', function () {
 test('non-pilot unit uses its dynamic Firebase path', function () {
   const path = context.window.lerntexteAudioFirebasePfad('Steuern', { titel: 'Einheit 7' });
   assert.strictEqual(path, 'podcast/steuern-einheit-7.mp3');
-  assert.ok(code.includes('lerntextePilotAssetsLaden(currentItem.eintrag)'));
+  assert.ok(code.includes('lerntextePilotAssetsLaden(currentItem.eintrag, sessionId, signal)'));
 });
 
 test('Recht path generation remains valid for the normal playlist case', function () {

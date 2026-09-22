@@ -224,6 +224,8 @@ function createBlock2Context() {
   audio.currentTime = 0;
   audio.src = '';
   audio.duration = 120;
+  audio.paused = true;
+  audio.error = null;
   audio.listeners = {};
   audio.addEventListener = function (type, listener) {
     (this.listeners[type] ||= new Set()).add(listener);
@@ -235,8 +237,11 @@ function createBlock2Context() {
     for (const listener of this.listeners[event.type] || []) listener(event);
   };
   audio.load = function () {};
+  audio.removeAttribute = function (name) {
+    if (name === 'src') this.src = '';
+  };
   audio.pause = function () { this.paused = true; };
-  audio.play = function () { return Promise.resolve(); };
+  audio.play = function () { this.paused = false; return Promise.resolve(); };
 
   const status = new MockElement(null, 'div');
   const chapterLabel = new MockElement(null, 'strong');
@@ -247,6 +252,13 @@ function createBlock2Context() {
   const resumeButton = new MockElement(null, 'button');
   resumeButton.className = 'secondary-btn';
   const restartButton = new MockElement(null, 'button');
+  const previousButton = new MockElement(null, 'button');
+  const reloadButton = new MockElement(null, 'button');
+  const nextButton = new MockElement(null, 'button');
+  const progressWrapper = new MockElement(null, 'div');
+  const progressBar = new MockElement(null, 'span');
+  const progressPercent = new MockElement(null, 'span');
+  const progressMeta = new MockElement(null, 'div');
   const elements = {
     lerntexteInhaltBereich: root,
     lerntexteAudioPlayer: audio,
@@ -256,10 +268,18 @@ function createBlock2Context() {
     lerntexteAudioPauseBtn: pauseButton,
     lerntexteAudioStopBtn: stopButton,
     lerntextePilotResumeBtn: resumeButton,
-    lerntextePilotRestartBtn: restartButton
+    lerntextePilotRestartBtn: restartButton,
+    lerntexteAudioPreviousBtn: previousButton,
+    lerntexteAudioReloadBtn: reloadButton,
+    lerntexteAudioNextBtn: nextButton,
+    lerntexteAudioProgressWrapper: progressWrapper,
+    lerntexteAudioProgressBar: progressBar,
+    lerntexteAudioProgressPercent: progressPercent,
+    lerntexteAudioProgressMeta: progressMeta
   };
   const document = new EventDocument(elements);
-  [root, audio, status, chapterLabel, playButton, pauseButton, stopButton, resumeButton, restartButton]
+  [root, audio, status, chapterLabel, playButton, pauseButton, stopButton, resumeButton, restartButton,
+    previousButton, reloadButton, nextButton, progressWrapper, progressBar, progressPercent, progressMeta]
     .forEach(element => { element.ownerDocument = document; });
   const eventWindow = new EventWindow();
   const expectedHash = createHash('sha256').update('abc def ghi', 'utf8').digest('hex');
@@ -297,6 +317,7 @@ function createBlock2Context() {
     },
     Promise,
     TextEncoder,
+    AbortController,
     Uint8Array,
     ArrayBuffer,
     isFinite,
@@ -335,6 +356,11 @@ function configureBlock3Progress(fixture, progressData, uid = 'user-123') {
     return { success: true };
   };
   return { loadCalls, saveCalls };
+}
+
+async function flushAsync() {
+  await Promise.resolve();
+  await new Promise(resolve => setImmediate(resolve));
 }
 
 function element(document, tagName, ...children) {
@@ -576,14 +602,15 @@ test('TASK 16 Block 2 Coverage: Pilot-Root und alte Session werden bei echtem Re
   assert.ok(root.querySelector('.lerntexte-text').querySelectorAll('[data-word-index]').length > 0);
 });
 
-test('TASK 16 Block 2 Coverage: initialer Resync nutzt die aktuelle Startposition', async () => {
+test('TASK 16 Block 2 Coverage: neue Session übernimmt keine Position des alten Media-Requests', async () => {
   const { context, root, audio } = createBlock2Context();
   context.window.__renderEntries([block2PilotEntry()], 'Recht');
   audio.currentTime = 1.5;
 
   await context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
 
-  assert.strictEqual(root.querySelector('[data-word-index="1"]').classList.contains('podcast-word-active'), true);
+  assert.strictEqual(audio.currentTime, 0);
+  assert.strictEqual(root.querySelector('[data-word-index="0"]').classList.contains('podcast-word-active'), true);
 });
 
 test('TASK 16 Block 2 Coverage: seeked cleanup deaktiviert alte Handlerwirkung', async () => {
@@ -687,7 +714,7 @@ test('TASK 16 Block 2 Coverage: natürliches Pilot-Ende bereinigt alle Karaoke-L
   assert.strictEqual((eventWindow.listeners.pageshow || new Set()).size, 0);
 });
 
-test('TASK 16 Block 3: Pilot lädt Progress erst nach Asset-Gate und Fortsetzen matched exakt', async () => {
+test('TASK 16 Block 3: Pilot lädt Progress erst nach Asset-Gate und wendet ihn einmalig an', async () => {
   const fixture = createBlock2Context();
   const progress = configureBlock3Progress(fixture, [
     { nutzer: 'other', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte', firebasePfad: fixture.manifest.mp3Path, lerntextHash: fixture.manifest.lerntextHash, sekundenPosition: 11, wortIndex: 1, completed: false },
@@ -702,9 +729,11 @@ test('TASK 16 Block 3: Pilot lädt Progress erst nach Asset-Gate und Fortsetzen 
   await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
 
   assert.deepStrictEqual(progress.loadCalls, [['user-123', 'Recht']]);
-  assert.strictEqual(fixture.audio.currentTime, 0);
-  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
   assert.strictEqual(fixture.audio.currentTime, 30);
+  fixture.audio.currentTime = 34;
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+  assert.strictEqual(fixture.audio.currentTime, 34, 'Fortsetzen darf nicht erneut zur gespeicherten Position springen');
   assert.strictEqual(playCount, 2);
 });
 
@@ -773,36 +802,216 @@ test('TASK 16 Block 3: Von vorne setzt 0, resynct sofort und löscht keinen Prog
   assert.strictEqual(progress.saveCalls.length, 0);
 });
 
-test('TASK 16 Block 3: natürlicher Abschluss speichert vor Playlist-Weiterschaltung', async () => {
+test('TASK 16 Block 3: natürlicher Abschluss blockiert Playlist-Weiterschaltung nicht durch Speicherung', async () => {
   const fixture = createBlock2Context();
   let resolveSave;
   let saveStarted = false;
-  let legacyLoadStarted = false;
+  let mp3LoadCount = 0;
   fixture.eventWindow.aktuellerNutzer = 'user-123';
   fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => ({ data: [] });
   fixture.eventWindow.lerntextePodcastFortschrittSpeichern = state => {
     saveStarted = state.completed === true;
     return new Promise(resolve => { resolveSave = resolve; });
   };
-  fixture.eventWindow.lerntexteAudioDependencies = {
-    loadUrl: async () => {
-      legacyLoadStarted = true;
-      return 'https://example.test/legacy.mp3';
-    }
+  fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async () => {
+    mp3LoadCount += 1;
+    return 'https://example.test/pilot-' + mp3LoadCount + '.mp3';
   };
   fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
   await fixture.context.window.lerntexteAudioPlaylistWeiter([
     block2PlaylistItem(),
-    block2PlaylistItem({ fach: 'Recht', titel: 'Vertragsarten', lerntext: 'Legacy Text' })
+    block2PlaylistItem()
   ], 0);
   fixture.audio.dispatchEvent({ type: 'ended' });
-  await Promise.resolve();
+  await flushAsync();
 
   assert.strictEqual(saveStarted, true);
-  assert.strictEqual(legacyLoadStarted, false);
+  assert.strictEqual(mp3LoadCount, 2, 'nächstes Kapitel muss vor Abschluss des Save-Requests laden');
   resolveSave({ success: true });
-  await new Promise(resolve => setImmediate(resolve));
-  assert.strictEqual(legacyLoadStarted, false);
+  await flushAsync();
+  assert.strictEqual(mp3LoadCount, 2);
+  assert.strictEqual((fixture.audio.listeners.ended || new Set()).size, 1, 'alter Cleanup darf Listener der neuen Session nicht entfernen');
+});
+
+test('Podcast-Regression: verspätete Asset-Antwort darf neue Session nicht überschreiben', async () => {
+  const fixture = createBlock2Context();
+  let resolveFirstManifest;
+  let manifestCalls = 0;
+  let urlCalls = 0;
+  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async () => {
+    manifestCalls += 1;
+    if (manifestCalls === 1) {
+      return new Promise(resolve => { resolveFirstManifest = resolve; });
+    }
+    return fixture.manifest;
+  };
+  fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async () => {
+    urlCalls += 1;
+    return 'https://example.test/session-' + urlCalls + '.mp3';
+  };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+
+  const firstLoad = fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await Promise.resolve();
+  const secondLoad = fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await secondLoad;
+  const currentSrc = fixture.audio.src;
+  resolveFirstManifest(fixture.manifest);
+  await firstLoad;
+
+  assert.strictEqual(currentSrc, 'https://example.test/session-1.mp3');
+  assert.strictEqual(fixture.audio.src, currentSrc);
+  assert.strictEqual(urlCalls, 1, 'veraltete Session muss direkt nach dem verspäteten await enden');
+});
+
+test('Podcast-Regression: Ansichtswechsel invalidiert einen noch laufenden Kapitel-Load', async () => {
+  const fixture = createBlock2Context();
+  let resolveManifest;
+  let playCount = 0;
+  fixture.eventWindow.lerntextePilotDependencies.loadManifest = () => new Promise(resolve => { resolveManifest = resolve; });
+  fixture.audio.play = () => { playCount += 1; return Promise.resolve(); };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+
+  const pendingLoad = fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await Promise.resolve();
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  resolveManifest(fixture.manifest);
+  await pendingLoad;
+
+  assert.strictEqual(playCount, 0);
+  assert.strictEqual(fixture.audio.src, '');
+});
+
+test('Podcast-Regression: nächstes Kapitel kann einen langsamen Load abbrechen', async () => {
+  const fixture = createBlock2Context();
+  let resolveFirstManifest;
+  let manifestCalls = 0;
+  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async () => {
+    manifestCalls += 1;
+    if (manifestCalls === 1) return new Promise(resolve => { resolveFirstManifest = resolve; });
+    return fixture.manifest;
+  };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  const firstLoad = fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(), block2PlaylistItem()], 0);
+  await Promise.resolve();
+  const nextButton = fixture.document.getElementById('lerntexteAudioNextBtn');
+
+  assert.strictEqual(nextButton.disabled, false);
+  await nextButton.onclick();
+  resolveFirstManifest(fixture.manifest);
+  await firstLoad;
+
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioPreviousBtn').disabled, false);
+  assert.strictEqual(fixture.audio.src, 'https://example.test/pilot.mp3');
+});
+
+test('Podcast-Regression: audio.load bricht alten Media-Request erst nach Listener-Cleanup ab', async () => {
+  const fixture = createBlock2Context();
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  let oldListenerPresentDuringAbort = false;
+  fixture.audio.load = function () {
+    if (!this.src && (this.listeners.error || new Set()).size > 0) oldListenerPresentDuringAbort = true;
+  };
+
+  await fixture.document.getElementById('lerntexteAudioReloadBtn').onclick();
+
+  assert.strictEqual(oldListenerPresentDuringAbort, false);
+  assert.strictEqual((fixture.audio.listeners.error || new Set()).size, 1);
+});
+
+test('Podcast-Regression: ended wird pro Session nur einmal verarbeitet', async () => {
+  const fixture = createBlock2Context();
+  let urlCalls = 0;
+  configureBlock3Progress(fixture, []);
+  fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async () => {
+    urlCalls += 1;
+    return 'https://example.test/chapter-' + urlCalls + '.mp3';
+  };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  const repeated = [block2PlaylistItem(), block2PlaylistItem(), block2PlaylistItem()];
+  await fixture.context.window.lerntexteAudioPlaylistWeiter(repeated, 0);
+
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  await flushAsync();
+
+  assert.strictEqual(urlCalls, 2, 'doppeltes ended darf Kapitel 2 nicht überspringen');
+  assert.strictEqual(fixture.audio.src, 'https://example.test/chapter-2.mp3');
+});
+
+test('Podcast-Regression: nativer Mediafehler erhält Kapitel und ermöglicht erneutes Laden', async () => {
+  const fixture = createBlock2Context();
+  let urlCalls = 0;
+  fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async () => {
+    urlCalls += 1;
+    return 'https://example.test/retry-' + urlCalls + '.mp3';
+  };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(), block2PlaylistItem()], 0);
+  fixture.audio.currentTime = 27;
+  fixture.audio.error = { code: 2 };
+
+  fixture.audio.dispatchEvent({ type: 'error' });
+
+  assert.match(fixture.status.textContent, /erneut laden|Media|Netzwerk/i);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioReloadBtn').disabled, false);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioPreviousBtn').disabled, true);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioNextBtn').disabled, false);
+
+  await fixture.document.getElementById('lerntexteAudioReloadBtn').onclick();
+
+  assert.strictEqual(urlCalls, 2);
+  assert.strictEqual(fixture.audio.src, 'https://example.test/retry-2.mp3');
+  assert.strictEqual(fixture.audio.currentTime, 27, 'Reload muss die letzte Kapitelposition erhalten');
+});
+
+test('Podcast-Regression: Media-Stall zeigt Recovery an und blockiert Navigation nicht', async () => {
+  const fixture = createBlock2Context();
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(), block2PlaylistItem()], 0);
+
+  fixture.audio.dispatchEvent({ type: 'stalled' });
+
+  assert.match(fixture.status.textContent, /lädt ungewöhnlich lange|erneut laden/i);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioReloadBtn').disabled, false);
+  await fixture.document.getElementById('lerntexteAudioNextBtn').onclick();
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioPreviousBtn').disabled, false);
+  await fixture.document.getElementById('lerntexteAudioPreviousBtn').onclick();
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioPreviousBtn').disabled, true);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioNextBtn').disabled, false);
+});
+
+test('Podcast-Regression: native Zeitereignisse aktualisieren Balken und Zeit', async () => {
+  const fixture = createBlock2Context();
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  fixture.audio.currentTime = 30;
+  fixture.audio.duration = 120;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioProgressBar').style.width, '25%');
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioProgressPercent').textContent, '25 %');
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioProgressMeta').textContent, '0:30 / 2:00');
+});
+
+test('Podcast-Regression: Pause-UI wartet nicht auf Fortschrittsspeicherung', async () => {
+  const fixture = createBlock2Context();
+  let resolveSave;
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => ({ data: [] });
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = () => new Promise(resolve => { resolveSave = resolve; });
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+
+  const pauseResult = fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+
+  assert.strictEqual(fixture.audio.paused, true);
+  assert.match(fixture.status.textContent, /pausiert/i);
+  assert.strictEqual(fixture.document.getElementById('lerntextePilotResumeBtn').hidden, false);
+  resolveSave({ success: true });
+  await pauseResult;
 });
 
 test('TASK 16 Block 2 Coverage: Nicht-Pilot erhält keine Karaoke-Listener', async () => {
@@ -898,13 +1107,12 @@ test('TASK 16 Block 3 Coverage: Fortsetzen resynct Karaoke sofort ohne Event', a
   }]);
   fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
   await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
-  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
 
   assert.strictEqual(fixture.audio.currentTime, 2.5);
   assert.strictEqual(fixture.root.querySelector('[data-word-index="2"]').classList.contains('podcast-word-active'), true);
 });
 
-test('TASK 16 Block 3 Coverage: completed Resume überspringt Pilot zur nächsten Einheit', async () => {
+test('TASK 16 Block 3 Coverage: Fortsetzen bedeutet auch bei abgeschlossenem Stand nur Wiedergabe fortsetzen', async () => {
   const fixture = createBlock2Context();
   let playCount = 0;
   let legacyStarted = false;
@@ -920,14 +1128,16 @@ test('TASK 16 Block 3 Coverage: completed Resume überspringt Pilot zur nächste
   const legacy = { fach: 'Recht', titel: 'Vertragsarten', lerntext: 'Legacy Text' };
 
   await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(), block2PlaylistItem(legacy)], 0);
+  fixture.audio.currentTime = 14;
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
   await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
 
   assert.strictEqual(legacyStarted, false);
-  assert.strictEqual(playCount, 1);
-  assert.strictEqual(fixture.audio.currentTime, 0);
+  assert.strictEqual(playCount, 2);
+  assert.strictEqual(fixture.audio.currentTime, 14);
 });
 
-test('TASK 16 Block 3 Coverage: completed Resume ohne nächste Einheit zeigt Status', async () => {
+test('TASK 16 Block 3 Coverage: Fortsetzen ohne nächste Einheit bleibt im aktuellen Kapitel', async () => {
   const fixture = createBlock2Context();
   configureBlock3Progress(fixture, [{
     nutzer: 'user-123', fach: 'Recht', einheit: 'Rechtssubjekte und Rechtsobjekte',
@@ -935,10 +1145,12 @@ test('TASK 16 Block 3 Coverage: completed Resume ohne nächste Einheit zeigt Sta
   }]);
   fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
   await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  fixture.audio.currentTime = 9;
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
   await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
 
-  assert.match(fixture.status.textContent, /abgeschlossen|Von vorne/i);
-  assert.strictEqual(fixture.audio.currentTime, 0);
+  assert.match(fixture.status.textContent, /läuft/i);
+  assert.strictEqual(fixture.audio.currentTime, 9);
 });
 
 test('TASK 16 Block 3 Coverage: Save-Fehler bei Pause bleibt sicher', async () => {
@@ -2182,7 +2394,7 @@ test('Pilot Integration: realer Playlist-Flow blockiert bei Asset-Fehler speech'
 
     assert.strictEqual(playCalled, false);
     assert.strictEqual(speechCalled, false);
-    assert.strictEqual(status.textContent, 'missing');
+    assert.strictEqual(status.textContent, 'missing Kapitel erneut laden oder wechseln.');
   } finally {
     global.document = originalDocument;
     global.window = originalWindow;

@@ -9,6 +9,9 @@ const buttonId = 'id="lerntexteAudioTestBtn"';
 
 try {
   assert.ok(!html.includes(buttonId), 'Index.html still contains the visible test-audio button.');
+  assert.ok(html.includes('id="lerntexteAudioPreviousBtn"'), 'Button für vorheriges Kapitel fehlt.');
+  assert.ok(html.includes('id="lerntexteAudioReloadBtn"'), 'Button zum erneuten Laden des Kapitels fehlt.');
+  assert.ok(html.includes('id="lerntexteAudioNextBtn"'), 'Button für nächstes Kapitel fehlt.');
   console.log('✓ Lerntexte audio UI test passed: visible test-audio button is absent.');
   process.exit(0);
 } catch (error) {
