@@ -36,6 +36,239 @@ const faecherNachTeilbereich = {
   // Interner Zustand: true, wenn die aktuelle Frage über die Fehleranalyse-Wiederholung geöffnet wurde (nicht anhand von sichtbarem Text erkennen)
   let wiederholungsKontext = null;
 
+  let trainerEinstiegsDialogState = null;
+  let trainerEinstiegsDialogSchritt = 1;
+  let trainerEinstiegAuswahlNachAuth = null;
+
+  function trainerAuswahlIstVollstaendig(teilbereich, fach, thema) {
+    const bereich = String(teilbereich || "").trim();
+    const fachName = String(fach || "").trim();
+    const themaName = String(thema || "").trim();
+    return ["WQ", "HQ"].includes(bereich)
+      && (faecherNachTeilbereich[bereich] || []).includes(fachName)
+      && themaName.length > 0;
+  }
+
+  function trainerEinstiegElement(id) {
+    return document.getElementById(id);
+  }
+
+  function trainerEinstiegSetzeOptionen(select, options, placeholder) {
+    if (!select) return;
+    select.innerHTML = "";
+    const first = document.createElement("option");
+    first.value = "";
+    first.textContent = placeholder;
+    select.appendChild(first);
+    options.forEach(function(optionData) {
+      const option = document.createElement("option");
+      option.value = typeof optionData === "string" ? optionData : String(optionData.value || "");
+      option.textContent = typeof optionData === "string" ? optionData : String(optionData.label || optionData.value || "");
+      select.appendChild(option);
+    });
+  }
+
+  function trainerEinstiegStateAusProduktivemKontext() {
+    const teilbereich = String(aktuellerTeilbereich || "").trim();
+    const fach = String(aktuellesFach || "").trim();
+    const thema = String(aktuellesThema || "").trim();
+    return {
+      teilbereich,
+      fach: (faecherNachTeilbereich[teilbereich] || []).includes(fach) ? fach : "",
+      thema: fach && (faecherNachTeilbereich[teilbereich] || []).includes(fach) ? thema : ""
+    };
+  }
+
+  function trainerEinstiegAktualisiereSchritt() {
+    const dialog = trainerEinstiegElement("trainerEinstiegsDialog");
+    if (!dialog || !trainerEinstiegsDialogState) return;
+
+    [1, 2, 3].forEach(function(schritt) {
+      const bereich = trainerEinstiegElement("trainerEinstiegsSchritt" + schritt);
+      if (bereich) bereich.hidden = schritt !== trainerEinstiegsDialogSchritt;
+    });
+
+    const anzeige = trainerEinstiegElement("trainerEinstiegsFortschritt");
+    const titel = ["Teilbereich", "Fach", "Thema"][trainerEinstiegsDialogSchritt - 1];
+    if (anzeige) anzeige.textContent = trainerEinstiegsDialogSchritt + " von 3 – " + titel;
+
+    const startButton = trainerEinstiegElement("trainerEinstiegsStartBtn");
+    if (startButton) {
+      startButton.disabled = !trainerEinstiegsDialogState.thema;
+    }
+  }
+
+  function trainerEinstiegLadeFaecher() {
+    const fachSelect = trainerEinstiegElement("trainerEinstiegsFach");
+    const fachListe = faecherNachTeilbereich[trainerEinstiegsDialogState?.teilbereich] || [];
+    trainerEinstiegSetzeOptionen(fachSelect, fachListe, "-- Fach wählen --");
+    if (fachSelect) fachSelect.value = trainerEinstiegsDialogState.fach || "";
+  }
+
+  async function trainerEinstiegLadeThemen() {
+    const themaSelect = trainerEinstiegElement("trainerEinstiegsThema");
+    if (!themaSelect || !trainerEinstiegsDialogState?.fach) return;
+
+    trainerEinstiegSetzeOptionen(themaSelect, [], "Themen werden geladen...");
+    themaSelect.disabled = true;
+    const status = trainerEinstiegElement("trainerEinstiegsStatus");
+    if (status) status.textContent = "Themen werden geladen …";
+
+    const fachZumLaden = trainerEinstiegsDialogState.fach;
+    try {
+      const ladeThemenDaten = window.ladeTrainerThemenDaten;
+      if (typeof ladeThemenDaten !== "function") {
+        throw new Error("Themenlogik ist noch nicht verfügbar.");
+      }
+      const themen = await ladeThemenDaten(fachZumLaden);
+      if (!trainerEinstiegsDialogState || trainerEinstiegsDialogState.fach !== fachZumLaden) return;
+      trainerEinstiegSetzeOptionen(themaSelect, themen.map(function(eintrag) {
+        const name = typeof eintrag === "string" ? eintrag : String(eintrag.thema || "").trim();
+        const anzahl = typeof eintrag === "object" ? Number(eintrag.anzahl || 0) : 0;
+        return { value: name, label: anzahl > 0 ? name + " (" + anzahl + " Fragen)" : name };
+      }), "-- Thema wählen --");
+      themaSelect.value = trainerEinstiegsDialogState.thema || "";
+      themaSelect.disabled = false;
+      if (status) status.textContent = themen.length ? "Thema auswählen." : "Keine Themen gefunden.";
+    } catch (error) {
+      if (!trainerEinstiegsDialogState || trainerEinstiegsDialogState.fach !== fachZumLaden) return;
+      trainerEinstiegSetzeOptionen(themaSelect, [], "Themen konnten nicht geladen werden");
+      if (status) status.textContent = "Themen konnten nicht geladen werden: " + error.message;
+    }
+  }
+
+  function trainerEinstiegOeffne() {
+    const dialog = trainerEinstiegElement("trainerEinstiegsDialog");
+    if (!dialog) return;
+
+    trainerEinstiegAuswahlNachAuth = null;
+    trainerEinstiegsDialogState = trainerEinstiegStateAusProduktivemKontext();
+    trainerEinstiegsDialogSchritt = trainerEinstiegsDialogState.teilbereich
+      ? (trainerEinstiegsDialogState.fach ? 3 : 2)
+      : 1;
+    const teilbereichSelect = trainerEinstiegElement("trainerEinstiegsTeilbereich");
+    if (teilbereichSelect) teilbereichSelect.value = trainerEinstiegsDialogState.teilbereich || "";
+    trainerEinstiegLadeFaecher();
+    const themaSelect = trainerEinstiegElement("trainerEinstiegsThema");
+    trainerEinstiegSetzeOptionen(themaSelect, [], "-- Thema wählen --");
+    if (themaSelect) themaSelect.disabled = true;
+    const status = trainerEinstiegElement("trainerEinstiegsStatus");
+    if (status) status.textContent = trainerEinstiegsDialogState.fach
+      ? "Thema auswählen."
+      : trainerEinstiegsDialogState.teilbereich
+        ? "Wähle ein Fach."
+        : "Wähle zuerst einen Teilbereich.";
+    dialog.hidden = false;
+    dialog.setAttribute("aria-hidden", "false");
+    trainerEinstiegAktualisiereSchritt();
+    if (trainerEinstiegsDialogState.fach) trainerEinstiegLadeThemen();
+    if (teilbereichSelect) window.setTimeout(function() { teilbereichSelect.focus(); }, 0);
+  }
+
+  function trainerEinstiegSchliesse() {
+    const dialog = trainerEinstiegElement("trainerEinstiegsDialog");
+    if (dialog) {
+      dialog.hidden = true;
+      dialog.setAttribute("aria-hidden", "true");
+    }
+    trainerEinstiegsDialogState = null;
+    trainerEinstiegsDialogSchritt = 1;
+  }
+
+  function trainerEinstiegTeilbereichGeaendert() {
+    if (!trainerEinstiegsDialogState) return;
+    const select = trainerEinstiegElement("trainerEinstiegsTeilbereich");
+    trainerEinstiegsDialogState.teilbereich = select ? select.value : "";
+    trainerEinstiegsDialogState.fach = "";
+    trainerEinstiegsDialogState.thema = "";
+    trainerEinstiegLadeFaecher();
+    const themaSelect = trainerEinstiegElement("trainerEinstiegsThema");
+    trainerEinstiegSetzeOptionen(themaSelect, [], "-- Thema wählen --");
+    if (themaSelect) themaSelect.disabled = true;
+    trainerEinstiegsDialogSchritt = trainerEinstiegsDialogState.teilbereich ? 2 : 1;
+    const status = trainerEinstiegElement("trainerEinstiegsStatus");
+    if (status) status.textContent = trainerEinstiegsDialogState.teilbereich ? "Wähle ein Fach." : "Wähle zuerst einen Teilbereich.";
+    trainerEinstiegAktualisiereSchritt();
+  }
+
+  function trainerEinstiegFachGeaendert() {
+    if (!trainerEinstiegsDialogState) return;
+    const select = trainerEinstiegElement("trainerEinstiegsFach");
+    trainerEinstiegsDialogState.fach = select ? select.value : "";
+    trainerEinstiegsDialogState.thema = "";
+    trainerEinstiegsDialogSchritt = trainerEinstiegsDialogState.fach ? 3 : 2;
+    trainerEinstiegAktualisiereSchritt();
+    if (trainerEinstiegsDialogState.fach) trainerEinstiegLadeThemen();
+  }
+
+  function trainerEinstiegThemaGeaendert() {
+    if (!trainerEinstiegsDialogState) return;
+    const select = trainerEinstiegElement("trainerEinstiegsThema");
+    trainerEinstiegsDialogState.thema = select ? select.value : "";
+    trainerEinstiegAktualisiereSchritt();
+  }
+
+  function trainerEinstiegSchrittZurueck(schritt) {
+    if (!trainerEinstiegsDialogState) return;
+    trainerEinstiegsDialogSchritt = schritt === 1 ? 1 : 2;
+    trainerEinstiegAktualisiereSchritt();
+  }
+
+  async function trainerEinstiegUebernehmeAuswahl(auswahl) {
+    const trainerView = document.getElementById("trainerView");
+    if (trainerView && !trainerView.classList.contains("active")) return;
+
+    const teilbereichSelect = document.getElementById("teilbereichSelect");
+    if (!teilbereichSelect) return;
+    teilbereichSelect.value = auswahl.teilbereich;
+    teilbereichSelect.style.display = "none";
+
+    if (typeof waehleTeilbereich === "function") waehleTeilbereich();
+    if (typeof waehleFach === "function") await waehleFach(auswahl.fach);
+
+    const themaSelect = document.getElementById("themaSelect");
+    if (!themaSelect) return;
+    themaSelect.value = auswahl.thema;
+    if (typeof starteThema === "function") await starteThema();
+  }
+
+  async function trainerEinstiegNachAuth() {
+    const auswahl = trainerEinstiegAuswahlNachAuth;
+    if (!auswahl) return;
+    if (!document.getElementById("trainerView")?.classList.contains("active")) return;
+    trainerEinstiegAuswahlNachAuth = null;
+    await trainerEinstiegUebernehmeAuswahl(auswahl);
+  }
+
+  window.trainerEinstiegNachAuth = trainerEinstiegNachAuth;
+
+  async function trainerEinstiegStarteTraining() {
+    const auswahl = trainerEinstiegsDialogState && { ...trainerEinstiegsDialogState };
+    if (!trainerAuswahlIstVollstaendig(auswahl?.teilbereich, auswahl?.fach, auswahl?.thema)) return;
+
+    trainerEinstiegAuswahlNachAuth = auswahl;
+    trainerEinstiegSchliesse();
+    if (typeof requireAuth === "function") {
+      requireAuth("trainerView");
+    } else {
+      zeigeBereich("trainerView");
+    }
+
+    if (document.getElementById("trainerView")?.classList.contains("active")) {
+      await trainerEinstiegNachAuth();
+    }
+  }
+
+  function aktualisiereTrainerAuswahlFallback() {
+    const button = document.getElementById("trainerAuswahlStartBtn");
+    if (!button) return;
+    button.hidden = trainerAuswahlIstVollstaendig(aktuellerTeilbereich, aktuellesFach, aktuellesThema);
+  }
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape" && trainerEinstiegsDialogState) trainerEinstiegSchliesse();
+  });
+
   const erfolgsFortschritt = {};
   window.meldeErfolgsFortschritt = function(bereich, prozent, userId) {
     const schluessel = String(userId || '');
@@ -188,6 +421,8 @@ if (viewId === "formelView") {
     }
     if (viewId === "kilianView") document.getElementById("navKilian").classList.add("active");
 
+    if (viewId === "trainerView") aktualisiereTrainerAuswahlFallback();
+
     window.scrollTo({ top: 0, behavior: "smooth" });
     // move the single hamburger/menu into the active view's heading
     try { moveHamburgerToView(viewId); } catch (e) { console.warn('moveHamburgerToView error', e); }
@@ -231,6 +466,13 @@ function moveHamburgerToView(viewId) {
 }
 
 function oeffneTrainerMitTeilbereich(teilbereich) {
+    if (typeof teilbereich !== "string" || !teilbereich) {
+      if (!trainerAuswahlIstVollstaendig(aktuellerTeilbereich, aktuellesFach, aktuellesThema)) {
+        trainerEinstiegOeffne();
+        return;
+      }
+    }
+
     if (typeof requireAuth === 'function') {
       requireAuth('trainerView');
     } else {

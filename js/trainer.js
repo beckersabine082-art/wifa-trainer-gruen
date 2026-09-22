@@ -12,6 +12,7 @@ function waehleTeilbereich() {
     aktuelleMusterloesung = "";
     aktuelleStichpunkte = [];
     aktuelleFrageId = "";
+    if (typeof aktualisiereTrainerAuswahlFallback === "function") aktualisiereTrainerAuswahlFallback();
 
     const fachSelect = document.getElementById("fachSelect");
     const fachBereich = document.getElementById("fachBereich");
@@ -911,6 +912,16 @@ async function zurueckZurFehleranalyse() {
     }
   }
 
+async function ladeTrainerThemenDaten(fach) {
+    const result = await apiGet("topics", { fach });
+    if (!result.success) {
+      throw new Error(result.error || "Themen konnten nicht geladen werden.");
+    }
+    return result.data || [];
+  }
+
+window.ladeTrainerThemenDaten = ladeTrainerThemenDaten;
+
 async function ladeThemen(fach) {
     const eigenerToken = ++ladeToken;
 
@@ -924,15 +935,9 @@ async function ladeThemen(fach) {
       bereich.style.display = "block";
       document.getElementById("fachStatus").textContent = "Themen werden geladen für: " + fach;
 
-      const result = await apiGet("topics", { fach });
-
       if (eigenerToken !== ladeToken) return;
-
-      if (!result.success) {
-        throw new Error(result.error || "Themen konnten nicht geladen werden.");
-      }
-
-      const themen = result.data || [];
+      const themen = await ladeTrainerThemenDaten(fach);
+      if (eigenerToken !== ladeToken) return;
 
       select.innerHTML = '<option value="">-- Thema wählen --</option>';
 
@@ -965,6 +970,7 @@ async function ladeThemen(fach) {
 
       document.getElementById("fachStatus").textContent =
         "Themen geladen für: " + fach + " (" + themen.length + ")";
+      return themen;
     } catch (error) {
       if (eigenerToken !== ladeToken) return;
 
@@ -990,6 +996,7 @@ function waehleFach(fach) {
     aktuelleMusterloesung = "";
     aktuelleStichpunkte = [];
     aktuelleFrageId = "";
+    if (typeof aktualisiereTrainerAuswahlFallback === "function") aktualisiereTrainerAuswahlFallback();
 
     document.getElementById("anzeigeFach").textContent = aktuellesFach || "Kein Fach";
     document.getElementById("anzeigeThema").textContent = "Bitte Thema wählen";
@@ -1003,7 +1010,7 @@ function waehleFach(fach) {
     updateStatAnzeige();
 
     if (aktuellesFach) {
-      ladeThemen(aktuellesFach);
+      return ladeThemen(aktuellesFach);
     }
   }
 
@@ -1243,6 +1250,7 @@ async function starteThema() {
     aktuellesThema = thema;
     aktuelleFrageId = "";
     wiederholungsKontext = null;
+    if (typeof aktualisiereTrainerAuswahlFallback === "function") aktualisiereTrainerAuswahlFallback();
 
     const gespeicherteFrageId = await ladeTrainerFortschritt(aktuellesFach, aktuellesThema);
     ladeFrageAusFach(aktuellesFach, aktuellesThema, gespeicherteFrageId || "", usageTicket);

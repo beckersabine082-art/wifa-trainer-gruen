@@ -4571,3 +4571,120 @@ body.hinweis-open {
     font-size: 14px;
   }
 }
+
+.trainer-auswahl-start-btn {
+  margin-top: 10px;
+}
+
+.trainer-einstiegs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 14000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(45, 31, 70, 0.42);
+  overflow-y: auto;
+}
+
+.trainer-einstiegs-overlay[hidden] {
+  display: none;
+}
+
+.trainer-einstiegs-karte {
+  width: min(100%, 460px);
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid rgba(79, 159, 104, 0.22);
+  border-radius: 22px;
+  background: #ffffff;
+  color: #2d1f46;
+  box-shadow: 0 18px 52px rgba(31, 52, 39, 0.24);
+}
+
+.trainer-einstiegs-kopf {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.trainer-einstiegs-kopf h2 {
+  margin: 0 0 6px;
+  color: #245c3a;
+  font-size: 22px;
+}
+
+.trainer-einstiegs-kopf p {
+  margin: 0;
+  color: #4a3970;
+  line-height: 1.45;
+}
+
+.trainer-einstiegs-schliessen {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #efe7ff;
+  color: #2d1f46;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.trainer-einstiegs-fortschritt {
+  margin: 18px 0 12px;
+  color: #245c3a;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.trainer-einstiegs-schritt select {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 46px;
+  margin-top: 6px;
+}
+
+.trainer-einstiegs-zurueck {
+  margin-top: 12px;
+}
+
+.trainer-einstiegs-status {
+  min-height: 20px;
+  margin-top: 10px;
+}
+
+.trainer-einstiegs-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+@media (max-width: 520px) {
+  .trainer-einstiegs-overlay {
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .trainer-einstiegs-karte {
+    margin-top: 8vh;
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .trainer-einstiegs-kopf h2 {
+    font-size: 20px;
+  }
+
+  .trainer-einstiegs-aktionen > button {
+    flex: 1 1 140px;
+  }
+}

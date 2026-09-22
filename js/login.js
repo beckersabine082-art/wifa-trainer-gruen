@@ -361,6 +361,7 @@ function bindAuthUI() {
 				const target = getDesiredView() || 'startView';
 				clearDesiredView();
 				zeigeBereich(target);
+				if (target === 'trainerView') window.trainerEinstiegNachAuth?.();
 			}
 		} catch (e) {
 			showStatus(translateError(e.code), true);
@@ -509,7 +510,11 @@ function bindAuthUI() {
 				updateNavForAuth(user);
 				await ensureUserProfile(user);
 				const target = getDesiredView();
-				if (target) { zeigeBereich(target); clearDesiredView(); }
+				if (target) {
+					zeigeBereich(target);
+					if (target === 'trainerView') window.trainerEinstiegNachAuth?.();
+					clearDesiredView();
+				}
 			} else {
 				showStatus('E-Mail noch nicht bestätigt.', true);
 			}
@@ -703,7 +708,11 @@ onAuthStateChanged(auth, async (user) => {
 			if (tabs) tabs.style.display = 'none';
 		}
 		const target = getDesiredView();
-		if (currentUserVerified && target) { zeigeBereich(target); clearDesiredView(); }
+		if (currentUserVerified && target) {
+			zeigeBereich(target);
+			if (target === 'trainerView') window.trainerEinstiegNachAuth?.();
+			clearDesiredView();
+		}
 		if (currentUserVerified && typeof window.stelleLaufendePruefungWiederHer === 'function') {
 			await window.stelleLaufendePruefungWiederHer();
 		}

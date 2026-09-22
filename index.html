@@ -435,6 +435,9 @@
           </div>
 
           <div class="status" id="fachStatus">Bitte zuerst einen Teilbereich auswählen.</div>
+          <button class="secondary-btn trainer-auswahl-start-btn" id="trainerAuswahlStartBtn" type="button" onclick="trainerEinstiegOeffne()" hidden>
+            Lernbereich auswählen
+          </button>
         </div>
 
         <div class="card">
@@ -1484,6 +1487,49 @@
   <div id="kilianBubbleAntwort">
     Hier erscheint Kilians Antwort.
   </div>
+</div>
+
+<div id="trainerEinstiegsDialog" class="trainer-einstiegs-overlay" role="dialog" aria-modal="true" aria-labelledby="trainerEinstiegsTitel" aria-hidden="true" hidden>
+  <section class="trainer-einstiegs-karte">
+    <div class="trainer-einstiegs-kopf">
+      <div>
+        <h2 id="trainerEinstiegsTitel">Was möchtest du trainieren?</h2>
+        <p>Wähle kurz deinen Lernbereich aus.</p>
+      </div>
+      <button class="trainer-einstiegs-schliessen" type="button" onclick="trainerEinstiegSchliesse()" aria-label="Auswahl schließen">×</button>
+    </div>
+
+    <div class="trainer-einstiegs-fortschritt" id="trainerEinstiegsFortschritt" aria-live="polite">1 von 3 – Teilbereich</div>
+
+    <div id="trainerEinstiegsSchritt1" class="trainer-einstiegs-schritt">
+      <label class="label" for="trainerEinstiegsTeilbereich">Teilbereich</label>
+      <select id="trainerEinstiegsTeilbereich" onchange="trainerEinstiegTeilbereichGeaendert()">
+        <option value="">-- Teilbereich wählen --</option>
+        <option value="WQ">WQ – Wirtschaftsbezogene Qualifikationen</option>
+        <option value="HQ">HQ – Handlungsspezifische Qualifikationen</option>
+      </select>
+    </div>
+
+    <div id="trainerEinstiegsSchritt2" class="trainer-einstiegs-schritt" hidden>
+      <label class="label" for="trainerEinstiegsFach">Fach</label>
+      <select id="trainerEinstiegsFach" onchange="trainerEinstiegFachGeaendert()">
+        <option value="">-- Fach wählen --</option>
+      </select>
+      <button class="secondary-btn trainer-einstiegs-zurueck" type="button" onclick="trainerEinstiegSchrittZurueck(1)">Zurück</button>
+    </div>
+
+    <div id="trainerEinstiegsSchritt3" class="trainer-einstiegs-schritt" hidden>
+      <label class="label" for="trainerEinstiegsThema">Thema</label>
+      <select id="trainerEinstiegsThema" onchange="trainerEinstiegThemaGeaendert()">
+        <option value="">-- Thema wählen --</option>
+      </select>
+      <div class="status trainer-einstiegs-status" id="trainerEinstiegsStatus" aria-live="polite"></div>
+      <div class="trainer-einstiegs-aktionen">
+        <button class="secondary-btn" type="button" onclick="trainerEinstiegSchrittZurueck(2)">Zurück</button>
+        <button class="action-btn" id="trainerEinstiegsStartBtn" type="button" onclick="trainerEinstiegStarteTraining()" disabled>Training starten</button>
+      </div>
+    </div>
+  </section>
 </div>
 
 <div id="trainerHintBubble" class="trainer-hint-bubble" hidden>
