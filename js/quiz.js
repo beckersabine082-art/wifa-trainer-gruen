@@ -515,13 +515,18 @@ function befuelleQuizModus() {
   const modus = document.getElementById('quizModus');
   if (!modus || !katalog) return;
 
-  const faecher = [...new Set(katalog.map(item => String(item.fach || '').trim()).filter(Boolean))]
+  const ausgewaehltesFach = modus.value;
+  const angezeigteFaecher = Array.from(modus.options || [])
+    .map(option => String(option.value || '').trim())
+    .filter(Boolean);
+  const katalogFaecher = katalog.map(item => String(item.fach || '').trim()).filter(Boolean);
+  const faecher = [...new Set([...angezeigteFaecher, ...katalogFaecher])]
     .sort((first, second) => first.localeCompare(second, 'de'));
   modus.replaceChildren(
     new Option('🎲 Alle Fächer – Zufallsmix', ''),
     ...faecher.map(fach => new Option(fach, fach))
   );
-  modus.value = quizFach;
+  modus.value = ausgewaehltesFach;
 }
 
 async function ladeQuizNachAuswahl(usageTicket = window.WifaUsage?.captureTicket()) {
@@ -586,6 +591,7 @@ function ladeQuizAuswahlMitFehlerbehandlung() {
 
 function wechsleQuizmodus(event) {
   quizFach = event.target.value;
+  if (!katalog) return;
   if (!quizSchwierigkeitsgrad) {
     const status = document.getElementById('quizStatus');
     if (status) status.textContent = 'Bitte wähle zuerst einen Schwierigkeitsgrad.';
@@ -598,6 +604,7 @@ function wechsleQuizSchwierigkeitsgrad(event) {
   const value = String(event.target?.value || '').trim();
   if (!QUIZ_SCHWIERIGKEITEN.includes(value)) return;
   quizSchwierigkeitsgrad = value;
+  if (!katalog) return;
   ladeQuizAuswahlMitFehlerbehandlung();
 }
 
