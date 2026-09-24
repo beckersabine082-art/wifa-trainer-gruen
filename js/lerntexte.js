@@ -40,6 +40,7 @@ let lerntexteAudioPlaylistIndex = 0;
 let lerntexteAudioQuelle = "";
 let lerntexteAudioSessionId = 0;
 let lerntexteAudioLoadController = null;
+let lerntexteAudioPrefetch = null;
 let lerntexteAudioLetztePosition = 0;
 let lerntexteAudioFehler = false;
 let lerntexteAudioLaedt = false;
@@ -134,7 +135,114 @@ function lerntexteAudioIstVeralteterFehler(error) {
   return Boolean(error && (error.code === 'podcast/session-stale' || error.name === 'AbortError'));
 }
 
+function lerntexteAudioPrefetchVerwerfen() {
+  const prefetch = lerntexteAudioPrefetch;
+  lerntexteAudioPrefetch = null;
+  if (prefetch && prefetch.controller && typeof prefetch.controller.abort === 'function') {
+    prefetch.controller.abort();
+  }
+}
+
+function lerntexteAudioPrefetchIstAktuell(prefetch) {
+  return Boolean(
+    prefetch
+    && lerntexteAudioPrefetch === prefetch
+    && lerntexteAudioSessionIstAktuell(prefetch.sessionId)
+    && lerntexteAudioPlaylist === prefetch.playlist
+    && lerntexteAudioPlaylistIndex === prefetch.sourceIndex
+    && lerntexteAudioPlaylist[prefetch.targetIndex] === prefetch.item
+  );
+}
+
+function lerntexteAudioPrefetchNehmen(targetIndex, sessionId) {
+  const prefetch = lerntexteAudioPrefetch;
+  const usable = Boolean(
+    prefetch
+    && prefetch.state === 'ready'
+    && prefetch.sessionId === sessionId
+    && prefetch.playlist === lerntexteAudioPlaylist
+    && prefetch.targetIndex === targetIndex
+    && prefetch.item === lerntexteAudioPlaylist[targetIndex]
+    && prefetch.assets
+    && prefetch.assets.manifest
+    && prefetch.assets.mp3Metadata
+    && typeof prefetch.assets.mp3Url === 'string'
+    && prefetch.assets.mp3Url
+  );
+
+  lerntexteAudioPrefetch = null;
+  if (!usable) {
+    if (prefetch && prefetch.controller && typeof prefetch.controller.abort === 'function') {
+      prefetch.controller.abort();
+    }
+    return null;
+  }
+  return prefetch;
+}
+
+function lerntexteAudioNaechstesKapitelVorbereiten(sessionId) {
+  if (!lerntexteAudioSessionIstAktuell(sessionId)) return Promise.resolve(null);
+  const sourceIndex = lerntexteAudioPlaylistIndex;
+  const targetIndex = sourceIndex + 1;
+  if (targetIndex >= lerntexteAudioPlaylist.length) {
+    lerntexteAudioPrefetchVerwerfen();
+    return Promise.resolve(null);
+  }
+
+  const playlist = lerntexteAudioPlaylist;
+  const item = playlist[targetIndex];
+  if (!item || !item.eintrag) return Promise.resolve(null);
+  if (lerntexteAudioPrefetch
+    && lerntexteAudioPrefetch.sessionId === sessionId
+    && lerntexteAudioPrefetch.playlist === playlist
+    && lerntexteAudioPrefetch.targetIndex === targetIndex
+    && lerntexteAudioPrefetch.item === item) {
+    return lerntexteAudioPrefetch.promise || Promise.resolve(lerntexteAudioPrefetch);
+  }
+
+  lerntexteAudioPrefetchVerwerfen();
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const prefetch = {
+    sessionId: sessionId,
+    playlist: playlist,
+    sourceIndex: sourceIndex,
+    targetIndex: targetIndex,
+    item: item,
+    controller: controller,
+    state: 'pending',
+    assets: null,
+    progress: null,
+    currentHash: '',
+    promise: null
+  };
+  lerntexteAudioPrefetch = prefetch;
+
+  prefetch.promise = (async function () {
+    const signal = controller ? controller.signal : undefined;
+    const assets = await lerntextePilotAssetsLaden(item.eintrag, sessionId, signal);
+    if (!lerntexteAudioPrefetchIstAktuell(prefetch)) return null;
+    const validation = await lerntextePilotAssetValidieren(item.eintrag, assets.manifest, assets.mp3Metadata, sessionId);
+    if (!lerntexteAudioPrefetchIstAktuell(prefetch)) return null;
+    if (!validation.valid) {
+      if (lerntexteAudioPrefetch === prefetch) lerntexteAudioPrefetch = null;
+      return null;
+    }
+    const progress = await lerntextePilotProgressLaden(item.eintrag, validation.currentHash, sessionId, { silent: true });
+    if (!lerntexteAudioPrefetchIstAktuell(prefetch)) return null;
+    prefetch.assets = assets;
+    prefetch.progress = progress;
+    prefetch.currentHash = validation.currentHash;
+    prefetch.state = 'ready';
+    return prefetch;
+  })().catch(function () {
+    if (lerntexteAudioPrefetch === prefetch) lerntexteAudioPrefetch = null;
+    return null;
+  });
+  return prefetch.promise;
+}
+
 function lerntexteAudioSessionInvalidieren() {
+  lerntexteAudioPrefetchVerwerfen();
   const previousSessionId = lerntexteAudioSessionId;
   lerntextePilotKaraokeAufraeumen(previousSessionId);
   if (lerntexteAudioLoadController && typeof lerntexteAudioLoadController.abort === 'function') {
@@ -150,44 +258,48 @@ async function lerntextePilotAssetsLaden(eintrag, sessionId, signal) {
   const paths = lerntextePodcastPfade(fach, eintrag);
   if (typeof window !== 'undefined' && window.lerntextePilotDependencies) {
     const dependencies = window.lerntextePilotDependencies;
-    const manifest = await dependencies.loadManifest(paths.jsonPath, signal);
-    lerntexteAudioSessionPruefen(sessionId);
-    const mp3Metadata = await dependencies.loadMetadata(paths.mp3Path, signal);
-    lerntexteAudioSessionPruefen(sessionId);
-    const mp3Url = await dependencies.loadMp3Url(paths.mp3Path, signal);
+    const results = await Promise.all([
+      dependencies.loadManifest(paths.jsonPath, signal),
+      dependencies.loadMetadata(paths.mp3Path, signal),
+      dependencies.loadMp3Url(paths.mp3Path, signal)
+    ]);
     lerntexteAudioSessionPruefen(sessionId);
     return {
-      manifest: manifest,
-      mp3Metadata: mp3Metadata,
-      mp3Url: mp3Url
+      manifest: results[0],
+      mp3Metadata: results[1],
+      mp3Url: results[2]
     };
   }
 
-  const firebase = await import('./firebase-config.js');
-  lerntexteAudioSessionPruefen(sessionId);
+  const modules = await Promise.all([
+    import('./firebase-config.js'),
+    import('https://www.gstatic.com/firebasejs/12.17.1/firebase-storage.js')
+  ]);
+  const firebase = modules[0];
+  const storageModule = modules[1];
   const storageRef = firebase.ref(firebase.storage, paths.mp3Path);
   const jsonRef = firebase.ref(firebase.storage, paths.jsonPath);
-  const storageModule = await import('https://www.gstatic.com/firebasejs/12.17.1/firebase-storage.js');
   lerntexteAudioSessionPruefen(sessionId);
-  const manifestUrl = await firebase.getDownloadURL(jsonRef);
-  lerntexteAudioSessionPruefen(sessionId);
-  const manifestResponse = await fetch(manifestUrl, signal ? { signal: signal } : undefined);
-  lerntexteAudioSessionPruefen(sessionId);
-  if (!manifestResponse.ok) {
-    throw new Error('Podcast-Manifest konnte nicht geladen werden.');
-  }
-
-  const manifest = await manifestResponse.json();
-  lerntexteAudioSessionPruefen(sessionId);
-  const mp3Metadata = await storageModule.getMetadata(storageRef);
-  lerntexteAudioSessionPruefen(sessionId);
-  const mp3Url = await firebase.getDownloadURL(storageRef);
+  const manifestPromise = firebase.getDownloadURL(jsonRef).then(async function (manifestUrl) {
+    lerntexteAudioSessionPruefen(sessionId);
+    const manifestResponse = await fetch(manifestUrl, signal ? { signal: signal } : undefined);
+    lerntexteAudioSessionPruefen(sessionId);
+    if (!manifestResponse.ok) {
+      throw new Error('Podcast-Manifest konnte nicht geladen werden.');
+    }
+    return manifestResponse.json();
+  });
+  const results = await Promise.all([
+    manifestPromise,
+    storageModule.getMetadata(storageRef),
+    firebase.getDownloadURL(storageRef)
+  ]);
   lerntexteAudioSessionPruefen(sessionId);
 
   return {
-    manifest: manifest,
-    mp3Metadata: mp3Metadata,
-    mp3Url: mp3Url
+    manifest: results[0],
+    mp3Metadata: results[1],
+    mp3Url: results[2]
   };
 }
 
@@ -270,7 +382,9 @@ async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadat
     return false;
   }
 
-  const progress = await lerntextePilotProgressLaden(eintrag, validation.currentHash, sessionId);
+  const progress = Object.prototype.hasOwnProperty.call(options, 'progress')
+    ? options.progress
+    : await lerntextePilotProgressLaden(eintrag, validation.currentHash, sessionId);
   lerntexteAudioSessionPruefen(sessionId);
   const textRoot = options.textRoot || lerntextePilotTextRoot;
   lerntextePilotKaraokeAufraeumen(sessionId);
@@ -333,9 +447,11 @@ async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadat
       if (!lerntexteAudioSessionIstAktuell(sessionId)) return false;
       window.WifaAnalytics?.audioError(eintrag.fach, eintrag.titel, error?.name);
       lerntextePilotStatus('Podcast konnte nicht gestartet werden. Kapitel erneut laden oder wechseln.');
+      lerntexteAudioPrefetchVerwerfen();
       lerntexteAudioFehler = true;
       lerntexteAudioAktiv = false;
       lerntexteAudioSteuerungAktualisieren();
+      lerntexteAudioMediaSessionAktualisieren();
       return false;
     }
   }
@@ -390,13 +506,15 @@ async function lerntextePilotNatürlichBeenden(usageTicket, sessionId) {
   const nextIndex = lerntexteAudioPlaylistIndex + 1;
   lerntextePilotKaraokeAufraeumen(sessionId);
   if (nextIndex >= lerntexteAudioPlaylist.length) {
+    lerntexteAudioPrefetchVerwerfen();
     lerntexteAudioProgressSet(100, lerntexteAudioZeitFormat(lerntexteAudioLetztePosition) + ' / ' + lerntexteAudioZeitFormat(lerntexteAudioLetztePosition));
     lerntextePilotStatus('Alle Lerneinheiten wurden abgespielt.');
     lerntexteAudioSteuerungAktualisieren();
     lerntexteAudioKapitelsteuerungAktualisieren();
+    lerntexteAudioMediaSessionAktualisieren();
     return true;
   }
-  return lerntexteAudioKapitelLaden(nextIndex, { usageTicket: usageTicket, saveCurrent: false });
+  return lerntexteAudioKapitelLaden(nextIndex, { usageTicket: usageTicket, saveCurrent: false, usePrefetch: true });
 }
 
 function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot, usageTicket = window.WifaUsage?.captureTicket(), sessionId = lerntexteAudioSessionId, initialPosition) {
@@ -457,6 +575,8 @@ function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot, usageTicket 
     const item = lerntexteAudioPlaylist[lerntexteAudioPlaylistIndex];
     lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && item.titel || 'Lerneinheit'));
     lerntexteAudioSteuerungAktualisieren();
+    lerntexteAudioMediaSessionAktualisieren();
+    lerntexteAudioNaechstesKapitelVorbereiten(sessionId);
   };
   const errorHandler = function () {
     if (!lerntexteAudioSessionIstAktuell(sessionId) || mediaErrorHandled) return;
@@ -464,6 +584,7 @@ function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot, usageTicket 
     if (typeof audio.currentTime === 'number' && isFinite(audio.currentTime)) {
       lerntexteAudioLetztePosition = Math.max(0, audio.currentTime);
     }
+    lerntexteAudioPrefetchVerwerfen();
     lerntexteAudioFehler = true;
     lerntexteAudioAktiv = false;
     lerntexteAudioPausiert = false;
@@ -472,6 +593,7 @@ function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot, usageTicket 
     window.WifaAnalytics?.audioError(lerntextePilotEntry && lerntextePilotEntry.fach, lerntextePilotEntry && lerntextePilotEntry.titel, mediaCode);
     lerntextePilotStatus('Podcast-Mediafehler. Kapitel erneut laden oder wechseln.');
     lerntexteAudioSteuerungAktualisieren();
+    lerntexteAudioMediaSessionAktualisieren();
   };
   const endedHandler = function () {
     if (!lerntexteAudioSessionIstAktuell(sessionId) || endedHandled) return;
@@ -598,7 +720,8 @@ function lerntextePilotUidErmitteln() {
   return typeof uid === 'string' && uid.trim() ? uid.trim() : null;
 }
 
-async function lerntextePilotProgressLaden(eintrag, currentHash, sessionId) {
+async function lerntextePilotProgressLaden(eintrag, currentHash, sessionId, options) {
+  options = options || {};
   const uid = lerntextePilotUidErmitteln();
   const resultState = { uid: uid, resumeState: null, completedState: null };
   if (!uid) return resultState;
@@ -631,7 +754,7 @@ async function lerntextePilotProgressLaden(eintrag, currentHash, sessionId) {
     });
   } catch (error) {
     if (lerntexteAudioIstVeralteterFehler(error)) throw error;
-    if (typeof sessionId !== 'number' || lerntexteAudioSessionIstAktuell(sessionId)) {
+    if (!options.silent && (typeof sessionId !== 'number' || lerntexteAudioSessionIstAktuell(sessionId))) {
       lerntextePilotStatus('Podcast-Fortschritt konnte nicht geladen werden. Wiedergabe startet von vorne.');
     }
   }
@@ -683,17 +806,22 @@ async function lerntextePilotFortsetzen() {
     await lerntextePilotAudio.play();
     if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
     lerntextePilotStatus('Audio läuft.');
+    lerntexteAudioMediaSessionAktualisieren();
   } catch (error) {
     if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
+    lerntexteAudioPrefetchVerwerfen();
     lerntexteAudioFehler = true;
     lerntexteAudioAktiv = false;
     lerntextePilotStatus('Podcast konnte nicht fortgesetzt werden. Kapitel erneut laden oder wechseln.');
     lerntexteAudioSteuerungAktualisieren();
+    lerntexteAudioMediaSessionAktualisieren();
   }
 }
 
 async function lerntextePilotVonVorne() {
   if (!lerntextePilotAudio) return;
+  const sessionId = lerntexteAudioSessionId;
+  lerntexteAudioPrefetchVerwerfen();
   window.WifaAnalytics?.restartAudio(lerntextePilotAudio);
   window.WifaUsage?.restartAudio(lerntextePilotAudio);
   lerntextePodcastVonVorne(lerntextePilotAudio);
@@ -706,12 +834,17 @@ async function lerntextePilotVonVorne() {
   lerntexteAudioSteuerungAktualisieren();
   try {
     await lerntextePilotAudio.play();
+    if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
     lerntextePilotStatus('Audio läuft.');
+    lerntexteAudioMediaSessionAktualisieren();
   } catch (error) {
+    if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
+    lerntexteAudioPrefetchVerwerfen();
     lerntexteAudioFehler = true;
     lerntexteAudioAktiv = false;
     lerntextePilotStatus('Podcast konnte nicht gestartet werden. Kapitel erneut laden oder wechseln.');
     lerntexteAudioSteuerungAktualisieren();
+    lerntexteAudioMediaSessionAktualisieren();
   }
 }
 
@@ -725,21 +858,30 @@ function lerntextePilotPausieren() {
   lerntexteAudioPausiert = true;
   lerntexteAudioSteuerungAktualisieren();
   lerntexteElement('lerntexteAudioStatus').textContent = 'Audio pausiert.';
+  lerntexteAudioMediaSessionAktualisieren();
   return lerntextePilotProgressSpeichern(false, { sessionId: lerntexteAudioSessionId, showError: true });
 }
 
 function lerntextePilotStoppen() {
   if (!lerntextePilotAudio) return;
+  const sessionId = lerntexteAudioSessionId;
+  lerntexteAudioPrefetchVerwerfen();
   lerntextePodcastStoppen(lerntextePilotAudio, function () {
     return lerntextePilotProgressSpeichern(false);
   }, lerntextePilotSaveState(false)).then(function (saved) {
+    if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
     lerntexteAudioAktiv = false;
     lerntexteAudioPausiert = false;
     if (saved !== false) {
       lerntexteElement('lerntexteAudioStatus').textContent = 'Audio gestoppt.';
     }
+    lerntexteAudioMediaSessionAktualisieren();
   }).catch(function () {
+    if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
+    lerntexteAudioAktiv = false;
+    lerntexteAudioPausiert = false;
     lerntextePilotStatus('Podcast-Fortschritt konnte nicht gespeichert werden.');
+    lerntexteAudioMediaSessionAktualisieren();
   });
 }
 
@@ -1049,11 +1191,6 @@ function lerntexteAudioSteuerungAktualisieren() {
       playBtn.disabled = true;
       playBtn.classList.remove("action-btn");
       playBtn.classList.add("secondary-btn");
-    } else if (lerntexteAudioFehler) {
-      playBtn.textContent = "▶ Kapitel erneut laden";
-      playBtn.disabled = true;
-      playBtn.classList.remove("action-btn");
-      playBtn.classList.add("secondary-btn");
     } else {
       playBtn.textContent = "▶ Anhören";
       playBtn.disabled = false;
@@ -1215,7 +1352,7 @@ function initialisiereLerntexteAnsicht() {
 
 async function lerntexteFachWaehlen(fach) {
   const usageTicket = window.WifaUsage?.captureTicket();
-  lerntexteAudioStoppen();
+  lerntexteAudioStoppen(undefined, { resetSession: true });
   lerntexteAktuellesFach = fach;
   lerntexteAktuellesKapitel = "";
   lerntexteDaten = [];
@@ -1287,7 +1424,7 @@ function lerntexteBaueKapitelDropdown() {
 }
 
 function lerntexteKapitelWaehlen() {
-  lerntexteAudioStoppen();
+  lerntexteAudioStoppen(undefined, { resetSession: true });
   lerntexteAktuellesKapitel = lerntexteElement("lerntexteKapitelSelect").value;
   const titelElement = lerntexteElement("lerntexteAudioChapterLabel");
   if (titelElement) {
@@ -1491,6 +1628,7 @@ function lerntexteAnzeigen(usageTicket = window.WifaUsage?.captureTicket()) {
 
 function lerntexteAudioPlaylistWeiter(playlistOverride, playlistIndexOverride, usageTicket = window.WifaUsage?.captureTicket()) {
   if (Array.isArray(playlistOverride)) {
+    lerntexteAudioPrefetchVerwerfen();
     lerntexteAudioPlaylist = playlistOverride;
     lerntexteAudioPlaylistIndex = typeof playlistIndexOverride === 'number' ? playlistIndexOverride : 0;
   }
@@ -1513,6 +1651,12 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
   }
 
   const oldSessionId = lerntexteAudioSessionId;
+  let prepared = null;
+  if (options.usePrefetch === true) {
+    prepared = lerntexteAudioPrefetchNehmen(targetIndex, oldSessionId);
+  } else {
+    lerntexteAudioPrefetchVerwerfen();
+  }
   const domAudio = document.getElementById('lerntexteAudioPlayer');
   if (options.saveCurrent !== false && lerntextePilotAudio && lerntextePilotUid) {
     lerntextePilotProgressSpeichern(false, { sessionId: oldSessionId, showError: false }).catch(function () {});
@@ -1560,17 +1704,31 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
   try {
     if (!domAudio) return false;
     const textRoot = currentItem.textRoot || lerntextePilotTextRoots[String(currentItem.eintrag.fach) + "\u0000" + String(currentItem.eintrag.titel)] || null;
-    const assets = await lerntextePilotAssetsLaden(currentItem.eintrag, sessionId, signal);
+    let assets = prepared ? prepared.assets : await lerntextePilotAssetsLaden(currentItem.eintrag, sessionId, signal);
     lerntexteAudioSessionPruefen(sessionId);
-    const validation = await lerntextePilotAssetValidieren(currentItem.eintrag, assets.manifest, assets.mp3Metadata, sessionId);
+    let validation = await lerntextePilotAssetValidieren(currentItem.eintrag, assets.manifest, assets.mp3Metadata, sessionId);
     lerntexteAudioSessionPruefen(sessionId);
+    let preparedProgress = prepared && prepared.currentHash === validation.currentHash ? prepared.progress : null;
+    if (!validation.valid && prepared) {
+      assets = await lerntextePilotAssetsLaden(currentItem.eintrag, sessionId, signal);
+      lerntexteAudioSessionPruefen(sessionId);
+      validation = await lerntextePilotAssetValidieren(currentItem.eintrag, assets.manifest, assets.mp3Metadata, sessionId);
+      lerntexteAudioSessionPruefen(sessionId);
+      preparedProgress = null;
+    }
     if (!validation.valid) {
       window.WifaAnalytics?.audioError(currentItem.eintrag.fach, currentItem.eintrag.titel, 'asset_invalid');
       lerntextePilotStatus(validation.reason || 'Podcast muss aktualisiert werden.');
+      lerntexteAudioPrefetchVerwerfen();
       lerntexteAudioFehler = true;
+      lerntexteAudioMediaSessionAktualisieren();
       return false;
     }
     lerntextePilotTextRoot = textRoot;
+    const startOptions = { sessionId: sessionId, startPosition: options.startPosition, mp3Url: assets.mp3Url, textRoot: textRoot };
+    if (preparedProgress && prepared.currentHash === validation.currentHash) {
+      startOptions.progress = preparedProgress;
+    }
     return await lerntextePilotAudioStartenValidiert(
       currentItem.eintrag,
       assets.manifest,
@@ -1578,14 +1736,16 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
       null,
       validation,
       options.usageTicket,
-      { sessionId: sessionId, startPosition: options.startPosition, mp3Url: assets.mp3Url, textRoot: textRoot }
+      startOptions
     );
   } catch (error) {
     if (lerntexteAudioIstVeralteterFehler(error) || !lerntexteAudioSessionIstAktuell(sessionId)) return false;
     window.WifaAnalytics?.audioError(currentItem.eintrag.fach, currentItem.eintrag.titel, error?.code || error?.name);
+    lerntexteAudioPrefetchVerwerfen();
     lerntexteAudioFehler = true;
     lerntexteAudioAktiv = false;
     lerntextePilotStatus((error && error.message ? error.message : 'Podcast konnte nicht geladen werden.') + ' Kapitel erneut laden oder wechseln.');
+    lerntexteAudioMediaSessionAktualisieren();
     return false;
   } finally {
     if (lerntexteAudioSessionIstAktuell(sessionId)) {
@@ -1597,11 +1757,13 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
 
 function lerntexteAudioKapitelVorher() {
   if (lerntexteAudioPlaylistIndex <= 0) return Promise.resolve(false);
+  lerntexteAudioPrefetchVerwerfen();
   return lerntexteAudioKapitelLaden(lerntexteAudioPlaylistIndex - 1);
 }
 
 function lerntexteAudioKapitelNeuLaden() {
   if (!lerntexteAudioPlaylist.length) return Promise.resolve(false);
+  lerntexteAudioPrefetchVerwerfen();
   const audio = document.getElementById('lerntexteAudioPlayer');
   const currentPosition = audio && typeof audio.currentTime === 'number' && isFinite(audio.currentTime)
     ? Math.max(0, audio.currentTime)
@@ -1611,19 +1773,28 @@ function lerntexteAudioKapitelNeuLaden() {
 
 function lerntexteAudioKapitelWeiter() {
   if (lerntexteAudioPlaylistIndex >= lerntexteAudioPlaylist.length - 1) return Promise.resolve(false);
+  lerntexteAudioPrefetchVerwerfen();
   return lerntexteAudioKapitelLaden(lerntexteAudioPlaylistIndex + 1);
 }
 
-function lerntexteAudioStoppen(status) {
+function lerntexteAudioStoppen(status, options) {
+  options = options || {};
   const currentPlayer = document.getElementById("lerntexteAudioPlayer");
-  if (currentPlayer && currentPlayer === lerntextePilotAudio) {
+  if (!options.resetSession && currentPlayer && currentPlayer === lerntextePilotAudio) {
     lerntextePilotStoppen();
     return;
   }
+  const oldSessionId = lerntexteAudioSessionId;
+  if (currentPlayer && currentPlayer === lerntextePilotAudio && lerntextePilotUid) {
+    lerntextePilotProgressSpeichern(false, { sessionId: oldSessionId, showError: false }).catch(function () {});
+  }
+  lerntexteAudioSessionInvalidieren();
 
   lerntexteAudioGeneration++;
   lerntexteAudioAktiv = false;
   lerntexteAudioPausiert = false;
+  lerntexteAudioFehler = false;
+  lerntexteAudioLaedt = false;
   lerntexteAudioQuelle = "";
   lerntexteAudioPlaylist = [];
   lerntexteAudioPlaylistIndex = 0;
@@ -1640,11 +1811,14 @@ function lerntexteAudioStoppen(status) {
 
   const player = document.getElementById("lerntexteAudioPlayer");
   if (player) {
-    player.pause();
+    if (typeof player.pause === 'function') player.pause();
+    if (typeof player.removeAttribute === 'function') player.removeAttribute('src');
+    else player.src = '';
     player.currentTime = 0;
     window.WifaUsage?.restartAudio(player);
     player.onended = null;
     player.ontimeupdate = null;
+    if (typeof player.load === 'function') player.load();
   }
 
   if (lerntexteAudioTestKapitelAktiv && lerntexteAudioTestAudio) {
@@ -1680,6 +1854,10 @@ function lerntexteAudioAbspielen() {
     return;
   }
 
+  if (lerntexteAudioFehler && lerntexteAudioPlaylist.length) {
+    return lerntexteAudioKapitelNeuLaden();
+  }
+
   const einheiten = lerntexteAusgewaehlteEinheiten();
   if (!einheiten.length) {
     lerntexteElement("lerntexteAudioStatus").textContent = "Keine Lerneinheiten zum Anhören vorhanden.";
@@ -1703,7 +1881,7 @@ function lerntexteAudioAbspielen() {
   }
   lerntexteAudioProgressSet(0, "0:00 / 0:00");
   lerntexteAudioSteuerungAktualisieren();
-  lerntexteAudioPlaylistWeiter();
+  return lerntexteAudioPlaylistWeiter();
 }
 
 function lerntexteSprechen(chunks, index, generation) {

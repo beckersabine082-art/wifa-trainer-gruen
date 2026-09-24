@@ -255,6 +255,8 @@ function createBlock2Context() {
   const previousButton = new MockElement(null, 'button');
   const reloadButton = new MockElement(null, 'button');
   const nextButton = new MockElement(null, 'button');
+  const chapterSelect = new MockElement(null, 'select');
+  chapterSelect.value = '';
   const progressWrapper = new MockElement(null, 'div');
   const progressBar = new MockElement(null, 'span');
   const progressPercent = new MockElement(null, 'span');
@@ -272,6 +274,7 @@ function createBlock2Context() {
     lerntexteAudioPreviousBtn: previousButton,
     lerntexteAudioReloadBtn: reloadButton,
     lerntexteAudioNextBtn: nextButton,
+    lerntexteKapitelSelect: chapterSelect,
     lerntexteAudioProgressWrapper: progressWrapper,
     lerntexteAudioProgressBar: progressBar,
     lerntexteAudioProgressPercent: progressPercent,
@@ -279,8 +282,9 @@ function createBlock2Context() {
   };
   const document = new EventDocument(elements);
   [root, audio, status, chapterLabel, playButton, pauseButton, stopButton, resumeButton, restartButton,
-    previousButton, reloadButton, nextButton, progressWrapper, progressBar, progressPercent, progressMeta]
+    previousButton, reloadButton, nextButton, chapterSelect, progressWrapper, progressBar, progressPercent, progressMeta]
     .forEach(element => { element.ownerDocument = document; });
+  reloadButton.textContent = '↻ Kapitel erneut laden';
   const eventWindow = new EventWindow();
   const expectedHash = createHash('sha256').update('abc def ghi', 'utf8').digest('hex');
   const digestBytes = Uint8Array.from(expectedHash.match(/../g), byte => parseInt(byte, 16));
@@ -301,7 +305,7 @@ function createBlock2Context() {
     loadMetadata: async () => ({ customMetadata: { lerntextHash: expectedHash } }),
     loadMp3Url: async () => 'https://example.test/pilot.mp3'
   };
-  eventWindow.speechSynthesis = { speak() {} };
+  eventWindow.speechSynthesis = { speak() {}, cancel() {} };
 
   const context = {
     window: eventWindow,
@@ -326,6 +330,12 @@ function createBlock2Context() {
   const source = sourceFiles.map(file => fs.readFileSync(path.join(__dirname, file), 'utf8')).join('\n')
     + '\nwindow.__renderEntries = function(entries, fach) {'
     + 'lerntexteDaten = entries; lerntexteAktuellesFach = fach; lerntexteAktuellesKapitel = ""; lerntexteAnzeigen();'
+    + '};'
+    + 'window.__selectChapter = function(value) {'
+    + 'document.getElementById("lerntexteKapitelSelect").value = String(value); lerntexteKapitelWaehlen();'
+    + '};'
+    + 'window.__audioState = function() {'
+    + 'return { index: lerntexteAudioPlaylistIndex, titles: lerntexteAudioPlaylist.map(function(item) { return item.titel; }), active: lerntexteAudioAktiv, paused: lerntexteAudioPausiert, error: lerntexteAudioFehler, prefetched: Boolean(lerntexteAudioPrefetch) };'
     + '};';
   vm.runInNewContext(source, context);
   return { context, document, eventWindow, root, audio, status, manifest };
@@ -341,6 +351,35 @@ function block2PilotEntry() {
 
 function block2PlaylistItem(entry = block2PilotEntry()) {
   return { eintrag: entry, titel: entry.titel, text: entry.lerntext };
+}
+
+function block2ChapterEntry(title, chapter, fach = 'Recht') {
+  return {
+    fach,
+    titel: title,
+    lerntext: 'abc def ghi',
+    hauptkapitelNr: chapter,
+    hauptkapitel: 'Kapitel ' + chapter,
+    unterkapitelNr: chapter + '.1'
+  };
+}
+
+function block2ManifestFor(fixture, entry) {
+  const mp3Path = fixture.context.window.lerntexteAudioFirebasePfad(entry.fach, entry);
+  return Object.assign({}, fixture.manifest, {
+    mp3Path,
+    jsonPath: mp3Path.replace(/\.mp3$/, '.json')
+  });
+}
+
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, resolve, reject };
 }
 
 function configureBlock3Progress(fixture, progressData, uid = 'user-123') {
@@ -833,6 +872,477 @@ test('TASK 16 Block 3: natürlicher Abschluss blockiert Playlist-Weiterschaltung
   assert.strictEqual((fixture.audio.listeners.ended || new Set()).size, 1, 'alter Cleanup darf Listener der neuen Session nicht entfernen');
 });
 
+test('Podcast-Optimierung: Manifest, MP3-Metadaten und Download-URL starten parallel', async () => {
+  const fixture = createBlock2Context();
+  const manifestRequest = deferred();
+  const metadataRequest = deferred();
+  const urlRequest = deferred();
+  const started = [];
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest() {
+      started.push('manifest');
+      return manifestRequest.promise;
+    },
+    loadMetadata() {
+      started.push('metadata');
+      return metadataRequest.promise;
+    },
+    loadMp3Url() {
+      started.push('mp3-url');
+      return urlRequest.promise;
+    }
+  };
+  fixture.context.window.__renderEntries([block2PilotEntry()], 'Recht');
+
+  const load = fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem()], 0);
+  await Promise.resolve();
+  let assertionError;
+  try {
+    assert.deepStrictEqual(started, ['manifest', 'metadata', 'mp3-url']);
+  } catch (error) {
+    assertionError = error;
+  } finally {
+    manifestRequest.resolve(fixture.manifest);
+    metadataRequest.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    urlRequest.resolve('https://example.test/parallel.mp3');
+    await load;
+  }
+  if (assertionError) throw assertionError;
+});
+
+test('Podcast-Prefetch: verborgenes Dokument wechselt mit vorbereiteten Assets, Progress und Media Session', async () => {
+  const fixture = createBlock2Context();
+  const first = block2ChapterEntry('Kapitel Eins', 1);
+  const second = block2ChapterEntry('Kapitel Zwei', 2);
+  const manifests = new Map([first, second].map(entry => {
+    const manifest = block2ManifestFor(fixture, entry);
+    return [manifest.jsonPath, manifest];
+  }));
+  const calls = { manifest: [], metadata: [], url: [] };
+  let playCount = 0;
+  let validationCount = 0;
+  const originalValidator = fixture.eventWindow.lerntexteAudioVersionIstSynchron;
+  fixture.eventWindow.lerntexteAudioVersionIstSynchron = (...args) => {
+    validationCount += 1;
+    return originalValidator(...args);
+  };
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      calls.manifest.push(jsonPath);
+      return Promise.resolve(manifests.get(jsonPath));
+    },
+    loadMetadata(mp3Path) {
+      calls.metadata.push(mp3Path);
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      calls.url.push(mp3Path);
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  const progress = configureBlock3Progress(fixture, [{
+    nutzer: 'user-123',
+    fach: 'Recht',
+    einheit: second.titel,
+    firebasePfad: block2ManifestFor(fixture, second).mp3Path,
+    lerntextHash: fixture.manifest.lerntextHash,
+    sekundenPosition: 7,
+    wortIndex: 1,
+    completed: false
+  }]);
+  fixture.context.navigator.mediaSession = {
+    playbackState: 'none',
+    setActionHandler() {}
+  };
+  fixture.audio.play = function () {
+    playCount += 1;
+    this.paused = false;
+    return Promise.resolve();
+  };
+  fixture.context.window.__renderEntries([first, second], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(first), block2PlaylistItem(second)], 0);
+
+  fixture.audio.dispatchEvent({ type: 'playing' });
+  await flushAsync();
+
+  assert.strictEqual(calls.manifest.length, 2, 'Folge-Manifest muss vor ended geladen sein');
+  assert.strictEqual(calls.metadata.length, 2, 'Folge-Metadaten müssen vor ended geladen sein');
+  assert.strictEqual(calls.url.length, 2, 'Folge-URL muss vor ended geladen sein');
+  assert.strictEqual(progress.loadCalls.length, 2, 'Folge-Fortschritt muss vor ended geladen sein');
+  assert.strictEqual(fixture.context.navigator.mediaSession.playbackState, 'playing');
+
+  fixture.document.hidden = true;
+  fixture.document.dispatchEvent({ type: 'visibilitychange' });
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  await flushAsync();
+
+  assert.strictEqual(playCount, 2);
+  assert.match(fixture.audio.src, /recht-kapitel-zwei\.mp3$/);
+  assert.strictEqual(fixture.audio.currentTime, 7);
+  assert.strictEqual(calls.manifest.length, 2, 'Cache-Treffer darf Assets nicht erneut laden');
+  assert.strictEqual(calls.metadata.length, 2);
+  assert.strictEqual(calls.url.length, 2);
+  assert.strictEqual(progress.loadCalls.length, 2);
+  assert.strictEqual(validationCount, 3, 'gecachte Assets müssen beim Wechsel erneut hashvalidiert werden');
+});
+
+test('Podcast-Prefetch: fehlgeschlagenes Vorladen fällt beim ended auf den normalen Ladeweg zurück', async () => {
+  const fixture = createBlock2Context();
+  const first = block2ChapterEntry('Kapitel Eins', 1);
+  const second = block2ChapterEntry('Kapitel Zwei', 2);
+  const secondManifest = block2ManifestFor(fixture, second);
+  let secondManifestCalls = 0;
+  let playCount = 0;
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      if (jsonPath === secondManifest.jsonPath) {
+        secondManifestCalls += 1;
+        if (secondManifestCalls === 1) return Promise.reject(new Error('prefetch offline'));
+        return Promise.resolve(secondManifest);
+      }
+      return Promise.resolve(block2ManifestFor(fixture, first));
+    },
+    loadMetadata() {
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  fixture.audio.play = function () {
+    playCount += 1;
+    return Promise.resolve();
+  };
+  fixture.context.window.__renderEntries([first, second], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(first), block2PlaylistItem(second)], 0);
+
+  fixture.audio.dispatchEvent({ type: 'playing' });
+  await flushAsync();
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  await flushAsync();
+
+  assert.strictEqual(secondManifestCalls, 2);
+  assert.strictEqual(playCount, 2);
+  assert.match(fixture.audio.src, /recht-kapitel-zwei\.mp3$/);
+});
+
+test('Podcast-Prefetch: nach Hashänderung wird der Cache verworfen und frisch validiert', async () => {
+  const fixture = createBlock2Context();
+  const first = block2ChapterEntry('Kapitel Eins', 1);
+  const second = block2ChapterEntry('Kapitel Zwei', 2);
+  const secondPaths = block2ManifestFor(fixture, second);
+  const changedText = 'changed current text';
+  const changedHash = createHash('sha256').update(changedText, 'utf8').digest('hex');
+  const digestFor = bytes => {
+    const hex = createHash('sha256').update(Buffer.from(bytes)).digest('hex');
+    return Uint8Array.from(hex.match(/../g), byte => parseInt(byte, 16)).buffer;
+  };
+  fixture.eventWindow.crypto.subtle.digest = async (_algorithm, bytes) => digestFor(bytes);
+  let secondManifestCalls = 0;
+  let secondMetadataCalls = 0;
+  let playCount = 0;
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      if (jsonPath === secondPaths.jsonPath) {
+        secondManifestCalls += 1;
+        return Promise.resolve(Object.assign({}, secondPaths, {
+          lerntextHash: secondManifestCalls === 1 ? fixture.manifest.lerntextHash : changedHash,
+          wortZeitmarken: fixture.manifest.wortZeitmarken
+        }));
+      }
+      return Promise.resolve(block2ManifestFor(fixture, first));
+    },
+    loadMetadata(mp3Path) {
+      if (mp3Path === secondPaths.mp3Path) secondMetadataCalls += 1;
+      return Promise.resolve({
+        customMetadata: {
+          lerntextHash: mp3Path === secondPaths.mp3Path && secondMetadataCalls > 1
+            ? changedHash
+            : fixture.manifest.lerntextHash
+        }
+      });
+    },
+    loadMp3Url(mp3Path) {
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  fixture.audio.play = function () {
+    playCount += 1;
+    return Promise.resolve();
+  };
+  fixture.context.window.__renderEntries([first, second], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(first), block2PlaylistItem(second)], 0);
+
+  fixture.audio.dispatchEvent({ type: 'playing' });
+  await flushAsync();
+  assert.strictEqual(secondManifestCalls, 1, 'Folgekapitel muss vor ended im Cache liegen');
+
+  second.lerntext = changedText;
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  await flushAsync();
+
+  assert.strictEqual(secondManifestCalls, 2, 'ungültiger Cache muss den normalen Ladeweg verwenden');
+  assert.strictEqual(secondMetadataCalls, 2);
+  assert.strictEqual(playCount, 2);
+  assert.match(fixture.audio.src, /recht-kapitel-zwei\.mp3$/);
+});
+
+test('Podcast-Prefetch: Fach- oder Playlistwechsel übernimmt keinen vorbereiteten Altbestand', async () => {
+  const fixture = createBlock2Context();
+  const oldFirst = block2ChapterEntry('Alt Eins', 1, 'Recht');
+  const oldSecond = block2ChapterEntry('Alt Zwei', 2, 'Recht');
+  const newFirst = block2ChapterEntry('Neu Eins', 1, 'Steuern');
+  const newSecond = block2ChapterEntry('Neu Zwei', 2, 'Steuern');
+  const allEntries = [oldFirst, oldSecond, newFirst, newSecond];
+  const manifests = new Map(allEntries.map(entry => {
+    const manifest = block2ManifestFor(fixture, entry);
+    return [manifest.jsonPath, manifest];
+  }));
+  const manifestCalls = [];
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      manifestCalls.push(jsonPath);
+      return Promise.resolve(manifests.get(jsonPath));
+    },
+    loadMetadata() {
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  fixture.context.window.__renderEntries([oldFirst, oldSecond], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(oldFirst), block2PlaylistItem(oldSecond)], 0);
+  fixture.audio.dispatchEvent({ type: 'playing' });
+  await flushAsync();
+  assert.ok(manifestCalls.includes(block2ManifestFor(fixture, oldSecond).jsonPath));
+
+  fixture.context.window.__renderEntries([newFirst, newSecond], 'Steuern');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(newFirst), block2PlaylistItem(newSecond)], 0);
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  await flushAsync();
+
+  assert.ok(manifestCalls.includes(block2ManifestFor(fixture, newSecond).jsonPath));
+  assert.match(fixture.audio.src, /steuern-neu-zwei\.mp3$/);
+  assert.doesNotMatch(fixture.audio.src, /recht-alt-zwei/);
+});
+
+test('Podcast-Kapitelsprung: laufender Fehlerzustand wird synchron zurückgesetzt und nur die Auswahl gestartet', async () => {
+  const fixture = createBlock2Context();
+  const entries = [
+    block2ChapterEntry('Kapitel Eins', 1),
+    block2ChapterEntry('Kapitel Zwei', 2),
+    block2ChapterEntry('Kapitel Drei', 3)
+  ];
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      const entry = entries.find(candidate => block2ManifestFor(fixture, candidate).jsonPath === jsonPath);
+      return Promise.resolve(block2ManifestFor(fixture, entry));
+    },
+    loadMetadata() {
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter(entries.map(block2PlaylistItem), 1);
+  fixture.audio.error = { code: 2 };
+  fixture.audio.dispatchEvent({ type: 'error' });
+
+  fixture.context.window.__selectChapter(3);
+
+  const resetState = fixture.context.window.__audioState();
+  assert.strictEqual(resetState.index, 0);
+  assert.strictEqual(resetState.titles.length, 0);
+  assert.strictEqual(resetState.active, false);
+  assert.strictEqual(resetState.paused, false);
+  assert.strictEqual(resetState.error, false);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioPlayBtn').textContent, '▶ Anhören');
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioPlayBtn').disabled, false);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioReloadBtn').disabled, true);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioPreviousBtn').disabled, true);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioNextBtn').disabled, true);
+
+  fixture.context.window.lerntexteAudioAbspielen();
+  await flushAsync();
+  assert.strictEqual(Array.from(fixture.context.window.__audioState().titles).join('|'), 'Kapitel Drei');
+  assert.match(fixture.audio.src, /recht-kapitel-drei\.mp3$/);
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+  assert.strictEqual(fixture.audio.paused, true);
+  assert.strictEqual(fixture.context.window.__audioState().paused, true);
+});
+
+test('Podcast-Fehlerzustand: Hauptbutton bleibt Play und lädt den aktuellen Index erneut', async () => {
+  const fixture = createBlock2Context();
+  const first = block2ChapterEntry('Kapitel Eins', 1);
+  const second = block2ChapterEntry('Kapitel Zwei', 2);
+  let secondUrlCalls = 0;
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      const entry = jsonPath.includes('kapitel-zwei') ? second : first;
+      return Promise.resolve(block2ManifestFor(fixture, entry));
+    },
+    loadMetadata() {
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      if (mp3Path.includes('kapitel-zwei')) secondUrlCalls += 1;
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop() + '?load=' + secondUrlCalls);
+    }
+  };
+  fixture.context.window.__renderEntries([first, second], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(first), block2PlaylistItem(second)], 1);
+  fixture.audio.error = { code: 2 };
+  fixture.audio.dispatchEvent({ type: 'error' });
+
+  const playButton = fixture.document.getElementById('lerntexteAudioPlayBtn');
+  const reloadButton = fixture.document.getElementById('lerntexteAudioReloadBtn');
+  assert.strictEqual(playButton.textContent, '▶ Anhören');
+  assert.strictEqual(playButton.disabled, false);
+  assert.strictEqual([playButton, reloadButton].filter(button => button.textContent.includes('Kapitel erneut laden')).length, 1);
+
+  fixture.context.window.lerntexteAudioAbspielen();
+  await flushAsync();
+
+  assert.strictEqual(secondUrlCalls, 2);
+  assert.strictEqual(fixture.context.window.__audioState().index, 1);
+  assert.match(fixture.audio.src, /recht-kapitel-zwei\.mp3\?load=2$/);
+});
+
+test('Podcast-Session: verspäteter Von-vorne-Fehler überschreibt neue Playlist und deren Prefetch nicht', async () => {
+  const fixture = createBlock2Context();
+  const oldFirst = block2ChapterEntry('Alt Eins', 1, 'Recht');
+  const newFirst = block2ChapterEntry('Neu Eins', 1, 'Steuern');
+  const newSecond = block2ChapterEntry('Neu Zwei', 2, 'Steuern');
+  const entries = [oldFirst, newFirst, newSecond];
+  const manifests = new Map(entries.map(entry => {
+    const manifest = block2ManifestFor(fixture, entry);
+    return [manifest.jsonPath, manifest];
+  }));
+  const manifestCalls = [];
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      manifestCalls.push(jsonPath);
+      return Promise.resolve(manifests.get(jsonPath));
+    },
+    loadMetadata() {
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  const restartPlay = deferred();
+  let playCalls = 0;
+  fixture.audio.play = function () {
+    playCalls += 1;
+    return playCalls === 2 ? restartPlay.promise : Promise.resolve();
+  };
+  fixture.context.window.__renderEntries([oldFirst], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(oldFirst)], 0);
+
+  const pendingRestart = fixture.document.getElementById('lerntextePilotRestartBtn').onclick();
+  fixture.context.window.__renderEntries([newFirst, newSecond], 'Steuern');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(newFirst), block2PlaylistItem(newSecond)], 0);
+  fixture.audio.dispatchEvent({ type: 'playing' });
+  await flushAsync();
+  const newSecondPath = block2ManifestFor(fixture, newSecond).jsonPath;
+  assert.strictEqual(manifestCalls.filter(path => path === newSecondPath).length, 1);
+
+  restartPlay.reject(new Error('old restart rejected'));
+  await pendingRestart;
+  await flushAsync();
+
+  const currentState = fixture.context.window.__audioState();
+  assert.strictEqual(currentState.error, false);
+  assert.strictEqual(currentState.active, true);
+  assert.strictEqual(currentState.prefetched, true);
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  await flushAsync();
+  assert.strictEqual(manifestCalls.filter(path => path === newSecondPath).length, 1, 'alter Reject darf den neuen Prefetch nicht löschen');
+  assert.match(fixture.audio.src, /steuern-neu-zwei\.mp3$/);
+});
+
+test('Podcast-Fehlerzustand: Fortsetzen-Fehler verwirft Prefetch und setzt Media Session auf paused', async () => {
+  const fixture = createBlock2Context();
+  const first = block2ChapterEntry('Kapitel Eins', 1);
+  const second = block2ChapterEntry('Kapitel Zwei', 2);
+  fixture.context.navigator.mediaSession = {
+    playbackState: 'none',
+    setActionHandler() {}
+  };
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      return Promise.resolve(block2ManifestFor(fixture, jsonPath.includes('kapitel-zwei') ? second : first));
+    },
+    loadMetadata() {
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  fixture.context.window.__renderEntries([first, second], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(first), block2PlaylistItem(second)], 0);
+  fixture.audio.dispatchEvent({ type: 'playing' });
+  await flushAsync();
+  assert.strictEqual(fixture.context.window.__audioState().prefetched, true);
+
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+  assert.strictEqual(fixture.context.navigator.mediaSession.playbackState, 'paused');
+  fixture.audio.play = () => Promise.reject(new Error('resume rejected'));
+  await fixture.document.getElementById('lerntextePilotResumeBtn').onclick();
+
+  const failedState = fixture.context.window.__audioState();
+  assert.strictEqual(failedState.error, true);
+  assert.strictEqual(failedState.prefetched, false);
+  assert.strictEqual(fixture.context.navigator.mediaSession.playbackState, 'paused');
+});
+
+test('Podcast-Session: verspäteter Stop-Save setzt eine neue Wiedergabe nicht auf inaktiv', async () => {
+  const fixture = createBlock2Context();
+  const oldEntry = block2ChapterEntry('Alt Eins', 1, 'Recht');
+  const newEntry = block2ChapterEntry('Neu Eins', 1, 'Steuern');
+  const saveRequest = deferred();
+  fixture.eventWindow.aktuellerNutzer = 'user-123';
+  fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => ({ data: [] });
+  fixture.eventWindow.lerntextePodcastFortschrittSpeichern = () => saveRequest.promise;
+  fixture.context.navigator.mediaSession = {
+    playbackState: 'none',
+    setActionHandler() {}
+  };
+  fixture.eventWindow.lerntextePilotDependencies = {
+    loadManifest(jsonPath) {
+      return Promise.resolve(block2ManifestFor(fixture, jsonPath.includes('steuern-neu-eins') ? newEntry : oldEntry));
+    },
+    loadMetadata() {
+      return Promise.resolve({ customMetadata: { lerntextHash: fixture.manifest.lerntextHash } });
+    },
+    loadMp3Url(mp3Path) {
+      return Promise.resolve('https://example.test/' + mp3Path.split('/').pop());
+    }
+  };
+  fixture.context.window.__renderEntries([oldEntry], 'Recht');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(oldEntry)], 0);
+
+  fixture.context.window.lerntexteAudioStoppen();
+  fixture.context.window.__renderEntries([newEntry], 'Steuern');
+  await fixture.context.window.lerntexteAudioPlaylistWeiter([block2PlaylistItem(newEntry)], 0);
+  fixture.audio.dispatchEvent({ type: 'playing' });
+  assert.strictEqual(fixture.context.navigator.mediaSession.playbackState, 'playing');
+
+  saveRequest.resolve({ success: true });
+  await flushAsync();
+
+  const state = fixture.context.window.__audioState();
+  assert.strictEqual(state.active, true);
+  assert.strictEqual(state.paused, false);
+  assert.strictEqual(fixture.context.navigator.mediaSession.playbackState, 'playing');
+  assert.match(fixture.audio.src, /steuern-neu-eins\.mp3$/);
+});
+
 test('Podcast-Regression: verspätete Asset-Antwort darf neue Session nicht überschreiben', async () => {
   const fixture = createBlock2Context();
   let resolveFirstManifest;
@@ -859,9 +1369,9 @@ test('Podcast-Regression: verspätete Asset-Antwort darf neue Session nicht übe
   resolveFirstManifest(fixture.manifest);
   await firstLoad;
 
-  assert.strictEqual(currentSrc, 'https://example.test/session-1.mp3');
+  assert.strictEqual(currentSrc, 'https://example.test/session-2.mp3');
   assert.strictEqual(fixture.audio.src, currentSrc);
-  assert.strictEqual(urlCalls, 1, 'veraltete Session muss direkt nach dem verspäteten await enden');
+  assert.strictEqual(urlCalls, 2, 'parallele URL-Anfrage der veralteten Session darf die neue Quelle nicht überschreiben');
 });
 
 test('Podcast-Regression: Ansichtswechsel invalidiert einen noch laufenden Kapitel-Load', async () => {
