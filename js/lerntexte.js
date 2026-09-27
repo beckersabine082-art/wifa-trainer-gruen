@@ -2391,6 +2391,12 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
 
   try {
     if (!domAudio) return false;
+    if (lerntexteAktuellesFach === 'Recht' && lerntexteContinuousFallbackAktiv) {
+      lerntexteContinuousAnsichtSynchronisieren(currentItem.eintrag);
+      currentItem.textRoot = lerntextePilotTextRoots[
+        String(currentItem.eintrag.fach) + "\u0000" + String(currentItem.eintrag.titel)
+      ] || null;
+    }
     const textRoot = currentItem.textRoot || lerntextePilotTextRoots[String(currentItem.eintrag.fach) + "\u0000" + String(currentItem.eintrag.titel)] || null;
     let assets = prepared ? prepared.assets : await lerntextePilotAssetsLaden(currentItem.eintrag, sessionId, signal);
     lerntexteAudioSessionPruefen(sessionId);

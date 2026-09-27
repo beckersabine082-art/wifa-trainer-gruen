@@ -3991,13 +3991,30 @@ test('Recht-Bundle: fehlendes Sidecar fällt beim Vordergrundstart auf Legacy-Au
   assert.strictEqual(fixture.context.window.__audioState().index, 56);
   assert.strictEqual(fixture.context.window.__audioState().titles.length, 57);
   assert.strictEqual(fixture.context.window.__audioState().titles[56], selected.titel);
+  const assertVisibleUnit = index => {
+    assert.strictEqual(
+      fixture.document.getElementById('lerntexteKapitelSelect').value,
+      block2ManifestFor(fixture, entries[index]).mp3Path
+    );
+    const titles = fixture.root.querySelectorAll('.lerntexte-einheit-titel');
+    assert.strictEqual(titles.length, 1);
+    assert.match(titles[0].textContent, new RegExp(entries[index].titel));
+    const roots = fixture.root.querySelectorAll('.lerntexte-text');
+    assert.strictEqual(roots.length, 1);
+    fixture.audio.currentTime = 0.5;
+    fixture.audio.dispatchEvent({ type: 'timeupdate' });
+    assert.strictEqual(roots[0].querySelector('[data-word-index="0"]').classList.contains('podcast-word-active'), true);
+  };
+  assertVisibleUnit(56);
 
   await fixture.context.window.lerntexteAudioKapitelVorher();
   assert.strictEqual(fixture.context.window.__audioState().index, 55);
   assert.strictEqual(fixture.audio.src, 'https://example.test/recht-recht-einheit-56.mp3');
+  assertVisibleUnit(55);
   await fixture.context.window.lerntexteAudioKapitelWeiter();
   assert.strictEqual(fixture.context.window.__audioState().index, 56);
   assert.strictEqual(fixture.audio.src, 'https://example.test/recht-recht-einheit-57.mp3');
+  assertVisibleUnit(56);
 });
 
 test('Recht-Bundle: Media Session steuert Kapitel und lokale Position ohne Medienwechsel', async () => {
