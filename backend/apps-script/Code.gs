@@ -251,6 +251,361 @@ function getProgressForKey_(nutzer, bereich, fach, auswahl) {
   return row.data;
 }
 
+const TRAINER_PILOT_VERSION_ = "WIFA-TR-WQ3-20260927-v2";
+const TRAINER_PILOT_PROGRESS_PREFIX_ = "tr-v2:";
+
+function getOptionalSheetByName_(name) {
+  try {
+    return getSheetByNameSafe_(name);
+  } catch (error) {
+    return null;
+  }
+}
+
+function getTableObjects_(sheetName) {
+  const sheet = getOptionalSheetByName_(sheetName);
+  if (!sheet) return [];
+  const values = sheet.getDataRange().getValues();
+  if (!values.length) return [];
+  const headers = (values[0] || []).map(function(value) { return String(value || "").trim(); });
+  return values.slice(1).filter(function(row) {
+    return row.some(function(value) { return value !== "" && value !== null && value !== undefined; });
+  }).map(function(row) {
+    const item = {};
+    headers.forEach(function(header, index) {
+      if (header) item[header] = row[index];
+    });
+    return item;
+  });
+}
+
+function getTrainerPilotMigration_() {
+  const events = getTableObjects_("Trainer_Migrationen").filter(function(item) {
+    return String(item.Version || "").trim() === TRAINER_PILOT_VERSION_;
+  });
+  if (!events.length) return null;
+  const latest = events[events.length - 1];
+  return {
+    version: TRAINER_PILOT_VERSION_,
+    migrationId: String(latest.MigrationID || "").trim(),
+    status: String(latest.Laufstatus || "").trim().toUpperCase(),
+    active: String(latest.Laufstatus || "").trim().toUpperCase() === "AKTIV"
+  };
+}
+
+function getTrainerPilotMetadata_() {
+  const migration = getTrainerPilotMigration_();
+  const topics = getTableObjects_("Trainer_Themen").filter(function(item) {
+    return String(item.Version || "").trim() === TRAINER_PILOT_VERSION_;
+  });
+  const details = getTableObjects_("Trainer_Detailgruppen").filter(function(item) {
+    return String(item.Version || "").trim() === TRAINER_PILOT_VERSION_;
+  });
+  const assignments = getTableObjects_("Trainer_Zuordnung").filter(function(item) {
+    return String(item.Version || "").trim() === TRAINER_PILOT_VERSION_;
+  });
+  const references = getTableObjects_("Trainer_Rahmenplanbezug").filter(function(item) {
+    return String(item.Version || "").trim() === TRAINER_PILOT_VERSION_;
+  });
+  const coverage = getTableObjects_("Rahmenplan_Abdeckung").filter(function(item) {
+    return String(item.FreigabeReferenz || "").trim() === TRAINER_PILOT_VERSION_;
+  });
+  const detailByKey = {};
+  details.forEach(function(item) {
+    detailByKey[String(item.DetailKey || "").trim()] = item;
+  });
+  const assignmentById = {};
+  assignments.forEach(function(item) {
+    const id = String(item.TrainerID || "").trim();
+    const detail = detailByKey[String(item.DetailKey || "").trim()] || {};
+    if (id) assignmentById[id] = {
+      assignment: item,
+      detail: detail,
+      uiThemenKey: String(detail.UIThemenKey || "").trim()
+    };
+  });
+  const metadata = {
+    migration: migration,
+    topics: topics,
+    details: details,
+    assignments: assignments,
+    references: references,
+    coverage: coverage,
+    assignmentById: assignmentById
+  };
+  metadata.validationErrors = validateTrainerPilotMetadata_(metadata);
+  metadata.valid = metadata.validationErrors.length === 0;
+  metadata.active = Boolean(migration && migration.active && metadata.valid);
+  return metadata;
+}
+
+function validateTrainerPilotMetadata_(metadata) {
+  const errors = [];
+  const expectedTopics = {
+    "ui-wq-recht-at": ["Recht", 85],
+    "ui-wq-recht-schuld": ["Recht", 174],
+    "ui-wq-recht-sachen": ["Recht", 84],
+    "ui-wq-recht-handel": ["Recht", 75],
+    "ui-wq-recht-arbeit": ["Recht", 116],
+    "ui-wq-recht-wettbewerb": ["Recht", 17],
+    "ui-wq-recht-gewerbe": ["Recht", 16],
+    "ui-wq-steuern-grundlagen": ["Steuern", 12],
+    "ui-wq-steuern-unternehmen": ["Steuern", 205],
+    "ui-wq-steuern-ao": ["Steuern", 16]
+  };
+  const topicByKey = {};
+  (metadata.topics || []).forEach(function(item) {
+    const key = String(item.UIThemenKey || "").trim();
+    if (!key || topicByKey[key]) errors.push("topic_identity");
+    if (key) topicByKey[key] = item;
+  });
+  if ((metadata.topics || []).length !== 10 || Object.keys(topicByKey).length !== 10) errors.push("topic_count");
+  Object.keys(expectedTopics).forEach(function(key) {
+    const item = topicByKey[key];
+    if (!item || String(item.Quellfach || "").trim() !== expectedTopics[key][0] ||
+        String(item.Teilbereich || "").trim() !== "WQ" ||
+        String(item.Sichtbar || "").trim().toLowerCase() !== "ja" ||
+        String(item.Status || "").trim().toUpperCase() !== "AKTIV") errors.push("topic_contract");
+  });
+
+  const detailByKey = {};
+  (metadata.details || []).forEach(function(item) {
+    const key = String(item.DetailKey || "").trim();
+    const uiKey = String(item.UIThemenKey || "").trim();
+    if (!key || detailByKey[key]) errors.push("detail_identity");
+    if (key) detailByKey[key] = item;
+    if (!topicByKey[uiKey] || String(item.Quellfach || "").trim() !== String(topicByKey[uiKey].Quellfach || "").trim() ||
+        String(item.Teilbereich || "").trim() !== "WQ") errors.push("detail_parent");
+  });
+  if ((metadata.details || []).length !== 35 || Object.keys(detailByKey).length !== 35) errors.push("detail_count");
+
+  const assignmentIds = {};
+  const topicCounts = {};
+  let rechtCount = 0;
+  let steuernCount = 0;
+  (metadata.assignments || []).forEach(function(item) {
+    const id = String(item.TrainerID || "").trim();
+    const detail = detailByKey[String(item.DetailKey || "").trim()];
+    if (!id || assignmentIds[id]) errors.push("assignment_identity");
+    if (id) assignmentIds[id] = true;
+    if (!detail || String(item.Quellfach || "").trim() !== String(detail.Quellfach || "").trim() ||
+        String(item.Teilbereich || "").trim() !== "WQ") {
+      errors.push("assignment_parent");
+      return;
+    }
+    const uiKey = String(detail.UIThemenKey || "").trim();
+    topicCounts[uiKey] = (topicCounts[uiKey] || 0) + 1;
+    if (String(item.Quellfach || "").trim() === "Recht") rechtCount++;
+    if (String(item.Quellfach || "").trim() === "Steuern") steuernCount++;
+  });
+  if ((metadata.assignments || []).length !== 800 || Object.keys(assignmentIds).length !== 800 || rechtCount !== 567 || steuernCount !== 233) {
+    errors.push("assignment_count");
+  }
+  Object.keys(expectedTopics).forEach(function(key) {
+    if (topicCounts[key] !== expectedTopics[key][1]) errors.push("topic_pool_count");
+  });
+
+  const primaryById = {};
+  let primaryCount = 0;
+  let crossCount = 0;
+  (metadata.references || []).forEach(function(item) {
+    const id = String(item.TrainerID || "").trim();
+    const type = String(item.Bezugsart || "").trim().toUpperCase();
+    if (!assignmentIds[id]) errors.push("reference_assignment");
+    if (type === "PRIMAER") {
+      primaryCount++;
+      if (primaryById[id]) errors.push("reference_primary_identity");
+      primaryById[id] = true;
+    } else if (type === "QUERVERWEIS") {
+      crossCount++;
+    } else {
+      errors.push("reference_type");
+    }
+    if (id === "R-0566" && String(item.PunktKey || "").trim() === "3.1.1") errors.push("r0566_evidence");
+  });
+  if (primaryCount !== 800 || Object.keys(primaryById).length !== 800 || crossCount !== 57) errors.push("reference_count");
+
+  const coverageKeys = {};
+  (metadata.coverage || []).forEach(function(item) {
+    const key = String(item.PunktKey || "").trim();
+    if (!key || coverageKeys[key]) errors.push("coverage_identity");
+    if (key) coverageKeys[key] = true;
+  });
+  if ((metadata.coverage || []).length !== 71 || Object.keys(coverageKeys).length !== 71 || !coverageKeys["3"]) errors.push("coverage_count");
+  return Array.from(new Set(errors));
+}
+
+function getTrainerPilotActiveSource_(metadata, fach) {
+  const safeFach = String(fach || "").trim();
+  const activeQuestions = getActiveQuestions(safeFach);
+  const activeById = {};
+  activeQuestions.forEach(function(question) {
+    const id = String(question.id || "").trim();
+    if (id) activeById[id] = question;
+  });
+  const assignmentIds = (metadata.assignments || []).filter(function(item) {
+    return String(item.Quellfach || "").trim() === safeFach;
+  }).map(function(item) {
+    return String(item.TrainerID || "").trim();
+  });
+  const valid = assignmentIds.length === activeQuestions.length &&
+    new Set(assignmentIds).size === assignmentIds.length &&
+    assignmentIds.every(function(id) { return Boolean(activeById[id]); });
+  return {valid: valid, activeById: activeById, questions: activeQuestions};
+}
+
+function isTrainerPilotSubject_(fach) {
+  return ["Recht", "Steuern"].includes(String(fach || "").trim());
+}
+
+function getTrainerCatalogFrontend(fach) {
+  const safeFach = String(fach || "").trim();
+  const metadata = getTrainerPilotMetadata_();
+  if (!isTrainerPilotSubject_(safeFach) || !metadata.active) {
+    return {
+      active: false,
+      version: "legacy",
+      fach: safeFach,
+      fallbackReason: isTrainerPilotSubject_(safeFach) && metadata.migration && metadata.migration.active && !metadata.valid
+        ? "invalid_metadata" : "",
+      topics: getTopicsForSheet(safeFach)
+    };
+  }
+  const source = getTrainerPilotActiveSource_(metadata, safeFach);
+  if (!source.valid) {
+    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_source", topics: getTopicsForSheet(safeFach)};
+  }
+  const topics = metadata.topics.filter(function(item) {
+    return String(item.Quellfach || "").trim() === safeFach &&
+      String(item.Sichtbar || "").trim().toLowerCase() === "ja" &&
+      String(item.Status || "").trim().toUpperCase() === "AKTIV";
+  }).sort(function(first, second) {
+    return Number(first.Sortierung || 0) - Number(second.Sortierung || 0);
+  }).map(function(item) {
+    const uiThemenKey = String(item.UIThemenKey || "").trim();
+    const count = metadata.assignments.filter(function(assignment) {
+      const detail = metadata.assignmentById[String(assignment.TrainerID || "").trim()];
+      return String(assignment.Quellfach || "").trim() === safeFach && detail && detail.uiThemenKey === uiThemenKey;
+    }).length;
+    return {
+      uiThemenKey: uiThemenKey,
+      thema: String(item.Anzeigename || "").trim(),
+      anzahl: count,
+      sortierung: Number(item.Sortierung || 0),
+      version: TRAINER_PILOT_VERSION_
+    };
+  });
+  return {
+    active: true,
+    version: TRAINER_PILOT_VERSION_,
+    migrationId: metadata.migration.migrationId,
+    fach: safeFach,
+    topics: topics
+  };
+}
+
+function getTrainerQuestionsFrontend(fach, uiThemenKey) {
+  const safeFach = String(fach || "").trim();
+  const safeUiKey = String(uiThemenKey || "").trim();
+  const metadata = getTrainerPilotMetadata_();
+  if (!isTrainerPilotSubject_(safeFach) || !metadata.active) {
+    return {active: false, version: "legacy", fach: safeFach, uiThemenKey: "", questions: []};
+  }
+  const topic = metadata.topics.find(function(item) {
+    return String(item.Quellfach || "").trim() === safeFach && String(item.UIThemenKey || "").trim() === safeUiKey;
+  });
+  if (safeUiKey && !topic) {
+    return {active: true, version: TRAINER_PILOT_VERSION_, fach: safeFach, uiThemenKey: safeUiKey, questions: []};
+  }
+  const source = getTrainerPilotActiveSource_(metadata, safeFach);
+  if (!source.valid) {
+    return {active: false, version: "legacy", fach: safeFach, uiThemenKey: "", fallbackReason: "invalid_source", questions: []};
+  }
+  const activeById = source.activeById;
+  const questions = metadata.assignments.filter(function(item) {
+    const id = String(item.TrainerID || "").trim();
+    const link = metadata.assignmentById[id];
+    return String(item.Quellfach || "").trim() === safeFach && activeById[id] &&
+      (!safeUiKey || (link && link.uiThemenKey === safeUiKey));
+  }).sort(function(first, second) {
+    return Number(first.UIReihenfolge || 0) - Number(second.UIReihenfolge || 0);
+  }).map(function(item, index, all) {
+    const id = String(item.TrainerID || "").trim();
+    const link = metadata.assignmentById[id];
+    const question = activeById[id];
+    const uiTopic = metadata.topics.find(function(candidate) {
+      return String(candidate.UIThemenKey || "").trim() === link.uiThemenKey;
+    }) || {};
+    return Object.assign({}, question, {
+      legacyThema: question.thema,
+      uiThemenKey: link.uiThemenKey,
+      uiThemenName: String(uiTopic.Anzeigename || "").trim(),
+      rahmenplanPunktKey: String(link.detail.RahmenplanPunktKey || "").trim(),
+      fragePosition: index + 1,
+      frageGesamt: all.length
+    });
+  });
+  return {
+    active: true,
+    version: TRAINER_PILOT_VERSION_,
+    fach: safeFach,
+    uiThemenKey: safeUiKey,
+    thema: String(topic && topic.Anzeigename || "").trim(),
+    questions: questions
+  };
+}
+
+function progressTimestampMillis_(value) {
+  if (value instanceof Date) return value.getTime();
+  const parsed = new Date(value || 0).getTime();
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function getTrainerCompatibleProgress_(nutzer, bereich, fach, auswahl) {
+  const safeAuswahl = normalizeProgressSelection_(auswahl);
+  if (String(bereich || "").trim() !== "trainer" || !isTrainerPilotSubject_(fach)) {
+    return getProgressForKey_(nutzer, bereich, fach, safeAuswahl);
+  }
+  const metadata = getTrainerPilotMetadata_();
+  if (!metadata.assignments.length) return getProgressForKey_(nutzer, bereich, fach, safeAuswahl);
+  const requestedUiKey = safeAuswahl.indexOf(TRAINER_PILOT_PROGRESS_PREFIX_) === 0
+    ? safeAuswahl.slice(TRAINER_PILOT_PROGRESS_PREFIX_.length) : "";
+  const sheet = ensureNutzerFortschrittSheet_();
+  const values = sheet.getDataRange().getValues();
+  const activeIds = new Set(getActiveQuestions(fach).map(function(question) {
+    return String(question.id || "").trim();
+  }));
+  const candidates = [];
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i] || [];
+    if (String(row[0] || "").trim() !== String(nutzer || "").trim() ||
+        String(row[1] || "").trim() !== String(bereich || "").trim() ||
+        String(row[2] || "").trim() !== String(fach || "").trim()) continue;
+    const sourceSelection = String(row[3] || "").trim();
+    const id = String(row[4] || "").trim();
+    if (!activeIds.has(id)) continue;
+    const link = metadata.assignmentById[id];
+    if (!link || String(link.assignment.Quellfach || "").trim() !== String(fach || "").trim()) continue;
+    const matches = requestedUiKey
+      ? link.uiThemenKey === requestedUiKey
+      : String(link.assignment.QuellthemaAlt || "").trim() === safeAuswahl;
+    if (!matches) continue;
+    candidates.push({
+      nutzer: String(row[0] || "").trim(),
+      bereich: String(row[1] || "").trim(),
+      fach: String(row[2] || "").trim(),
+      auswahl: safeAuswahl,
+      aufgeloestAus: sourceSelection,
+      letzteFrageId: id,
+      aktualisiert: row[5]
+    });
+  }
+  candidates.sort(function(first, second) {
+    return progressTimestampMillis_(second.aktualisiert) - progressTimestampMillis_(first.aktualisiert);
+  });
+  return candidates[0] || getProgressForKey_(nutzer, bereich, fach, safeAuswahl);
+}
+
 function upsertProgressForKey_(nutzer, bereich, fach, auswahl, frageId) {
   const sheet = ensureNutzerFortschrittSheet_();
   const safeNutzer = String(nutzer || "").trim();
@@ -317,7 +672,7 @@ function doGet(e) {
     let result = {};
 
     // Public question APIs must never act as readers for private progress tabs.
-    if (['topics','questionById','firstQuestion','nextQuestion','questionsForTopic','getKarteikarten','quizQuestion'].includes(action) &&
+    if (['topics','trainerCatalog','trainerQuestions','questionById','firstQuestion','nextQuestion','questionsForTopic','getKarteikarten','quizQuestion'].includes(action) &&
         !istOeffentlichesFragenFach_(e?.parameter?.fach)) {
       return ContentService.createTextOutput(JSON.stringify({success:false,error:'invalid_request'}))
         .setMimeType(ContentService.MimeType.JSON);
@@ -336,6 +691,15 @@ function doGet(e) {
         success: true,
         data: getTopicsForSheet(fach)
       };
+
+    } else if (action === "trainerCatalog") {
+      const fach = String(e?.parameter?.fach || "").trim();
+      result = {success: true, data: getTrainerCatalogFrontend(fach)};
+
+    } else if (action === "trainerQuestions") {
+      const fach = String(e?.parameter?.fach || "").trim();
+      const uiThemenKey = String(e?.parameter?.uiThemenKey || "").trim();
+      result = {success: true, data: getTrainerQuestionsFrontend(fach, uiThemenKey)};
 
        } else if (action === "quizCatalog") {
       result = {
@@ -563,7 +927,7 @@ function doPost(e) {
       result = {success:true, data:getLernstandFrontend(uid)};
     } else if (action === 'getProgress') {
       if (!body.bereich || !body.fach) throw new Error('invalid_request');
-      result = {success:true, data:getProgressForKey_(uid, body.bereich, body.fach, normalizeProgressSelection_(body.auswahl))};
+      result = {success:true, data:getTrainerCompatibleProgress_(uid, body.bereich, body.fach, normalizeProgressSelection_(body.auswahl))};
     } else if (action === 'getPodcastProgress') {
       result = {success:true, data:getPodcastProgress(uid, body.fach)};
     } else if (action === "bewerteAntwort") {

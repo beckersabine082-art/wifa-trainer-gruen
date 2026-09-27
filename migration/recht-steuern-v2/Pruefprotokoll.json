@@ -1,0 +1,111 @@
+{
+  "planId": "WIFA-TR-WQ3-20260927-v2",
+  "state": "DRAFT_NOT_APPROVED_NOT_EXECUTED",
+  "sourceWorkbookSha256": "d3d779ba41a87452a5e3a11aaa4b831ab79f0372a5141522f2a89114c3707ffa",
+  "sourceWorkbookSheets": [
+    "Soll-Ist-Matrix",
+    "Auffälligkeiten",
+    "Trainer-Datenindex"
+  ],
+  "reconciliation": {
+    "active": 2686,
+    "pilot": 800,
+    "recht": 567,
+    "steuern": 233,
+    "outside": 1886,
+    "uniquePrimary": 800,
+    "missing": 0,
+    "duplicates": 0,
+    "changedIds": 0,
+    "newIds": 0,
+    "deletedIds": 0,
+    "areaTransfers": 0,
+    "sourceTopics": 24,
+    "targetTopics": 35,
+    "planBranches": 46
+  },
+  "revision": {
+    "visibleTopics": 10,
+    "internalGroups": 35,
+    "frameworkNodes": 71,
+    "frameworkContentPoints": 70,
+    "primaryMapUnchanged": true,
+    "allPriorAssignmentFieldsUnchanged": true,
+    "uiCounts": [
+      [
+        "BGB Allgemeiner Teil",
+        85
+      ],
+      [
+        "BGB Schuldrecht",
+        174
+      ],
+      [
+        "BGB Sachenrecht",
+        84
+      ],
+      [
+        "Handelsrecht",
+        75
+      ],
+      [
+        "Arbeitsrecht",
+        116
+      ],
+      [
+        "Wettbewerbsrecht",
+        17
+      ],
+      [
+        "Gewerberecht",
+        16
+      ],
+      [
+        "Grundbegriffe des Steuerrechts",
+        12
+      ],
+      [
+        "Unternehmensbezogene Steuern",
+        205
+      ],
+      [
+        "Abgabenordnung",
+        16
+      ]
+    ],
+    "previousManifestUnchanged": true,
+    "previousWorkbookUnchanged": true
+  },
+  "partialPointCodes": [
+    "3.1",
+    "3.1.2",
+    "3.1.2.1",
+    "3.1.2.1 [2]"
+  ],
+  "doubtfulPointCodes": [
+    "3.1.2.5",
+    "3.1.4.3",
+    "3.1.5.3"
+  ],
+  "indexRowDiscrepancies": {
+    "global": 889,
+    "pilot": 525,
+    "source": "Complete saved raw sheet rows, before active filtering"
+  },
+  "excluded": {
+    "rows": 117,
+    "inactiveWithQuestion": 7,
+    "emptyPlaceholders": 110
+  },
+  "exactLabelDiagnostic": {
+    "old": 1,
+    "renamed": 0
+  },
+  "tests": {
+    "passed": 38,
+    "failed": 0
+  },
+  "sourceWorkbookUnchanged": true,
+  "productionWrites": 0,
+  "commits": 0
+}

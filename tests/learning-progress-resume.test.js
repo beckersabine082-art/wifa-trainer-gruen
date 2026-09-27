@@ -522,7 +522,8 @@ test('lernstand loads from topic counts without questionsForTopic requests', asy
   vm.runInContext(stripped, context);
   await context.window.ladeWifaLernstand();
 
-  assert.deepEqual(requestActions, ['topics']);
+  assert.deepEqual(requestActions, ['trainerCatalog', 'topics']);
+  assert.ok(!requestActions.includes('questionsForTopic'));
   const status = elements.get('lernstandStatus');
   const list = elements.get('lernstandListe');
   assert.ok(status.textContent.includes('Lernversuche geladen') || status.textContent.includes('Noch keine Fragen bearbeitet'));

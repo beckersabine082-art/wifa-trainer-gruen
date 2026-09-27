@@ -47,6 +47,11 @@ test('topic names map to fixed IDs and error codes cannot use object prototype p
   core.audioError('Recht', '', 'constructor');
   assert.equal(events[1].params.error_code, 'unknown');
 });
+test('trainer pilot emits the stable UI key as an allowlisted analytics topic', () => {
+  const {core, events} = setup(); core.setEnabled(true);
+  core.start('trainer', 'Recht', 'ui-wq-recht-at');
+  assert.equal(events[0].params.topic_id, 'ui-wq-recht-at');
+});
 test('revocation drops an in-progress run; explicit podcast restart begins a new run', () => {
   const {core, events} = setup(); core.setEnabled(true);
   core.start('exam', 'Recht'); core.setEnabled(false); core.setEnabled(true); core.complete('exam');

@@ -9,7 +9,7 @@ const attempt = (fach, thema, id, points = 1, maximum = 1) => ({
   modul:'wifa-trainer',userId:'test',erreichtePunkte:points,maximalPunkte:maximum,
   status:points === maximum ? 'richtig' : 'falsch'
 });
-async function render(attempts, active, fail = false) {
+async function render(attempts, active, fail = false, pilot = false) {
   const elements = new Map(), cards = [], requests = [], logs = [];
   const element = id => {
     if (!elements.has(id)) elements.set(id,{innerHTML:'',textContent:'',addEventListener(){}});
@@ -18,6 +18,11 @@ async function render(attempts, active, fail = false) {
   const c = {console:{log:text=>logs.push(text),warn:()=>{}},
     window:{faecherNachTeilbereich:{WQ:['Steuern','Recht']}, apiGet:async(action,params)=>{
       requests.push({action,params});
+      if(action === 'trainerCatalog' && pilot) return {success:true,data:{active:true,version:'WIFA-TR-WQ3-20260927-v2',topics:
+        params.fach === 'Recht'
+          ? [{uiThemenKey:'ui-wq-recht-at',thema:'BGB Allgemeiner Teil',anzahl:85}]
+          : [{uiThemenKey:'ui-wq-steuern-grundlagen',thema:'Grundbegriffe des Steuerrechts',anzahl:12}]}};
+      if(action === 'trainerQuestions' && pilot) { if(fail) throw Error('offline'); return {success:true,data:{active:true,questions:active[params.fach] || []}}; }
       if(action === 'topics') return {success:true,data:[{thema:'Aktuell',anzahl:params.fach === 'Steuern' ? 233 : 83},...(params.fach === 'Recht' ? [{thema:'Weiteres',anzahl:488}] : [])]};
       if(action === 'questionsForTopic') { if(fail) throw Error('offline'); return {success:true,data:active[params.fach] || []}; }
       throw Error('unexpected request');
@@ -78,4 +83,22 @@ test('audit identifies a moved topic separately from an inactive question withou
   assert.equal(audit.excluded[0].activeCatalogMatch,false);
   assert.equal(audit.currentTotals.answered,0);
   assert.ok(!r.logs[0].includes('PRIVATE ANSWER'));
+});
+
+test('pilot lernstand projects legacy attempts by stable ID onto one visible UI topic without double counting',async()=>{
+  const attempts=[
+    attempt('Recht','Rechtliche Grundlagen & Methoden','R-0566',1,1),
+    attempt('Recht','BGB Allgemeiner Teil','R-0050',0,1)
+  ];
+  const active={Recht:[
+    {id:'R-0566',thema:'Rechtliche Grundlagen & Methoden',legacyThema:'Rechtliche Grundlagen & Methoden',uiThemenKey:'ui-wq-recht-at',uiThemenName:'BGB Allgemeiner Teil'},
+    {id:'R-0050',thema:'BGB Allgemeiner Teil',legacyThema:'BGB Allgemeiner Teil',uiThemenKey:'ui-wq-recht-at',uiThemenName:'BGB Allgemeiner Teil'}
+  ]};
+  const r=await render(attempts,active,false,true);
+  const recht=r.cards[1];
+  assert.ok(recht, r.status + '\n' + JSON.stringify(r.requests));
+  assert.match(recht.card,/2 \/ 85 Fragen/);
+  assert.match(recht.panel,/BGB Allgemeiner Teil/);
+  assert.equal(r.requests.filter(call=>call.action==='trainerQuestions' && call.params.fach==='Recht').length,1);
+  assert.equal(r.requests.filter(call=>call.action==='questionsForTopic' && call.params.fach==='Recht').length,0);
 });

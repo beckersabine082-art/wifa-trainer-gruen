@@ -117,12 +117,25 @@ async function loadQuestionCatalog() {
     faecher.map(fach => ({ bereich, fach }))
   );
   const results = await Promise.all(subjects.map(async subject => {
-    const result = await window.apiGet('topics', { fach: subject.fach });
-    if (!result.success) throw new Error(result.error || `Fragenbestand für ${subject.fach} konnte nicht geladen werden.`);
-    return (result.data || []).map(item => ({
+    let result;
+    try {
+      result = await window.apiGet('trainerCatalog', { fach: subject.fach });
+    } catch (_) {
+      result = null;
+    }
+    let topics;
+    if (result?.success && result.data && Array.isArray(result.data.topics)) {
+      topics = result.data.topics;
+    } else {
+      result = await window.apiGet('topics', { fach: subject.fach });
+      if (!result.success) throw new Error(result.error || `Fragenbestand für ${subject.fach} konnte nicht geladen werden.`);
+      topics = result.data || [];
+    }
+    return topics.map(item => ({
       ...subject,
       thema: typeof item === 'string' ? item : String(item.thema || ''),
-      total: Math.max(0, Number(typeof item === 'object' ? item.anzahl : 0) || 0)
+      total: Math.max(0, Number(typeof item === 'object' ? item.anzahl : 0) || 0),
+      uiThemenKey: typeof item === 'object' ? String(item.uiThemenKey || '') : ''
     }));
   }));
   return results.flat().filter(item => item.thema);
@@ -146,34 +159,50 @@ async function loadActiveAttemptBasis(attempts, catalog) {
   const questionsBySubject = new Map();
   // One existing active-question request per attempted subject, never per topic.
   for (const fach of new Set(configured.map(subject => subject.fach))) {
-    const result = await window.apiGet('questionsForTopic', { fach });
-    if (!result?.success || !Array.isArray(result.data) || result.data.some(question =>
+    const pilot = catalog.some(topic => topic.fach === fach && topic.uiThemenKey);
+    const result = pilot
+      ? await window.apiGet('trainerQuestions', { fach })
+      : await window.apiGet('questionsForTopic', { fach });
+    const questions = pilot ? result?.data?.questions : result?.data;
+    if (!result?.success || !Array.isArray(questions) || questions.some(question =>
       !question || !String(question.id || '').trim() || typeof question.thema !== 'string')) {
       throw new Error(`Aktiver Fragenkatalog für ${fach} konnte nicht geprüft werden.`);
     }
-    questionsBySubject.set(fach, result.data);
+    questionsBySubject.set(fach, questions);
   }
   const membership = new Map();
   const activeAttempts = [];
   attempts.forEach(attempt => {
     const subjectActive = configured.some(subject => subject.bereich === attempt.bereich && subject.fach === attempt.fach);
-    const topicActive = catalog.some(topic => topic.bereich === attempt.bereich
-      && topic.fach === attempt.fach && topic.thema === attempt.thema);
+    const pilot = catalog.some(topic => topic.bereich === attempt.bereich && topic.fach === attempt.fach && topic.uiThemenKey);
     const question = subjectActive ? questionsBySubject.get(attempt.fach)?.find(item =>
       String(item.id).trim() === String(attempt.frageId || '').trim()) : undefined;
-    const catalogMatch = Boolean(topicActive && question && question.thema === attempt.thema);
+    const currentQuestionTopic = pilot
+      ? String(question?.uiThemenName || '').trim()
+      : String(question?.thema || '').trim();
+    const topicActive = catalog.some(topic => topic.bereich === attempt.bereich
+      && topic.fach === attempt.fach && topic.thema === (pilot ? currentQuestionTopic : attempt.thema));
+    const catalogMatch = Boolean(topicActive && question && (pilot || question.thema === attempt.thema));
     membership.set(attempt, {
       activeTopic: topicActive,
       activeQuestion: Boolean(question),
-      currentQuestionTopic: question?.thema,
+      currentQuestionTopic,
       activeCatalogMatch: catalogMatch,
       reason: !subjectActive ? 'Fach/Bereich nicht aktuell zugeordnet'
         : !question ? 'Frage-ID nicht im aktiven Fachkatalog'
-          : !topicActive || question.thema !== attempt.thema ? 'Themenzuordnung nicht im aktuellen Katalog'
+          : !topicActive || (!pilot && question.thema !== attempt.thema) ? 'Themenzuordnung nicht im aktuellen Katalog'
             : 'Aktiver Katalogtreffer'
     });
     // Identity comes from the confirmed current catalog, not a possibly legacy stored key.
-    if (catalogMatch) activeAttempts.push({ ...attempt, questionKey: questionKey(attempt) });
+    if (catalogMatch) activeAttempts.push({
+      ...attempt,
+      legacyThema: pilot ? String(attempt.thema || '') : undefined,
+      thema: pilot ? currentQuestionTopic : attempt.thema,
+      uiThemenKey: pilot ? String(question.uiThemenKey || '') : '',
+      questionKey: pilot
+        ? ['wifa-trainer', String(attempt.bereich || ''), String(attempt.fach || ''), String(attempt.frageId || '')].join('::')
+        : questionKey(attempt)
+    });
   });
   return { activeAttempts, membership };
 }
@@ -498,7 +527,7 @@ function renderSubject(subject, latest, catalog, attempts = latest, index = 0) {
           <div class="lernstand-topic-stat-item lernstand-stat-open-errors ${topicStats.errors.length > 0 ? 'is-error' : 'is-clear'}"><span class="lernstand-topic-stat-label">Offene Fehler:</span><span class="lernstand-topic-stat-value">${topicStats.errors.length}</span></div>
           <div class="lernstand-topic-stat-item lernstand-stat-fullpoints"><span class="lernstand-topic-stat-label">Mit voller Punktzahl:</span><span class="lernstand-topic-stat-value">${fullPointPercent}%</span></div>
         </div>
-        <button class="secondary-btn lernstand-theme-btn" type="button" data-action="start-unanswered-topic" data-bereich="${escapeText(subject.bereich)}" data-fach="${escapeText(subject.fach)}" data-thema="${escapeText(topic.thema)}" ${buttonDisabled}>${unansweredButtonText}</button>
+        <button class="secondary-btn lernstand-theme-btn" type="button" data-action="start-unanswered-topic" data-bereich="${escapeText(subject.bereich)}" data-fach="${escapeText(subject.fach)}" data-thema="${escapeText(topic.thema)}" data-ui-key="${escapeText(topic.uiThemenKey || '')}" ${buttonDisabled}>${unansweredButtonText}</button>
       </div>`;
   }).join('') || '<div class="lernstand-topic">Noch keine Themen verfügbar.</div>';
   const subjectId = `lernstand-subject-${index}`;
@@ -540,6 +569,7 @@ function bindLearningProgressInteractions() {
     if (topicTrainerButton) {
       const fach = String(topicTrainerButton.dataset.fach || '').trim();
       const thema = String(topicTrainerButton.dataset.thema || '').trim();
+      const uiThemenKey = String(topicTrainerButton.dataset.uiKey || '').trim();
       const bereich = String(topicTrainerButton.dataset.bereich || '').trim();
       if (!fach || !thema || !bereich) return;
       // The trainer state is declared with global let in main.js, not on window.
@@ -551,6 +581,7 @@ function bindLearningProgressInteractions() {
       aktuellerTeilbereich = bereich;
       aktuellesFach = fach;
       aktuellesThema = thema;
+      if (typeof aktuellesTrainerThemaKey !== 'undefined') aktuellesTrainerThemaKey = uiThemenKey;
       const teilbereichSelect = document.getElementById('teilbereichSelect');
       const fachSelect = document.getElementById('fachSelect');
       const themaSelect = document.getElementById('themaSelect');
@@ -566,10 +597,10 @@ function bindLearningProgressInteractions() {
       if (themaSelect) {
         themaSelect.innerHTML = '<option value="">-- Thema wählen --</option>';
         const option = document.createElement('option');
-        option.value = thema;
+        option.value = uiThemenKey || thema;
         option.textContent = thema;
         themaSelect.appendChild(option);
-        themaSelect.value = thema;
+        themaSelect.value = uiThemenKey || thema;
       }
       document.getElementById('fachBereich').style.display = 'block';
       document.getElementById('themaBereich').style.display = 'block';
@@ -672,6 +703,7 @@ async function oeffneWiederholungAusAttempt(attempt) {
     bereich: String(attempt.bereich || '').trim(),
     fach,
     thema: String(attempt.thema || '').trim(),
+    uiThemenKey: String(attempt.uiThemenKey || '').trim(),
     questionKey: String(attempt.questionKey || '').trim()
   });
 }
