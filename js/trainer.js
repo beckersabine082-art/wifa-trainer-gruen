@@ -135,9 +135,48 @@ let trainerNochNieHistoryIndex = -1;
 let trainerNochNiePool = [];
 const trainerFragenCache = new Map();
 const trainerThemenKatalogByValue = new Map();
+const trainerPilotVersion = "WIFA-TR-WQ3-20260927-v2";
+const trainerPilotKatalogVertrag = {
+  Recht: [
+    ["ui-wq-recht-at", "BGB Allgemeiner Teil", 85],
+    ["ui-wq-recht-schuld", "BGB Schuldrecht", 174],
+    ["ui-wq-recht-sachen", "BGB Sachenrecht", 84],
+    ["ui-wq-recht-handel", "Handelsrecht", 75],
+    ["ui-wq-recht-arbeit", "Arbeitsrecht", 116],
+    ["ui-wq-recht-wettbewerb", "Wettbewerbsrecht", 17],
+    ["ui-wq-recht-gewerbe", "Gewerberecht", 16]
+  ],
+  Steuern: [
+    ["ui-wq-steuern-grundlagen", "Grundbegriffe des Steuerrechts", 12],
+    ["ui-wq-steuern-unternehmen", "Unternehmensbezogene Steuern", 205],
+    ["ui-wq-steuern-ao", "Abgabenordnung", 16]
+  ]
+};
 
 function trainerIstUiKey(value) {
   return /^ui-wq-/.test(String(value || "").trim());
+}
+
+function trainerIstPilotFach(fach) {
+  return ["Recht", "Steuern"].includes(String(fach || "").trim());
+}
+
+function trainerPilotKatalogIstGueltig(fach, data) {
+  const expected = trainerPilotKatalogVertrag[String(fach || "").trim()] || [];
+  const topics = data && Array.isArray(data.topics) ? data.topics : [];
+  if (!data || data.active !== true || String(data.version || "").trim() !== trainerPilotVersion ||
+      String(data.migrationStatus || "").trim().toUpperCase() !== "AKTIV" || topics.length !== expected.length) return false;
+  const keys = new Set();
+  return topics.every(function(item, index) {
+    const actual = [
+      String(item && item.uiThemenKey || "").trim(),
+      String(item && item.thema || "").trim(),
+      Number(item && item.anzahl || 0)
+    ];
+    if (!actual[0] || keys.has(actual[0])) return false;
+    keys.add(actual[0]);
+    return actual[0] === expected[index][0] && actual[1] === expected[index][1] && actual[2] === expected[index][2];
+  });
 }
 
 function trainerAktuelleAuswahl() {
@@ -177,6 +216,11 @@ async function trainerThemenpoolLaden(fach, thema) {
   const result = pilot
     ? await apiGet("trainerQuestions", { fach, uiThemenKey: thema })
     : await apiGet("questionsForTopic", { fach, thema });
+  if (pilot && (!result || !result.success || !result.data || result.data.active !== true ||
+      String(result.data.version || "").trim() !== trainerPilotVersion ||
+      String(result.data.uiThemenKey || "").trim() !== String(thema || "").trim())) {
+    throw new Error("Themenpool konnte nicht aus Trainer_Zuordnung geladen werden.");
+  }
   const data = pilot ? result && result.data && result.data.questions : result && result.data;
   if (!result || !result.success || !Array.isArray(data)) throw new Error("Themenpool konnte nicht geladen werden.");
   const ids = new Set();
@@ -951,6 +995,7 @@ async function zurueckZurFehleranalyse() {
   }
 
 async function ladeTrainerThemenDaten(fach) {
+    const pilotFach = trainerIstPilotFach(fach);
     let result;
     try {
       result = await apiGet("trainerCatalog", { fach });
@@ -958,12 +1003,23 @@ async function ladeTrainerThemenDaten(fach) {
       result = null;
     }
     if (result && result.success && result.data && Array.isArray(result.data.topics)) {
+      if (pilotFach) {
+        const explicitRollback = result.data.active === false &&
+          String(result.data.migrationStatus || "").trim().toUpperCase() === "ZURUECKGEROLLT" &&
+          !result.data.fallbackReason;
+        if (!explicitRollback && !trainerPilotKatalogIstGueltig(fach, result.data)) {
+          throw new Error("Pilot-Themen konnten nicht mit dem freigegebenen Pilotvertrag geladen werden.");
+        }
+      }
       aktuelleTrainerKatalogVersion = result.data.active ? String(result.data.version || "").trim() : "";
       return result.data.topics.map(function(item) {
         const thema = String(item && item.thema || "").trim();
         const uiThemenKey = String(item && item.uiThemenKey || "").trim();
         return Object.assign({}, item, {thema, uiThemenKey, value: uiThemenKey || thema});
       });
+    }
+    if (pilotFach) {
+      throw new Error("Pilot-Themen konnten nicht aus Trainer_Themen geladen werden.");
     }
     result = await apiGet("topics", { fach });
     if (!result.success) throw new Error(result.error || "Themen konnten nicht geladen werden.");

@@ -106,6 +106,44 @@ test('pilot catalog exposes exactly ten stable UI topics and never an internal d
   assert.ok(topics.every(item => !Object.hasOwn(item, 'rahmenplanPunktKey')));
 });
 
+test('Recht exposes seven pools with 567 unique IDs and the exact approved counts', () => {
+  const context = backend();
+  const catalog = context.getTrainerCatalogFrontend('Recht');
+  const pools = catalog.topics.map(topic => context.getTrainerQuestionsFrontend('Recht', topic.uiThemenKey));
+  const ids = pools.flatMap(pool => pool.questions.map(question => question.id));
+
+  assert.deepEqual(catalog.topics.map(topic => [topic.thema,topic.anzahl]), [
+    ['BGB Allgemeiner Teil',85],
+    ['BGB Schuldrecht',174],
+    ['BGB Sachenrecht',84],
+    ['Handelsrecht',75],
+    ['Arbeitsrecht',116],
+    ['Wettbewerbsrecht',17],
+    ['Gewerberecht',16]
+  ]);
+  assert.equal(catalog.topics.length,7);
+  assert.equal(catalog.topics.reduce((sum,topic) => sum + topic.anzahl,0),567);
+  assert.equal(ids.length,567);
+  assert.equal(new Set(ids).size,567);
+});
+
+test('Steuern exposes three pools with 233 unique IDs and the exact approved counts', () => {
+  const context = backend();
+  const catalog = context.getTrainerCatalogFrontend('Steuern');
+  const pools = catalog.topics.map(topic => context.getTrainerQuestionsFrontend('Steuern', topic.uiThemenKey));
+  const ids = pools.flatMap(pool => pool.questions.map(question => question.id));
+
+  assert.deepEqual(catalog.topics.map(topic => [topic.thema,topic.anzahl]), [
+    ['Grundbegriffe des Steuerrechts',12],
+    ['Unternehmensbezogene Steuern',205],
+    ['Abgabenordnung',16]
+  ]);
+  assert.equal(catalog.topics.length,3);
+  assert.equal(catalog.topics.reduce((sum,topic) => sum + topic.anzahl,0),233);
+  assert.equal(ids.length,233);
+  assert.equal(new Set(ids).size,233);
+});
+
 test('pilot pools contain every ID exactly once and R-0566 stays a method question outside 3.1.1 evidence', () => {
   const context = backend();
   const pools = manifest.visibleTopics.map(topic => context.getTrainerQuestionsFrontend(topic.fach, topic.uiTopicId));
@@ -149,6 +187,7 @@ test('rollback switch immediately restores the untouched legacy topic catalog', 
   const catalog = context.getTrainerCatalogFrontend('Recht');
 
   assert.equal(catalog.active, false);
+  assert.equal(catalog.migrationStatus, 'ZURUECKGEROLLT');
   assert.ok(catalog.topics.some(item => item.thema === 'Kaufrecht & Verbraucherschutz'));
   assert.ok(catalog.topics.every(item => !Object.hasOwn(item, 'uiThemenKey')));
 });
@@ -160,12 +199,28 @@ test('active switch fails closed when assignments are duplicated or required met
   const duplicateCatalog = duplicate.getTrainerCatalogFrontend('Recht');
   assert.equal(duplicateCatalog.active, false);
   assert.equal(duplicateCatalog.fallbackReason, 'invalid_metadata');
-  assert.ok(duplicateCatalog.topics.every(item => !Object.hasOwn(item, 'uiThemenKey')));
+  assert.equal(duplicateCatalog.topics.length, 0);
 
   const incomplete = backend({Trainer_Detailgruppen: [metadata().Trainer_Detailgruppen[0]]});
   const incompleteCatalog = incomplete.getTrainerCatalogFrontend('Recht');
   assert.equal(incompleteCatalog.active, false);
   assert.equal(incompleteCatalog.fallbackReason, 'invalid_metadata');
+  assert.equal(incompleteCatalog.topics.length, 0);
+
+  const incompleteSourceRows = rowsForQuestions('Recht');
+  incompleteSourceRows.find(row => row[0] === 'R-0001')[8] = 'nein';
+  const incompleteSource = backend({Recht: incompleteSourceRows});
+  const incompleteSourceCatalog = incompleteSource.getTrainerCatalogFrontend('Recht');
+  assert.equal(incompleteSourceCatalog.active, false);
+  assert.equal(incompleteSourceCatalog.fallbackReason, 'invalid_source');
+  assert.equal(incompleteSourceCatalog.topics.length, 0);
+
+  const migrationHeader = metadata().Trainer_Migrationen[0];
+  const missingMigration = backend({Trainer_Migrationen: [migrationHeader]});
+  const missingMigrationCatalog = missingMigration.getTrainerCatalogFrontend('Recht');
+  assert.equal(missingMigrationCatalog.active, false);
+  assert.equal(missingMigrationCatalog.fallbackReason, 'missing_migration');
+  assert.equal(missingMigrationCatalog.topics.length, 0);
 });
 
 test('resume ignores a newer cursor whose ID is no longer active in the source sheet', () => {

@@ -4,6 +4,29 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 
+const approvedTopics = {
+  Recht: [
+    ['ui-wq-recht-at','BGB Allgemeiner Teil',85],
+    ['ui-wq-recht-schuld','BGB Schuldrecht',174],
+    ['ui-wq-recht-sachen','BGB Sachenrecht',84],
+    ['ui-wq-recht-handel','Handelsrecht',75],
+    ['ui-wq-recht-arbeit','Arbeitsrecht',116],
+    ['ui-wq-recht-wettbewerb','Wettbewerbsrecht',17],
+    ['ui-wq-recht-gewerbe','Gewerberecht',16]
+  ],
+  Steuern: [
+    ['ui-wq-steuern-grundlagen','Grundbegriffe des Steuerrechts',12],
+    ['ui-wq-steuern-unternehmen','Unternehmensbezogene Steuern',205],
+    ['ui-wq-steuern-ao','Abgabenordnung',16]
+  ]
+};
+
+Object.keys(approvedTopics).forEach(fach => {
+  approvedTopics[fach] = approvedTopics[fach].map(([uiThemenKey,thema,anzahl]) => ({
+    uiThemenKey,thema,anzahl,version:'WIFA-TR-WQ3-20260927-v2'
+  }));
+});
+
 function harness() {
   const elements = new Map();
   const calls = [];
@@ -17,15 +40,7 @@ function harness() {
     });
     return elements.get(id);
   };
-  const visible = [
-    ['ui-wq-recht-at','BGB Allgemeiner Teil',85],
-    ['ui-wq-recht-schuld','BGB Schuldrecht',174],
-    ['ui-wq-recht-sachen','BGB Sachenrecht',84],
-    ['ui-wq-recht-handel','Handelsrecht',75],
-    ['ui-wq-recht-arbeit','Arbeitsrecht',116],
-    ['ui-wq-recht-wettbewerb','Wettbewerbsrecht',17],
-    ['ui-wq-recht-gewerbe','Gewerberecht',16]
-  ].map(([uiThemenKey,thema,anzahl]) => ({uiThemenKey,thema,anzahl,version:'WIFA-TR-WQ3-20260927-v2'}));
+  const visible = approvedTopics.Recht;
   const questions = [
     {id:'R-0566',thema:'Rechtliche Grundlagen & Methoden',legacyThema:'Rechtliche Grundlagen & Methoden',uiThemenKey:'ui-wq-recht-at',uiThemenName:'BGB Allgemeiner Teil',frage:'Methodenfrage',fragePosition:1,frageGesamt:2},
     {id:'R-0050',thema:'BGB Allgemeiner Teil',legacyThema:'BGB Allgemeiner Teil',uiThemenKey:'ui-wq-recht-at',uiThemenName:'BGB Allgemeiner Teil',frage:'Grundlagenfrage',fragePosition:2,frageGesamt:2}
@@ -43,7 +58,9 @@ function harness() {
     apiPost:async(action,params)=>{posts.push({action,params});return {success:true};},
     apiGet:async(action,params)=>{
       calls.push({action,params});
-      if(action==='trainerCatalog') return {success:true,data:{active:true,version:'WIFA-TR-WQ3-20260927-v2',topics:visible}};
+      if(action==='trainerCatalog') return {success:true,data:{
+        active:true,version:'WIFA-TR-WQ3-20260927-v2',migrationStatus:'AKTIV',topics:approvedTopics[params.fach] || []
+      }};
       if(action==='trainerQuestions') return {success:true,data:{active:true,version:'WIFA-TR-WQ3-20260927-v2',uiThemenKey:params.uiThemenKey,questions}};
       if(action==='topics') return {success:true,data:[{thema:'BGB: Personen, Rechtsgeschäfte und Vertretung',anzahl:84}]};
       if(action==='questionsForTopic') return {success:true,data:[]};
@@ -64,9 +81,87 @@ test('topic dropdown renders only the seven approved Recht UI topics with stable
 
   assert.deepEqual(rendered.map(item => item.value), visible.map(item => item.uiThemenKey));
   assert.deepEqual(rendered.map(item => item.textContent), visible.map(item => `${item.thema} (${item.anzahl} Fragen)`));
+  assert.equal(rendered.length,7);
+  assert.equal(rendered.reduce((sum,item) => sum + Number(item.dataset.fragenAnzahl),0),567);
   assert.ok(!rendered.some(item => /Personen, Rechtsgeschäfte/.test(item.textContent)));
   assert.equal(calls.filter(call => call.action === 'trainerCatalog').length, 1);
   assert.equal(calls.filter(call => call.action === 'topics').length, 0);
+});
+
+test('topic dropdown renders only the three approved Steuern UI topics with exact counts', async () => {
+  const {c,calls,element} = harness();
+  await c.ladeThemen('Steuern');
+  const rendered = element('themaSelect').children;
+
+  assert.deepEqual(rendered.map(item => item.value), approvedTopics.Steuern.map(item => item.uiThemenKey));
+  assert.deepEqual(rendered.map(item => item.textContent), approvedTopics.Steuern.map(item => `${item.thema} (${item.anzahl} Fragen)`));
+  assert.equal(rendered.length,3);
+  assert.equal(rendered.reduce((sum,item) => sum + Number(item.dataset.fragenAnzahl),0),233);
+  assert.equal(calls.filter(call => call.action === 'topics').length,0);
+});
+
+test('pilot subjects never fall back to legacy topics when the deployed pilot API is unavailable', async () => {
+  const {c,calls} = harness();
+  c.apiGet = async (action,params) => {
+    calls.push({action,params});
+    if(action==='trainerCatalog') return {success:false,error:'Unbekannte Aktion.'};
+    if(action==='topics') return {success:true,data:[
+      {thema:'BGB Allgemeiner Teil',anzahl:67},
+      {thema:'BGB Schuldrecht',anzahl:7},
+      {thema:'Rechtliche Grundlagen & Methoden',anzahl:1}
+    ]};
+    throw Error('Unexpected request: '+action);
+  };
+
+  await assert.rejects(() => c.ladeTrainerThemenDaten('Recht'),/Pilot-Themen/);
+  assert.equal(calls.filter(call => call.action === 'topics').length,0);
+});
+
+test('pilot subjects reject unmarked legacy catalog payloads but accept an explicit rollback', async () => {
+  const legacyTopics = [{thema:'Rechtliche Grundlagen & Methoden',anzahl:1}];
+  const unavailable = harness();
+  unavailable.c.apiGet = async (action,params) => {
+    unavailable.calls.push({action,params});
+    if(action==='trainerCatalog') return {success:true,data:{active:false,version:'legacy',topics:legacyTopics}};
+    throw Error('Unexpected request: '+action);
+  };
+  await assert.rejects(() => unavailable.c.ladeTrainerThemenDaten('Recht'),/Pilot-Themen/);
+
+  const stale = harness();
+  stale.c.apiGet = async (action,params) => {
+    stale.calls.push({action,params});
+    if(action==='trainerCatalog') return {success:true,data:{
+      active:true,version:'WIFA-TR-WQ3-20260927-v1',migrationStatus:'AKTIV',topics:legacyTopics
+    }};
+    throw Error('Unexpected request: '+action);
+  };
+  await assert.rejects(() => stale.c.ladeTrainerThemenDaten('Recht'),/Pilot-Themen/);
+
+  const rollback = harness();
+  rollback.c.apiGet = async (action,params) => {
+    rollback.calls.push({action,params});
+    if(action==='trainerCatalog') return {success:true,data:{
+      active:false,version:'legacy',migrationStatus:'ZURUECKGEROLLT',topics:legacyTopics
+    }};
+    throw Error('Unexpected request: '+action);
+  };
+  const rollbackTopics = await rollback.c.ladeTrainerThemenDaten('Recht');
+  assert.deepEqual(rollbackTopics.map(item => item.thema),['Rechtliche Grundlagen & Methoden']);
+});
+
+test('pilot question pools reject a stale or mismatched API contract', async () => {
+  const {c} = harness();
+  c.apiGet = async action => {
+    if(action==='trainerQuestions') return {success:true,data:{
+      active:true,version:'WIFA-TR-WQ3-20260927-v1',uiThemenKey:'ui-wq-recht-at',questions:[]
+    }};
+    throw Error('Unexpected request: '+action);
+  };
+
+  await assert.rejects(
+    () => c.trainerThemenpoolLaden('Recht','ui-wq-recht-at'),
+    /Themenpool/
+  );
 });
 
 test('pilot navigation and resume use the UI key while the displayed and persisted question keep their proper levels', async () => {

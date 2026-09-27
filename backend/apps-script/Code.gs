@@ -461,19 +461,37 @@ function isTrainerPilotSubject_(fach) {
 function getTrainerCatalogFrontend(fach) {
   const safeFach = String(fach || "").trim();
   const metadata = getTrainerPilotMetadata_();
-  if (!isTrainerPilotSubject_(safeFach) || !metadata.active) {
+  if (!isTrainerPilotSubject_(safeFach)) {
     return {
       active: false,
       version: "legacy",
       fach: safeFach,
-      fallbackReason: isTrainerPilotSubject_(safeFach) && metadata.migration && metadata.migration.active && !metadata.valid
-        ? "invalid_metadata" : "",
+      fallbackReason: "",
+      migrationStatus: "",
       topics: getTopicsForSheet(safeFach)
     };
   }
+  if (!metadata.migration) {
+    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "missing_migration", migrationStatus: "", topics: []};
+  }
+  const migrationStatus = String(metadata.migration.status || "").trim().toUpperCase();
+  if (!metadata.migration.active) {
+    const rolledBack = migrationStatus === "ZURUECKGEROLLT";
+    return {
+      active: false,
+      version: "legacy",
+      fach: safeFach,
+      fallbackReason: rolledBack ? "" : "inactive_migration",
+      migrationStatus: migrationStatus,
+      topics: rolledBack ? getTopicsForSheet(safeFach) : []
+    };
+  }
+  if (!metadata.valid) {
+    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_metadata", migrationStatus: migrationStatus, topics: []};
+  }
   const source = getTrainerPilotActiveSource_(metadata, safeFach);
   if (!source.valid) {
-    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_source", topics: getTopicsForSheet(safeFach)};
+    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_source", migrationStatus: migrationStatus, topics: []};
   }
   const topics = metadata.topics.filter(function(item) {
     return String(item.Quellfach || "").trim() === safeFach &&
@@ -499,6 +517,7 @@ function getTrainerCatalogFrontend(fach) {
     active: true,
     version: TRAINER_PILOT_VERSION_,
     migrationId: metadata.migration.migrationId,
+    migrationStatus: migrationStatus,
     fach: safeFach,
     topics: topics
   };
