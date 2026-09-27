@@ -788,11 +788,11 @@ function lerntexteContinuousFortschrittSpeichern(index, localTime, completed) {
 
 function lerntexteContinuousAnsichtSynchronisieren(entry) {
   if (!entry) return;
-  const mainChapter = String(entry.hauptkapitelNr || '');
-  if (lerntexteAktuellesKapitel && lerntexteAktuellesKapitel !== mainChapter) {
-    lerntexteAktuellesKapitel = mainChapter;
+  const chapterKey = lerntexteKapitelSchluessel(entry);
+  if (lerntexteAktuellesKapitel && lerntexteAktuellesKapitel !== chapterKey) {
+    lerntexteAktuellesKapitel = chapterKey;
     const select = lerntexteElement('lerntexteKapitelSelect');
-    if (select) select.value = mainChapter;
+    if (select) select.value = chapterKey;
     lerntexteInhaltRendern(undefined, { trackUsage: false });
   }
 }
@@ -1907,7 +1907,10 @@ async function lerntexteFachWaehlen(fach) {
 
     const titelElement = lerntexteElement("lerntexteAudioChapterLabel");
     if (titelElement) {
-      titelElement.textContent = lerntexteAktuellesKapitel ? "Kapitel " + lerntexteAktuellesKapitel : lerntexteAktuellesFach;
+      const selectedEntry = lerntexteDaten.find(function (eintrag) {
+        return lerntexteKapitelSchluessel(eintrag) === lerntexteAktuellesKapitel;
+      });
+      titelElement.textContent = selectedEntry ? "Kapitel " + selectedEntry.hauptkapitelNr : lerntexteAktuellesFach;
     }
 
     lerntexteAnzeigen(usageTicket);
@@ -1918,6 +1921,12 @@ async function lerntexteFachWaehlen(fach) {
   }
 }
 
+function lerntexteKapitelSchluessel(eintrag) {
+  return lerntexteAktuellesFach === 'Recht'
+    ? lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path
+    : String(eintrag.hauptkapitelNr);
+}
+
 function lerntexteBaueKapitelDropdown() {
   const select = lerntexteElement("lerntexteKapitelSelect");
   select.innerHTML = '<option value="">Alle Kapitel</option>';
@@ -1925,13 +1934,15 @@ function lerntexteBaueKapitelDropdown() {
   const gesehen = new Set();
 
   lerntexteDaten.forEach(function (eintrag) {
-    const key = String(eintrag.hauptkapitelNr);
+    const key = lerntexteKapitelSchluessel(eintrag);
     if (gesehen.has(key)) return;
     gesehen.add(key);
 
     const option = document.createElement("option");
     option.value = key;
-    option.textContent = "Kapitel " + eintrag.hauptkapitelNr + " – " + eintrag.hauptkapitel;
+    option.textContent = lerntexteAktuellesFach === 'Recht'
+      ? "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel)
+      : "Kapitel " + eintrag.hauptkapitelNr + " – " + eintrag.hauptkapitel;
     select.appendChild(option);
   });
 }
@@ -1943,7 +1954,7 @@ function lerntexteKapitelWaehlen() {
     lerntexteInhaltRendern(undefined, { trackUsage: false });
     const targetIndex = selectedChapter
       ? lerntexteAudioPlaylist.findIndex(function (item) {
-        return item && item.eintrag && String(item.eintrag.hauptkapitelNr) === selectedChapter;
+        return item && item.eintrag && lerntexteKapitelSchluessel(item.eintrag) === selectedChapter;
       })
       : 0;
     if (targetIndex >= 0) lerntexteContinuousKapitelSpringen(targetIndex, 0);
@@ -1955,7 +1966,10 @@ function lerntexteKapitelWaehlen() {
   lerntexteAktuellesKapitel = selectedChapter;
   const titelElement = lerntexteElement("lerntexteAudioChapterLabel");
   if (titelElement) {
-    titelElement.textContent = lerntexteAktuellesKapitel ? "Kapitel " + lerntexteAktuellesKapitel : lerntexteAktuellesFach;
+    const selectedEntry = lerntexteDaten.find(function (eintrag) {
+      return lerntexteKapitelSchluessel(eintrag) === lerntexteAktuellesKapitel;
+    });
+    titelElement.textContent = selectedEntry ? "Kapitel " + selectedEntry.hauptkapitelNr : lerntexteAktuellesFach;
   }
   lerntexteAnzeigen();
 }
@@ -1963,7 +1977,7 @@ function lerntexteKapitelWaehlen() {
 function lerntexteAusgewaehlteEinheiten() {
   if (!lerntexteAktuellesKapitel) return lerntexteDaten;
   return lerntexteDaten.filter(function (eintrag) {
-    return String(eintrag.hauptkapitelNr) === lerntexteAktuellesKapitel;
+    return lerntexteKapitelSchluessel(eintrag) === lerntexteAktuellesKapitel;
   });
 }
 
@@ -2559,7 +2573,7 @@ function lerntexteAudioAbspielen() {
         let targetIndex = 0;
         if (lerntexteAktuellesKapitel) {
           const selectedIndex = lerntexteAudioPlaylist.findIndex(function (item) {
-            return item && item.eintrag && String(item.eintrag.hauptkapitelNr) === String(lerntexteAktuellesKapitel);
+            return item && item.eintrag && lerntexteKapitelSchluessel(item.eintrag) === lerntexteAktuellesKapitel;
           });
           if (selectedIndex >= 0) targetIndex = selectedIndex;
         }

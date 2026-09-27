@@ -337,7 +337,7 @@ function createBlock2Context() {
   };
   const source = sourceFiles.map(file => fs.readFileSync(path.join(__dirname, file), 'utf8')).join('\n')
     + '\nwindow.__renderEntries = function(entries, fach) {'
-    + 'lerntexteDaten = entries; lerntexteAktuellesFach = fach; lerntexteAktuellesKapitel = ""; lerntexteAnzeigen();'
+    + 'lerntexteDaten = entries; lerntexteAktuellesFach = fach; lerntexteAktuellesKapitel = ""; lerntexteBaueKapitelDropdown(); lerntexteAnzeigen();'
     + '};'
     + 'window.__selectChapter = function(value) {'
     + 'document.getElementById("lerntexteKapitelSelect").value = String(value); lerntexteKapitelWaehlen();'
@@ -383,7 +383,7 @@ function block2ManifestFor(fixture, entry) {
 function continuousRechtEntries(count = 57) {
   return Array.from({ length: count }, (_, index) => block2ChapterEntry(
     'Recht Einheit ' + String(index + 1),
-    String(Math.floor(index / 10) + 1)
+    String(index % 7 + 1)
   ));
 }
 
@@ -1223,7 +1223,7 @@ test('Podcast-Kapitelsprung: laufender Fehlerzustand wird synchron zurückgesetz
   fixture.audio.error = { code: 2 };
   fixture.audio.dispatchEvent({ type: 'error' });
 
-  fixture.context.window.__selectChapter(3);
+  fixture.context.window.__selectChapter(block2ManifestFor(fixture, entries[2]).mp3Path);
 
   const resetState = fixture.context.window.__audioState();
   assert.strictEqual(resetState.index, 0);
@@ -3677,6 +3677,91 @@ test('Recht-Bundle: zwei logische Grenzen behalten dieselbe Quelle und benötige
   assert.strictEqual(fixture.document.getElementById('lerntexteAudioProgressMeta').textContent, '0:00 / 0:03');
 });
 
+test('Recht-Bundle: Dropdown bietet 57 eindeutige MP3-Pfade auch bei wiederholten Hauptkapitelnummern', () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries();
+  fixture.context.window.__renderEntries(entries, 'Recht');
+
+  const options = fixture.document.getElementById('lerntexteKapitelSelect').childNodes.slice(1);
+  const values = options.map(option => option.value);
+  assert.strictEqual(options.length, 57);
+  assert.strictEqual(new Set(values).size, 57);
+  assert.strictEqual(values[0], 'podcast/recht-recht-einheit-1.mp3');
+  assert.strictEqual(values[28], 'podcast/recht-recht-einheit-29.mp3');
+  assert.strictEqual(values[55], 'podcast/recht-recht-einheit-56.mp3');
+  assert.strictEqual(values[56], 'podcast/recht-recht-einheit-57.mp3');
+  assert.match(options[56].textContent, /Recht Einheit 57/);
+});
+
+test('Recht-Bundle: Dropdown springt direkt und schnell zwischen logischen Einheiten ohne Medienwechsel', async () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries();
+  const bundle = configureContinuousRechtBundle(fixture, entries);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  await fixture.context.window.lerntexteAudioAbspielen();
+
+  const select = fixture.document.getElementById('lerntexteKapitelSelect');
+  const initial = {
+    src: fixture.audio.src,
+    assignments: fixture.audio.srcAssignments,
+    load: fixture.audio.loadCalls,
+    play: fixture.audio.playCalls
+  };
+  const choose = index => {
+    fixture.context.window.__selectChapter(bundle.chapters[index].legacyMp3Path);
+    for (const type of ['seeking', 'timeupdate', 'seeked']) fixture.audio.dispatchEvent({ type });
+    assert.strictEqual(fixture.context.window.__audioState().index, index);
+    assert.strictEqual(fixture.audio.currentTime, bundle.chapters[index].start);
+    assert.strictEqual(select.value, bundle.chapters[index].legacyMp3Path);
+    assert.strictEqual(fixture.document.getElementById('lerntexteAudioChapterLabel').textContent, entries[index].titel);
+    assert.strictEqual(fixture.root.querySelectorAll('.lerntexte-text').length, 1);
+    assert.match(fixture.root.textContent, new RegExp(entries[index].titel));
+    assert.deepStrictEqual({
+      src: fixture.audio.src,
+      assignments: fixture.audio.srcAssignments,
+      load: fixture.audio.loadCalls,
+      play: fixture.audio.playCalls
+    }, initial);
+  };
+
+  for (const index of [28, 0, 55, 56]) {
+    choose(index);
+    assert.strictEqual(fixture.audio.paused, false);
+  }
+  fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+  assert.strictEqual(fixture.audio.paused, true);
+  choose(55);
+  choose(56);
+  assert.strictEqual(fixture.audio.paused, true);
+  fixture.context.window.__selectChapter(bundle.chapters[28].legacyMp3Path);
+  fixture.context.window.__selectChapter(bundle.chapters[56].legacyMp3Path);
+  for (const type of ['seeking', 'timeupdate', 'seeked']) fixture.audio.dispatchEvent({ type });
+  assert.strictEqual(fixture.context.window.__audioState().index, 56);
+  assert.strictEqual(fixture.audio.currentTime, bundle.chapters[56].start);
+  assert.strictEqual(fixture.audio.paused, true);
+  assert.deepStrictEqual({
+    src: fixture.audio.src,
+    assignments: fixture.audio.srcAssignments,
+    load: fixture.audio.loadCalls,
+    play: fixture.audio.playCalls
+  }, initial);
+});
+
+test('Recht-Bundle: Dropdown-Auswahl vor Start behält den exakten Bundle-Index', async () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries();
+  const bundle = configureContinuousRechtBundle(fixture, entries);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+
+  fixture.context.window.__selectChapter(bundle.chapters[56].legacyMp3Path);
+  await fixture.context.window.lerntexteAudioAbspielen();
+
+  assert.strictEqual(fixture.context.window.__audioState().index, 56);
+  assert.strictEqual(fixture.audio.currentTime, bundle.chapters[56].start);
+  assert.strictEqual(fixture.document.getElementById('lerntexteAudioChapterLabel').textContent, entries[56].titel);
+  assert.strictEqual(fixture.audio.src, 'https://example.test/recht-bundle.mp3');
+});
+
 test('Recht-Bundle: Vor, Zurück und direkte Kapitelwahl seeken nur und erhalten Pause', async () => {
   const fixture = createBlock2Context();
   const entries = continuousRechtEntries();
@@ -3698,8 +3783,8 @@ test('Recht-Bundle: Vor, Zurück und direkte Kapitelwahl seeken nur und erhalten
   await fixture.context.window.lerntexteAudioKapitelVorher();
   assert.strictEqual(fixture.audio.currentTime, 0);
 
-  fixture.context.window.__selectChapter('2');
-  assert.strictEqual(fixture.audio.currentTime, 30, 'Hauptkapitel 2 beginnt bei logischem Kapitel 11');
+  fixture.context.window.__selectChapter(block2ManifestFor(fixture, entries[10]).mp3Path);
+  assert.strictEqual(fixture.audio.currentTime, 30, 'die gewählte logische Einheit beginnt bei Index 10');
   assert.strictEqual(fixture.audio.paused, true);
   assert.deepStrictEqual({
     src: fixture.audio.srcAssignments,
@@ -3742,7 +3827,7 @@ test('Recht-Bundle: identischer manueller Seek unterdrückt spätere natürliche
   fixture.context.window.__renderEntries(entries, 'Recht');
   await fixture.context.window.lerntexteAudioAbspielen();
 
-  fixture.context.window.__selectChapter('1');
+  fixture.context.window.__selectChapter(block2ManifestFor(fixture, entries[0]).mp3Path);
   fixture.audio.currentTime = 3.25;
   fixture.audio.dispatchEvent({ type: 'timeupdate' });
   await flushAsync();
@@ -3882,18 +3967,26 @@ test('Recht-Bundle: Sichtbarkeits-Rückkehr rekonstruiert Kapitel und speichert 
 test('Recht-Bundle: fehlendes Sidecar fällt beim Vordergrundstart auf Legacy-Audio zurück', async () => {
   const fixture = createBlock2Context();
   const entries = continuousRechtEntries();
-  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async () => block2ManifestFor(fixture, entries[0]);
+  const selected = entries[56];
+  const selectedPath = 'podcast/recht-recht-einheit-57.mp3';
+  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async () => block2ManifestFor(fixture, selected);
+  fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async path => {
+    assert.strictEqual(path, selectedPath);
+    return 'https://example.test/recht-einheit-57.mp3';
+  };
   fixture.eventWindow.lerntextePilotDependencies.loadBundleManifest = async () => {
     throw new Error('bundle unavailable');
   };
   fixture.context.window.__renderEntries(entries, 'Recht');
+  fixture.context.window.__selectChapter(selectedPath);
 
   const started = await fixture.context.window.lerntexteAudioAbspielen();
 
   assert.strictEqual(started, true);
-  assert.strictEqual(fixture.audio.src, 'https://example.test/pilot.mp3');
+  assert.strictEqual(fixture.audio.src, 'https://example.test/recht-einheit-57.mp3');
   assert.strictEqual(fixture.audio.playCalls, 1);
   assert.strictEqual(fixture.context.window.__audioState().index, 0);
+  assert.strictEqual(fixture.context.window.__audioState().titles[0], selected.titel);
 });
 
 test('Recht-Bundle: Media Session steuert Kapitel und lokale Position ohne Medienwechsel', async () => {
