@@ -57,12 +57,13 @@ let lerntextePilotLastValidWordIndex = 0;
 let lerntextePilotTextRoots = {};
 let lerntexteContinuousState = null;
 let lerntexteContinuousFallbackAktiv = false;
+let lerntexteContinuousFallbackFach = '';
 let lerntexteAudioMediaSessionPositionAktiv = false;
-const lerntexteContinuousManifestPath = 'podcast/continuous/recht.json';
 const lerntexteAudioTestStatischeQuelle = "https://beckersabine082-art.github.io/wifa-trainer-gruen/audio/podcast/recht-rechtssubjekte-rechtsobjekte.mp3";
 
-function lerntexteContinuousIstRecht() {
-  return String(lerntexteAktuellesFach || '').trim() === 'Recht';
+function lerntexteContinuousDescriptor(fach) {
+  const paths = lerntexteContinuousHelper('continuousPodcastPaths');
+  return paths && fach ? Object.freeze(Object.assign({ fach: fach }, paths(fach))) : null;
 }
 
 function lerntexteContinuousHelper(name) {
@@ -136,12 +137,13 @@ function lerntextePilotStatus(text) {
   }
 }
 
-function lerntexteAudioSessionIstAktuell(sessionId) {
-  return sessionId === lerntexteAudioSessionId;
+function lerntexteAudioSessionIstAktuell(sessionId, fach) {
+  return sessionId === lerntexteAudioSessionId
+    && (fach === undefined || fach === lerntexteAktuellesFach);
 }
 
-function lerntexteAudioSessionPruefen(sessionId) {
-  if (typeof sessionId !== 'number' || lerntexteAudioSessionIstAktuell(sessionId)) return;
+function lerntexteAudioSessionPruefen(sessionId, fach) {
+  if (typeof sessionId !== 'number' || lerntexteAudioSessionIstAktuell(sessionId, fach)) return;
   const error = new Error('Veraltete Podcast-Session.');
   error.code = 'podcast/session-stale';
   throw error;
@@ -321,11 +323,12 @@ async function lerntextePilotAssetsLaden(eintrag, sessionId, signal) {
 }
 
 function lerntexteContinuousKannVersuchen() {
-  if (!lerntexteContinuousIstRecht() || lerntexteContinuousFallbackAktiv) return false;
-  if (!lerntexteContinuousHelper('validateRechtBundle')
-    || !lerntexteContinuousHelper('rechtChapterIndexAtTime')
-    || !lerntexteContinuousHelper('rechtChapterLocalTime')
-    || !lerntexteContinuousHelper('rechtChapterSeekTarget')) return false;
+  if (!lerntexteContinuousDescriptor(lerntexteAktuellesFach)
+    || (lerntexteContinuousFallbackAktiv && lerntexteContinuousFallbackFach === lerntexteAktuellesFach)) return false;
+  if (!lerntexteContinuousHelper('validateContinuousBundle')
+    || !lerntexteContinuousHelper('chapterIndexAtTime')
+    || !lerntexteContinuousHelper('chapterLocalTime')
+    || !lerntexteContinuousHelper('chapterSeekTarget')) return false;
 
   if (typeof window !== 'undefined' && window.lerntextePilotDependencies) {
     return typeof window.lerntextePilotDependencies.loadBundleManifest === 'function';
@@ -333,26 +336,26 @@ function lerntexteContinuousKannVersuchen() {
   return true;
 }
 
-async function lerntexteContinuousAssetsLaden(sessionId, signal) {
+async function lerntexteContinuousAssetsLaden(sessionId, signal, descriptor) {
   if (typeof window !== 'undefined' && window.lerntextePilotDependencies) {
     const dependencies = window.lerntextePilotDependencies;
     if (typeof dependencies.loadBundleManifest !== 'function') {
-      const unavailable = new Error('Recht-Bundle ist nicht verfügbar.');
+      const unavailable = new Error('Podcast-Bundle ist nicht verfügbar.');
       unavailable.code = 'podcast/bundle-unavailable';
       throw unavailable;
     }
-    const loaded = await dependencies.loadBundleManifest(lerntexteContinuousManifestPath, signal);
-    lerntexteAudioSessionPruefen(sessionId);
+    const loaded = await dependencies.loadBundleManifest(descriptor.sidecarPath, signal);
+    lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
     const manifest = loaded && loaded.manifest ? loaded.manifest : loaded;
     const manifestHash = String(loaded && loaded.manifestHash || '');
     if (!manifest || typeof manifest.mp3Path !== 'string') {
-      throw new Error('Recht-Bundle-Sidecar ist ungültig.');
+      throw new Error('Podcast-Bundle-Sidecar ist ungültig.');
     }
     const results = await Promise.all([
       dependencies.loadMetadata(manifest.mp3Path, signal),
       dependencies.loadMp3Url(manifest.mp3Path, signal)
     ]);
-    lerntexteAudioSessionPruefen(sessionId);
+    lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
     return { manifest: manifest, manifestHash: manifestHash, mp3Metadata: results[0], mp3Url: results[1] };
   }
 
@@ -360,38 +363,41 @@ async function lerntexteContinuousAssetsLaden(sessionId, signal) {
     import('./firebase-config.js'),
     import('https://www.gstatic.com/firebasejs/12.17.1/firebase-storage.js')
   ]);
+  lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
   const firebase = modules[0];
   const storageModule = modules[1];
-  const sidecarRef = firebase.ref(firebase.storage, lerntexteContinuousManifestPath);
+  const sidecarRef = firebase.ref(firebase.storage, descriptor.sidecarPath);
   const sidecarUrl = await firebase.getDownloadURL(sidecarRef);
-  lerntexteAudioSessionPruefen(sessionId);
+  lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
   const response = await fetch(sidecarUrl, signal ? { signal: signal } : undefined);
-  lerntexteAudioSessionPruefen(sessionId);
-  if (!response.ok) throw new Error('Recht-Bundle-Sidecar konnte nicht geladen werden.');
+  lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
+  if (!response.ok) throw new Error('Podcast-Bundle-Sidecar konnte nicht geladen werden.');
   const manifestText = await response.text();
+  lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
   const manifestHash = await lerntextePilotHash(manifestText);
-  lerntexteAudioSessionPruefen(sessionId);
+  lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
   let manifest;
   try {
     manifest = JSON.parse(manifestText);
   } catch (error) {
-    throw new Error('Recht-Bundle-Sidecar ist kein gültiges JSON.');
+    throw new Error('Podcast-Bundle-Sidecar ist kein gültiges JSON.');
   }
   const mp3Ref = firebase.ref(firebase.storage, manifest.mp3Path);
   const results = await Promise.all([
     storageModule.getMetadata(mp3Ref),
     firebase.getDownloadURL(mp3Ref)
   ]);
-  lerntexteAudioSessionPruefen(sessionId);
+  lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
   return { manifest: manifest, manifestHash: manifestHash, mp3Metadata: results[0], mp3Url: results[1] };
 }
 
-async function lerntexteContinuousAktuelleEintraege(sessionId) {
-  const entries = await Promise.all(lerntexteDaten.map(async function (entry, index) {
+async function lerntexteContinuousAktuelleEintraege(sessionId, descriptor, data) {
+  const entries = await Promise.all(data.map(async function (entry, index) {
     const paths = lerntextePodcastPfade(entry.fach, entry);
     const lerntextHash = await lerntextePilotHash(lerntextePilotTextFuerEintrag(entry));
     return {
       index: index,
+      fach: String(entry.fach || ''),
       titel: String(entry.titel || ''),
       hauptkapitel: String(entry.hauptkapitel || ''),
       hauptkapitelNr: String(entry.hauptkapitelNr || ''),
@@ -401,21 +407,23 @@ async function lerntexteContinuousAktuelleEintraege(sessionId) {
       legacyJsonPath: paths.jsonPath
     };
   }));
-  lerntexteAudioSessionPruefen(sessionId);
+  lerntexteAudioSessionPruefen(sessionId, descriptor.fach);
   return entries;
 }
 
-async function lerntexteContinuousAssetsValidieren(assets, sessionId) {
-  const validator = lerntexteContinuousHelper('validateRechtBundle');
-  if (!validator) return { valid: false, reason: 'Recht-Bundle-Prüfung fehlt.' };
-  const currentEntries = await lerntexteContinuousAktuelleEintraege(sessionId);
+async function lerntexteContinuousAssetsValidieren(assets, sessionId, descriptor, data) {
+  const validator = lerntexteContinuousHelper('validateContinuousBundle');
+  if (!validator) return { valid: false, reason: 'Podcast-Bundle-Prüfung fehlt.' };
+  const currentEntries = await lerntexteContinuousAktuelleEintraege(sessionId, descriptor, data);
   const result = validator({
     manifest: assets.manifest,
     manifestHash: assets.manifestHash,
     mp3Metadata: assets.mp3Metadata,
-    currentEntries: currentEntries
+    currentEntries: currentEntries,
+    expectedFach: descriptor.fach,
+    expectedMp3Prefix: descriptor.mp3Prefix
   });
-  return result && typeof result === 'object' ? result : { valid: false, reason: 'Recht-Bundle-Prüfung ist ungültig.' };
+  return result && typeof result === 'object' ? result : { valid: false, reason: 'Podcast-Bundle-Prüfung ist ungültig.' };
 }
 
 function lerntextePilotHashValidator() {
@@ -763,14 +771,16 @@ function lerntexteContinuousFortschrittState(index, localTime, completed) {
   if (!lerntexteContinuousState || !lerntexteContinuousState.manifest) return null;
   const chapter = lerntexteContinuousState.manifest.chapters[index];
   const item = lerntexteAudioPlaylist[index];
-  if (!chapter || !item || !item.eintrag) return null;
+  if (!chapter || !item || !item.eintrag
+    || item.eintrag.fach !== lerntexteContinuousState.fach
+    || !lerntexteAudioSessionIstAktuell(lerntexteContinuousState.sessionId, lerntexteContinuousState.fach)) return null;
   const duration = Math.max(0, Number(chapter.end) - Number(chapter.start));
   const position = Math.max(0, Math.min(duration, Number(localTime) || 0));
   const marks = Array.isArray(chapter.wortZeitmarken) ? chapter.wortZeitmarken : [];
   const finalWordIndex = marks.length ? Number(marks[marks.length - 1].wortIndex) || 0 : 0;
   return {
     nutzer: lerntextePilotUid,
-    fach: 'Recht',
+    fach: item.eintrag.fach,
     einheit: item.eintrag.titel || '',
     firebasePfad: chapter.legacyMp3Path,
     lerntextHash: chapter.lerntextHash,
@@ -801,7 +811,9 @@ function lerntexteContinuousKapitelAktivieren(index) {
   if (!lerntexteContinuousState || !lerntexteContinuousState.manifest) return false;
   const chapter = lerntexteContinuousState.manifest.chapters[index];
   const item = lerntexteAudioPlaylist[index];
-  if (!chapter || !item || !item.eintrag) return false;
+  if (!chapter || !item || !item.eintrag
+    || item.eintrag.fach !== lerntexteContinuousState.fach
+    || !lerntexteAudioSessionIstAktuell(lerntexteContinuousState.sessionId, lerntexteContinuousState.fach)) return false;
 
   const previousRoot = lerntextePilotTextRoot;
   if (lerntexteContinuousState.chapterIndex !== index) {
@@ -827,7 +839,7 @@ function lerntexteContinuousProgressAktualisieren(audio) {
   if (!lerntexteContinuousState || !audio) return;
   const index = lerntexteContinuousState.chapterIndex;
   const chapter = lerntexteContinuousState.manifest.chapters[index];
-  const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+  const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
   if (!chapter || !localTimeFor) return;
   const localTime = localTimeFor(lerntexteContinuousState.manifest, index, Number(audio.currentTime));
   if (localTime === null) return;
@@ -839,8 +851,8 @@ function lerntexteContinuousProgressAktualisieren(audio) {
 function lerntexteContinuousSynchronisieren(time, options) {
   options = options || {};
   if (!lerntexteContinuousState || !lerntexteContinuousState.manifest) return -1;
-  const indexAtTime = lerntexteContinuousHelper('rechtChapterIndexAtTime');
-  const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+  const indexAtTime = lerntexteContinuousHelper('chapterIndexAtTime');
+  const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
   if (!indexAtTime || !localTimeFor) return -1;
   const currentTime = Number(time);
   const nextIndex = indexAtTime(lerntexteContinuousState.manifest, currentTime);
@@ -872,7 +884,7 @@ function lerntexteContinuousIndexRekonstruieren() {
       && isFinite(lerntexteContinuousState.pendingStartPosition)) {
     return lerntexteContinuousState.chapterIndex;
   }
-  const indexAtTime = lerntexteContinuousHelper('rechtChapterIndexAtTime');
+  const indexAtTime = lerntexteContinuousHelper('chapterIndexAtTime');
   const currentTime = Number(lerntextePilotAudio.currentTime);
   if (!indexAtTime || !isFinite(currentTime)) return lerntexteContinuousState.chapterIndex;
   const actualIndex = indexAtTime(lerntexteContinuousState.manifest, currentTime);
@@ -885,16 +897,16 @@ function lerntexteContinuousIndexRekonstruieren() {
 
 function lerntexteContinuousKapitelSpringen(targetIndex, localSeconds) {
   if (!lerntexteContinuousState || !lerntextePilotAudio) return Promise.resolve(false);
-  const seekTarget = lerntexteContinuousHelper('rechtChapterSeekTarget');
+  const seekTarget = lerntexteContinuousHelper('chapterSeekTarget');
   const target = seekTarget && seekTarget(lerntexteContinuousState.manifest, targetIndex, localSeconds || 0);
   if (target === null || target === undefined) return Promise.resolve(false);
 
   const reconstructedIndex = lerntexteContinuousIndexRekonstruieren();
   const previousIndex = reconstructedIndex >= 0 ? reconstructedIndex : lerntexteContinuousState.chapterIndex;
-  const indexAtTime = lerntexteContinuousHelper('rechtChapterIndexAtTime');
+  const indexAtTime = lerntexteContinuousHelper('chapterIndexAtTime');
   const destinationIndex = indexAtTime ? indexAtTime(lerntexteContinuousState.manifest, target) : targetIndex;
   if (destinationIndex >= 0 && destinationIndex !== previousIndex && lerntextePilotAudio.ended !== true) {
-    const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+    const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
     const previousLocalTime = localTimeFor && localTimeFor(
       lerntexteContinuousState.manifest,
       previousIndex,
@@ -1008,13 +1020,14 @@ function lerntexteContinuousKaraokeEinrichten(audio, usageTicket, sessionId, ini
     if (!lerntexteAudioSessionIstAktuell(sessionId) || mediaErrorHandled) return;
     mediaErrorHandled = true;
     lerntexteContinuousFallbackAktiv = true;
+    lerntexteContinuousFallbackFach = lerntexteAktuellesFach;
     lerntexteAudioFehler = true;
     lerntexteAudioAktiv = false;
     lerntexteAudioPausiert = false;
     lerntexteAudioLaedt = false;
     const mediaCode = audio.error && audio.error.code ? 'bundle_media_' + audio.error.code : 'bundle_media_error';
-    window.WifaAnalytics?.audioError('Recht', lerntextePilotEntry && lerntextePilotEntry.titel, mediaCode);
-    lerntextePilotStatus('Recht-Podcast-Mediafehler. Kapitel erneut laden oder wechseln.');
+    window.WifaAnalytics?.audioError(lerntextePilotEntry && lerntextePilotEntry.fach, lerntextePilotEntry && lerntextePilotEntry.titel, mediaCode);
+    lerntextePilotStatus('Podcast-Mediafehler. Kapitel erneut laden oder wechseln.');
     lerntexteAudioSteuerungAktualisieren();
     lerntexteAudioMediaSessionAktualisieren();
   };
@@ -1195,8 +1208,8 @@ async function lerntextePilotProgressLaden(eintrag, currentHash, sessionId, opti
 function lerntextePilotSaveState(completed) {
   const audio = lerntextePilotAudio;
   if (lerntexteContinuousState && audio) {
-    const indexAtTime = lerntexteContinuousHelper('rechtChapterIndexAtTime');
-    const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+    const indexAtTime = lerntexteContinuousHelper('chapterIndexAtTime');
+    const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
     const absoluteTime = typeof audio.currentTime === 'number' && isFinite(audio.currentTime) ? Math.max(0, audio.currentTime) : 0;
     const derivedIndex = indexAtTime ? indexAtTime(lerntexteContinuousState.manifest, absoluteTime) : -1;
     const index = derivedIndex >= 0 ? derivedIndex : lerntexteContinuousState.chapterIndex;
@@ -1269,6 +1282,7 @@ async function lerntextePilotVonVorne() {
   if (lerntexteContinuousState) {
     const currentIndex = lerntexteContinuousIndexRekonstruieren();
     await lerntexteContinuousKapitelSpringen(currentIndex, 0);
+    if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
     lerntexteAudioLetztePosition = Number(lerntextePilotAudio.currentTime) || 0;
   } else {
     lerntextePodcastVonVorne(lerntextePilotAudio);
@@ -1747,6 +1761,19 @@ function lerntexteAudioProgressAktualisieren() {
   lerntexteAudioProgressSet(percent, metaText);
 }
 
+function lerntexteAudioMediaSessionZuruecksetzen() {
+  if (!("mediaSession" in navigator)) return;
+  navigator.mediaSession.metadata = null;
+  navigator.mediaSession.playbackState = 'none';
+  ['play', 'pause', 'stop', 'previoustrack', 'nexttrack', 'seekto', 'seekbackward', 'seekforward'].forEach(function (action) {
+    try { navigator.mediaSession.setActionHandler(action, null); } catch (error) {}
+  });
+  if (typeof navigator.mediaSession.setPositionState === 'function') {
+    try { navigator.mediaSession.setPositionState(); } catch (error) {}
+  }
+  lerntexteAudioMediaSessionPositionAktiv = false;
+}
+
 function lerntexteAudioMediaSessionAktualisieren() {
   if (!("mediaSession" in navigator)) return;
 
@@ -1800,7 +1827,7 @@ function lerntexteAudioMediaSessionAktualisieren() {
     const offset = details && Number(details.seekOffset) > 0 ? Number(details.seekOffset) : 10;
     if (lerntexteContinuousState) {
       const currentIndex = lerntexteContinuousIndexRekonstruieren();
-      const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+      const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
       const local = localTimeFor(lerntexteContinuousState.manifest, currentIndex, Number(audio.currentTime)) || 0;
       lerntexteContinuousKapitelSpringen(currentIndex, local - offset);
     } else audio.currentTime = Math.max(0, Number(audio.currentTime) - offset);
@@ -1811,7 +1838,7 @@ function lerntexteAudioMediaSessionAktualisieren() {
     const offset = details && Number(details.seekOffset) > 0 ? Number(details.seekOffset) : 10;
     if (lerntexteContinuousState) {
       const currentIndex = lerntexteContinuousIndexRekonstruieren();
-      const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+      const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
       const local = localTimeFor(lerntexteContinuousState.manifest, currentIndex, Number(audio.currentTime)) || 0;
       lerntexteContinuousKapitelSpringen(currentIndex, local + offset);
     } else audio.currentTime = Math.max(0, Number(audio.currentTime) + offset);
@@ -1819,7 +1846,7 @@ function lerntexteAudioMediaSessionAktualisieren() {
 
   if (lerntexteContinuousState && typeof navigator.mediaSession.setPositionState === 'function' && lerntextePilotAudio) {
     const chapter = lerntexteContinuousState.manifest.chapters[lerntexteContinuousState.chapterIndex];
-    const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+    const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
     const duration = chapter ? Number(chapter.end) - Number(chapter.start) : 0;
     const local = localTimeFor ? localTimeFor(lerntexteContinuousState.manifest, lerntexteContinuousState.chapterIndex, Number(lerntextePilotAudio.currentTime)) : 0;
     if (duration > 0 && local !== null) {
@@ -1867,8 +1894,14 @@ async function lerntexteFachWaehlen(fach) {
   const usageTicket = window.WifaUsage?.captureTicket();
   lerntexteAudioStoppen(undefined, { resetSession: true });
   lerntexteAktuellesFach = fach;
+  const sessionId = lerntexteAudioSessionId;
   lerntexteAktuellesKapitel = "";
   lerntexteDaten = [];
+  lerntextePilotTextRoots = {};
+  lerntexteBaueKapitelDropdown();
+  lerntexteElement('lerntexteKapitelSelect').value = '';
+  lerntexteElement('lerntexteAudioChapterLabel').textContent = fach;
+  lerntexteAudioMediaSessionZuruecksetzen();
 
   document.querySelectorAll("#lerntexteFachGrid .subject-btn").forEach(function (button) {
     button.classList.toggle("active", button.textContent === fach);
@@ -1883,6 +1916,7 @@ async function lerntexteFachWaehlen(fach) {
     lerntexteElement("lerntexteStatus").textContent = "Lerntexte werden geladen...";
 
     const result = await apiGet("getLerntexte", { fach: fach });
+    if (!lerntexteAudioSessionIstAktuell(sessionId, fach)) return;
 
     if (!result.success) {
       throw new Error(result.error || "Lerntexte konnten nicht geladen werden.");
@@ -1916,15 +1950,14 @@ async function lerntexteFachWaehlen(fach) {
     lerntexteAnzeigen(usageTicket);
 
   } catch (error) {
+    if (!lerntexteAudioSessionIstAktuell(sessionId, fach)) return;
     lerntexteElement("lerntexteStatus").textContent =
       "Fehler beim Laden der Lerntexte: " + error.message;
   }
 }
 
 function lerntexteKapitelSchluessel(eintrag) {
-  return lerntexteAktuellesFach === 'Recht'
-    ? lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path
-    : String(eintrag.hauptkapitelNr);
+  return lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path;
 }
 
 function lerntexteBaueKapitelDropdown() {
@@ -1940,16 +1973,14 @@ function lerntexteBaueKapitelDropdown() {
 
     const option = document.createElement("option");
     option.value = key;
-    option.textContent = lerntexteAktuellesFach === 'Recht'
-      ? "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel)
-      : "Kapitel " + eintrag.hauptkapitelNr + " – " + eintrag.hauptkapitel;
+    option.textContent = "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel);
     select.appendChild(option);
   });
 }
 
 function lerntexteKapitelWaehlen() {
   const selectedChapter = lerntexteElement("lerntexteKapitelSelect").value;
-  if (lerntexteContinuousState && lerntexteContinuousIstRecht()) {
+  if (lerntexteContinuousState) {
     lerntexteAktuellesKapitel = selectedChapter;
     lerntexteInhaltRendern(undefined, { trackUsage: false });
     const targetIndex = selectedChapter
@@ -2178,11 +2209,15 @@ async function lerntexteContinuousStarten(targetIndex, options) {
   options = options || {};
   const domAudio = lerntexteElement('lerntexteAudioPlayer');
   if (!domAudio) return { started: false, fallback: true };
+  const fach = lerntexteAktuellesFach;
+  const descriptor = lerntexteContinuousDescriptor(fach);
+  const data = lerntexteDaten.slice();
+  if (!descriptor) return { started: false, fallback: true };
   const requestedItem = lerntexteAudioPlaylist[targetIndex];
   const requestedPath = requestedItem && requestedItem.eintrag
     ? lerntextePodcastPfade(requestedItem.eintrag.fach, requestedItem.eintrag).mp3Path
     : '';
-  const completePlaylist = lerntexteAudioPlaylistErstellen(lerntexteDaten);
+  const completePlaylist = lerntexteAudioPlaylistErstellen(data);
   const completeTargetIndex = completePlaylist.findIndex(function (item) {
     return item && item.eintrag && lerntextePodcastPfade(item.eintrag.fach, item.eintrag).mp3Path === requestedPath;
   });
@@ -2199,15 +2234,15 @@ async function lerntexteContinuousStarten(targetIndex, options) {
   let sourceApplied = false;
 
   try {
-    lerntextePilotStatus('Kontinuierlicher Recht-Podcast wird geladen …');
+    lerntextePilotStatus('Kontinuierlicher Podcast wird geladen …');
     lerntexteAudioProgressSet(0, '0:00 / 0:00');
     lerntexteAudioSteuerungAktualisieren();
-    const assets = await lerntexteContinuousAssetsLaden(sessionId, signal);
-    lerntexteAudioSessionPruefen(sessionId);
-    const validation = await lerntexteContinuousAssetsValidieren(assets, sessionId);
-    lerntexteAudioSessionPruefen(sessionId);
+    const assets = await lerntexteContinuousAssetsLaden(sessionId, signal, descriptor);
+    lerntexteAudioSessionPruefen(sessionId, fach);
+    const validation = await lerntexteContinuousAssetsValidieren(assets, sessionId, descriptor, data);
+    lerntexteAudioSessionPruefen(sessionId, fach);
     if (!validation.valid) {
-      const invalid = new Error('Recht-Bundle ist nicht aktuell: ' + (validation.reason || 'ungültig'));
+      const invalid = new Error('Podcast-Bundle ist nicht aktuell: ' + (validation.reason || 'ungültig'));
       invalid.code = 'podcast/bundle-invalid';
       throw invalid;
     }
@@ -2217,9 +2252,9 @@ async function lerntexteContinuousStarten(targetIndex, options) {
 
     const chapter = assets.manifest.chapters[targetIndex];
     const item = lerntexteAudioPlaylist[targetIndex];
-    if (!chapter || !item || !item.eintrag) throw new Error('Startkapitel fehlt im Recht-Bundle.');
+    if (!chapter || !item || !item.eintrag) throw new Error('Startkapitel fehlt im Podcast-Bundle.');
     const progress = await lerntextePilotProgressLaden(item.eintrag, chapter.lerntextHash, sessionId, { silent: true });
-    lerntexteAudioSessionPruefen(sessionId);
+    lerntexteAudioSessionPruefen(sessionId, fach);
     lerntextePilotUid = progress.uid;
     lerntextePilotResumeState = progress.resumeState;
     lerntextePilotCompletedState = progress.completedState;
@@ -2230,11 +2265,13 @@ async function lerntexteContinuousStarten(targetIndex, options) {
       const saved = Number(progress.resumeState.sekundenPosition);
       if (isFinite(saved) && saved >= 0) localStart = saved;
     }
-    const seekTarget = lerntexteContinuousHelper('rechtChapterSeekTarget');
+    const seekTarget = lerntexteContinuousHelper('chapterSeekTarget');
     const absoluteStart = seekTarget(assets.manifest, targetIndex, localStart);
-    if (absoluteStart === null) throw new Error('Startposition fehlt im Recht-Bundle.');
+    if (absoluteStart === null) throw new Error('Startposition fehlt im Podcast-Bundle.');
 
     lerntexteContinuousState = {
+      fach: fach,
+      descriptor: descriptor,
       manifest: assets.manifest,
       manifestHash: assets.manifestHash,
       mp3Url: assets.mp3Url,
@@ -2268,7 +2305,7 @@ async function lerntexteContinuousStarten(targetIndex, options) {
     window.WifaAnalytics?.audio(domAudio, item.eintrag.fach, item.eintrag.titel);
     window.WifaUsage?.audio(domAudio, item.eintrag.fach, item.eintrag.titel, options.usageTicket);
     await domAudio.play();
-    lerntexteAudioSessionPruefen(sessionId);
+    lerntexteAudioSessionPruefen(sessionId, fach);
     if (lerntexteContinuousState) lerntexteContinuousState.ignoreCompletion = false;
     const activeIndex = lerntexteContinuousState ? lerntexteContinuousState.chapterIndex : targetIndex;
     const activeItem = lerntexteAudioPlaylist[activeIndex] || item;
@@ -2276,16 +2313,18 @@ async function lerntexteContinuousStarten(targetIndex, options) {
     lerntexteAudioMediaSessionAktualisieren();
     return { started: true, fallback: false };
   } catch (error) {
-    if (lerntexteAudioIstVeralteterFehler(error) || !lerntexteAudioSessionIstAktuell(sessionId)) {
+    if (lerntexteAudioIstVeralteterFehler(error) || !lerntexteAudioSessionIstAktuell(sessionId, fach)) {
       return { started: false, fallback: false };
     }
-    window.WifaAnalytics?.audioError('Recht', lerntexteAudioPlaylist[targetIndex] && lerntexteAudioPlaylist[targetIndex].titel, error?.code || error?.name);
+    window.WifaAnalytics?.audioError(fach, lerntexteAudioPlaylist[targetIndex] && lerntexteAudioPlaylist[targetIndex].titel, error?.code || error?.name);
     if (!sourceApplied) {
       lerntexteContinuousFallbackAktiv = true;
-      lerntextePilotStatus('Recht-Bundle nicht verfügbar. Einzelkapitel wird geladen …');
+      lerntexteContinuousFallbackFach = fach;
+      lerntextePilotStatus('Podcast-Bundle nicht verfügbar. Einzelkapitel wird geladen …');
       return { started: false, fallback: true };
     }
     lerntexteContinuousFallbackAktiv = true;
+    lerntexteContinuousFallbackFach = fach;
     lerntexteAudioFehler = true;
     lerntexteAudioAktiv = false;
     lerntextePilotStatus('Podcast konnte nicht gestartet werden. Kapitel erneut laden oder wechseln.');
@@ -2293,7 +2332,7 @@ async function lerntexteContinuousStarten(targetIndex, options) {
     lerntexteAudioMediaSessionAktualisieren();
     return { started: false, fallback: false };
   } finally {
-    if (lerntexteAudioSessionIstAktuell(sessionId)) {
+    if (lerntexteAudioSessionIstAktuell(sessionId, fach)) {
       lerntexteAudioLaedt = false;
       lerntexteAudioSteuerungAktualisieren();
     }
@@ -2391,7 +2430,7 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
 
   try {
     if (!domAudio) return false;
-    if (lerntexteAktuellesFach === 'Recht') {
+    if (currentItem && currentItem.eintrag) {
       lerntexteContinuousAnsichtSynchronisieren(currentItem.eintrag);
       currentItem.textRoot = lerntextePilotTextRoots[
         String(currentItem.eintrag.fach) + "\u0000" + String(currentItem.eintrag.titel)
@@ -2466,9 +2505,10 @@ function lerntexteAudioKapitelNeuLaden() {
   const audio = document.getElementById('lerntexteAudioPlayer');
   if (lerntexteContinuousState && audio) {
     const index = lerntexteContinuousIndexRekonstruieren();
-    const localTimeFor = lerntexteContinuousHelper('rechtChapterLocalTime');
+    const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
     const localPosition = localTimeFor(lerntexteContinuousState.manifest, index, Number(audio.currentTime)) || 0;
     lerntexteContinuousFallbackAktiv = true;
+    lerntexteContinuousFallbackFach = lerntexteAktuellesFach;
     return lerntexteAudioKapitelLaden(index, { startPosition: localPosition, forceLegacy: true });
   }
   const currentPosition = audio && typeof audio.currentTime === 'number' && isFinite(audio.currentTime)
@@ -2501,6 +2541,7 @@ function lerntexteAudioStoppen(status, options) {
   }
   lerntexteAudioSessionInvalidieren();
   lerntexteContinuousFallbackAktiv = false;
+  lerntexteContinuousFallbackFach = '';
 
   lerntexteAudioGeneration++;
   lerntexteAudioAktiv = false;
@@ -2591,9 +2632,7 @@ function lerntexteAudioAbspielen() {
     });
   }
 
-  const einheiten = lerntexteAktuellesFach === 'Recht'
-    ? lerntexteDaten
-    : lerntexteAusgewaehlteEinheiten();
+  const einheiten = lerntexteDaten;
   if (!einheiten.length) {
     lerntexteElement("lerntexteAudioStatus").textContent = "Keine Lerneinheiten zum Anhören vorhanden.";
     return;
@@ -2606,7 +2645,7 @@ function lerntexteAudioAbspielen() {
     return;
   }
 
-  const selectedIndex = lerntexteAktuellesFach === 'Recht' && lerntexteAktuellesKapitel
+  const selectedIndex = lerntexteAktuellesKapitel
     ? playlist.findIndex(function (item) {
       return item && item.eintrag && lerntexteKapitelSchluessel(item.eintrag) === lerntexteAktuellesKapitel;
     })

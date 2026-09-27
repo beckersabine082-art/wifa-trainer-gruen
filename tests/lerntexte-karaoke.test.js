@@ -181,6 +181,8 @@ class EventDocument extends MockDocument {
     return this.elements[id] || null;
   }
 
+  querySelectorAll() { return []; }
+
   addEventListener(type, listener) {
     (this.listeners[type] ||= new Set()).add(listener);
   }
@@ -289,6 +291,9 @@ function createBlock2Context() {
     lerntexteAudioProgressMeta: progressMeta
   };
   const document = new EventDocument(elements);
+  for (const id of ['lerntexteKapitelBereich', 'lerntexteAudioCard', 'lerntexteStatus']) {
+    elements[id] = new MockElement(document, 'div');
+  }
   [root, audio, status, chapterLabel, playButton, pauseButton, stopButton, resumeButton, restartButton,
     previousButton, reloadButton, nextButton, chapterSelect, progressWrapper, progressBar, progressPercent, progressMeta]
     .forEach(element => { element.ownerDocument = document; });
@@ -342,6 +347,7 @@ function createBlock2Context() {
     + 'window.__selectChapter = function(value) {'
     + 'document.getElementById("lerntexteKapitelSelect").value = String(value); lerntexteKapitelWaehlen();'
     + '};'
+    + 'window.__subjectState = function() { return { fach: lerntexteAktuellesFach, selection: lerntexteAktuellesKapitel, continuous: lerntexteContinuousState, fallback: lerntexteContinuousFallbackAktiv, entries: lerntexteDaten }; };'
     + 'window.__audioState = function() {'
     + 'return { index: lerntexteAudioPlaylistIndex, titles: lerntexteAudioPlaylist.map(function(item) { return item.titel; }), active: lerntexteAudioAktiv, paused: lerntexteAudioPausiert, error: lerntexteAudioFehler, prefetched: Boolean(lerntexteAudioPrefetch) };'
     + '};';
@@ -387,7 +393,7 @@ function continuousRechtEntries(count = 57) {
   ));
 }
 
-function configureContinuousRechtBundle(fixture, entries) {
+function configureContinuousRechtBundle(fixture, entries, fach = 'Recht', slug = 'recht') {
   const bundleHash = 'b'.repeat(64);
   const manifestHash = 'c'.repeat(64);
   const sampleRateHz = 22050;
@@ -416,9 +422,9 @@ function configureContinuousRechtBundle(fixture, entries) {
   });
   const manifest = {
     schemaVersion: 1,
-    fach: 'Recht',
+    fach,
     bundleHash,
-    mp3Path: 'podcast/continuous/recht/' + bundleHash + '.mp3',
+    mp3Path: 'podcast/continuous/' + slug + '/' + bundleHash + '.mp3',
     duration: entries.length * 3,
     sampleCount: entries.length * samplesPerChapter,
     encoding: {
@@ -439,7 +445,7 @@ function configureContinuousRechtBundle(fixture, entries) {
     ? { contentType: 'audio/mpeg', customMetadata: { bundleHash, manifestHash } }
     : legacyLoadMetadata(path);
   fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async path => path === manifest.mp3Path
-    ? 'https://example.test/recht-bundle.mp3'
+    ? 'https://example.test/' + slug + '-bundle.mp3'
     : legacyLoadMp3Url(path);
   return { manifest, manifestHash, chapters };
 }
@@ -452,6 +458,249 @@ function deferred() {
     reject = rejectPromise;
   });
   return { promise, resolve, reject };
+}
+
+function continuousSteuernEntries() {
+  return ['Erste Einheit', 'Zweite Einheit', 'Dritte Einheit'].map(title => block2ChapterEntry(title, '1', 'Steuern'));
+}
+
+function configureSubjectSwitch(fixture, entriesBySubject) {
+  fixture.context.apiGet = async (action, { fach }) => ({ success: true, data: entriesBySubject[fach] });
+  const actions = {};
+  const positions = [];
+  fixture.context.navigator.mediaSession = {
+    metadata: null,
+    playbackState: 'none',
+    setActionHandler(action, handler) { actions[action] = handler; },
+    setPositionState(state) { positions.push(state); }
+  };
+  fixture.context.MediaMetadata = fixture.eventWindow.MediaMetadata = function(value) { Object.assign(this, value); };
+  return { actions, positions };
+}
+
+test('Fachwechsel: Von-vorne-Fortsetzung nach synchronem Seek startet das neue Fach nicht', async () => {
+  const fixture = createBlock2Context();
+  const recht = continuousRechtEntries();
+  const steuern = continuousSteuernEntries();
+  configureSubjectSwitch(fixture, { Recht: recht, Steuern: steuern });
+  configureContinuousRechtBundle(fixture, recht);
+  await fixture.context.lerntexteFachWaehlen('Recht');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  const restart = fixture.context.lerntextePilotVonVorne();
+  const change = fixture.context.lerntexteFachWaehlen('Steuern');
+  await Promise.all([restart, change]);
+  assert.equal(fixture.context.window.__audioState().active, false);
+  assert.equal(fixture.audio.playCalls, 1);
+  assert.equal(fixture.context.navigator.mediaSession.metadata, null);
+});
+
+test('Fachwechsel: vorgemerkter Neustart nach Bundle-Ende bleibt an seine Sitzung gebunden', async () => {
+  const fixture = createBlock2Context();
+  const recht = continuousRechtEntries();
+  const steuern = continuousSteuernEntries();
+  configureSubjectSwitch(fixture, { Recht: recht, Steuern: steuern });
+  configureContinuousRechtBundle(fixture, recht);
+  await fixture.context.lerntexteFachWaehlen('Recht');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  fixture.audio.currentTime = 171;
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  const restart = fixture.context.window.lerntexteAudioAbspielen();
+  const change = fixture.context.lerntexteFachWaehlen('Steuern');
+  await Promise.all([restart, change]);
+  assert.equal(fixture.context.window.__audioState().active, false);
+  assert.equal(fixture.audio.playCalls, 1);
+  assert.equal(fixture.context.navigator.mediaSession.metadata, null);
+});
+
+test('Fachwechsel: fachgebundener Fehler-Fallback verhindert kein Bundle nach Rückkehr', async () => {
+  const fixture = createBlock2Context();
+  const recht = continuousRechtEntries();
+  const steuern = continuousSteuernEntries();
+  configureSubjectSwitch(fixture, { Recht: recht, Steuern: steuern });
+  configureContinuousRechtBundle(fixture, recht);
+  await fixture.context.lerntexteFachWaehlen('Recht');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  fixture.audio.error = { code: 3 };
+  fixture.audio.dispatchEvent({ type: 'error' });
+  assert.equal(fixture.context.window.__subjectState().fallback, true);
+  configureContinuousRechtBundle(fixture, steuern, 'Steuern', 'steuern');
+  await fixture.context.lerntexteFachWaehlen('Steuern');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  assert.equal(fixture.audio.src, 'https://example.test/steuern-bundle.mp3');
+  configureContinuousRechtBundle(fixture, recht);
+  await fixture.context.lerntexteFachWaehlen('Recht');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  assert.equal(fixture.audio.src, 'https://example.test/recht-bundle.mp3');
+  assert.equal(fixture.context.window.__subjectState().fallback, false);
+});
+
+test('Continuous-Fach: zweites Fach läuft über zwei Grenzen mit lokalem Karaoke, Fortschritt und Media Session', async () => {
+  const fixture = createBlock2Context();
+  const entries = continuousSteuernEntries();
+  configureContinuousRechtBundle(fixture, entries, 'Steuern', 'steuern');
+  const { actions, positions } = configureSubjectSwitch(fixture, { Steuern: entries });
+  const { saveCalls } = configureBlock3Progress(fixture, []);
+  const paths = [];
+  const loader = fixture.eventWindow.lerntextePilotDependencies.loadBundleManifest;
+  fixture.eventWindow.lerntextePilotDependencies.loadBundleManifest = async path => { paths.push(path); return loader(path); };
+  await fixture.context.lerntexteFachWaehlen('Steuern');
+  const select = fixture.document.getElementById('lerntexteKapitelSelect');
+  assert.equal(select.childNodes.filter(node => node.value).length, 3, 'jede logische Einheit bekommt eine Option');
+  fixture.context.window.__selectChapter('podcast/steuern-erste-einheit.mp3');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  assert.equal(fixture.audio.src, 'https://example.test/steuern-bundle.mp3');
+  assert.deepEqual(paths, ['podcast/continuous/steuern.json']);
+  const counts = [fixture.audio.srcAssignments, fixture.audio.loadCalls, fixture.audio.playCalls];
+  for (const [time, index] of [[3.25, 1], [7.25, 2]]) {
+    fixture.audio.currentTime = time;
+    fixture.audio.dispatchEvent({ type: 'timeupdate' });
+    assert.equal(fixture.context.window.__audioState().index, index);
+    assert.equal(select.value, ['podcast/steuern-erste-einheit.mp3', 'podcast/steuern-zweite-einheit.mp3', 'podcast/steuern-dritte-einheit.mp3'][index]);
+    assert.equal(fixture.context.navigator.mediaSession.metadata.title, entries[index].titel);
+    assert.equal(fixture.context.navigator.mediaSession.metadata.artist, 'Steuern');
+  }
+  assert.equal(fixture.root.querySelector('.podcast-word-active').textContent, 'def');
+  assert.equal(fixture.document.getElementById('lerntexteAudioProgressMeta').textContent, '0:01 / 0:03');
+  await fixture.context.lerntextePilotProgressSpeichern(false);
+  assert.ok(saveCalls.some(state => state.fach === 'Steuern' && state.firebasePfad === 'podcast/steuern-zweite-einheit.mp3' && state.completed && state.sekundenPosition === 3));
+  assert.equal(saveCalls.at(-1).fach, 'Steuern');
+  assert.equal(saveCalls.at(-1).sekundenPosition, 1.25);
+  actions.seekto({ seekTime: 0.5 });
+  assert.equal(fixture.audio.currentTime, 6.5);
+  assert.equal(positions.at(-1).position, 0.5);
+  fixture.audio.pause();
+  fixture.context.window.__selectChapter('podcast/steuern-zweite-einheit.mp3');
+  assert.equal(fixture.audio.currentTime, 3);
+  assert.equal(fixture.audio.paused, true);
+  assert.deepEqual([fixture.audio.srcAssignments, fixture.audio.loadCalls, fixture.audio.playCalls], counts);
+});
+
+for (const invalid of [false, true]) {
+  test(`Continuous-Fach: ${invalid ? 'ungültiges' : 'fehlendes'} Sidecar erhält gewählten Legacy-Index und Navigation`, async () => {
+    const fixture = createBlock2Context();
+    const entries = continuousSteuernEntries();
+    const bundle = configureContinuousRechtBundle(fixture, entries, 'Steuern', 'steuern');
+    if (invalid) bundle.manifest.chapters[1].lerntextHash = 'd'.repeat(64);
+    else fixture.eventWindow.lerntextePilotDependencies.loadBundleManifest = async () => { throw new Error('missing'); };
+    fixture.eventWindow.lerntextePilotDependencies.loadManifest = async jsonPath => block2ManifestFor(fixture, entries.find(entry => block2ManifestFor(fixture, entry).jsonPath === jsonPath));
+    fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async path => 'https://example.test/' + path;
+    fixture.context.window.__renderEntries(entries, 'Steuern');
+    fixture.context.window.__selectChapter('podcast/steuern-dritte-einheit.mp3');
+    assert.equal(await fixture.context.window.lerntexteAudioAbspielen(), true);
+    assert.equal(fixture.audio.src, 'https://example.test/podcast/steuern-dritte-einheit.mp3');
+    assert.equal(fixture.context.window.__audioState().index, 2);
+    await fixture.context.window.lerntexteAudioKapitelVorher();
+    assert.equal(fixture.audio.src, 'https://example.test/podcast/steuern-zweite-einheit.mp3');
+    assert.equal(fixture.document.getElementById('lerntexteKapitelSelect').value, 'podcast/steuern-zweite-einheit.mp3');
+    assert.match(fixture.root.querySelector('.lerntexte-einheit-titel').textContent, /Zweite Einheit/);
+  });
+}
+
+test('Fachwechsel: Recht → anderes Fach → Recht räumt Auswahl, Playlist und Media Session vollständig auf', async () => {
+  const fixture = createBlock2Context();
+  const recht = continuousRechtEntries();
+  const steuern = continuousSteuernEntries();
+  const { actions, positions } = configureSubjectSwitch(fixture, { Recht: recht, Steuern: steuern });
+  configureContinuousRechtBundle(fixture, recht);
+  await fixture.context.lerntexteFachWaehlen('Recht');
+  fixture.context.window.__selectChapter('podcast/recht-recht-einheit-57.mp3');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  const oldState = fixture.context.window.__subjectState().continuous;
+  const gate = deferred();
+  fixture.context.apiGet = () => gate.promise;
+  const change = fixture.context.lerntexteFachWaehlen('Steuern');
+  assert.equal(fixture.context.window.__subjectState().continuous, null);
+  assert.equal(fixture.context.window.__subjectState().selection, '');
+  assert.equal(fixture.context.window.__audioState().titles.length, 0);
+  assert.equal(fixture.context.window.__audioState().prefetched, false);
+  assert.equal(fixture.document.getElementById('lerntexteKapitelSelect').value, '');
+  assert.equal(fixture.context.navigator.mediaSession.metadata, null);
+  assert.equal(fixture.context.navigator.mediaSession.playbackState, 'none');
+  assert.equal(positions.at(-1), undefined);
+  assert.ok(Object.values(actions).every(handler => handler === null));
+  gate.resolve({ success: true, data: steuern });
+  await change;
+  configureContinuousRechtBundle(fixture, steuern, 'Steuern', 'steuern');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  assert.equal(fixture.context.window.__subjectState().continuous.fach, 'Steuern');
+  configureSubjectSwitch(fixture, { Recht: recht });
+  configureContinuousRechtBundle(fixture, recht);
+  await fixture.context.lerntexteFachWaehlen('Recht');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  const newState = fixture.context.window.__subjectState().continuous;
+  assert.equal(newState.fach, 'Recht');
+  assert.notEqual(newState.sessionId, oldState.sessionId);
+  assert.equal(newState.descriptor.sidecarPath, 'podcast/continuous/recht.json');
+  assert.equal(fixture.context.window.__audioState().index, 0);
+});
+
+for (const phase of ['sidecar', 'metadata', 'url', 'progress', 'play']) {
+  for (const reject of [false, true]) {
+    test(`Fachwechsel: verspätete ${phase}-${reject ? 'Fehler' : 'Antwort'} darf neue Wiedergabe nicht überschreiben`, async () => {
+      const fixture = createBlock2Context();
+      const recht = continuousRechtEntries();
+      const steuern = continuousSteuernEntries();
+      configureSubjectSwitch(fixture, { Recht: recht, Steuern: steuern });
+      configureContinuousRechtBundle(fixture, recht);
+      const gate = deferred();
+      const dependencies = fixture.eventWindow.lerntextePilotDependencies;
+      const key = { sidecar: 'loadBundleManifest', metadata: 'loadMetadata', url: 'loadMp3Url' }[phase];
+      const original = key ? dependencies[key] : phase === 'play' ? fixture.audio.play : null;
+      let expected;
+      if (key) dependencies[key] = async (...args) => { expected = await original(...args); return gate.promise; };
+      if (phase === 'play') fixture.audio.play = () => gate.promise;
+      if (phase === 'progress') {
+        configureBlock3Progress(fixture, []);
+        fixture.eventWindow.lerntextePodcastFortschrittLaden = () => gate.promise;
+        expected = { data: [] };
+      }
+      await fixture.context.lerntexteFachWaehlen('Recht');
+      const oldStart = fixture.context.window.lerntexteAudioAbspielen();
+      await flushAsync();
+      await fixture.context.lerntexteFachWaehlen('Steuern');
+      if (key) dependencies[key] = original;
+      if (phase === 'play') fixture.audio.play = original;
+      if (phase === 'progress') fixture.eventWindow.lerntextePodcastFortschrittLaden = async () => ({ data: [] });
+      configureContinuousRechtBundle(fixture, steuern, 'Steuern', 'steuern');
+      await fixture.context.window.lerntexteAudioAbspielen();
+      assert.equal(fixture.audio.src, 'https://example.test/steuern-bundle.mp3');
+      const status = fixture.status.textContent;
+      const state = fixture.context.window.__subjectState().continuous;
+      if (reject) gate.reject(new Error('late failure'));
+      else gate.resolve(expected);
+      await oldStart;
+      fixture.audio.dispatchEvent({ type: 'loadedmetadata' });
+      assert.equal(fixture.context.window.__subjectState().continuous, state);
+      assert.equal(fixture.context.window.__subjectState().fallback, false);
+      assert.equal(fixture.audio.src, 'https://example.test/steuern-bundle.mp3');
+      assert.equal(fixture.status.textContent, status);
+      assert.equal(fixture.context.window.__audioState().error, false);
+    });
+  }
+}
+
+for (const reject of [false, true]) {
+  test(`Fachwechsel: überlappendes getLerntexte ignoriert verspäteten ${reject ? 'Fehler' : 'Erfolg'} auch nach Rückkehr zum selben Fach`, async () => {
+    const fixture = createBlock2Context();
+    const gate = deferred();
+    const steuern = continuousSteuernEntries();
+    const recht = continuousRechtEntries(3);
+    let first = true;
+    fixture.context.apiGet = async (_, { fach }) => {
+      if (first) { first = false; return gate.promise; }
+      return { success: true, data: fach === 'Steuern' ? steuern : recht };
+    };
+    const oldLoad = fixture.context.lerntexteFachWaehlen('Recht');
+    await fixture.context.lerntexteFachWaehlen('Steuern');
+    await fixture.context.lerntexteFachWaehlen('Recht');
+    const before = fixture.document.getElementById('lerntexteStatus').textContent;
+    if (reject) gate.reject(new Error('late Lerntexte failure'));
+    else gate.resolve({ success: true, data: continuousRechtEntries() });
+    await oldLoad;
+    assert.equal(fixture.context.window.__subjectState().entries.length, 3);
+    assert.equal(fixture.document.getElementById('lerntexteStatus').textContent, before);
+    assert.equal(fixture.root.querySelectorAll('.lerntexte-text').length, 3);
+  });
 }
 
 function configureBlock3Progress(fixture, progressData, uid = 'user-123') {
