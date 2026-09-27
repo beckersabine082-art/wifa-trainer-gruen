@@ -2585,7 +2585,9 @@ function lerntexteAudioAbspielen() {
     });
   }
 
-  const einheiten = lerntexteAusgewaehlteEinheiten();
+  const einheiten = lerntexteAktuellesFach === 'Recht'
+    ? lerntexteDaten
+    : lerntexteAusgewaehlteEinheiten();
   if (!einheiten.length) {
     lerntexteElement("lerntexteAudioStatus").textContent = "Keine Lerneinheiten zum Anhören vorhanden.";
     return;
@@ -2598,10 +2600,16 @@ function lerntexteAudioAbspielen() {
     return;
   }
 
+  const selectedIndex = lerntexteAktuellesFach === 'Recht' && lerntexteAktuellesKapitel
+    ? playlist.findIndex(function (item) {
+      return item && item.eintrag && lerntexteKapitelSchluessel(item.eintrag) === lerntexteAktuellesKapitel;
+    })
+    : 0;
+
   lerntexteAudioAktiv = true;
   lerntexteAudioPausiert = false;
   lerntexteAudioPlaylist = playlist;
-  lerntexteAudioPlaylistIndex = 0;
+  lerntexteAudioPlaylistIndex = Math.max(0, selectedIndex);
   lerntexteAudioQuelle = "";
   if (playlist[lerntexteAudioPlaylistIndex] && playlist[lerntexteAudioPlaylistIndex].eintrag && lerntexteIstPilotEinheit(playlist[lerntexteAudioPlaylistIndex].eintrag.fach, playlist[lerntexteAudioPlaylistIndex].eintrag.titel)) {
     const pilotAudio = document.getElementById('lerntexteAudioPlayer');

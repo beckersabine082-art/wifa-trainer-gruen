@@ -1239,7 +1239,8 @@ test('Podcast-Kapitelsprung: laufender Fehlerzustand wird synchron zurückgesetz
 
   fixture.context.window.lerntexteAudioAbspielen();
   await flushAsync();
-  assert.strictEqual(Array.from(fixture.context.window.__audioState().titles).join('|'), 'Kapitel Drei');
+  assert.strictEqual(Array.from(fixture.context.window.__audioState().titles).join('|'), 'Kapitel Eins|Kapitel Zwei|Kapitel Drei');
+  assert.strictEqual(fixture.context.window.__audioState().index, 2);
   assert.match(fixture.audio.src, /recht-kapitel-drei\.mp3$/);
   await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
   assert.strictEqual(fixture.audio.paused, true);
@@ -3969,10 +3970,12 @@ test('Recht-Bundle: fehlendes Sidecar fällt beim Vordergrundstart auf Legacy-Au
   const entries = continuousRechtEntries();
   const selected = entries[56];
   const selectedPath = 'podcast/recht-recht-einheit-57.mp3';
-  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async () => block2ManifestFor(fixture, selected);
+  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async jsonPath => {
+    const entry = entries.find(candidate => block2ManifestFor(fixture, candidate).jsonPath === jsonPath);
+    return block2ManifestFor(fixture, entry);
+  };
   fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async path => {
-    assert.strictEqual(path, selectedPath);
-    return 'https://example.test/recht-einheit-57.mp3';
+    return 'https://example.test/' + path.split('/').pop();
   };
   fixture.eventWindow.lerntextePilotDependencies.loadBundleManifest = async () => {
     throw new Error('bundle unavailable');
@@ -3983,10 +3986,18 @@ test('Recht-Bundle: fehlendes Sidecar fällt beim Vordergrundstart auf Legacy-Au
   const started = await fixture.context.window.lerntexteAudioAbspielen();
 
   assert.strictEqual(started, true);
-  assert.strictEqual(fixture.audio.src, 'https://example.test/recht-einheit-57.mp3');
+  assert.strictEqual(fixture.audio.src, 'https://example.test/recht-recht-einheit-57.mp3');
   assert.strictEqual(fixture.audio.playCalls, 1);
-  assert.strictEqual(fixture.context.window.__audioState().index, 0);
-  assert.strictEqual(fixture.context.window.__audioState().titles[0], selected.titel);
+  assert.strictEqual(fixture.context.window.__audioState().index, 56);
+  assert.strictEqual(fixture.context.window.__audioState().titles.length, 57);
+  assert.strictEqual(fixture.context.window.__audioState().titles[56], selected.titel);
+
+  await fixture.context.window.lerntexteAudioKapitelVorher();
+  assert.strictEqual(fixture.context.window.__audioState().index, 55);
+  assert.strictEqual(fixture.audio.src, 'https://example.test/recht-recht-einheit-56.mp3');
+  await fixture.context.window.lerntexteAudioKapitelWeiter();
+  assert.strictEqual(fixture.context.window.__audioState().index, 56);
+  assert.strictEqual(fixture.audio.src, 'https://example.test/recht-recht-einheit-57.mp3');
 });
 
 test('Recht-Bundle: Media Session steuert Kapitel und lokale Position ohne Medienwechsel', async () => {
