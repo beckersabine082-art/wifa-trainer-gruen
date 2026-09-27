@@ -4012,6 +4012,23 @@ test('Recht-Bundle: Dropdown-Auswahl vor Start behält den exakten Bundle-Index'
   assert.strictEqual(fixture.audio.src, 'https://example.test/recht-bundle.mp3');
 });
 
+test('Podcast: ausdrücklich gewählte Einheit ohne Vorlesetext startet nicht still Kapitel eins', async () => {
+  const fixture = createBlock2Context();
+  const playable = block2ChapterEntry('Spielbare Einheit', '1');
+  const unavailable = block2ChapterEntry('Einheit ohne Vorlesetext', '2');
+  unavailable.lerntext = '';
+  fixture.context.window.__renderEntries([playable, unavailable], 'Recht');
+  fixture.context.window.__selectChapter(fixture.context.window.lerntexteAudioFirebasePfad('Recht', unavailable));
+
+  const started = await fixture.context.window.lerntexteAudioAbspielen();
+
+  assert.strictEqual(started, false);
+  assert.strictEqual(fixture.audio.playCalls, 0);
+  assert.strictEqual(fixture.audio.src, '');
+  assert.strictEqual(fixture.context.window.__audioState().active, false);
+  assert.strictEqual(fixture.status.textContent, 'Das gewünschte Kapitel ist nicht verfügbar.');
+});
+
 test('Recht-Bundle: Vor, Zurück und direkte Kapitelwahl seeken nur und erhalten Pause', async () => {
   const fixture = createBlock2Context();
   const entries = continuousRechtEntries();

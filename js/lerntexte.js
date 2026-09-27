@@ -2638,7 +2638,6 @@ function lerntexteAudioAbspielen() {
     return;
   }
 
-  lerntexteContinuousFallbackAktiv = false;
   const playlist = lerntexteAudioPlaylistErstellen(einheiten);
   if (!playlist.length) {
     lerntexteElement("lerntexteAudioStatus").textContent = "Für diesen Abschnitt sind keine Vorlesetexte verfügbar.";
@@ -2651,6 +2650,13 @@ function lerntexteAudioAbspielen() {
     })
     : 0;
 
+  if (lerntexteAktuellesKapitel && selectedIndex < 0) {
+    lerntextePilotStatus('Das gewünschte Kapitel ist nicht verfügbar.');
+    lerntexteAudioKapitelsteuerungAktualisieren();
+    return false;
+  }
+
+  lerntexteContinuousFallbackAktiv = false;
   lerntexteAudioAktiv = true;
   lerntexteAudioPausiert = false;
   lerntexteAudioPlaylist = playlist;
