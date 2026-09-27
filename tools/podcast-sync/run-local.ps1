@@ -5,11 +5,14 @@ param(
   [switch]$Bundles,
   [string]$OnlySubject,
   [string]$FfmpegPath = 'ffmpeg',
+  [switch]$VerifyOnly,
   [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
 if ($OnlySubject -and !$Bundles) { throw '-OnlySubject erfordert -Bundles' }
 if ($Bundles -and $Only) { throw '-Bundles akzeptiert nur ganze Fächer über -OnlySubject' }
+if ($VerifyOnly -and !$Bundles) { throw '-VerifyOnly erfordert -Bundles' }
+if ($VerifyOnly -and $DryRun) { throw '-VerifyOnly und -DryRun dürfen nicht kombiniert werden' }
 $account = (Resolve-Path -LiteralPath $ServiceAccountPath).Path
 $local = Join-Path $PSScriptRoot '.local'
 New-Item -ItemType Directory -Force $local | Out-Null
@@ -55,6 +58,7 @@ try {
   $syncArgs = @('sync-all.js')
   if ($Bundles) { $syncArgs = @('sync-bundles.js') }
   if ($DryRun) { $syncArgs += '--dry-run' }
+  if ($VerifyOnly) { $syncArgs += '--verify-only' }
   if ($Only) { $syncArgs += @('--only', $Only) }
   if ($OnlySubject) { $syncArgs += @('--only-subject', $OnlySubject) }
   & node @syncArgs

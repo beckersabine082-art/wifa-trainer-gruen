@@ -321,3 +321,105 @@ test('direct builder and publish reload reject global collisions even outside th
   await assert.rejects(publish(f, bundle), /kollision/);
   assert.equal(f.events.length, 0);
 });
+
+async function publishedFixture(t) {
+  const f = fixture(t); const bundle = await build(f); await publish(f, bundle);
+  // Keep the published objects, but remove local build artifacts before verification.
+  fs.rmSync(bundle.workDir, { recursive: true, force: true });
+  f.events.length = 0; f.calls.length = 0; f.reads.length = 0;
+  return { ...f, bundle };
+}
+
+test('verify-only validates published hashes, complete current entries and full decode without build or writes', async t => {
+  const f = await publishedFixture(t);
+  const result = await cli.syncBundles({ ...f, verifyOnly: true,
+    buildBundle: async () => { throw new Error('must not build'); },
+    publishBundle: async () => { throw new Error('must not publish'); } });
+  assert.equal(result.failed, 0); assert.equal(result.verifyOnly, true);
+  const report = result.subjects[0];
+  assert.equal(report.status, 'VERIFIED'); assert.equal(report.decodeStatus, 'VERIFIED');
+  assert.equal(report.chapters, 2); assert.equal(report.words, 2);
+  assert.equal(report.sampleCount, 8820); assert.equal(report.decodedSamples, 8820);
+  assert.equal(report.duration, 0.4); assert.equal(report.bytes, Buffer.byteLength('bundle-Steuern'));
+  assert.equal(report.bundleHash, f.bundle.sidecar.bundleHash);
+  assert.equal(report.manifestHash, hash(f.bundle.sidecarBytes));
+  assert.equal(report.sidecarPath, 'podcast/continuous/steuern.json');
+  assert.equal(f.calls.length, 1); assert.equal(f.calls[0].includes('libmp3lame'), false);
+  assert.ok(f.calls[0].includes('-xerror')); assert.equal(f.calls[0][f.calls[0].indexOf('-ar') + 1], '22050');
+  assert.ok(f.reads.every(read => read.generation !== undefined));
+  assert.equal(f.events.length, 0); assert.deepEqual(fs.readdirSync(f.workDir), ['keep.txt']);
+});
+
+for (const failure of ['sidecarBytes', 'mp3Bytes', 'manifestHash', 'bundleHash', 'sidecarType', 'mp3Type',
+  'sidecarToken', 'mp3Token', 'path', 'count', 'identity', 'wordCoverage', 'word', 'api', 'decode', 'samples', 'generation']) {
+  test('verify-only fails without writes or leftover files: ' + failure, async t => {
+    const f = await publishedFixture(t);
+    const sidecar = f.objects.get('podcast/continuous/steuern.json'), mp3 = f.objects.get(f.bundle.sidecar.mp3Path);
+    const manifest = JSON.parse(sidecar.bytes);
+    if (failure === 'sidecarBytes') sidecar.bytes = Buffer.from('{');
+    if (failure === 'mp3Bytes') mp3.bytes = Buffer.from('corrupt');
+    if (failure === 'manifestHash') mp3.metadata.manifestHash = '0'.repeat(64);
+    if (failure === 'bundleHash') mp3.metadata.bundleHash = '0'.repeat(64);
+    if (failure === 'sidecarType') sidecar.contentType = 'text/plain';
+    if (failure === 'mp3Type') mp3.contentType = 'text/plain';
+    if (failure === 'sidecarToken') delete sidecar.metadata.firebaseStorageDownloadTokens;
+    if (failure === 'mp3Token') delete mp3.metadata.firebaseStorageDownloadTokens;
+    if (failure === 'path') manifest.mp3Path = 'podcast/legacy.mp3';
+    if (failure === 'count') manifest.chapters.pop();
+    if (failure === 'identity') manifest.chapters[0].titel = 'Wrong';
+    if (failure === 'wordCoverage') manifest.chapters[0].wortZeitmarken.push({ wortIndex: 1, wort: 'Wrong', start: 0.2, end: 0.2 });
+    if (failure === 'word') manifest.chapters[0].wortZeitmarken[0].wort = 'Wrong';
+    if (['path', 'count', 'identity', 'wordCoverage', 'word'].includes(failure)) {
+      sidecar.bytes = Buffer.from(JSON.stringify(manifest)); mp3.metadata.manifestHash = hash(sidecar.bytes);
+    }
+    if (failure === 'api') f.catalog[0].lerntext = 'Changed';
+    if (failure === 'decode') f.ffmpeg = async () => { throw new Error('decode failed'); };
+    if (failure === 'samples') { const original = f.ffmpeg; f.ffmpeg = async args => { await original(args); fs.appendFileSync(args.at(-1), Buffer.alloc(2)); }; }
+    if (failure === 'generation') sidecar.generation = undefined;
+    const result = await cli.syncBundles({ ...f, verifyOnly: true });
+    assert.equal(result.failed, 1); assert.equal(result.subjects[0].status, 'FAILED');
+    assert.equal(typeof result.subjects[0].error, 'string');
+    assert.equal(f.events.length, 0); assert.deepEqual(fs.readdirSync(f.workDir), ['keep.txt']);
+  });
+}
+
+test('verify-only audits entire catalog before exact subject selection and continues after a missing published subject', async t => {
+  const f = await publishedFixture(t);
+  const catalog = [...f.catalog, { ...f.catalog[0], fach: 'Recht' }];
+  let loads = 0;
+  const options = { ...f, verifyOnly: true, loadCatalog: async (...args) => { assert.equal(args.length, 0); loads++; return catalog; } };
+  const result = await cli.syncBundles(options);
+  assert.equal(loads, 1);
+  assert.deepEqual(result.subjects.map(row => [row.fach, row.status]), [['Recht', 'FAILED'], ['Steuern', 'VERIFIED']]);
+  const selected = await cli.syncBundles({ ...options, onlySubject: 'Steuern' });
+  assert.equal(selected.subjects.length, 1); assert.equal(selected.failed, 0);
+  catalog.push({ ...f.catalog[0], fach: 'Stéuern', titel: 'Extra' });
+  await assert.rejects(cli.syncBundles({ ...options, onlySubject: 'Steuern' }), /kollision/);
+  assert.equal(f.events.length, 0);
+});
+
+test('CLI verify-only reports verification and nonzero failure, and rejects dry-run combination before access', async t => {
+  const previousExitCode = process.exitCode; t.after(() => { process.exitCode = previousExitCode; });
+  const lines = []; let calls = 0;
+  const adapters = { createAdminClient: async () => { calls++; return { storage: () => ({ bucket: () => ({}) }) }; },
+    sync: async options => { assert.equal(options.verifyOnly, true); return { failed: 1, subjects: [{ status: 'FAILED' }] }; },
+    write: line => lines.push(line) };
+  await cli.runCli(['--verify-only'], adapters);
+  assert.equal(process.exitCode, 1); assert.equal(JSON.parse(lines[0]).failed, 1);
+  await assert.rejects(cli.runCli(['--verify-only', '--dry-run'], adapters), /kombiniert|Argument/);
+  await assert.rejects(cli.runCli(['--dry-run', '--verify-only'], adapters), /kombiniert|Argument/);
+  await assert.rejects(cli.syncBundles({ dryRun: true, verifyOnly: true, loadCatalog: async () => { throw new Error('must not load'); } }), /kombiniert|Argument/);
+  assert.equal(calls, 1);
+});
+
+for (const changed of ['sidecar', 'mp3Metadata']) test('verify-only rejects concurrent object changes during full decode: ' + changed, async t => {
+  const f = await publishedFixture(t); const decode = f.ffmpeg;
+  f.ffmpeg = async args => {
+    await decode(args);
+    if (changed === 'sidecar') f.objects.get('podcast/continuous/steuern.json').generation = '99';
+    else f.objects.get(f.bundle.sidecar.mp3Path).metadata.manifestHash = '0'.repeat(64);
+  };
+  const result = await cli.syncBundles({ ...f, verifyOnly: true });
+  assert.equal(result.failed, 1); assert.match(result.subjects[0].error, /Generation|Metadaten/);
+  assert.equal(f.events.length, 0); assert.deepEqual(fs.readdirSync(f.workDir), ['keep.txt']);
+});
