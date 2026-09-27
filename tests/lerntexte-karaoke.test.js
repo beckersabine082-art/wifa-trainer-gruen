@@ -4017,6 +4017,45 @@ test('Recht-Bundle: fehlendes Sidecar fällt beim Vordergrundstart auf Legacy-Au
   assertVisibleUnit(56);
 });
 
+test('Recht-Legacy: ohne Bundle-Loader folgen Dropdown, Lerntext und Karaoke der Navigation', async () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries();
+  delete fixture.eventWindow.lerntextePilotDependencies.loadBundleManifest;
+  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async jsonPath => {
+    const entry = entries.find(candidate => block2ManifestFor(fixture, candidate).jsonPath === jsonPath);
+    return block2ManifestFor(fixture, entry);
+  };
+  fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async path =>
+    'https://example.test/' + path.split('/').pop();
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  fixture.context.window.__selectChapter('podcast/recht-recht-einheit-57.mp3');
+
+  await fixture.context.window.lerntexteAudioAbspielen();
+  const assertUnit = index => {
+    assert.strictEqual(fixture.context.window.__audioState().index, index);
+    assert.strictEqual(fixture.audio.src, 'https://example.test/recht-recht-einheit-' + (index + 1) + '.mp3');
+    assert.strictEqual(
+      fixture.document.getElementById('lerntexteKapitelSelect').value,
+      'podcast/recht-recht-einheit-' + (index + 1) + '.mp3'
+    );
+    const titles = fixture.root.querySelectorAll('.lerntexte-einheit-titel');
+    assert.strictEqual(titles.length, 1);
+    assert.match(titles[0].textContent, new RegExp(entries[index].titel));
+    const roots = fixture.root.querySelectorAll('.lerntexte-text');
+    assert.strictEqual(roots.length, 1);
+    fixture.audio.currentTime = 0.5;
+    fixture.audio.dispatchEvent({ type: 'timeupdate' });
+    assert.strictEqual(roots[0].querySelector('[data-word-index="0"]').classList.contains('podcast-word-active'), true);
+  };
+
+  assert.strictEqual(fixture.context.window.__audioState().titles.length, 57);
+  assertUnit(56);
+  await fixture.context.window.lerntexteAudioKapitelVorher();
+  assertUnit(55);
+  await fixture.context.window.lerntexteAudioKapitelWeiter();
+  assertUnit(56);
+});
+
 test('Recht-Bundle: Media Session steuert Kapitel und lokale Position ohne Medienwechsel', async () => {
   const fixture = createBlock2Context();
   const entries = continuousRechtEntries();

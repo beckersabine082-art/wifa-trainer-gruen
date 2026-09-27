@@ -2391,7 +2391,7 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
 
   try {
     if (!domAudio) return false;
-    if (lerntexteAktuellesFach === 'Recht' && lerntexteContinuousFallbackAktiv) {
+    if (lerntexteAktuellesFach === 'Recht') {
       lerntexteContinuousAnsichtSynchronisieren(currentItem.eintrag);
       currentItem.textRoot = lerntextePilotTextRoots[
         String(currentItem.eintrag.fach) + "\u0000" + String(currentItem.eintrag.titel)
