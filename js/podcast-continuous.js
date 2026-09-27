@@ -1,10 +1,9 @@
-// Pure validation and timeline helpers for the Recht continuous podcast.
+// Pure validation and timeline helpers for continuous podcasts.
 (function (root) {
   'use strict';
 
   const SHA256 = /^[a-f0-9]{64}$/;
   const SAMPLE_RATE = 22050;
-  const CHAPTER_COUNT = 57;
   const IDENTITY_FIELDS = [
     'index', 'titel', 'hauptkapitel', 'hauptkapitelNr', 'unterkapitelNr',
     'lerntextHash', 'legacyMp3Path', 'legacyJsonPath'
@@ -30,14 +29,37 @@
     return { valid: false, reason: reason };
   }
 
-  function validateRechtBundle(input) {
+  function podcastSlug(value) {
+    return value.trim().toLowerCase()
+      .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9-]/g, '-').replace(/-{2,}/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function continuousPodcastPaths(fach) {
+    if (typeof fach !== 'string' || !fach.trim()) throw new TypeError('Fach fehlt');
+    const slug = podcastSlug(fach);
+    if (!slug) throw new TypeError('Fach hat keinen gültigen Slug');
+    return {
+      slug: slug,
+      sidecarPath: 'podcast/continuous/' + slug + '.json',
+      mp3Prefix: 'podcast/continuous/' + slug + '/'
+    };
+  }
+
+  function validateContinuousBundle(input) {
     if (!isRecord(input)) return invalid('input');
-    const { manifest, manifestHash, mp3Metadata, currentEntries } = input;
-    if (!isRecord(manifest) || manifest.schemaVersion !== 1 || manifest.fach !== 'Recht') {
+    const { manifest, manifestHash, mp3Metadata, currentEntries, expectedFach, expectedMp3Prefix } = input;
+    let paths;
+    try { paths = continuousPodcastPaths(expectedFach); }
+    catch { return invalid('subject'); }
+    if (expectedMp3Prefix !== paths.mp3Prefix) return invalid('bundle-path');
+    if (!isRecord(manifest) || manifest.schemaVersion !== 1 || manifest.fach !== expectedFach) {
       return invalid('schema');
     }
     if (!isSha256(manifest.bundleHash) || !isSha256(manifestHash) ||
-        manifest.mp3Path !== 'podcast/continuous/recht/' + manifest.bundleHash + '.mp3') {
+        manifest.mp3Path !== expectedMp3Prefix + manifest.bundleHash + '.mp3') {
       return invalid('bundle-path');
     }
     const metadata = isRecord(mp3Metadata) && mp3Metadata.customMetadata;
@@ -55,16 +77,16 @@
         !nearlySameSampleTime(manifest.duration, manifest.sampleCount)) {
       return invalid('duration');
     }
-    if (!Array.isArray(manifest.chapters) || manifest.chapters.length !== CHAPTER_COUNT ||
-        !Array.isArray(currentEntries) || currentEntries.length !== CHAPTER_COUNT) {
+    if (!Array.isArray(currentEntries) || currentEntries.length === 0 ||
+        !Array.isArray(manifest.chapters) || manifest.chapters.length !== currentEntries.length) {
       return invalid('chapter-count');
     }
 
     let previousEndSample = 0;
-    for (let index = 0; index < CHAPTER_COUNT; index += 1) {
+    for (let index = 0; index < currentEntries.length; index += 1) {
       const chapter = manifest.chapters[index];
       const current = currentEntries[index];
-      if (!isRecord(chapter) || !isRecord(current) ||
+      if (!isRecord(chapter) || !isRecord(current) || current.fach !== expectedFach ||
           IDENTITY_FIELDS.some(function (field) { return chapter[field] !== current[field]; }) ||
           chapter.index !== index || typeof chapter.hauptkapitelNr !== 'string' ||
           chapter.hauptkapitelNr.trim() === '' || typeof chapter.unterkapitelNr !== 'string' ||
@@ -108,13 +130,27 @@
     return { valid: true, reason: null };
   }
 
+  function validateRechtBundle(input) {
+    if (!isRecord(input)) return invalid('input');
+    const currentEntries = Array.isArray(input.currentEntries)
+      ? input.currentEntries.map(function (entry) {
+        return isRecord(entry) && entry.fach === undefined ? { ...entry, fach: 'Recht' } : entry;
+      }) : input.currentEntries;
+    return validateContinuousBundle({
+      ...input,
+      expectedFach: 'Recht',
+      expectedMp3Prefix: continuousPodcastPaths('Recht').mp3Prefix,
+      currentEntries: currentEntries
+    });
+  }
+
   function chapterAt(manifest, index) {
     return isRecord(manifest) && Array.isArray(manifest.chapters) &&
       Number.isInteger(index) && index >= 0 && index < manifest.chapters.length
       ? manifest.chapters[index] : null;
   }
 
-  function rechtChapterIndexAtTime(manifest, time) {
+  function chapterIndexAtTime(manifest, time) {
     if (!isRecord(manifest) || !Array.isArray(manifest.chapters) ||
         manifest.chapters.length === 0 || !isFiniteNumber(time) || time < 0) return -1;
     const chapters = manifest.chapters;
@@ -135,14 +171,14 @@
     return -1;
   }
 
-  function rechtChapterLocalTime(manifest, index, time) {
+  function chapterLocalTime(manifest, index, time) {
     const chapter = chapterAt(manifest, index);
     if (!isRecord(chapter) || !isFiniteNumber(chapter.start) ||
         !isFiniteNumber(chapter.end) || !isFiniteNumber(time)) return null;
     return Math.min(Math.max(time - chapter.start, 0), chapter.end - chapter.start);
   }
 
-  function rechtChapterSeekTarget(manifest, index, localSeconds) {
+  function chapterSeekTarget(manifest, index, localSeconds) {
     const chapter = chapterAt(manifest, index);
     const offset = localSeconds === undefined ? 0 : localSeconds;
     if (!isRecord(chapter) || !isFiniteNumber(chapter.start) ||
@@ -151,10 +187,15 @@
   }
 
   const api = {
+    continuousPodcastPaths,
+    validateContinuousBundle,
+    chapterIndexAtTime,
+    chapterLocalTime,
+    chapterSeekTarget,
     validateRechtBundle,
-    rechtChapterIndexAtTime,
-    rechtChapterLocalTime,
-    rechtChapterSeekTarget
+    rechtChapterIndexAtTime: chapterIndexAtTime,
+    rechtChapterLocalTime: chapterLocalTime,
+    rechtChapterSeekTarget: chapterSeekTarget
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (root) root.podcastContinuous = api;

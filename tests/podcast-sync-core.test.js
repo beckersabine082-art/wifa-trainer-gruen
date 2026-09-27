@@ -378,6 +378,7 @@ test('TASK3-J: Word indices sind 0-basiert und lückenlos', function() {
 // ====== TASK 4: SHA-256 und Firebase-Pfade ======
 
 const hashPaths = require('../tools/podcast-sync/hash-paths.js');
+const browserContinuous = require('../js/podcast-continuous.js');
 const {
   sha256Lerntext: sha256FromPaths,
   podcastSlug,
@@ -496,6 +497,34 @@ test('TASK4-J: Deterministische Pfade', function() {
   const baseSlug2 = paths1.jsonPath.replace(/^podcast\//, '').replace(/\.json$/, '');
   
   assert.strictEqual(baseSlug1, baseSlug2, 'mp3/json haben gleichen base slug');
+});
+
+test('continuous paths use 13 distinct canonical slugs in Node and browser', function() {
+  const subjects = [
+    ['Recht', 'recht'], ['Steuern', 'steuern'], ['Rechnungswesen', 'rechnungswesen'],
+    ['BWL', 'bwl'], ['VWL', 'vwl'], ['Unternehmensführung', 'unternehmensfuehrung'],
+    ['Führung und Zusammenarbeit', 'fuehrung-und-zusammenarbeit'],
+    ['Betriebliches Management', 'betriebliches-management'],
+    ['Logistik', 'logistik'], ['Marketing', 'marketing'], ['Vertrieb', 'vertrieb'],
+    ['Betriebliches Rechnungswesen und Controlling', 'betriebliches-rechnungswesen-und-controlling'],
+    ['Investition und Finanzierung', 'investition-und-finanzierung']
+  ];
+  const seen = new Set();
+  for (const [fach, slug] of subjects) {
+    const expected = {
+      slug,
+      sidecarPath: `podcast/continuous/${slug}.json`,
+      mp3Prefix: `podcast/continuous/${slug}/`
+    };
+    assert.deepStrictEqual(hashPaths.continuousPodcastPaths(fach), expected);
+    assert.deepStrictEqual(browserContinuous.continuousPodcastPaths(fach), expected);
+    assert.ok(!seen.has(expected.sidecarPath), `${fach}: Sidecar-Pfad kollidiert`);
+    seen.add(expected.sidecarPath);
+  }
+  assert.strictEqual(seen.size, 13);
+  for (const fach of ['', '   ', null, {}, '!!!']) {
+    assert.throws(() => hashPaths.continuousPodcastPaths(fach));
+  }
 });
 
 process.on('exit', function() {

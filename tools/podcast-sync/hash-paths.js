@@ -94,8 +94,20 @@ function podcastPaths(fach, titel) {
   };
 }
 
+function continuousPodcastPaths(fach) {
+  if (typeof fach !== 'string' || !fach.trim()) throw new TypeError('Fach fehlt');
+  const slug = podcastSlug(fach);
+  if (!slug) throw new TypeError('Fach hat keinen gültigen Slug');
+  return {
+    slug,
+    sidecarPath: 'podcast/continuous/' + slug + '.json',
+    mp3Prefix: 'podcast/continuous/' + slug + '/'
+  };
+}
+
 module.exports = {
   sha256Lerntext,
   podcastSlug,
-  podcastPaths
+  podcastPaths,
+  continuousPodcastPaths
 };

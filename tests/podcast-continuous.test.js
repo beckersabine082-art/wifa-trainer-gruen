@@ -55,6 +55,101 @@ function invalidWith(change) {
   assert.equal(helper.validateRechtBundle(input).valid, false);
 }
 
+function genericFixture(fach = 'Steuern', count = 3) {
+  const input = fixture();
+  const slug = 'steuern';
+  input.expectedFach = fach;
+  input.expectedMp3Prefix = `podcast/continuous/${slug}/`;
+  input.manifest.fach = fach;
+  input.manifest.mp3Path = `${input.expectedMp3Prefix}${HASH}.mp3`;
+  input.currentEntries = input.currentEntries.slice(0, count).map(entry => ({
+    ...entry,
+    fach,
+    legacyMp3Path: entry.legacyMp3Path.replace('recht-', `${slug}-`),
+    legacyJsonPath: entry.legacyJsonPath.replace('recht-', `${slug}-`)
+  }));
+  input.manifest.chapters = input.currentEntries.map((entry, index) => ({
+    ...entry,
+    startSample: index * SAMPLE_RATE,
+    endSample: (index + 1) * SAMPLE_RATE,
+    start: index,
+    end: index + 1,
+    wortZeitmarken: [{ wortIndex: 0, wort: 'Wort', start: 0, end: 0.75 }]
+  }));
+  input.manifest.duration = count;
+  input.manifest.sampleCount = count * SAMPLE_RATE;
+  return input;
+}
+
+test('accepts a non-Recht bundle with an exact, nonempty current chapter count', () => {
+  assert.deepEqual(helper.validateContinuousBundle(genericFixture()), { valid: true, reason: null });
+  assert.deepEqual(helper.validateContinuousBundle(genericFixture('Steuern', 4)), { valid: true, reason: null });
+  const empty = genericFixture('Steuern', 0);
+  assert.equal(helper.validateContinuousBundle(empty).valid, false);
+  const fewerCurrent = genericFixture();
+  fewerCurrent.currentEntries.pop();
+  assert.equal(helper.validateContinuousBundle(fewerCurrent).valid, false);
+  const fewerChapters = genericFixture();
+  fewerChapters.manifest.chapters.pop();
+  assert.equal(helper.validateContinuousBundle(fewerChapters).valid, false);
+});
+
+test('rejects wrong subject, slug, path prefix, and mixed current subjects', () => {
+  const cases = [
+    input => { input.manifest.fach = 'Recht'; },
+    input => { input.expectedFach = 'Recht'; },
+    input => { input.expectedMp3Prefix = 'podcast/continuous/recht/'; },
+    input => { input.manifest.mp3Path = `podcast/continuous/recht/${HASH}.mp3`; },
+    input => { input.currentEntries[1].fach = 'Recht'; },
+    input => { delete input.currentEntries[1].fach; }
+  ];
+  for (const change of cases) {
+    const input = genericFixture();
+    change(input);
+    assert.equal(helper.validateContinuousBundle(input).valid, false);
+  }
+});
+
+test('generic validation retains hash, encoding, identity, sample, and word-mark gates', () => {
+  const cases = [
+    input => { input.manifest.schemaVersion = 2; },
+    input => { input.manifest.bundleHash = 'invalid'; },
+    input => { input.mp3Metadata.customMetadata.manifestHash = 'c'.repeat(64); },
+    input => { input.manifest.encoding.channels = 2; },
+    input => { input.manifest.chapters[1].lerntextHash = 'f'.repeat(64); },
+    input => { input.manifest.chapters[1].legacyJsonPath = 'podcast/other.json'; },
+    input => { input.manifest.chapters[1].startSample += 1; },
+    input => { input.manifest.chapters[1].wortZeitmarken[0].end = 1.1; }
+  ];
+  for (const change of cases) {
+    const input = genericFixture();
+    change(input);
+    assert.equal(helper.validateContinuousBundle(input).valid, false);
+  }
+});
+
+test('generic timeline helpers work on variable-length bundles and retain Recht aliases', () => {
+  const { manifest } = genericFixture();
+  assert.equal(helper.chapterIndexAtTime(manifest, 1), 1);
+  assert.equal(helper.chapterIndexAtTime(manifest, 3), 2);
+  assert.equal(helper.chapterIndexAtTime(manifest, 3.01), -1);
+  assert.equal(helper.chapterLocalTime(manifest, 1, 1.4), 0.3999999999999999);
+  assert.equal(helper.chapterSeekTarget(manifest, 1, 0.25), 1.25);
+  assert.equal(helper.rechtChapterIndexAtTime(manifest, 1), 1);
+  assert.equal(helper.rechtChapterLocalTime(manifest, 1, 1.4), helper.chapterLocalTime(manifest, 1, 1.4));
+  assert.equal(helper.rechtChapterSeekTarget(manifest, 1, 0.25), 1.25);
+});
+
+test('browser canonical paths reject invalid subjects', () => {
+  assert.deepEqual(helper.continuousPodcastPaths('Steuern'), {
+    slug: 'steuern', sidecarPath: 'podcast/continuous/steuern.json',
+    mp3Prefix: 'podcast/continuous/steuern/'
+  });
+  for (const fach of ['', '   ', null, {}, '!!!']) {
+    assert.throws(() => helper.continuousPodcastPaths(fach));
+  }
+});
+
 test('accepts a hash-bound 57-chapter Recht bundle matching current entries', () => {
   assert.deepEqual(helper.validateRechtBundle(fixture()), { valid: true, reason: null });
 });
