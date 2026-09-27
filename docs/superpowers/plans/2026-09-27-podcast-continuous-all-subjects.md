@@ -265,4 +265,3 @@ Bericht enthält die acht ausdrücklich angeforderten Punkte: Recht-Direktwahl; 
 - [ ] **Step 4: Nach dem Vorabbericht Worktree-Branch in `main` übernehmen und `origin/main` pushen**
 
 - [ ] **Step 5: Nach Push Live-Cachebuster und repräsentative produktive Bundle-URLs erneut prüfen**
-

@@ -86,4 +86,3 @@ Erwartet werden 13 Fach-Bundles, 521 Kapitel und 118.814 Wortmarken:
 | Investition und Finanzierung | 34 | 6.689 |
 
 Vor Merge/Push werden pro Fach Größe, Dauer, Kapitel, Wortmarken, Bundle-/Sidecar-Hash, Pfade, vollständiger FFmpeg-Decode und produktiver HTTP-/Content-Type-/Range-Spotcheck berichtet. Recht-Direktwahl wird für erstes, mittleres, vorletztes und letztes Kapitel im pausierten und laufenden Zustand verifiziert.
-
