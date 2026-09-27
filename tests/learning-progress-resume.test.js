@@ -304,7 +304,7 @@ test('missing frageId is rejected in saveProgress', () => {
   }, /erforderlich|frageId/i);
 });
 
-test('stale trainer progress response is ignored when the selected topic changed mid-request', async () => {
+test('stale trainer progress response cannot start a question after the selected topic changed', async () => {
   const trainerContext = loadTrainerScript();
   trainerContext.aktuellesFach = 'Recht';
   trainerContext.aktuellesThema = 'Vertrag';
@@ -385,9 +385,7 @@ test('stale trainer progress response is ignored when the selected topic changed
   assert.equal(trainerContext.aktuellesThema, 'EStG');
   assert.ok(frageLadeAufrufe.every(([fach, thema]) => !(fach === 'Recht' && thema === 'Vertrag')));
   assert.ok(frageLadeAufrufe.every(([fach, thema, currentId]) => !(fach === 'Recht' && thema === 'Vertrag' && currentId === 'q-stale-a')));
-  assert.ok(frageLadeAufrufe.length >= 1);
-  assert.equal(frageLadeAufrufe[frageLadeAufrufe.length - 1][0], 'Steuern');
-  assert.equal(frageLadeAufrufe[frageLadeAufrufe.length - 1][1], 'EStG');
+  assert.equal(frageLadeAufrufe.length, 0);
 });
 
 test('Quiz Von vorne restores the first normal question and exits shuffle', async () => {

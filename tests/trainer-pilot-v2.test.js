@@ -56,30 +56,44 @@ function metadata() {
   };
 }
 
-function sheet(name, rows) {
+function sheet(name, rows, reads) {
+  function record(kind) {
+    const key = `${name}:${kind}`;
+    reads.set(key, (reads.get(key) || 0) + 1);
+  }
   return {
     getName: () => name,
     getLastRow: () => rows.length + (name === 'Recht' || name === 'Steuern' ? 2 : 0),
     getLastColumn: () => Math.max(1, ...rows.map(row => row.length)),
-    getDataRange: () => ({getValues: () => rows}),
+    getDataRange: () => ({getValues: () => { record('data'); return rows; }}),
     getRange: (startRow, startColumn, numRows) => ({
-      getValues: () => rows.slice(startRow - (name === 'Recht' || name === 'Steuern' ? 3 : 1), startRow - (name === 'Recht' || name === 'Steuern' ? 3 : 1) + numRows)
+      getValues: () => {
+        record('range');
+        return rows.slice(startRow - (name === 'Recht' || name === 'Steuern' ? 3 : 1), startRow - (name === 'Recht' || name === 'Steuern' ? 3 : 1) + numRows);
+      }
     })
   };
 }
 
 function backend(extraSheets = {}) {
   const tables = metadata();
+  const reads = new Map();
+  const cacheValues = new Map();
   const all = {
     Recht: rowsForQuestions('Recht'),
     Steuern: rowsForQuestions('Steuern'),
     ...tables,
     ...extraSheets
   };
-  const sheets = new Map(Object.entries(all).map(([name, rows]) => [name, sheet(name, rows)]));
+  const sheets = new Map(Object.entries(all).map(([name, rows]) => [name, sheet(name, rows, reads)]));
   const context = {
     console,
     PropertiesService: {getScriptProperties: () => ({getProperty: () => ''})},
+    CacheService: {getScriptCache: () => ({
+      get: key => cacheValues.has(key) ? cacheValues.get(key) : null,
+      put: (key, value) => cacheValues.set(key, value),
+      remove: key => cacheValues.delete(key)
+    })},
     ContentService: {MimeType: {JSON: 'application/json'}, createTextOutput: text => ({setMimeType: () => JSON.parse(text)})},
     SpreadsheetApp: {getActiveSpreadsheet: () => ({getSheets: () => [...sheets.values()], getSheetByName: name => sheets.get(name) || null})}
   };
@@ -87,7 +101,16 @@ function backend(extraSheets = {}) {
   vm.runInContext(source, context);
   context.getFrontendSheetNames = () => ['Recht', 'Steuern'];
   context.getSpreadsheet_ = () => ({getSheets: () => [...sheets.values()], getSheetByName: name => sheets.get(name) || null});
+  context.__tables = all;
+  context.__reads = reads;
+  context.__cacheValues = cacheValues;
   return context;
+}
+
+function readCount(context, sheetName) {
+  return [...context.__reads.entries()]
+    .filter(([key]) => key.startsWith(`${sheetName}:`))
+    .reduce((sum, [, count]) => sum + count, 0);
 }
 
 test('pilot catalog exposes exactly ten stable UI topics and never an internal detail group', () => {
@@ -221,6 +244,99 @@ test('active switch fails closed when assignments are duplicated or required met
   assert.equal(missingMigrationCatalog.active, false);
   assert.equal(missingMigrationCatalog.fallbackReason, 'missing_migration');
   assert.equal(missingMigrationCatalog.topics.length, 0);
+});
+
+test('warm runtime cache skips static and audit sheets while migration and source stay fresh', () => {
+  const context = backend();
+  const first = context.getTrainerCatalogFrontend('Recht');
+  assert.equal(first.active, true);
+
+  assert.equal(readCount(context, 'Trainer_Rahmenplanbezug'), 0);
+  assert.equal(readCount(context, 'Rahmenplan_Abdeckung'), 0);
+  assert.ok(readCount(context, 'Trainer_Themen') > 0);
+  assert.ok([...context.__cacheValues.keys()].every(key => key.includes(VERSION)));
+  assert.ok([...context.__cacheValues.values()].every(value => Buffer.byteLength(value, 'utf8') < 90000));
+
+  context.__reads.clear();
+  const second = context.getTrainerQuestionsFrontend('Recht', 'ui-wq-recht-gewerbe');
+  assert.equal(second.questions.length, 16);
+  assert.ok(readCount(context, 'Trainer_Migrationen') > 0);
+  assert.ok(readCount(context, 'Recht') > 0);
+  assert.equal(readCount(context, 'Trainer_Themen'), 0);
+  assert.equal(readCount(context, 'Trainer_Detailgruppen'), 0);
+  assert.equal(readCount(context, 'Trainer_Zuordnung'), 0);
+  assert.equal(readCount(context, 'Trainer_Rahmenplanbezug'), 0);
+  assert.equal(readCount(context, 'Rahmenplan_Abdeckung'), 0);
+});
+
+test('missing, evicted, malformed, or inconsistent runtime cache rebuilds from source tables', () => {
+  const context = backend();
+  assert.equal(context.getTrainerCatalogFrontend('Steuern').active, true);
+  assert.ok(context.__cacheValues.size > 0);
+
+  const corruptions = [
+    () => context.__cacheValues.clear(),
+    () => context.__cacheValues.forEach((value, key) => context.__cacheValues.set(key, '{')),
+    () => context.__cacheValues.forEach((value, key) => context.__cacheValues.set(key, JSON.stringify({version: VERSION})))
+  ];
+
+  corruptions.forEach(corrupt => {
+    corrupt();
+    context.__reads.clear();
+    const catalog = context.getTrainerCatalogFrontend('Steuern');
+    assert.equal(catalog.active, true);
+    assert.deepEqual(catalog.topics.map(item => item.anzahl), [12,205,16]);
+    assert.ok(readCount(context, 'Trainer_Themen') > 0);
+    assert.ok(readCount(context, 'Trainer_Detailgruppen') > 0);
+    assert.ok(readCount(context, 'Trainer_Zuordnung') > 0);
+    assert.equal(readCount(context, 'Trainer_Rahmenplanbezug'), 0);
+    assert.equal(readCount(context, 'Rahmenplan_Abdeckung'), 0);
+  });
+});
+
+test('fresh rollback state overrides a populated runtime cache immediately', () => {
+  const context = backend();
+  assert.equal(context.getTrainerCatalogFrontend('Recht').active, true);
+  assert.ok(context.__cacheValues.size > 0);
+
+  context.__tables.Trainer_Migrationen.push([
+    'mig-pilot-v2-rollback', VERSION, 'v1', manifest.planSpecSha256, manifest.snapshotSha256,
+    'ROLLBACK-TEST BESTANDEN', 'Nutzerfreigabe', '2026-09-27', 'ZURUECKGEROLLT',
+    new Date('2026-09-27T12:05:00Z'), 'legacy', 'test'
+  ]);
+  context.__reads.clear();
+  const rolledBack = context.getTrainerCatalogFrontend('Recht');
+
+  assert.equal(rolledBack.active, false);
+  assert.equal(rolledBack.migrationStatus, 'ZURUECKGEROLLT');
+  assert.ok(readCount(context, 'Trainer_Migrationen') > 0);
+  assert.equal(readCount(context, 'Trainer_Themen'), 0);
+  assert.equal(readCount(context, 'Trainer_Detailgruppen'), 0);
+  assert.equal(readCount(context, 'Trainer_Zuordnung'), 0);
+});
+
+test('audit metadata remains fully validated outside the normal trainer hot path', () => {
+  const context = backend();
+  const audit = context.getTrainerPilotAuditMetadata_();
+
+  assert.equal(audit.valid, true);
+  assert.equal(audit.references.length, 857);
+  assert.equal(audit.coverage.length, 71);
+  assert.ok(readCount(context, 'Trainer_Rahmenplanbezug') > 0);
+  assert.ok(readCount(context, 'Rahmenplan_Abdeckung') > 0);
+});
+
+test('shared runtime cache never contains user progress or identity data', () => {
+  const progressRows = [
+    ['Nutzer','Bereich','Fach','Auswahl','Letzte Frage-ID','Aktualisiert'],
+    ['u-secret','trainer','Recht','tr-v2:ui-wq-recht-at','R-0566',new Date('2026-09-27T12:00:00Z')]
+  ];
+  const context = backend({NutzerFortschritt: progressRows});
+  const progress = context.getTrainerCompatibleProgress_('u-secret','trainer','Recht','tr-v2:ui-wq-recht-at');
+  const cachePayload = [...context.__cacheValues.values()].join('\n');
+
+  assert.equal(progress.letzteFrageId, 'R-0566');
+  assert.doesNotMatch(cachePayload, /u-secret|NutzerFortschritt|Firebase|Analytics/i);
 });
 
 test('resume ignores a newer cursor whose ID is no longer active in the source sheet', () => {

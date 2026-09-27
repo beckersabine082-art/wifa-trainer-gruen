@@ -39,6 +39,33 @@ function loadSetBusy() {
   return { context, authControls, hamburger, navControls };
 }
 
+function loadLoggedOutState() {
+  const source = fs.readFileSync(path.join(__dirname, '../js/login.js'), 'utf8');
+  let cacheClears = 0;
+  const controls = new Map();
+  const control = id => {
+    if (!controls.has(id)) controls.set(id, {
+      value: 'x', checked: true, disabled: true, style: {},
+      classList: {add(){}, remove(){}}
+    });
+    return controls.get(id);
+  };
+  const context = {
+    window: {
+      aktuellerNutzer: 'u-1',
+      trainerPilotPoolCacheLeeren(){ cacheClears++; }
+    },
+    document: {querySelector: () => ({style:{}})},
+    clearDesiredView(){}, showStatus(){}, updateGreetingForStart(){}, updateNavForAuth(){},
+    updateAuthTitle(){}, updateProfileArea(){}, $: control
+  };
+  vm.createContext(context);
+  const start = source.indexOf('function setLoggedOutAuthState()');
+  const end = source.indexOf('function bindAuthUI()', start);
+  vm.runInContext(source.slice(start, end) + '\nthis.__setLoggedOutAuthState = setLoggedOutAuthState;', context);
+  return {context, cacheClears: () => cacheClears};
+}
+
 test('setBusy(true) deaktiviert echte Auth-Controls', () => {
   const fixture = loadSetBusy();
   fixture.context.__setBusy(true);
@@ -71,4 +98,10 @@ test('setBusy(false) aktiviert Auth-Controls wieder', () => {
   fixture.context.__setBusy(true);
   fixture.context.__setBusy(false);
   assert.ok(fixture.authControls.every(control => control.disabled === false));
+});
+
+test('Logout verwirft den sitzungsbezogenen Trainer-Poolcache', () => {
+  const fixture = loadLoggedOutState();
+  fixture.context.__setLoggedOutAuthState();
+  assert.equal(fixture.cacheClears(), 1);
 });

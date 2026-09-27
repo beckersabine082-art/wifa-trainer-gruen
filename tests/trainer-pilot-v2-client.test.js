@@ -164,6 +164,192 @@ test('pilot question pools reject a stale or mismatched API contract', async () 
   );
 });
 
+test('pilot question pools are cached once per version, subject, and UI key', async () => {
+  const {c,calls,questions} = harness();
+  c.aktuelleTrainerKatalogVersion = 'WIFA-TR-WQ3-20260927-v2';
+
+  const cacheKeys = [
+    c.trainerPilotPoolCacheKey('Recht','ui-wq-recht-at'),
+    c.trainerPilotPoolCacheKey('Recht','ui-wq-recht-schuld'),
+    c.trainerPilotPoolCacheKey('Steuern','ui-wq-recht-at')
+  ];
+  c.aktuelleTrainerKatalogVersion = 'WIFA-TR-WQ3-20260927-v3';
+  cacheKeys.push(c.trainerPilotPoolCacheKey('Recht','ui-wq-recht-at'));
+  assert.equal(new Set(cacheKeys).size, 4);
+  c.aktuelleTrainerKatalogVersion = 'WIFA-TR-WQ3-20260927-v2';
+
+  const first = await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+  const second = await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+
+  assert.deepEqual(first.map(item => item.id), questions.map(item => item.id));
+  assert.deepEqual(second.map(item => item.id), questions.map(item => item.id));
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 1);
+});
+
+test('resume and initial pilot pool load issue only one trainerQuestions request', async () => {
+  const {c,calls,element,questions} = harness();
+  let resolveProgress;
+  let resolveQuestions;
+  const progressResponse = new Promise(resolve => { resolveProgress = resolve; });
+  const questionsResponse = new Promise(resolve => { resolveQuestions = resolve; });
+  c.apiGet = async (action,params) => {
+    calls.push({action,params});
+    if(action==='trainerCatalog') return {success:true,data:{
+      active:true,version:'WIFA-TR-WQ3-20260927-v2',migrationStatus:'AKTIV',topics:approvedTopics.Recht
+    }};
+    if(action==='getProgress') return progressResponse;
+    if(action==='trainerQuestions') return questionsResponse;
+    throw Error('Unexpected request: '+action);
+  };
+
+  await c.ladeThemen('Recht');
+  element('themaSelect').value='ui-wq-recht-at';
+  const startPromise = c.starteThema();
+  await Promise.resolve();
+  await Promise.resolve();
+
+  assert.equal(calls.filter(call => call.action === 'getProgress').length, 1);
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 1);
+
+  resolveProgress({success:true,data:{letzteFrageId:'R-0566'}});
+  resolveQuestions({success:true,data:{
+    active:true,
+    version:'WIFA-TR-WQ3-20260927-v2',
+    uiThemenKey:'ui-wq-recht-at',
+    questions
+  }});
+  await startPromise;
+  await new Promise(resolve=>setImmediate(resolve));
+
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 1);
+  assert.equal(c.aktuelleFrageId, 'R-0050');
+});
+
+test('an in-flight pilot start cannot render after the trainer context changed', async () => {
+  const {c,element,questions} = harness();
+  let resolveProgress;
+  let resolveQuestions;
+  const progressResponse = new Promise(resolve => { resolveProgress = resolve; });
+  const questionsResponse = new Promise(resolve => { resolveQuestions = resolve; });
+  c.apiGet = async (action,params) => {
+    if(action==='trainerCatalog') return {success:true,data:{
+      active:true,version:'WIFA-TR-WQ3-20260927-v2',migrationStatus:'AKTIV',topics:approvedTopics.Recht
+    }};
+    if(action==='getProgress') return progressResponse;
+    if(action==='trainerQuestions') return questionsResponse;
+    throw Error('Unexpected request: '+action);
+  };
+
+  await c.ladeThemen('Recht');
+  element('themaSelect').value='ui-wq-recht-at';
+  const startPromise = c.starteThema();
+  await Promise.resolve();
+  await Promise.resolve();
+
+  element('teilbereichSelect').value='HQ';
+  c.waehleTeilbereich();
+  resolveProgress({success:true,data:{letzteFrageId:'R-0566'}});
+  resolveQuestions({success:true,data:{
+    active:true,
+    version:'WIFA-TR-WQ3-20260927-v2',
+    uiThemenKey:'ui-wq-recht-at',
+    questions
+  }});
+  await startPromise;
+  await new Promise(resolve=>setImmediate(resolve));
+
+  assert.equal(c.aktuellerTeilbereich, 'HQ');
+  assert.equal(c.aktuellesFach, '');
+  assert.equal(c.aktuellesTrainerThemaKey, '');
+  assert.equal(c.aktuelleFrageId, '');
+});
+
+test('explicit pilot cache invalidation cancels an in-flight topic start', async () => {
+  const {c,element,questions} = harness();
+  let resolveProgress;
+  let resolveQuestions;
+  c.apiGet = async (action,params) => {
+    if(action==='trainerCatalog') return {success:true,data:{
+      active:true,version:'WIFA-TR-WQ3-20260927-v2',migrationStatus:'AKTIV',topics:approvedTopics.Recht
+    }};
+    if(action==='getProgress') return new Promise(resolve => { resolveProgress = resolve; });
+    if(action==='trainerQuestions') return new Promise(resolve => { resolveQuestions = resolve; });
+    throw Error('Unexpected request: '+action);
+  };
+
+  await c.ladeThemen('Recht');
+  element('themaSelect').value='ui-wq-recht-at';
+  const startPromise = c.starteThema();
+  await Promise.resolve();
+  await Promise.resolve();
+
+  c.trainerPilotPoolCacheLeeren();
+  resolveProgress({success:true,data:{letzteFrageId:'R-0566'}});
+  resolveQuestions({success:true,data:{
+    active:true,
+    version:'WIFA-TR-WQ3-20260927-v2',
+    uiThemenKey:'ui-wq-recht-at',
+    questions
+  }});
+  await startPromise;
+  await new Promise(resolve=>setImmediate(resolve));
+
+  assert.equal(c.aktuelleFrageId, '');
+});
+
+test('next and previous navigation reuse an already loaded pilot pool', async () => {
+  const {c,calls,element} = harness();
+  await c.ladeThemen('Recht');
+  element('themaSelect').value='ui-wq-recht-at';
+  await c.starteThema();
+  await new Promise(resolve=>setImmediate(resolve));
+
+  await c.naechsteFrage();
+  await c.vorherigeFrage();
+
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 1);
+});
+
+test('pilot pool cache is cleared explicitly and on trainer context changes', async () => {
+  const {c,calls,element} = harness();
+  c.aktuelleTrainerKatalogVersion = 'WIFA-TR-WQ3-20260927-v2';
+  await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+  await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 1);
+
+  c.trainerPilotPoolCacheLeeren();
+  await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 2);
+
+  element('teilbereichSelect').value = 'HQ';
+  c.waehleTeilbereich();
+  c.aktuelleTrainerKatalogVersion = 'WIFA-TR-WQ3-20260927-v2';
+  await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 3);
+});
+
+test('rollback or legacy catalog invalidates cached pilot pools', async () => {
+  const {c,calls} = harness();
+  c.aktuelleTrainerKatalogVersion = 'WIFA-TR-WQ3-20260927-v2';
+  await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+  c.apiGet = async (action,params) => {
+    calls.push({action,params});
+    if(action==='trainerCatalog') return {success:true,data:{
+      active:false,version:'legacy',migrationStatus:'ZURUECKGEROLLT',topics:[{thema:'Legacy',anzahl:1}]
+    }};
+    if(action==='trainerQuestions') return {success:true,data:{
+      active:true,version:'WIFA-TR-WQ3-20260927-v2',uiThemenKey:params.uiThemenKey,questions:[]
+    }};
+    throw Error('Unexpected request: '+action);
+  };
+
+  await c.ladeTrainerThemenDaten('Recht');
+  c.aktuelleTrainerKatalogVersion = 'WIFA-TR-WQ3-20260927-v2';
+  await c.trainerThemenpoolLaden('Recht','ui-wq-recht-at');
+
+  assert.equal(calls.filter(call => call.action === 'trainerQuestions').length, 2);
+});
+
 test('pilot navigation and resume use the UI key while the displayed and persisted question keep their proper levels', async () => {
   const {c,calls,posts,element,questions} = harness();
   await c.ladeThemen('Recht');

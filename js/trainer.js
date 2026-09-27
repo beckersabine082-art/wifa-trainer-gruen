@@ -4,6 +4,7 @@ if (typeof aktuelleFrageQuellthema === "undefined") globalThis.aktuelleFrageQuel
 
 function waehleTeilbereich() {
     if (appIstBeschaeftigt) return;
+    trainerPilotPoolCacheLeeren();
     trainerShuffleResetState();
     trainerNochNieAktiv = false;
     trainerNochNieResetState();
@@ -136,6 +137,8 @@ let trainerNochNiePool = [];
 const trainerFragenCache = new Map();
 const trainerThemenKatalogByValue = new Map();
 const trainerPilotVersion = "WIFA-TR-WQ3-20260927-v2";
+const trainerPilotPoolCache = new Map();
+let trainerPilotPoolCacheGeneration = 0;
 const trainerPilotKatalogVertrag = {
   Recht: [
     ["ui-wq-recht-at", "BGB Allgemeiner Teil", 85],
@@ -213,25 +216,38 @@ function trainerShuffleResetState() {
 
 async function trainerThemenpoolLaden(fach, thema) {
   const pilot = trainerIstUiKey(thema);
-  const result = pilot
-    ? await apiGet("trainerQuestions", { fach, uiThemenKey: thema })
-    : await apiGet("questionsForTopic", { fach, thema });
-  if (pilot && (!result || !result.success || !result.data || result.data.active !== true ||
-      String(result.data.version || "").trim() !== trainerPilotVersion ||
-      String(result.data.uiThemenKey || "").trim() !== String(thema || "").trim())) {
-    throw new Error("Themenpool konnte nicht aus Trainer_Zuordnung geladen werden.");
+  const cacheKey = pilot ? trainerPilotPoolCacheKey(fach, thema) : "";
+  if (pilot && trainerPilotPoolCache.has(cacheKey)) return await trainerPilotPoolCache.get(cacheKey);
+
+  const request = (async function() {
+    const result = pilot
+      ? await apiGet("trainerQuestions", { fach, uiThemenKey: thema })
+      : await apiGet("questionsForTopic", { fach, thema });
+    if (pilot && (!result || !result.success || !result.data || result.data.active !== true ||
+        String(result.data.version || "").trim() !== trainerPilotVersion ||
+        String(result.data.uiThemenKey || "").trim() !== String(thema || "").trim())) {
+      throw new Error("Themenpool konnte nicht aus Trainer_Zuordnung geladen werden.");
+    }
+    const data = pilot ? result && result.data && result.data.questions : result && result.data;
+    if (!result || !result.success || !Array.isArray(data)) throw new Error("Themenpool konnte nicht geladen werden.");
+    const ids = new Set();
+    return data.map((frage, index) => ({...frage, fragePosition:index + 1, frageGesamt:data.length}))
+      .filter(frage => {
+        const id = String(frage.id || "").trim();
+        if (!id || ids.has(id)) return false;
+        ids.add(id);
+        frage.id = id;
+        return true;
+      });
+  })();
+
+  if (pilot) trainerPilotPoolCache.set(cacheKey, request);
+  try {
+    return await request;
+  } catch (error) {
+    if (pilot && trainerPilotPoolCache.get(cacheKey) === request) trainerPilotPoolCache.delete(cacheKey);
+    throw error;
   }
-  const data = pilot ? result && result.data && result.data.questions : result && result.data;
-  if (!result || !result.success || !Array.isArray(data)) throw new Error("Themenpool konnte nicht geladen werden.");
-  const ids = new Set();
-  return data.map((frage, index) => ({...frage, fragePosition:index + 1, frageGesamt:data.length}))
-    .filter(frage => {
-      const id = String(frage.id || "").trim();
-      if (!id || ids.has(id)) return false;
-      ids.add(id);
-      frage.id = id;
-      return true;
-    });
 }
 
 function trainerShuffleNaechsteFrage() {
@@ -528,6 +544,18 @@ function trainerResumeContext() {
   };
 }
 
+function trainerPilotPoolCacheLeeren() {
+  trainerPilotPoolCacheGeneration++;
+  trainerPilotPoolCache.clear();
+}
+
+window.trainerPilotPoolCacheLeeren = trainerPilotPoolCacheLeeren;
+
+function trainerPilotPoolCacheKey(fach, uiThemenKey) {
+  const version = String(aktuelleTrainerKatalogVersion || trainerPilotVersion).trim();
+  return [version, String(fach || "").trim(), String(uiThemenKey || "").trim()].join("::");
+}
+
 async function speichereTrainerFortschritt(fach, thema, frageId) {
   const userId = aktuellerNutzerUid();
   const safeFach = String(fach || "").trim();
@@ -587,11 +615,7 @@ async function ladeTrainerFortschritt(fach, thema, requestToken = ++trainerProgr
 
     let frageId = "";
     if (trainerIstUiKey(safeThema)) {
-      const pool = await trainerThemenpoolLaden(safeFach, safeThema);
-      const hit = pool.find(function(frage) {
-        return String(frage && frage.id || "").trim() === String(result.data.letzteFrageId || "").trim();
-      });
-      frageId = String(hit && hit.id || "").trim();
+      frageId = String(result.data.letzteFrageId || "").trim();
     } else {
       const frageResult = await apiGet("questionById", {fach: safeFach, frageId: result.data.letzteFrageId});
       const frage = frageResult && frageResult.success ? frageResult.data : null;
@@ -1011,7 +1035,11 @@ async function ladeTrainerThemenDaten(fach) {
           throw new Error("Pilot-Themen konnten nicht mit dem freigegebenen Pilotvertrag geladen werden.");
         }
       }
-      aktuelleTrainerKatalogVersion = result.data.active ? String(result.data.version || "").trim() : "";
+      const naechsteVersion = result.data.active ? String(result.data.version || "").trim() : "";
+      if (!result.data.active || (aktuelleTrainerKatalogVersion && aktuelleTrainerKatalogVersion !== naechsteVersion)) {
+        trainerPilotPoolCacheLeeren();
+      }
+      aktuelleTrainerKatalogVersion = naechsteVersion;
       return result.data.topics.map(function(item) {
         const thema = String(item && item.thema || "").trim();
         const uiThemenKey = String(item && item.uiThemenKey || "").trim();
@@ -1109,7 +1137,9 @@ function waehleFach(fach) {
     trainerShuffleResetState();
     trainerNochNieAktiv = false;
     trainerNochNieResetState();
-    aktuellesFach = String(fach || "").trim();
+    const naechstesFach = String(fach || "").trim();
+    if (aktuellesFach && aktuellesFach !== naechstesFach) trainerPilotPoolCacheLeeren();
+    aktuellesFach = naechstesFach;
     aktuellesThema = "";
     aktuellesTrainerThemaKey = "";
     aktuelleTrainerKatalogVersion = "";
@@ -1257,7 +1287,7 @@ function waehleFach(fach) {
     trainerAktualisiereVorherigeSchaltflaeche();
   }
 
-async function ladeFrageAusFach(fach, thema, currentId = "", usageTicket = window.WifaUsage?.captureTicket(), rueckwaerts = false) {
+async function ladeFrageAusFach(fach, thema, currentId = "", usageTicket = window.WifaUsage?.captureTicket(), rueckwaerts = false, vorhandenerPool = null) {
   trainerTippTimerAbbrechen();
     const eigenerToken = ++ladeToken;
 
@@ -1267,7 +1297,7 @@ async function ladeFrageAusFach(fach, thema, currentId = "", usageTicket = windo
 
       let result;
       if (trainerIstUiKey(thema)) {
-        const pool = await trainerThemenpoolLaden(fach, thema);
+        const pool = Array.isArray(vorhandenerPool) ? vorhandenerPool : await trainerThemenpoolLaden(fach, thema);
         const index = pool.findIndex(frage => frage.id === currentId);
         const selectedIndex = rueckwaerts
           ? (index <= 0 ? pool.length - 1 : index - 1)
@@ -1392,9 +1422,28 @@ async function starteThema() {
     wiederholungsKontext = null;
     if (typeof aktualisiereTrainerAuswahlFallback === "function") aktualisiereTrainerAuswahlFallback();
 
+    const startFach = String(aktuellesFach || "").trim();
     const auswahl = trainerAktuelleAuswahl();
-    const gespeicherteFrageId = await ladeTrainerFortschritt(aktuellesFach, auswahl);
-    ladeFrageAusFach(aktuellesFach, trainerAktuelleAuswahl(), gespeicherteFrageId || "", usageTicket);
+    const startToken = ++ladeToken;
+    const poolGeneration = trainerPilotPoolCacheGeneration;
+    if (trainerIstUiKey(auswahl)) {
+      try {
+        const ergebnisse = await Promise.all([
+          ladeTrainerFortschritt(startFach, auswahl),
+          trainerThemenpoolLaden(startFach, auswahl)
+        ]);
+        if (startToken !== ladeToken || poolGeneration !== trainerPilotPoolCacheGeneration ||
+            !trainerProgressSelectionMatches(startFach, auswahl)) return;
+        return await ladeFrageAusFach(startFach, auswahl, ergebnisse[0] || "", usageTicket, false, ergebnisse[1]);
+      } catch (error) {
+        if (startToken !== ladeToken || poolGeneration !== trainerPilotPoolCacheGeneration) return;
+        setzeStatus("Fehler beim Laden des Themenpools: " + error.message);
+        return;
+      }
+    }
+    const gespeicherteFrageId = await ladeTrainerFortschritt(startFach, auswahl);
+    if (startToken !== ladeToken || !trainerProgressSelectionMatches(startFach, auswahl)) return;
+    return ladeFrageAusFach(startFach, auswahl, gespeicherteFrageId || "", usageTicket);
   }
 
 function naechsteFrage() {
