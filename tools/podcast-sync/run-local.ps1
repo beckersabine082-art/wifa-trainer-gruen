@@ -2,9 +2,14 @@ param(
   [Parameter(Mandatory=$true)][string]$ServiceAccountPath,
   [string]$PythonPath = 'python',
   [string]$Only,
+  [switch]$Bundles,
+  [string]$OnlySubject,
+  [string]$FfmpegPath = 'ffmpeg',
   [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
+if ($OnlySubject -and !$Bundles) { throw '-OnlySubject erfordert -Bundles' }
+if ($Bundles -and $Only) { throw '-Bundles akzeptiert nur ganze Fächer über -OnlySubject' }
 $account = (Resolve-Path -LiteralPath $ServiceAccountPath).Path
 $local = Join-Path $PSScriptRoot '.local'
 New-Item -ItemType Directory -Force $local | Out-Null
@@ -13,6 +18,7 @@ $env:FIREBASE_STORAGE_BUCKET = 'wifa-trainer-gruen.firebasestorage.app'
 $apiSource = Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot '../../js/api.js')
 $env:PODCAST_LERNTEXTE_API_URL = [regex]::Match($apiSource, 'const API_BASE_URL = "([^"]+)"').Groups[1].Value
 $env:PODCAST_STATUS_LOG = Join-Path $local 'status.jsonl'
+$env:PODCAST_FFMPEG = $FfmpegPath
 
 Push-Location $PSScriptRoot
 try {
@@ -20,7 +26,7 @@ try {
     & npm.cmd ci
     if ($LASTEXITCODE -ne 0) { throw 'npm ci fehlgeschlagen' }
   }
-  if (!$DryRun) {
+  if (!$DryRun -and !$Bundles) {
     $venvPython = Join-Path $local 'venv/Scripts/python.exe'
     if (!(Test-Path -LiteralPath $venvPython)) {
       & $PythonPath -m venv (Join-Path $local 'venv')
@@ -47,8 +53,10 @@ try {
     $env:PODCAST_PIPER_MODEL = $model
   }
   $syncArgs = @('sync-all.js')
+  if ($Bundles) { $syncArgs = @('sync-bundles.js') }
   if ($DryRun) { $syncArgs += '--dry-run' }
   if ($Only) { $syncArgs += @('--only', $Only) }
+  if ($OnlySubject) { $syncArgs += @('--only-subject', $OnlySubject) }
   & node @syncArgs
   if ($LASTEXITCODE -ne 0) { throw 'Sync meldet Fehler; Statusprotokoll prüfen und denselben Aufruf wiederholen' }
 } finally { Pop-Location }

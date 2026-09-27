@@ -5,7 +5,8 @@ const os = require('node:os');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
 const { sha256Lerntext, podcastPaths } = require('../tools/podcast-sync/hash-paths.js');
-const { buildRechtBundle, publishRechtBundle } = require('../tools/podcast-sync/recht-bundle.js');
+const { buildRechtBundle, publishRechtBundle: publish } = require('../tools/podcast-sync/recht-bundle.js');
+const publishRechtBundle = options => publish({ ...options, loadCatalog: async () => options.bundle.entries });
 
 const hash = value => createHash('sha256').update(value).digest('hex');
 
@@ -44,18 +45,18 @@ function fixture(options = {}) {
       }
       return [item.bytes];
     },
-    async getMetadata() { if (!objects.has(name)) throw new Error(`missing ${name}`); const item = objects.get(name); return [{ generation: item.generation, metadata: item.metadata, size: String(item.bytes.length) }]; },
+    async getMetadata() { if (!objects.has(name)) throw new Error(`missing ${name}`); const item = objects.get(name); return [{ generation: item.generation, metadata: item.metadata, contentType: item.contentType || (name.endsWith('.mp3') ? 'audio/mpeg' : 'application/json'), size: String(item.bytes.length) }]; },
     async save(bytes, options) {
       events.push({ name, bytes, options });
       assert.equal(options.preconditionOpts.ifGenerationMatch, objects.get(name)?.generation || 0);
-      objects.set(name, { bytes: Buffer.from(bytes), generation: '3', metadata: options.metadata.metadata || {} });
+      objects.set(name, { bytes: Buffer.from(bytes), generation: '3', contentType: options.metadata.contentType, metadata: options.metadata.metadata || {} });
     }
   }; } };
-  const calls = [];
+  const calls = [], pcms = [];
   const ffmpeg = async args => {
     calls.push(args);
     const output = args.at(-1);
-    if (args.includes('libmp3lame')) fs.writeFileSync(output, Buffer.from('bundle-mp3'));
+    if (args.includes('libmp3lame')) { pcms.push(fs.readFileSync(args[args.indexOf('-i') + 1])); fs.writeFileSync(output, Buffer.from('bundle-mp3')); }
     else if (args.some(value => String(value).endsWith('bundle.mp3'))) fs.writeFileSync(output, Buffer.alloc(57 * 8820, 1));
     else {
       const input = String(args[args.indexOf('-i') + 1] || '');
@@ -64,7 +65,7 @@ function fixture(options = {}) {
     }
   };
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'recht-bundle-test-'));
-  return { entries, objects, events, reads, bucket, calls, ffmpeg, workDir,
+  return { entries, objects, events, reads, bucket, calls, pcms, ffmpeg, workDir,
     cleanup() { fs.rmSync(workDir, { recursive: true, force: true }); } };
 }
 
@@ -89,16 +90,15 @@ test('rejects a mismatched production source hash and legacy path', async t => {
   assert.equal(f.calls.length, 0);
 });
 
-test('requires every legacy MP3 to bind the exact JSON generation by manifestHash', async t => {
+test('permits absent legacy manifestHash only through the strict historical receipt contract', async t => {
   const f = fixture(); t.after(f.cleanup);
   const paths = podcastPaths('Recht', f.entries[0].titel);
   delete f.objects.get(paths.mp3Path).metadata.manifestHash;
 
-  await assert.rejects(
-    buildRechtBundle({ lerntexte: f.entries, bucket: f.bucket, ffmpeg: f.ffmpeg, workDir: f.workDir }),
-    /manifestHash/
-  );
-  assert.equal(f.calls.length, 0);
+  const bundle = await buildRechtBundle({ lerntexte: f.entries, bucket: f.bucket, ffmpeg: f.ffmpeg, workDir: f.workDir });
+  assert.equal(bundle.sources[0].contract, 'historical');
+  assert.equal(bundle.sources[0].jsonHash, hash(f.objects.get(paths.jsonPath).bytes));
+  assert.deepEqual(bundle.sources[0].generations, { mp3: '1', json: '2' });
 });
 
 test('preserves production word marks with zero duration under the legacy manifest contract', async t => {
@@ -150,7 +150,8 @@ test('aggregate PCM contains every decoded chapter in production order', async t
   const f = fixture(); t.after(f.cleanup);
   await buildRechtBundle({ lerntexte: f.entries.toReversed(), bucket: f.bucket, ffmpeg: f.ffmpeg, workDir: f.workDir });
 
-  const pcm = fs.readFileSync(path.join(f.workDir, 'recht-bundle.pcm'));
+  const pcm = f.pcms[0];
+  assert.equal(fs.existsSync(path.join(f.workDir, 'recht-bundle.pcm')), false);
   for (let index = 0; index < 57; index += 1) {
     assert.equal(pcm[index * 8820], index % 251 + 1, `PCM-Segment ${index + 1}`);
   }

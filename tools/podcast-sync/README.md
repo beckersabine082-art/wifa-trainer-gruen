@@ -45,3 +45,37 @@ python tests/podcast_local_audio_test.py
 ```
 
 Die historischen TTS-/Transkriptionsmodule und ihre Mocktests dokumentieren das alte Verfahren. Sie werden vom aktiven Sync nicht importiert oder ausgeführt.
+
+## Kontinuierliche Fach-Bundles
+
+`sync-bundles.js` verbindet bereits vorhandene Legacy-Paare. Es erzeugt keine neue Sprache und benötigt nur Node.js, die Node-Abhängigkeiten (`npm ci` im Verzeichnis `tools/podcast-sync`), Firebase-Zugang und FFmpeg mit `libmp3lame`. `-FfmpegPath` kann auf eine vorhandene FFmpeg-EXE zeigen; für Bundles werden weder Python noch Piper installiert. Service-Account-Schlüssel bleiben außerhalb des Repositorys.
+
+```powershell
+# Vollständige lokale Erzeugung und Decode-Prüfung, keine Firebase-Schreibzugriffe:
+.\tools\podcast-sync\run-local.ps1 -Bundles -DryRun -ServiceAccountPath C:\Privat\firebase.json -FfmpegPath C:\Tools\ffmpeg.exe
+
+# Ganzes einzelnes Fach veröffentlichen:
+.\tools\podcast-sync\run-local.ps1 -Bundles -OnlySubject 'Steuern' -ServiceAccountPath C:\Privat\firebase.json -FfmpegPath C:\Tools\ffmpeg.exe
+
+# Alle Fächer sequenziell veröffentlichen:
+.\tools\podcast-sync\run-local.ps1 -Bundles -ServiceAccountPath C:\Privat\firebase.json -FfmpegPath C:\Tools\ffmpeg.exe
+```
+
+Direkter Einstieg mit `GOOGLE_APPLICATION_CREDENTIALS`, `FIREBASE_STORAGE_BUCKET`, `PODCAST_LERNTEXTE_API_URL` und optional `PODCAST_FFMPEG`:
+
+```powershell
+node tools/podcast-sync/sync-bundles.js --dry-run --only-subject 'Steuern'
+node tools/podcast-sync/sync-bundles.js
+```
+
+Auch bei `--only-subject` wird zuerst der gesamte aktuelle API-Katalog geladen und auf Identitäts-/Pfadkollisionen geprüft. Leere oder falsch zugeordnete API-Fachantworten blockieren den Lauf. `--only` und Teil-Fach-Listen sind nicht erlaubt. Kapitel folgen derselben stabilen Sortierung wie der Player: `reihenfolgeFach`, dann `reihenfolgeKapitel`, bei Gleichstand API-Reihenfolge. Fächer laufen nach ihrer kleinsten `reihenfolgeFach`, mit Fachnamen als deterministischer Zweitsortierung.
+
+Die CLI schreibt abschließend einen JSON-Bericht nach stdout. `subjects` enthält je Fach `status` (`DRY_RUN`, `PUBLISHED`, `FAILED`), Kapitel-/Wortzahl (`chapters`, `words`), `bytes`, `duration`, `sampleCount`, `decodedSamples`, `bundleHash`, `manifestHash`, `mp3Path`, `sidecarPath` und `historicalSources`; Fehler enthalten `error`. Exitcode 1 bedeutet mindestens einen Fehler. Ein fehlgeschlagenes Fach hält die übrigen Fächer nicht auf. Der Bericht lässt sich durch Umleitung in eine externe JSON-Datei speichern. Der PowerShell-Einstieg kann bei erstmaliger Einrichtung zusätzlich Installationsmeldungen ausgeben; für ausschließlich JSON stdout den direkten Node-Einstieg verwenden.
+
+Jedes Legacy-Paar wird mit den zuvor gelesenen Objektgenerationen geladen. RAW-Lerntext-Hash, Fach, Titel, beide kanonischen Pfade, Byteanzahlen und sämtliche sichtbaren Wörter/Zeitmarken müssen stimmen. Ein vorhandenes `manifestHash` muss exakt dem SHA-256 der JSON-Bytes entsprechen; auch ein vorhandenes leeres Feld blockiert. Nur wenn dieses Feld auf einer Legacy-MP3 vollständig fehlt, gilt der historische Vertrag: zusätzlich werden beide Generationen und die SHA-256 beider Bytefolgen als Quellbelege festgehalten. Beide Quellen werden vor dem MP3-Upload und nochmals vor dem Sidecar-Publish generation-gepinnt gelesen und bytegenau gegen diese Belege geprüft; jeweils wird der aktuelle API-Katalog neu geladen. Neue Bundle-MP3s benötigen immer eine exakte `manifestHash`-Bindung. Legacy-Objekte werden niemals geschrieben oder gelöscht.
+
+Jede Quelle wird einzeln nach mono/22.050 Hz/s16le dekodiert. PCM wird blockweise angehängt, Kapitelgrenzen werden ausschließlich aus ganzzahligen Samples berechnet. Das Fach wird einmal mit 96 kbit/s kodiert und vollständig zurückdekodiert; die Samplezahl muss exakt übereinstimmen. Temporäre PCM-/Quell-Dateien werden auch bei Fehlern entfernt. Der CLI-Lauf entfernt nach jedem Fach sein eigenes temporäres Verzeichnis samt Bundle-MP3.
+
+Die Veröffentlichung hält ein fachbezogenes Schloss, schreibt zunächst die unveränderliche Hash-MP3 mit Create-only-Precondition, prüft deren Bytes, Content-Type, Token und Hashmetadaten und veröffentlicht erst danach das stabile Sidecar mit Generation-CAS. Beide Objekte werden anschließend authentifiziert zurückgelesen. Bei Fehlern vor Sidecar-Publish bleibt das bisherige Sidecar erhalten; höchstens eine unreferenzierte MP3 bleibt zurück. Ein Fehler beim abschließenden Readback wird als `FAILED` berichtet und kann nach bereits erfolgreichem Sidecar-Schreiben auftreten. Der Lauf löscht oder rollt keine veröffentlichten Objekte zurück; ein erneuter Aufruf validiert vorhandene unveränderliche MP3s und kann fortfahren.
+
+Programmschnittstellen: `buildSubjectBundle({ fach, catalog, lerntexte?, bucket, workDir, ffmpeg? })` erwartet den vollständigen aktuellen Katalog; eine optionale Fachliste muss exakt dessen Fachgruppe entsprechen. Rückgabe: Sidecar/Bytes, MP3-Pfad, eigenes `workDir`, kopierte `entries`, Quellbelege `sources`, Byte-/Samplezahlen. Der Aufrufer übernimmt nach Verwendung die Entfernung dieses eigenen Verzeichnisses. `publishSubjectBundle({ bundle, bucket, loadCatalog, withLock? })` verlangt einen frischen vollständigen Kataloglader. Die Recht-Wrapper behalten ihre 57-Kapitel-Prüfung und laden beim Publish standardmäßig den vollständigen API-Katalog neu.
