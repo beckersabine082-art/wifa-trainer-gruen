@@ -1,0 +1,17 @@
+{
+  "version": "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE",
+  "encoding": "UTF-8 JSON bytes",
+  "maximumBytes": 90000,
+  "subjects": {
+    "WQ-1": 64288,
+    "WQ-2": 30138,
+    "WQ-4": 55753,
+    "HQ-5": 62774,
+    "HQ-6": 71031,
+    "HQ-7": 74478,
+    "HQ-8": 43770,
+    "HQ-9": 52625
+  },
+  "containsUserData": false,
+  "sourceOfTruth": false
+}

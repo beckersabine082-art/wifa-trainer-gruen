@@ -157,7 +157,7 @@ const trainerPilotKatalogVertrag = {
 };
 
 function trainerIstUiKey(value) {
-  return /^ui-wq-/.test(String(value || "").trim());
+  return /^ui-(?:wq|hq)-/.test(String(value || "").trim());
 }
 
 function trainerIstPilotFach(fach) {
@@ -223,8 +223,9 @@ async function trainerThemenpoolLaden(fach, thema) {
     const result = pilot
       ? await apiGet("trainerQuestions", { fach, uiThemenKey: thema })
       : await apiGet("questionsForTopic", { fach, thema });
+    const erwarteteVersion = String(aktuelleTrainerKatalogVersion || trainerPilotVersion).trim();
     if (pilot && (!result || !result.success || !result.data || result.data.active !== true ||
-        String(result.data.version || "").trim() !== trainerPilotVersion ||
+        String(result.data.version || "").trim() !== erwarteteVersion ||
         String(result.data.uiThemenKey || "").trim() !== String(thema || "").trim())) {
       throw new Error("Themenpool konnte nicht aus Trainer_Zuordnung geladen werden.");
     }

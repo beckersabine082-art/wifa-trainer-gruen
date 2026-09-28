@@ -1,0 +1,24 @@
+{
+  "revision": "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE",
+  "checkedAt": "2026-09-28",
+  "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+  "backup": {
+    "fileId": "16CGqtZ_kDmjm1z7mVQtJ7SxIMjQx0FAaJuZwG8B6cQ4",
+    "title": "WiFa Prüfungs- Trainer – Backup vor Gesamtrollout REV2 – 2026-09-28",
+    "readable": true
+  },
+  "sourceAO": {
+    "activeIds": 2686,
+    "uniqueIds": 2686,
+    "manifestConflicts": 0,
+    "identity": "stable TrainerID; no historical row numbers"
+  },
+  "pilotBackupComparison": {
+    "Trainer_Themen": {"rows": 11, "differences": 0},
+    "Trainer_Detailgruppen": {"rows": 36, "differences": 0},
+    "Trainer_Zuordnung": {"rows": 801, "differences": 0},
+    "Trainer_Rahmenplanbezug": {"rows": 858, "differences": 0},
+    "Rahmenplan_Abdeckung": {"rows": 72, "differences": 0},
+    "Trainer_Migrationen": {"rows": 6, "differences": 0}
+  }
+}

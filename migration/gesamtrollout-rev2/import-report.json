@@ -1,0 +1,36 @@
+{
+  "revision": "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE",
+  "recovery": {
+    "alreadyCorrect": {
+      "Trainer_Themen": 38,
+      "Trainer_Detailgruppen": 161,
+      "Trainer_Zuordnung": 750,
+      "Trainer_Rahmenplanbezug": 0,
+      "Rahmenplan_Abdeckung": 506,
+      "Trainer_Migrationen": 8
+    },
+    "missingBeforeResume": {
+      "Trainer_Themen": 0,
+      "Trainer_Detailgruppen": 0,
+      "Trainer_Zuordnung": 1136,
+      "Trainer_Rahmenplanbezug": 1913,
+      "Rahmenplan_Abdeckung": 0,
+      "Trainer_Migrationen": 0
+    },
+    "mismatches": 0,
+    "duplicates": 0,
+    "partialBlock": "Trainer_Zuordnung ended after exactly 750 correct rollout rows"
+  },
+  "final": {
+    "visibleTopics": 48,
+    "detailGroups": 196,
+    "primaryAssignments": 2686,
+    "uniquePrimaryIds": 2686,
+    "coverageNodes": 577,
+    "pilotAssignmentsUnchanged": 800,
+    "newMigrationStatuses": ["VORBEREITET"],
+    "manifestMismatches": 0,
+    "subjectIds": {"WQ-1":283,"WQ-2":122,"WQ-3":800,"WQ-4":235,"HQ-5":264,"HQ-6":269,"HQ-7":317,"HQ-8":191,"HQ-9":205}
+  },
+  "contentActions": {"open": 9, "changedByMigration": 0}
+}

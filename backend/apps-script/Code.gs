@@ -612,6 +612,128 @@ function getTrainerPilotActiveSource_(metadata, fach) {
   return {valid: valid, activeById: activeById, questions: activeQuestions};
 }
 
+const TRAINER_ROLLOUT_VERSION_ = "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE";
+const TRAINER_ROLLOUT_CACHE_TTL_ = 21600;
+const TRAINER_ROLLOUT_CONTRACTS_ = [
+  {groupCode:"WQ-1", fachKey:"wq-volks-betriebswirtschaft", aliases:["Volks- und Betriebswirtschaft","VWL","BWL"], topicCount:4, detailCount:21, idCount:283},
+  {groupCode:"WQ-2", fachKey:"wq-rechnungswesen", aliases:["Rechnungswesen"], topicCount:5, detailCount:17, idCount:122},
+  {groupCode:"WQ-3", fachKey:"wq-recht-steuern", aliases:["Recht","Steuern"], topicCount:10, detailCount:35, idCount:800},
+  {groupCode:"WQ-4", fachKey:"wq-unternehmensfuehrung", aliases:["Unternehmensführung"], topicCount:3, detailCount:15, idCount:235},
+  {groupCode:"HQ-5", fachKey:"hq-betriebliches-management", aliases:["Betriebliches Management"], topicCount:4, detailCount:13, idCount:264},
+  {groupCode:"HQ-6", fachKey:"hq-investition-finanzierung-controlling", aliases:["Investition, Finanzierung, betriebliches Rechnungswesen und Controlling","Investition und Finanzierung","Betriebliches Rechnungswesen und Controlling"], topicCount:5, detailCount:26, idCount:269},
+  {groupCode:"HQ-7", fachKey:"hq-logistik", aliases:["Logistik"], topicCount:5, detailCount:23, idCount:317},
+  {groupCode:"HQ-8", fachKey:"hq-marketing-vertrieb", aliases:["Marketing und Vertrieb","Marketing","Vertrieb"], topicCount:5, detailCount:22, idCount:191},
+  {groupCode:"HQ-9", fachKey:"hq-fuehrung-zusammenarbeit", aliases:["Führung und Zusammenarbeit"], topicCount:7, detailCount:24, idCount:205}
+];
+
+function getTrainerRolloutContracts_() {
+  return TRAINER_ROLLOUT_CONTRACTS_.map(function(item) { return Object.assign({}, item, {aliases:item.aliases.slice()}); });
+}
+
+function getTrainerRolloutContract_(fach) {
+  const safe = String(fach || "").trim();
+  return TRAINER_ROLLOUT_CONTRACTS_.find(function(item) {
+    return item.groupCode !== "WQ-3" && item.aliases.includes(safe);
+  }) || null;
+}
+
+function getTrainerRolloutMigration_(contract) {
+  if (!contract) return null;
+  const rows = getTableObjects_("Trainer_Migrationen").filter(function(item) {
+    return String(item.Version || "").trim() === TRAINER_ROLLOUT_VERSION_ &&
+      String(item.FachgruppeCode || "").trim() === contract.groupCode;
+  });
+  if (!rows.length) return null;
+  const latest = rows[rows.length - 1];
+  const status = String(latest.Laufstatus || "").trim().toUpperCase();
+  return {migrationId:String(latest.MigrationID || "").trim(),status:status,active:status === "AKTIV"};
+}
+
+function indexTrainerRolloutMetadata_(metadata) {
+  const topicByKey = {}, detailByKey = {}, assignmentById = {};
+  (metadata.topics || []).forEach(function(x) { topicByKey[String(x.UIThemenKey || "").trim()] = x; });
+  (metadata.details || []).forEach(function(x) { detailByKey[String(x.DetailKey || "").trim()] = x; });
+  (metadata.assignments || []).forEach(function(x) {
+    const id = String(x.TrainerID || "").trim(), detail = detailByKey[String(x.DetailKey || "").trim()] || {};
+    if (id) assignmentById[id] = {assignment:x,detail:detail,uiThemenKey:String(detail.UIThemenKey || "").trim()};
+  });
+  metadata.topicByKey=topicByKey; metadata.detailByKey=detailByKey; metadata.assignmentById=assignmentById;
+  return metadata;
+}
+
+function validateTrainerRolloutMetadata_(metadata, contract) {
+  const errors=[], topicKeys={}, detailKeys={}, ids={}, topicCounts={};
+  (metadata.topics || []).forEach(function(x){const k=String(x.UIThemenKey||"").trim();if(!k||topicKeys[k])errors.push("topic_identity");topicKeys[k]=true;if(String(x.Sichtbar||"").toLowerCase()!=="ja")errors.push("topic_visibility");});
+  (metadata.details || []).forEach(function(x){const k=String(x.DetailKey||"").trim(),u=String(x.UIThemenKey||"").trim();if(!k||detailKeys[k])errors.push("detail_identity");detailKeys[k]=true;if(!topicKeys[u])errors.push("detail_parent");});
+  (metadata.assignments || []).forEach(function(x){const id=String(x.TrainerID||"").trim(),d=metadata.detailByKey[String(x.DetailKey||"").trim()];if(!id||ids[id])errors.push("assignment_identity");ids[id]=true;if(!d)errors.push("assignment_parent");else{const u=String(d.UIThemenKey||"").trim();topicCounts[u]=(topicCounts[u]||0)+1;}});
+  if(Object.keys(topicKeys).length!==contract.topicCount)errors.push("topic_count");
+  if(Object.keys(detailKeys).length!==contract.detailCount)errors.push("detail_count");
+  if(Object.keys(ids).length!==contract.idCount)errors.push("assignment_count");
+  Object.keys(topicKeys).forEach(function(k){if(!topicCounts[k])errors.push("empty_topic");});
+  return Array.from(new Set(errors));
+}
+
+function buildTrainerRolloutMetadata_(contract) {
+  const topics=getTableObjects_("Trainer_Themen").filter(function(x){return String(x.Version||"").trim()===TRAINER_ROLLOUT_VERSION_&&String(x.FachgruppeCode||"").trim()===contract.groupCode;});
+  const topicKeys=new Set(topics.map(function(x){return String(x.UIThemenKey||"").trim();}));
+  const details=getTableObjects_("Trainer_Detailgruppen").filter(function(x){return String(x.Version||"").trim()===TRAINER_ROLLOUT_VERSION_&&topicKeys.has(String(x.UIThemenKey||"").trim());});
+  const assignments=getTableObjects_("Trainer_Zuordnung").filter(function(x){return String(x.Version||"").trim()===TRAINER_ROLLOUT_VERSION_&&String(x.FachgruppeCode||"").trim()===contract.groupCode;});
+  const metadata=indexTrainerRolloutMetadata_({topics:topics,details:details,assignments:assignments});
+  metadata.validationErrors=validateTrainerRolloutMetadata_(metadata,contract);metadata.valid=metadata.validationErrors.length===0;return metadata;
+}
+
+function serializeTrainerRolloutMetadata_(metadata) {
+  return JSON.stringify({
+    version:TRAINER_ROLLOUT_VERSION_,
+    topics:(metadata.topics||[]).map(function(x){return [x.UIThemenKey,x.Teilbereich,x.FachgruppeCode,x.Quellfach,x.Anzeigename,x.Sortierung,x.Sichtbar,x.Status];}),
+    details:(metadata.details||[]).map(function(x){return [x.DetailKey,x.Teilbereich,x.Quellfach,x.UIThemenKey,x.RahmenplanPunktKey];}),
+    assignments:(metadata.assignments||[]).map(function(x){return [x.TrainerID,x.Teilbereich,x.Quellfach,x.DetailKey,x.UIReihenfolge,x.QuellthemaAlt,x.FachgruppeCode,x.PrimaerPunktKey];})
+  });
+}
+
+function hydrateTrainerRolloutMetadata_(raw) {
+  const parsed=JSON.parse(raw);
+  if(!parsed||parsed.version!==TRAINER_ROLLOUT_VERSION_||!Array.isArray(parsed.topics)||!Array.isArray(parsed.details)||!Array.isArray(parsed.assignments))return null;
+  return indexTrainerRolloutMetadata_({
+    topics:parsed.topics.map(function(r){return {UIThemenKey:r[0],Teilbereich:r[1],FachgruppeCode:r[2],Quellfach:r[3],Anzeigename:r[4],Sortierung:r[5],Sichtbar:r[6],Status:r[7]};}),
+    details:parsed.details.map(function(r){return {DetailKey:r[0],Teilbereich:r[1],Quellfach:r[2],UIThemenKey:r[3],RahmenplanPunktKey:r[4]};}),
+    assignments:parsed.assignments.map(function(r){return {TrainerID:r[0],Teilbereich:r[1],Quellfach:r[2],DetailKey:r[3],UIReihenfolge:r[4],QuellthemaAlt:r[5],FachgruppeCode:r[6],PrimaerPunktKey:r[7]};})
+  });
+}
+
+function getTrainerRolloutMetadata_(contract) {
+  const cache=trainerPilotRuntimeCache_(), key="trainer-rollout:"+TRAINER_ROLLOUT_VERSION_+":"+contract.groupCode;
+  if(cache){try{const raw=cache.get(key);if(raw){const hydrated=hydrateTrainerRolloutMetadata_(raw);if(hydrated){hydrated.validationErrors=validateTrainerRolloutMetadata_(hydrated,contract);hydrated.valid=hydrated.validationErrors.length===0;if(hydrated.valid)return hydrated;}cache.remove(key);}}catch(error){try{cache.remove(key);}catch(ignore){}}}
+  const metadata=buildTrainerRolloutMetadata_(contract);
+  if(cache&&metadata.valid){try{const raw=serializeTrainerRolloutMetadata_(metadata);if(raw.length<90000)cache.put(key,raw,TRAINER_ROLLOUT_CACHE_TTL_);}catch(error){}}
+  return metadata;
+}
+
+function getTrainerRolloutActiveSource_(metadata) {
+  const activeById={};
+  const sources=Array.from(new Set((metadata.assignments||[]).map(function(x){return String(x.Quellfach||"").trim();})));
+  sources.forEach(function(source){getActiveQuestions(source).forEach(function(q){const id=String(q.id||"").trim();if(id)activeById[id]=q;});});
+  const valid=(metadata.assignments||[]).every(function(x){return Boolean(activeById[String(x.TrainerID||"").trim()]);});
+  return {valid:valid,activeById:activeById};
+}
+
+function getTrainerRolloutCatalog_(fach, contract, migration) {
+  const metadata=getTrainerRolloutMetadata_(contract);
+  if(!metadata.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,fallbackReason:"invalid_metadata",migrationStatus:migration.status,topics:[]};
+  const source=getTrainerRolloutActiveSource_(metadata);
+  if(!source.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,fallbackReason:"invalid_source",migrationStatus:migration.status,topics:[]};
+  const topics=metadata.topics.slice().sort(function(a,b){return Number(a.Sortierung||0)-Number(b.Sortierung||0);}).map(function(x){const k=String(x.UIThemenKey||"").trim();return {uiThemenKey:k,thema:String(x.Anzeigename||"").trim(),anzahl:metadata.assignments.filter(function(a){return metadata.assignmentById[String(a.TrainerID||"").trim()].uiThemenKey===k;}).length,sortierung:Number(x.Sortierung||0),version:TRAINER_ROLLOUT_VERSION_};});
+  return {active:true,version:TRAINER_ROLLOUT_VERSION_,fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,migrationId:migration.migrationId,migrationStatus:migration.status,topics:topics};
+}
+
+function getTrainerRolloutQuestions_(fach, uiKey, contract, migration) {
+  const metadata=getTrainerRolloutMetadata_(contract);if(!metadata.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,uiThemenKey:"",fallbackReason:"invalid_metadata",questions:[]};
+  const source=getTrainerRolloutActiveSource_(metadata);if(!source.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,uiThemenKey:"",fallbackReason:"invalid_source",questions:[]};
+  const topic=metadata.topicByKey[uiKey];if(!topic)return {active:true,version:TRAINER_ROLLOUT_VERSION_,fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,uiThemenKey:uiKey,questions:[]};
+  const questions=metadata.assignments.filter(function(x){const link=metadata.assignmentById[String(x.TrainerID||"").trim()];return link&&link.uiThemenKey===uiKey;}).sort(function(a,b){return Number(a.UIReihenfolge||0)-Number(b.UIReihenfolge||0);}).map(function(x,index,all){const id=String(x.TrainerID||"").trim(),link=metadata.assignmentById[id],q=source.activeById[id];return Object.assign({},q,{legacyThema:q.thema,quellfach:String(x.Quellfach||"").trim(),uiThemenKey:uiKey,uiThemenName:String(topic.Anzeigename||"").trim(),rahmenplanPunktKey:String(x.PrimaerPunktKey||link.detail.RahmenplanPunktKey||"").trim(),fragePosition:index+1,frageGesamt:all.length});});
+  return {active:true,version:TRAINER_ROLLOUT_VERSION_,fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,uiThemenKey:uiKey,thema:String(topic.Anzeigename||"").trim(),questions:questions};
+}
+
 function isTrainerPilotSubject_(fach) {
   return ["Recht", "Steuern"].includes(String(fach || "").trim());
 }
@@ -619,6 +741,9 @@ function isTrainerPilotSubject_(fach) {
 function getTrainerCatalogFrontend(fach) {
   const safeFach = String(fach || "").trim();
   if (!isTrainerPilotSubject_(safeFach)) {
+    const contract = getTrainerRolloutContract_(safeFach);
+    const migration = getTrainerRolloutMigration_(contract);
+    if (contract && migration && migration.active) return getTrainerRolloutCatalog_(safeFach, contract, migration);
     return {
       active: false,
       version: "legacy",
@@ -686,6 +811,9 @@ function getTrainerQuestionsFrontend(fach, uiThemenKey) {
   const safeFach = String(fach || "").trim();
   const safeUiKey = String(uiThemenKey || "").trim();
   if (!isTrainerPilotSubject_(safeFach)) {
+    const contract = getTrainerRolloutContract_(safeFach);
+    const migration = getTrainerRolloutMigration_(contract);
+    if (contract && migration && migration.active) return getTrainerRolloutQuestions_(safeFach, safeUiKey, contract, migration);
     return {active: false, version: "legacy", fach: safeFach, uiThemenKey: "", questions: []};
   }
   const migration = getTrainerPilotMigration_();
@@ -748,30 +876,34 @@ function progressTimestampMillis_(value) {
 
 function getTrainerCompatibleProgress_(nutzer, bereich, fach, auswahl) {
   const safeAuswahl = normalizeProgressSelection_(auswahl);
-  if (String(bereich || "").trim() !== "trainer" || !isTrainerPilotSubject_(fach)) {
+  const pilotSubject = isTrainerPilotSubject_(fach);
+  const rolloutContract = pilotSubject ? null : getTrainerRolloutContract_(fach);
+  const rolloutMigration = rolloutContract ? getTrainerRolloutMigration_(rolloutContract) : null;
+  if (String(bereich || "").trim() !== "trainer" || (!pilotSubject && !(rolloutMigration && rolloutMigration.active))) {
     return getProgressForKey_(nutzer, bereich, fach, safeAuswahl);
   }
-  getTrainerPilotMigration_();
-  const metadata = getTrainerPilotRuntimeMetadata_();
+  if (pilotSubject) getTrainerPilotMigration_();
+  const metadata = pilotSubject ? getTrainerPilotRuntimeMetadata_() : getTrainerRolloutMetadata_(rolloutContract);
   if (!metadata.assignments.length) return getProgressForKey_(nutzer, bereich, fach, safeAuswahl);
   const requestedUiKey = safeAuswahl.indexOf(TRAINER_PILOT_PROGRESS_PREFIX_) === 0
     ? safeAuswahl.slice(TRAINER_PILOT_PROGRESS_PREFIX_.length) : "";
   const sheet = ensureNutzerFortschrittSheet_();
   const values = sheet.getDataRange().getValues();
-  const activeIds = new Set(getActiveQuestions(fach).map(function(question) {
-    return String(question.id || "").trim();
-  }));
+  const activeIds = pilotSubject
+    ? new Set(getActiveQuestions(fach).map(function(question) { return String(question.id || "").trim(); }))
+    : new Set(Object.keys(getTrainerRolloutActiveSource_(metadata).activeById));
+  const allowedProgressSubjects = pilotSubject ? [String(fach || "").trim()] : rolloutContract.aliases;
   const candidates = [];
   for (let i = 1; i < values.length; i++) {
     const row = values[i] || [];
     if (String(row[0] || "").trim() !== String(nutzer || "").trim() ||
         String(row[1] || "").trim() !== String(bereich || "").trim() ||
-        String(row[2] || "").trim() !== String(fach || "").trim()) continue;
+        !allowedProgressSubjects.includes(String(row[2] || "").trim())) continue;
     const sourceSelection = String(row[3] || "").trim();
     const id = String(row[4] || "").trim();
     if (!activeIds.has(id)) continue;
     const link = metadata.assignmentById[id];
-    if (!link || String(link.assignment.Quellfach || "").trim() !== String(fach || "").trim()) continue;
+    if (!link || (pilotSubject && String(link.assignment.Quellfach || "").trim() !== String(fach || "").trim())) continue;
     const matches = requestedUiKey
       ? link.uiThemenKey === requestedUiKey
       : String(link.assignment.QuellthemaAlt || "").trim() === safeAuswahl;

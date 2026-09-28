@@ -1,0 +1,191 @@
+{
+  "date": "2026-09-27T22:09:12.039Z",
+  "passed": 46,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "2686 Primärzuordnungen, alle einzigartig",
+      "passed": true
+    },
+    {
+      "name": "Revisionskennung freigegebene Grenzfälle",
+      "passed": true
+    },
+    {
+      "name": "Maschinenlesbares Manifest entspricht dem Planbestand",
+      "passed": true
+    },
+    {
+      "name": "800 Pilot und 1886 übrige",
+      "passed": true
+    },
+    {
+      "name": "Live-Menge identisch",
+      "passed": true
+    },
+    {
+      "name": "Ausgangsmatrix-Menge identisch",
+      "passed": true
+    },
+    {
+      "name": "Keine fachliche Quelltextabweichung nach Kürzungs-/Whitespace-Abgleich",
+      "passed": true
+    },
+    {
+      "name": "Keine aktiven IDs in Restzeilen",
+      "passed": true
+    },
+    {
+      "name": "Alle 38 neuen UI-Optionen plus 10 Pilot",
+      "passed": true
+    },
+    {
+      "name": "196 Detailgruppen, davon 35 unveränderter Pilot",
+      "passed": true
+    },
+    {
+      "name": "BM 264 und Führung/Zusammenarbeit 205 Primärzuordnungen",
+      "passed": true
+    },
+    {
+      "name": "Pilot-Detailgruppen exakt gleich",
+      "passed": true
+    },
+    {
+      "name": "Pilot-Primär- und Querverbindungen/Reihenfolgen unverändert",
+      "passed": true
+    },
+    {
+      "name": "Pilot 71 Abdeckungsknoten unverändert",
+      "passed": true
+    },
+    {
+      "name": "R-0566 kein Primärbeleg 3.1.1",
+      "passed": true
+    },
+    {
+      "name": "VWL-0127 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "IF-0091 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "BR-0076 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "PF-0194 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "PF-0195 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "PF-0196 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "PF-0197 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "PF-0202 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "PF-0203 freigegebener Primärbezug",
+      "passed": true
+    },
+    {
+      "name": "PF-0202/-0203 nur Primärfachwechsel innerhalb HQ; Quellfach bleibt",
+      "passed": true
+    },
+    {
+      "name": "PF-0194 ist kein direkter Abdeckungsbeleg für 9.4.1",
+      "passed": true
+    },
+    {
+      "name": "Neun spätere Inhaltsmaßnahmen bleiben offen",
+      "passed": true
+    },
+    {
+      "name": "Sechs Teilaspekte und drei Grenzfallüberarbeitungen vollständig enthalten",
+      "passed": true
+    },
+    {
+      "name": "Alle Primär-/Querpunkte existieren (Pilot-Beschriftung unverändert, Prüfauflösung kanonisch)",
+      "passed": true
+    },
+    {
+      "name": "WQ/HQ und Fachgrenzen unverändert",
+      "passed": true
+    },
+    {
+      "name": "Kein Detail sichtbar",
+      "passed": true
+    },
+    {
+      "name": "Alle Details haben UI-Eltern",
+      "passed": true
+    },
+    {
+      "name": "Alle IDs haben gültige Detail-Eltern",
+      "passed": true
+    },
+    {
+      "name": "Volks- und Betriebswirtschaft: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Rechnungswesen: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Recht und Steuern: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Unternehmensführung: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Betriebliches Management: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Investition, Finanzierung, betriebliches Rechnungswesen und Controlling: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Logistik: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Marketing und Vertrieb: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Führung und Zusammenarbeit: disjunkte vollständige Poolpartition",
+      "passed": true
+    },
+    {
+      "name": "Alle ursprünglichen 41 Problemknoten vorhanden",
+      "passed": true
+    },
+    {
+      "name": "577 Rahmenplanknoten, 568 Inhaltspunkte",
+      "passed": true
+    },
+    {
+      "name": "Keine neue/leere Trainer-ID",
+      "passed": true
+    },
+    {
+      "name": "UI-Sortierung pro Pool eindeutig",
+      "passed": true
+    }
+  ]
+}

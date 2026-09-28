@@ -1,0 +1,25 @@
+{
+  "revision": "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE",
+  "state": "METADATEN VOLLSTAENDIG; CODE LOKAL VORBEREITET; ACHT FAECHER INAKTIV",
+  "sheetGates": {
+    "visibleTopics": 48,
+    "detailGroups": 196,
+    "primaryAssignments": 2686,
+    "uniquePrimaryIds": 2686,
+    "coverageNodes": 577,
+    "pilotIdsUnchanged": 800,
+    "manifestMismatches": 0,
+    "duplicates": 0
+  },
+  "subjectIds": {"WQ-1":283,"WQ-2":122,"WQ-3":800,"WQ-4":235,"HQ-5":264,"HQ-6":269,"HQ-7":317,"HQ-8":191,"HQ-9":205},
+  "tests": {
+    "focusedTrainer": {"passed":59,"failed":0},
+    "repositoryWide": {
+      "status":"BASELINE RED",
+      "newRolloutFailures":0,
+      "knownUnrelatedFailures":["browser tests require missing playwright","success-celebration CSS contract","usage-client harness failures"]
+    }
+  },
+  "deployment": {"productionChanged":false,"stagingChanged":false,"newSubjectsActivated":0},
+  "openContentActions":["VWL-0127","IF-0091","BR-0076","UF-0058","BM-0260","BM-0154","IF-0152","M-0021","V-0077"]
+}
