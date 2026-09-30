@@ -261,6 +261,11 @@ const TRAINER_PILOT_RUNTIME_CACHE_KEYS_ = {
   Steuern: TRAINER_PILOT_RUNTIME_CACHE_PREFIX_ + "Steuern"
 };
 
+const KARTEIKARTEN_ERGAENZUNGEN_SHEET_ = "Karteikarten_Ergaenzungen";
+const KARTEIKARTEN_ERGAENZUNGEN_VERSION_ = "WIFA-KK-INHALTE-20260930-FINAL-1";
+const KARTEIKARTEN_ERGAENZUNGEN_CACHE_TTL_ = 21600;
+const KARTEIKARTEN_ERGAENZUNGEN_CACHE_PREFIX_ = "karteikarten-ergaenzungen:";
+
 function getOptionalSheetByName_(name) {
   try {
     return getSpreadsheet_().getSheetByName(String(name || "").trim());
@@ -990,7 +995,7 @@ function doGet(e) {
     let result = {};
 
     // Public question APIs must never act as readers for private progress tabs.
-    if (['topics','trainerCatalog','trainerQuestions','questionById','firstQuestion','nextQuestion','questionsForTopic','getKarteikarten','quizQuestion'].includes(action) &&
+    if (['topics','cardTopics','trainerCatalog','trainerQuestions','questionById','firstQuestion','nextQuestion','questionsForTopic','getKarteikarten','quizQuestion'].includes(action) &&
         !istOeffentlichesFragenFach_(e?.parameter?.fach)) {
       return ContentService.createTextOutput(JSON.stringify({success:false,error:'invalid_request'}))
         .setMimeType(ContentService.MimeType.JSON);
@@ -1008,6 +1013,14 @@ function doGet(e) {
       result = {
         success: true,
         data: getTopicsForSheet(fach)
+      };
+
+    } else if (action === "cardTopics") {
+      const fach = String(e?.parameter?.fach || "").trim();
+
+      result = {
+        success: true,
+        data: getKarteikartenTopicsFrontend(fach)
       };
 
     } else if (action === "trainerCatalog") {
@@ -2684,35 +2697,192 @@ function getQuizKey_(fach, frageId) {
   return fachName + "::" + id;
 }
 
+function getKarteikartenOverlayCacheKey_(version) {
+  return KARTEIKARTEN_ERGAENZUNGEN_CACHE_PREFIX_ + String(version || "").trim();
+}
+
+function getKarteikartenOverlayCache_() {
+  try {
+    return CacheService.getScriptCache();
+  } catch (error) {
+    return null;
+  }
+}
+
+function validateKarteikartenOverlayEntries_(entries) {
+  if (!Array.isArray(entries)) {
+    throw new Error("Ungültige Karteikarten-Ergänzung: Datenformat.");
+  }
+
+  const seen = {};
+  return entries.map(function(entry) {
+    const normalized = {
+      id: String(entry?.id || "").trim(),
+      fach: String(entry?.fach || "").trim(),
+      type: String(entry?.type || "").trim().toUpperCase(),
+      thema: String(entry?.thema || "").trim(),
+      front: String(entry?.front || "").trim(),
+      back: String(entry?.back || "").trim(),
+      revision: String(entry?.revision || "").trim()
+    };
+
+    if (!normalized.id || !normalized.fach || !normalized.thema ||
+        ['OVERRIDE', 'NEU', 'AUSSCHLUSS'].indexOf(normalized.type) === -1 ||
+        normalized.revision !== KARTEIKARTEN_ERGAENZUNGEN_VERSION_) {
+      throw new Error("Ungültige Karteikarten-Ergänzung: " + (normalized.id || "ohne ID") + ".");
+    }
+    if (normalized.type === 'NEU' && (!normalized.front || !normalized.back)) {
+      throw new Error("Ungültige Karteikarten-Ergänzung: " + normalized.id + ".");
+    }
+    if (normalized.type === 'OVERRIDE' && !normalized.front && !normalized.back) {
+      throw new Error("Ungültige Karteikarten-Ergänzung: " + normalized.id + ".");
+    }
+    if (seen[normalized.id]) {
+      throw new Error("Doppelte aktive Karten-ID: " + normalized.id + ".");
+    }
+    seen[normalized.id] = true;
+    return normalized;
+  });
+}
+
+function readKarteikartenOverlayEntries_() {
+  const sheet = getOptionalSheetByName_(KARTEIKARTEN_ERGAENZUNGEN_SHEET_);
+  if (!sheet) return [];
+
+  const values = sheet.getDataRange().getValues();
+  if (!values.length) return [];
+  const headers = (values[0] || []).map(function(value) { return String(value || "").trim(); });
+  const required = ['KartenID', 'Fach', 'Typ', 'Thema', 'Vorderseite', 'Rueckseite', 'Aktiv', 'Revision'];
+  const index = {};
+  headers.forEach(function(header, column) { if (header) index[header] = column; });
+  if (required.some(function(header) { return index[header] === undefined; })) {
+    throw new Error("Ungültige Karteikarten-Ergänzung: Spaltenschema.");
+  }
+
+  const entries = values.slice(1).filter(function(row) {
+    return String(row[index.Aktiv] || "").trim().toLowerCase() === 'ja';
+  }).map(function(row) {
+    return {
+      id: row[index.KartenID],
+      fach: row[index.Fach],
+      type: row[index.Typ],
+      thema: row[index.Thema],
+      front: row[index.Vorderseite],
+      back: row[index.Rueckseite],
+      revision: row[index.Revision]
+    };
+  });
+  return validateKarteikartenOverlayEntries_(entries);
+}
+
+function getKarteikartenOverlayEntries_() {
+  const version = KARTEIKARTEN_ERGAENZUNGEN_VERSION_;
+  const key = getKarteikartenOverlayCacheKey_(version);
+  const cache = getKarteikartenOverlayCache_();
+
+  if (cache) {
+    try {
+      const cached = cache.get(key);
+      if (cached) {
+        const envelope = JSON.parse(cached);
+        if (envelope && envelope.version === version) {
+          return validateKarteikartenOverlayEntries_(envelope.entries);
+        }
+      }
+    } catch (error) {
+      try { cache.remove(key); } catch (removeError) {}
+    }
+  }
+
+  const entries = readKarteikartenOverlayEntries_();
+  if (cache && entries.length) {
+    try {
+      cache.put(key, JSON.stringify({version: version, entries: entries}), KARTEIKARTEN_ERGAENZUNGEN_CACHE_TTL_);
+    } catch (error) {}
+  }
+  return entries;
+}
+
+function buildKarteikartenBestand_(fach) {
+  const sheetName = String(fach || "").trim();
+  if (!sheetName) return [];
+
+  const base = getActiveQuestions(sheetName).filter(function(question) {
+    return String(question.frage || "").trim() && String(question.musterloesung || "").trim();
+  }).map(function(question) {
+    return {
+      id: String(question.id || "").trim(),
+      fach: sheetName,
+      thema: String(question.thema || "").trim(),
+      vorderseite: String(question.frage || "").trim(),
+      rueckseite: String(question.musterloesung || "").trim()
+    };
+  });
+  const byId = {};
+  base.forEach(function(card) { byId[card.id] = card; });
+  const excluded = {};
+  const additions = [];
+
+  getKarteikartenOverlayEntries_().filter(function(entry) {
+    return entry.fach === sheetName;
+  }).forEach(function(entry) {
+    const existing = byId[entry.id];
+    if (entry.type === 'OVERRIDE') {
+      if (!existing || entry.thema !== existing.thema) {
+        throw new Error("Ungültige Karteikarten-Ergänzung: " + entry.id + ".");
+      }
+      existing.vorderseite = entry.front || existing.vorderseite;
+      existing.rueckseite = entry.back || existing.rueckseite;
+      return;
+    }
+    if (entry.type === 'AUSSCHLUSS') {
+      if (!existing || entry.thema !== existing.thema) {
+        throw new Error("Ungültige Karteikarten-Ergänzung: " + entry.id + ".");
+      }
+      excluded[entry.id] = true;
+      return;
+    }
+    if (existing) {
+      throw new Error("Ungültige Karteikarten-Ergänzung: " + entry.id + ".");
+    }
+    additions.push({
+      id: entry.id,
+      fach: sheetName,
+      thema: entry.thema,
+      vorderseite: entry.front,
+      rueckseite: entry.back
+    });
+  });
+
+  return base.filter(function(card) { return !excluded[card.id]; }).concat(additions);
+}
+
+function getKarteikartenTopicsFrontend(fach) {
+  const counts = {};
+  buildKarteikartenBestand_(fach).forEach(function(card) {
+    const thema = String(card.thema || "").trim();
+    if (!thema) return;
+    counts[thema] = (counts[thema] || 0) + 1;
+  });
+  return Object.keys(counts).sort(function(a, b) {
+    return a.localeCompare(b, "de");
+  }).map(function(thema) {
+    return {thema: thema, anzahl: counts[thema]};
+  });
+}
+
 function getKarteikartenFrontend(fach, thema) {
-    const sheetName = String(fach || "").trim();
+  const sheetName = String(fach || "").trim();
   const themaFilter = String(thema || "").trim();
 
   if (!sheetName) {
     return [];
   }
 
-  const fragen = getActiveQuestions(sheetName);
-
-  const gefiltert = fragen.filter(function(frage) {
+  return buildKarteikartenBestand_(sheetName).filter(function(karte) {
     if (!themaFilter) return true;
-    return String(frage.thema || "").trim() === themaFilter;
+    return String(karte.thema || "").trim() === themaFilter;
   });
-
-  return gefiltert
-    .filter(function(frage) {
-      return String(frage.frage || "").trim() &&
-             String(frage.musterloesung || "").trim();
-    })
-    .map(function(frage) {
-      return {
-        id: frage.id,
-        fach: sheetName,
-        thema: frage.thema,
-        vorderseite: frage.frage,
-        rueckseite: frage.musterloesung
-      };
-    });
 }
 
 function getLerntexte(fach) {
