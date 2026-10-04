@@ -229,12 +229,62 @@
     return chapter.start + Math.min(Math.max(offset, 0), chapter.end - chapter.start);
   }
 
+  function resolvePlaybackRange(manifest, selection) {
+    if (!isRecord(manifest) || Number(manifest.schemaVersion) !== 2 ||
+        !Array.isArray(manifest.chapters) || manifest.chapters.length === 0 ||
+        !Array.isArray(manifest.chapterGroups) || !isRecord(selection)) return null;
+    const mode = selection.mode;
+    let startIndex;
+    let endIndex;
+    let chapterKey = null;
+    if (mode === 'all') {
+      startIndex = 0;
+      endIndex = manifest.chapters.length - 1;
+    } else if (mode === 'chapter') {
+      const group = manifest.chapterGroups.find(function (item) {
+        return isRecord(item) && item.chapterKey === selection.chapterKey;
+      });
+      if (!group) return null;
+      startIndex = group.startIndex;
+      endIndex = group.endIndex;
+      chapterKey = group.chapterKey;
+    } else if (mode === 'entry') {
+      startIndex = manifest.chapters.findIndex(function (chapter) {
+        return isRecord(chapter) && chapter.lerntextId === selection.lerntextId;
+      });
+      if (startIndex < 0) return null;
+      const group = manifest.chapterGroups.find(function (item) {
+        return isRecord(item) && item.startIndex <= startIndex && item.endIndex >= startIndex;
+      });
+      if (!group) return null;
+      endIndex = group.endIndex;
+      chapterKey = group.chapterKey;
+    } else {
+      return null;
+    }
+    const first = chapterAt(manifest, startIndex);
+    const last = chapterAt(manifest, endIndex);
+    if (!first || !last || !isFiniteNumber(first.start) || !isFiniteNumber(last.end) ||
+        typeof first.lerntextId !== 'string' || typeof last.lerntextId !== 'string') return null;
+    return {
+      mode: mode,
+      startIndex: startIndex,
+      endIndex: endIndex,
+      startId: first.lerntextId,
+      endId: last.lerntextId,
+      start: first.start,
+      end: last.end,
+      chapterKey: chapterKey
+    };
+  }
+
   const api = {
     continuousPodcastPaths,
     validateContinuousBundle,
     chapterIndexAtTime,
     chapterLocalTime,
     chapterSeekTarget,
+    resolvePlaybackRange,
     validateRechtBundle,
     rechtChapterIndexAtTime: chapterIndexAtTime,
     rechtChapterLocalTime: chapterLocalTime,

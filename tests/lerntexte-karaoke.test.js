@@ -3969,7 +3969,7 @@ test('Recht-Bundle: Dropdown bietet 57 eindeutige MP3-Pfade auch bei wiederholte
   assert.match(options[56].textContent, /Recht Einheit 57/);
 });
 
-test('Staging-Bundle: Dropdown gruppiert sichtbare Kapitel und verwendet ausschließlich stabile Lerntext-IDs', () => {
+test('Staging-Bundle: Dropdown macht Kapitel auswählbar und rückt stabile Lerntext-IDs darunter ein', () => {
   const fixture = createBlock2Context();
   const entries = continuousRechtEntries(4).map((entry, index) => ({ ...entry,
     id: `LZ-RE-${index + 1}`, chapterKey: index < 2 ? 'ui-wq-re-1' : 'ui-wq-re-2',
@@ -3977,12 +3977,145 @@ test('Staging-Bundle: Dropdown gruppiert sichtbare Kapitel und verwendet ausschl
   fixture.context.window.__renderEntries(entries, 'Recht');
 
   const select = fixture.document.getElementById('lerntexteKapitelSelect');
-  const groups = select.childNodes.slice(1);
-  assert.equal(groups.length, 2);
-  assert.deepEqual(Array.from(groups, group => group.label), ['Kapitel 1 – BGB Allgemeiner Teil', 'Kapitel 2 – BGB Schuldrecht']);
-  assert.deepEqual(Array.from(groups.flatMap(group => group.childNodes), option => option.value),
-    ['LZ-RE-1', 'LZ-RE-2', 'LZ-RE-3', 'LZ-RE-4']);
-  assert.ok(groups.flatMap(group => group.childNodes).every(option => !option.value.startsWith('podcast/')));
+  assert.ok(select.childNodes.every(option => option.tagName === 'OPTION'), 'keine nicht auswählbaren optgroup-Überschriften');
+  assert.deepEqual(Array.from(select.childNodes, option => option.value), [
+    '', 'chapter:ui-wq-re-1', 'LZ-RE-1', 'LZ-RE-2', 'chapter:ui-wq-re-2', 'LZ-RE-3', 'LZ-RE-4'
+  ]);
+  assert.deepEqual(Array.from(select.childNodes.filter(option => option.classList.contains('lerntexte-kapitel-option')), option => option.textContent),
+    ['Kapitel 1 – BGB Allgemeiner Teil', 'Kapitel 2 – BGB Schuldrecht']);
+  assert.ok(select.childNodes.filter(option => option.classList.contains('lerntexte-lerneinheit-option'))
+    .every(option => /^\s*↳/.test(option.textContent)));
+});
+
+test('Staging-Bundle: alle 48 sichtbaren Kapitel sind eigenständige auswählbare Optionen', () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries(48).map((entry, index) => ({ ...entry,
+    id: `LZ-TEST-${index + 1}`,
+    chapterKey: `ui-test-${index + 1}`,
+    hauptkapitelNr: String(index + 1),
+    hauptkapitel: `Rahmenplan-Kapitel ${index + 1}`
+  }));
+  fixture.context.window.__renderEntries(entries, 'Recht');
+
+  const options = fixture.document.getElementById('lerntexteKapitelSelect').childNodes;
+  const chapters = options.filter(option => option.classList.contains('lerntexte-kapitel-option'));
+  assert.equal(chapters.length, 48);
+  assert.equal(new Set(chapters.map(option => option.value)).size, 48);
+  assert.ok(chapters.every(option => option.tagName === 'OPTION' && option.disabled !== true));
+});
+
+function twoChapterStagingEntries() {
+  return continuousRechtEntries(6).map((entry, index) => ({ ...entry,
+    id: `LZ-RE-${index + 1}`,
+    chapterKey: index < 3 ? 'ui-wq-re-1' : 'ui-wq-re-2',
+    hauptkapitelNr: index < 3 ? '1' : '2',
+    hauptkapitel: index < 3 ? 'BGB Allgemeiner Teil' : 'BGB Schuldrecht'
+  }));
+}
+
+test('Staging-Bundle: Kapitelmodus startet am ersten Lerntext und stoppt vor dem Folgekapitel', async () => {
+  const fixture = createBlock2Context();
+  const entries = twoChapterStagingEntries();
+  configureVersionedStagingBundle(fixture, entries);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  fixture.context.window.__selectChapter('chapter:ui-wq-re-1');
+  await fixture.context.window.lerntexteAudioAbspielen();
+
+  const range = fixture.context.window.__subjectState().continuous.playbackRange;
+  assert.deepEqual(JSON.parse(JSON.stringify(range)), {
+    mode: 'chapter', startIndex: 0, endIndex: 2, startId: 'LZ-RE-1', endId: 'LZ-RE-3',
+    start: 0, end: 9, chapterKey: 'ui-wq-re-1'
+  });
+  assert.equal(fixture.audio.currentTime, 0);
+  fixture.audio.currentTime = 9;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+  await flushAsync();
+
+  assert.equal(fixture.audio.paused, true);
+  assert.equal(fixture.context.window.__audioState().active, false);
+  assert.equal(fixture.context.window.__audioState().index, 2);
+  assert.equal(fixture.document.getElementById('lerntexteKapitelSelect').value, 'chapter:ui-wq-re-1');
+  assert.match(fixture.status.textContent, /Kapitel vollständig abgespielt/);
+});
+
+test('Staging-Bundle: Alle Kapitel läuft über Kapitelgrenzen, direkte Auswahl endet am aktuellen Kapitel', async () => {
+  const fixture = createBlock2Context();
+  const entries = twoChapterStagingEntries();
+  const bundle = configureVersionedStagingBundle(fixture, entries);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  await fixture.context.window.lerntexteAudioAbspielen();
+
+  fixture.audio.currentTime = 9.25;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+  assert.equal(fixture.audio.paused, false);
+  assert.equal(fixture.context.window.__audioState().index, 3);
+  assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.mode, 'all');
+
+  fixture.context.window.__selectChapter(entries[4].id);
+  assert.equal(fixture.audio.currentTime, 12);
+  assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.startIndex, 4);
+  assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.endIndex, 5);
+  fixture.audio.currentTime = bundle.chapters[5].end;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+  assert.equal(fixture.audio.paused, true);
+  assert.equal(fixture.context.window.__audioState().index, 5);
+});
+
+test('Staging-Bundle: Kapitelwechsel setzt sofort neuen Bereich und Lerntextwechsel bleibt darin', async () => {
+  const fixture = createBlock2Context();
+  const entries = twoChapterStagingEntries();
+  configureVersionedStagingBundle(fixture, entries);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  fixture.context.window.__selectChapter('chapter:ui-wq-re-1');
+  await fixture.context.window.lerntexteAudioAbspielen();
+  const initialAssignments = fixture.audio.srcAssignments;
+
+  fixture.context.window.__selectChapter('chapter:ui-wq-re-2');
+  assert.equal(fixture.audio.srcAssignments, initialAssignments, 'ein Kapitelwechsel lädt das Fachbundle nicht erneut');
+  assert.equal(fixture.audio.currentTime, 9);
+  assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.startIndex, 3);
+  assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.endIndex, 5);
+  fixture.context.window.__selectChapter(entries[4].id);
+  assert.equal(fixture.audio.srcAssignments, initialAssignments, 'ein Lerntextwechsel lädt das Fachbundle nicht erneut');
+  assert.equal(fixture.audio.currentTime, 12);
+  assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.startIndex, 4);
+  assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.endIndex, 5);
+});
+
+for (const selection of [
+  { value: 'chapter:ui-wq-re-1', savedId: 'LZ-RE-2', expectedTime: 4.5, mode: 'chapter' },
+  { value: '', savedId: 'LZ-RE-5', expectedTime: 13.5, mode: 'all' }
+]) {
+  test(`Staging-Bundle: Resume im Modus ${selection.mode} nutzt stabile ID und lokalen Offset`, async () => {
+    const fixture = createBlock2Context();
+    const entries = twoChapterStagingEntries();
+    const bundle = configureVersionedStagingBundle(fixture, entries);
+    configureBlock3Progress(fixture, [{
+      nutzer: 'user-123', fach: 'Recht', einheit: selection.savedId,
+      firebasePfad: 'podcast/staging/lerntext-rev2/continuous/recht.json#' + bundle.manifest.bundleVersion,
+      lerntextHash: fixture.expectedHash, sekundenPosition: 1.5, wortIndex: 1, completed: false
+    }]);
+    fixture.context.window.__renderEntries(entries, 'Recht');
+    fixture.context.window.__selectChapter(selection.value);
+    await fixture.context.window.lerntexteAudioAbspielen();
+    assert.equal(fixture.audio.currentTime, selection.expectedTime);
+    assert.equal(fixture.context.window.__subjectState().continuous.playbackRange.mode, selection.mode);
+  });
+}
+
+test('Staging-Bundle: letzter Lerntext des letzten Kapitels bleibt direkt auswählbar und endet sauber', async () => {
+  const fixture = createBlock2Context();
+  const entries = twoChapterStagingEntries();
+  const bundle = configureVersionedStagingBundle(fixture, entries);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  fixture.context.window.__selectChapter(entries.at(-1).id);
+  await fixture.context.window.lerntexteAudioAbspielen();
+  assert.equal(fixture.audio.currentTime, bundle.chapters.at(-1).start);
+  fixture.audio.currentTime = bundle.manifest.duration;
+  fixture.audio.ended = true;
+  fixture.audio.dispatchEvent({ type: 'ended' });
+  assert.equal(fixture.context.window.__audioState().active, false);
+  assert.equal(fixture.context.window.__audioState().index, entries.length - 1);
 });
 
 test('Staging-Bundle: Resume speichert ID plus Bundle-Version und verwendet keinen Offset einer anderen Version', async () => {

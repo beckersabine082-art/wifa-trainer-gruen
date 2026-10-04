@@ -808,6 +808,15 @@ function lerntexteContinuousFortschrittSpeichern(index, localTime, completed) {
 function lerntexteContinuousAnsichtSynchronisieren(entry) {
   if (!entry) return;
   const chapterKey = lerntexteKapitelSchluessel(entry);
+  if (lerntexteContinuousState && Number(lerntexteContinuousState.manifest?.schemaVersion) === 2) {
+    if (lerntexteContinuousState.displayedLerntextId !== chapterKey) {
+      lerntexteContinuousState.displayedLerntextId = chapterKey;
+      lerntexteInhaltRendern(undefined, { trackUsage: false, entriesOverride: [entry] });
+    }
+    const stableSelect = lerntexteElement('lerntexteKapitelSelect');
+    if (stableSelect) stableSelect.value = lerntexteAktuellesKapitel;
+    return;
+  }
   if (lerntexteAktuellesKapitel && lerntexteAktuellesKapitel !== chapterKey) {
     lerntexteAktuellesKapitel = chapterKey;
     const select = lerntexteElement('lerntexteKapitelSelect');
@@ -864,8 +873,11 @@ function lerntexteContinuousSynchronisieren(time, options) {
   const localTimeFor = lerntexteContinuousHelper('chapterLocalTime');
   if (!indexAtTime || !localTimeFor) return -1;
   const currentTime = Number(time);
-  const nextIndex = indexAtTime(lerntexteContinuousState.manifest, currentTime);
+  let nextIndex = indexAtTime(lerntexteContinuousState.manifest, currentTime);
   if (nextIndex < 0) return -1;
+  const playbackRange = lerntexteContinuousState.playbackRange;
+  if (playbackRange && nextIndex > playbackRange.endIndex) nextIndex = playbackRange.endIndex;
+  if (playbackRange && nextIndex < playbackRange.startIndex) nextIndex = playbackRange.startIndex;
   const previousIndex = lerntexteContinuousState.chapterIndex;
   const manual = options.manual === true || lerntexteContinuousState.seeking === true || lerntexteContinuousState.ignoreCompletion === true;
   if (previousIndex >= 0 && nextIndex > previousIndex && !manual) {
@@ -906,6 +918,10 @@ function lerntexteContinuousIndexRekonstruieren() {
 
 function lerntexteContinuousKapitelSpringen(targetIndex, localSeconds) {
   if (!lerntexteContinuousState || !lerntextePilotAudio) return Promise.resolve(false);
+  const playbackRange = lerntexteContinuousState.playbackRange;
+  if (playbackRange && (targetIndex < playbackRange.startIndex || targetIndex > playbackRange.endIndex)) {
+    return Promise.resolve(false);
+  }
   const seekTarget = lerntexteContinuousHelper('chapterSeekTarget');
   const target = seekTarget && seekTarget(lerntexteContinuousState.manifest, targetIndex, localSeconds || 0);
   if (target === null || target === undefined) return Promise.resolve(false);
@@ -928,6 +944,7 @@ function lerntexteContinuousKapitelSpringen(targetIndex, localSeconds) {
 
   lerntexteContinuousState.pendingStartPosition = target;
   lerntexteContinuousState.ignoreCompletion = true;
+  lerntexteContinuousState.rangeEnded = false;
   let appliedImmediately = false;
   try {
     lerntextePilotAudio.currentTime = target;
@@ -967,6 +984,11 @@ function lerntexteContinuousKaraokeEinrichten(audio, usageTicket, sessionId, ini
     if (!lerntexteAudioSessionIstAktuell(sessionId)) return;
     if (typeof audio.currentTime === 'number' && isFinite(audio.currentTime)) {
       lerntexteAudioLetztePosition = Math.max(0, audio.currentTime);
+    }
+    const range = lerntexteContinuousState && lerntexteContinuousState.playbackRange;
+    if (range && lerntexteContinuousState.rangeEnded !== true && Number(audio.currentTime) >= Number(range.end)) {
+      lerntexteContinuousBereichBeenden(audio);
+      return;
     }
     resync(audio.currentTime);
   };
@@ -1019,6 +1041,7 @@ function lerntexteContinuousKaraokeEinrichten(audio, usageTicket, sessionId, ini
     if (lerntexteContinuousState) {
       lerntexteContinuousState.pendingStartPosition = null;
       lerntexteContinuousState.ignoreCompletion = false;
+      lerntexteContinuousState.rangeEnded = false;
     }
     const item = lerntexteAudioPlaylist[lerntexteAudioPlaylistIndex];
     lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && item.titel || 'Lerneinheit'));
@@ -1053,7 +1076,10 @@ function lerntexteContinuousKaraokeEinrichten(audio, usageTicket, sessionId, ini
     lerntexteAudioPausiert = false;
     lerntexteAudioFehler = false;
     lerntexteAudioProgressSet(100, chapter ? lerntexteAudioZeitFormat(Number(chapter.end) - Number(chapter.start)) + ' / ' + lerntexteAudioZeitFormat(Number(chapter.end) - Number(chapter.start)) : '0:00 / 0:00');
-    lerntextePilotStatus('Alle Lerneinheiten wurden abgespielt.');
+    const range = lerntexteContinuousState && lerntexteContinuousState.playbackRange;
+    lerntextePilotStatus(range && range.mode !== 'all'
+      ? 'Kapitel vollständig abgespielt.'
+      : 'Alle Lerneinheiten wurden abgespielt.');
     lerntexteAudioSteuerungAktualisieren();
     lerntexteAudioMediaSessionAktualisieren();
   };
@@ -1086,6 +1112,36 @@ function lerntexteContinuousKaraokeEinrichten(audio, usageTicket, sessionId, ini
     visibilityCleanup();
   };
   resync(audio.currentTime, { manual: true });
+}
+
+function lerntexteContinuousBereichBeenden(audio) {
+  if (!lerntexteContinuousState || !lerntexteContinuousState.playbackRange || !audio) return false;
+  const range = lerntexteContinuousState.playbackRange;
+  if (lerntexteContinuousState.rangeEnded === true) return true;
+  lerntexteContinuousState.rangeEnded = true;
+  lerntexteContinuousState.ignoreCompletion = true;
+  if (typeof audio.pause === 'function') audio.pause();
+  try { audio.currentTime = Number(range.end); } catch (error) {}
+  const previousIndex = Math.max(range.startIndex, Math.min(range.endIndex, lerntexteContinuousState.chapterIndex));
+  for (let index = previousIndex; index <= range.endIndex; index += 1) {
+    const chapter = lerntexteContinuousState.manifest.chapters[index];
+    if (chapter) lerntexteContinuousFortschrittSpeichern(index, Number(chapter.end) - Number(chapter.start), true);
+  }
+  lerntexteContinuousKapitelAktivieren(range.endIndex);
+  const finalChapter = lerntexteContinuousState.manifest.chapters[range.endIndex];
+  if (finalChapter) {
+    resyncPilotHighlight(Number(finalChapter.end) - Number(finalChapter.start), lerntextePilotTextRoot, finalChapter);
+    lerntexteAudioProgressSet(100,
+      lerntexteAudioZeitFormat(Number(finalChapter.end) - Number(finalChapter.start)) + ' / ' +
+      lerntexteAudioZeitFormat(Number(finalChapter.end) - Number(finalChapter.start)));
+  }
+  lerntexteAudioAktiv = false;
+  lerntexteAudioPausiert = false;
+  lerntexteAudioFehler = false;
+  lerntextePilotStatus(range.mode === 'all' ? 'Alle Lerneinheiten wurden abgespielt.' : 'Kapitel vollständig abgespielt.');
+  lerntexteAudioSteuerungAktualisieren();
+  lerntexteAudioMediaSessionAktualisieren();
+  return true;
 }
 
 function resyncPilotHighlight(time, textRoot, manifest) {
@@ -1185,6 +1241,18 @@ async function lerntextePilotProgressLaden(eintrag, currentHash, sessionId, opti
 
   try {
     const identity = options.progressIdentity || null;
+    const rangeContext = options.playbackRange && options.manifest
+      ? { range: options.playbackRange, manifest: options.manifest }
+      : null;
+    const allowedChapters = rangeContext
+      ? rangeContext.manifest.chapters.slice(
+        rangeContext.range.startIndex,
+        rangeContext.range.mode === 'entry' ? rangeContext.range.startIndex + 1 : rangeContext.range.endIndex + 1
+      )
+      : [];
+    const allowedById = new Map(allowedChapters.map(function (chapter) {
+      return [String(chapter.lerntextId || ''), chapter];
+    }));
     const result = await lerntextePilotFortschrittLaden(uid, eintrag, identity);
     lerntexteAudioSessionPruefen(sessionId);
     const entries = Array.isArray(result)
@@ -1197,15 +1265,19 @@ async function lerntextePilotProgressLaden(eintrag, currentHash, sessionId, opti
       if (!entry) return null;
       const currentStableMatch = identity && entry.einheit === identity.einheit && entry.firebasePfad === identity.firebasePfad;
       const historicalStableMatch = identity && entry.einheit === identity.einheit && entry.firebasePfad !== identity.firebasePfad;
+      const rangeChapter = rangeContext ? allowedById.get(String(entry.einheit || '')) : null;
+      const currentRangeMatch = identity && rangeChapter && entry.firebasePfad === identity.firebasePfad;
+      const historicalRangeMatch = identity && rangeChapter && entry.firebasePfad !== identity.firebasePfad;
       const legacyMatch = entry.einheit === eintrag.titel && entry.firebasePfad === legacyPath;
+      const expectedHash = rangeChapter ? rangeChapter.lerntextHash : currentHash;
       const valid = entry
         && entry.nutzer === uid
         && entry.fach === eintrag.fach
-        && (currentStableMatch || historicalStableMatch || legacyMatch)
-        && entry.lerntextHash === currentHash;
+        && (currentStableMatch || historicalStableMatch || currentRangeMatch || historicalRangeMatch || legacyMatch)
+        && entry.lerntextHash === expectedHash;
       if (!valid) return null;
-      return { entry: entry, rank: currentStableMatch ? 3 : legacyMatch ? 2 : 1,
-        historicalStableMatch: Boolean(historicalStableMatch) };
+      return { entry: entry, rank: (currentStableMatch || currentRangeMatch) ? 3 : legacyMatch ? 2 : 1,
+        historicalStableMatch: Boolean(historicalStableMatch || historicalRangeMatch) };
     }).filter(Boolean).sort(function (left, right) { return left.rank - right.rank; });
     matchingEntries.forEach(function (match) {
       let entry = match.entry;
@@ -1708,8 +1780,11 @@ function lerntexteAudioKapitelsteuerungAktualisieren() {
   const reloadButton = lerntexteElement('lerntexteAudioReloadBtn');
   const nextButton = lerntexteElement('lerntexteAudioNextBtn');
   const hasPlaylist = Array.isArray(lerntexteAudioPlaylist) && lerntexteAudioPlaylist.length > 0;
+  const range = lerntexteContinuousState && lerntexteContinuousState.playbackRange;
+  const firstIndex = range ? range.startIndex : 0;
+  const lastIndex = range ? range.endIndex : lerntexteAudioPlaylist.length - 1;
   if (previousButton) {
-    previousButton.disabled = !hasPlaylist || lerntexteAudioPlaylistIndex <= 0;
+    previousButton.disabled = !hasPlaylist || lerntexteAudioPlaylistIndex <= firstIndex;
     previousButton.onclick = lerntexteAudioKapitelVorher;
   }
   if (reloadButton) {
@@ -1717,7 +1792,7 @@ function lerntexteAudioKapitelsteuerungAktualisieren() {
     reloadButton.onclick = lerntexteAudioKapitelNeuLaden;
   }
   if (nextButton) {
-    nextButton.disabled = !hasPlaylist || lerntexteAudioPlaylistIndex >= lerntexteAudioPlaylist.length - 1;
+    nextButton.disabled = !hasPlaylist || lerntexteAudioPlaylistIndex >= lastIndex;
     nextButton.onclick = lerntexteAudioKapitelWeiter;
   }
 }
@@ -1990,37 +2065,74 @@ function lerntexteKapitelSchluessel(eintrag) {
   return eintrag && eintrag.id ? String(eintrag.id) : lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path;
 }
 
+function lerntexteKapitelGruppenSchluessel(eintrag) {
+  return String(eintrag && eintrag.chapterKey ||
+    (String(eintrag && eintrag.hauptkapitelNr || '') + '\u0000' + String(eintrag && eintrag.hauptkapitel || '')));
+}
+
+function lerntexteKapitelAuswahlWert(chapterKey) {
+  return 'chapter:' + String(chapterKey || '');
+}
+
+function lerntexteAuswahlDescriptor(value) {
+  const selected = String(value || '');
+  if (!selected) return { mode: 'all' };
+  if (selected.startsWith('chapter:')) return { mode: 'chapter', chapterKey: selected.slice('chapter:'.length) };
+  return { mode: 'entry', lerntextId: selected };
+}
+
+function lerntexteAuswahlStartIndex(value, playlist) {
+  const selection = lerntexteAuswahlDescriptor(value);
+  if (selection.mode === 'all') return 0;
+  return playlist.findIndex(function (item) {
+    if (!item || !item.eintrag) return false;
+    return selection.mode === 'chapter'
+      ? lerntexteKapitelGruppenSchluessel(item.eintrag) === selection.chapterKey
+      : lerntexteKapitelSchluessel(item.eintrag) === selection.lerntextId;
+  });
+}
+
 function lerntexteBaueKapitelDropdown() {
   const select = lerntexteElement("lerntexteKapitelSelect");
-  select.innerHTML = '<option value="">Alle Kapitel</option>';
+  select.innerHTML = '';
+  const allOption = document.createElement('option');
+  allOption.value = '';
+  allOption.textContent = 'Alle Kapitel';
+  allOption.className = 'lerntexte-alle-option';
+  select.appendChild(allOption);
 
   const gesehen = new Set();
   const stableIds = lerntexteDaten.length > 0 && lerntexteDaten.every(function (eintrag) { return Boolean(eintrag && eintrag.id); });
-  const groups = new Map();
+  const groups = new Set();
 
   lerntexteDaten.forEach(function (eintrag) {
     const key = lerntexteKapitelSchluessel(eintrag);
     if (gesehen.has(key)) return;
     gesehen.add(key);
 
-    const option = document.createElement("option");
-    option.value = key;
-    option.textContent = stableIds ? (eintrag.titel || eintrag.hauptkapitel)
-      : "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel);
     if (!stableIds) {
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel);
       select.appendChild(option);
       return;
     }
-    const groupKey = String(eintrag.chapterKey || (String(eintrag.hauptkapitelNr || '') + '\u0000' + String(eintrag.hauptkapitel || '')));
-    let group = groups.get(groupKey);
-    if (!group) {
-      group = document.createElement('optgroup');
-      group.label = 'Kapitel ' + eintrag.hauptkapitelNr + ' – ' + eintrag.hauptkapitel;
-      group.dataset.chapterKey = groupKey;
-      groups.set(groupKey, group);
-      select.appendChild(group);
+    const groupKey = lerntexteKapitelGruppenSchluessel(eintrag);
+    if (!groups.has(groupKey)) {
+      const chapterOption = document.createElement('option');
+      chapterOption.value = lerntexteKapitelAuswahlWert(groupKey);
+      chapterOption.textContent = 'Kapitel ' + eintrag.hauptkapitelNr + ' – ' + eintrag.hauptkapitel;
+      chapterOption.className = 'lerntexte-kapitel-option';
+      chapterOption.dataset.chapterKey = groupKey;
+      groups.add(groupKey);
+      select.appendChild(chapterOption);
     }
-    group.appendChild(option);
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = '\u00a0\u00a0\u00a0↳ ' + (eintrag.titel || eintrag.hauptkapitel);
+    option.className = 'lerntexte-lerneinheit-option';
+    option.dataset.chapterKey = groupKey;
+    select.appendChild(option);
   });
 }
 
@@ -2029,11 +2141,15 @@ function lerntexteKapitelWaehlen() {
   if (lerntexteContinuousState) {
     lerntexteAktuellesKapitel = selectedChapter;
     lerntexteInhaltRendern(undefined, { trackUsage: false });
-    const targetIndex = selectedChapter
-      ? lerntexteAudioPlaylist.findIndex(function (item) {
-        return item && item.eintrag && lerntexteKapitelSchluessel(item.eintrag) === selectedChapter;
-      })
-      : 0;
+    const selection = lerntexteAuswahlDescriptor(selectedChapter);
+    const resolveRange = lerntexteContinuousHelper('resolvePlaybackRange');
+    const playbackRange = resolveRange && resolveRange(lerntexteContinuousState.manifest, selection);
+    if (playbackRange) {
+      lerntexteContinuousState.playbackRange = playbackRange;
+      lerntexteContinuousState.rangeEnded = false;
+    }
+    const targetIndex = playbackRange ? playbackRange.startIndex
+      : lerntexteAuswahlStartIndex(selectedChapter, lerntexteAudioPlaylist);
     if (targetIndex >= 0) lerntexteContinuousKapitelSpringen(targetIndex, 0);
     return;
   }
@@ -2053,8 +2169,11 @@ function lerntexteKapitelWaehlen() {
 
 function lerntexteAusgewaehlteEinheiten() {
   if (!lerntexteAktuellesKapitel) return lerntexteDaten;
+  const selection = lerntexteAuswahlDescriptor(lerntexteAktuellesKapitel);
   return lerntexteDaten.filter(function (eintrag) {
-    return lerntexteKapitelSchluessel(eintrag) === lerntexteAktuellesKapitel;
+    return selection.mode === 'chapter'
+      ? lerntexteKapitelGruppenSchluessel(eintrag) === selection.chapterKey
+      : lerntexteKapitelSchluessel(eintrag) === selection.lerntextId;
   });
 }
 
@@ -2206,10 +2325,11 @@ function lerntexteInhaltRendern(usageTicket, options) {
   bereich.innerHTML = "";
   lerntextePilotTextRoots = {};
 
-  const einheiten = lerntexteAusgewaehlteEinheiten();
+  const einheiten = Array.isArray(options.entriesOverride) ? options.entriesOverride : lerntexteAusgewaehlteEinheiten();
   if (!einheiten.length) return;
 
-  const zeigeKapitelUeberschrift = !lerntexteAktuellesKapitel;
+  const zeigeKapitelUeberschrift = !options.entriesOverride &&
+    (!lerntexteAktuellesKapitel || lerntexteAuswahlDescriptor(lerntexteAktuellesKapitel).mode === 'chapter');
   let letzteKapitelNr = null;
 
   einheiten.forEach(function (eintrag) {
@@ -2296,19 +2416,40 @@ async function lerntexteContinuousStarten(targetIndex, options) {
     lerntexteAudioPlaylist = completePlaylist;
     targetIndex = completeTargetIndex;
 
-    const chapter = assets.manifest.chapters[targetIndex];
-    const item = lerntexteAudioPlaylist[targetIndex];
+    const versioned = Number(assets.manifest.schemaVersion) === 2;
+    const selection = lerntexteAuswahlDescriptor(lerntexteAktuellesKapitel);
+    const resolveRange = lerntexteContinuousHelper('resolvePlaybackRange');
+    const playbackRange = versioned && resolveRange
+      ? resolveRange(assets.manifest, selection)
+      : null;
+    if (versioned && !playbackRange) throw new Error('Wiedergabebereich fehlt im Podcast-Bundle.');
+    if (playbackRange) targetIndex = playbackRange.startIndex;
+
+    let chapter = assets.manifest.chapters[targetIndex];
+    let item = lerntexteAudioPlaylist[targetIndex];
     if (!chapter || !item || !item.eintrag) throw new Error('Startkapitel fehlt im Podcast-Bundle.');
-    const progressIdentity = Number(assets.manifest.schemaVersion) === 2 ? {
+    const progressIdentity = versioned ? {
       einheit: chapter.lerntextId,
       firebasePfad: descriptor.sidecarPath + '#' + assets.manifest.bundleVersion
     } : null;
     const progress = await lerntextePilotProgressLaden(item.eintrag, chapter.lerntextHash, sessionId,
-      { silent: true, progressIdentity: progressIdentity });
+      { silent: true, progressIdentity: progressIdentity, playbackRange: playbackRange, manifest: assets.manifest });
     lerntexteAudioSessionPruefen(sessionId, fach);
     lerntextePilotUid = progress.uid;
     lerntextePilotResumeState = progress.resumeState;
     lerntextePilotCompletedState = progress.completedState;
+    if (playbackRange && progress.resumeState && progress.resumeState.completed !== true) {
+      const resumeIndex = assets.manifest.chapters.findIndex(function (candidate) {
+        return candidate && candidate.lerntextId === progress.resumeState.einheit;
+      });
+      const resumeAllowed = resumeIndex >= playbackRange.startIndex && resumeIndex <= playbackRange.endIndex
+        && (playbackRange.mode !== 'entry' || resumeIndex === playbackRange.startIndex);
+      if (resumeAllowed) {
+        targetIndex = resumeIndex;
+        chapter = assets.manifest.chapters[targetIndex];
+        item = lerntexteAudioPlaylist[targetIndex];
+      }
+    }
     let localStart = typeof options.startPosition === 'number' && isFinite(options.startPosition)
       ? Math.max(0, options.startPosition)
       : 0;
@@ -2331,7 +2472,10 @@ async function lerntexteContinuousStarten(targetIndex, options) {
       seeking: false,
       ignoreCompletion: true,
       pendingStartPosition: absoluteStart,
-      lastTime: absoluteStart
+      lastTime: absoluteStart,
+      playbackRange: playbackRange,
+      rangeEnded: false,
+      displayedLerntextId: null
     };
     lerntexteAudioPlaylistIndex = targetIndex;
     lerntexteAudioAktiv = true;
@@ -2664,17 +2808,16 @@ function lerntexteAudioAbspielen() {
 
   if (lerntexteContinuousState && lerntextePilotAudio && !lerntexteAudioAktiv) {
     const manifestDuration = Number(lerntexteContinuousState.manifest && lerntexteContinuousState.manifest.duration);
+    const playbackRange = lerntexteContinuousState.playbackRange;
     const atBundleEnd = lerntextePilotAudio.ended === true
       || (isFinite(manifestDuration) && Number(lerntextePilotAudio.currentTime) >= manifestDuration);
+    const atRangeEnd = playbackRange && (lerntexteContinuousState.rangeEnded === true
+      || Number(lerntextePilotAudio.currentTime) >= Number(playbackRange.end));
     return Promise.resolve().then(async function () {
-      if (atBundleEnd) {
-        let targetIndex = 0;
-        if (lerntexteAktuellesKapitel) {
-          const selectedIndex = lerntexteAudioPlaylist.findIndex(function (item) {
-            return item && item.eintrag && lerntexteKapitelSchluessel(item.eintrag) === lerntexteAktuellesKapitel;
-          });
-          if (selectedIndex >= 0) targetIndex = selectedIndex;
-        }
+      if (atBundleEnd || atRangeEnd) {
+        const targetIndex = playbackRange
+          ? playbackRange.startIndex
+          : Math.max(0, lerntexteAuswahlStartIndex(lerntexteAktuellesKapitel, lerntexteAudioPlaylist));
         const moved = await lerntexteContinuousKapitelSpringen(targetIndex, 0);
         if (!moved) return false;
       }
@@ -2695,11 +2838,7 @@ function lerntexteAudioAbspielen() {
     return;
   }
 
-  const selectedIndex = lerntexteAktuellesKapitel
-    ? playlist.findIndex(function (item) {
-      return item && item.eintrag && lerntexteKapitelSchluessel(item.eintrag) === lerntexteAktuellesKapitel;
-    })
-    : 0;
+  const selectedIndex = lerntexteAuswahlStartIndex(lerntexteAktuellesKapitel, playlist);
 
   if (lerntexteAktuellesKapitel && selectedIndex < 0) {
     lerntextePilotStatus('Das gewünschte Kapitel ist nicht verfügbar.');

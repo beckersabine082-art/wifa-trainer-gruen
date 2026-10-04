@@ -178,6 +178,48 @@ test('generic timeline helpers work on variable-length bundles and retain Recht 
   assert.equal(helper.rechtChapterSeekTarget(manifest, 1, 0.25), 1.25);
 });
 
+test('all 48 visible chapter groups resolve to their exact first and last Lerntext offsets', () => {
+  const chapters = [];
+  const chapterGroups = [];
+  let index = 0;
+  for (let groupIndex = 0; groupIndex < 48; groupIndex += 1) {
+    const size = groupIndex < 41 ? 11 : 10;
+    const startIndex = index;
+    const lerntextIds = [];
+    for (let itemIndex = 0; itemIndex < size; itemIndex += 1) {
+      const lerntextId = `LZ-${String(index + 1).padStart(3, '0')}`;
+      chapters.push({ index, lerntextId, chapterKey: `ui-${groupIndex + 1}`, start: index * 2, end: (index + 1) * 2 });
+      lerntextIds.push(lerntextId);
+      index += 1;
+    }
+    chapterGroups.push({ chapterKey: `ui-${groupIndex + 1}`, chapterNumber: String(groupIndex + 1),
+      chapterTitle: `Kapitel ${groupIndex + 1}`, startIndex, endIndex: index - 1, lerntextIds });
+  }
+  const manifest = { schemaVersion: 2, duration: 1042, chapters, chapterGroups };
+
+  assert.equal(chapters.length, 521);
+  for (const group of chapterGroups) {
+    const range = helper.resolvePlaybackRange(manifest, { mode: 'chapter', chapterKey: group.chapterKey });
+    assert.deepEqual(range, {
+      mode: 'chapter', startIndex: group.startIndex, endIndex: group.endIndex,
+      startId: chapters[group.startIndex].lerntextId, endId: chapters[group.endIndex].lerntextId,
+      start: chapters[group.startIndex].start, end: chapters[group.endIndex].end,
+      chapterKey: group.chapterKey
+    });
+  }
+
+  assert.deepEqual(helper.resolvePlaybackRange(manifest, { mode: 'all' }), {
+    mode: 'all', startIndex: 0, endIndex: 520, startId: 'LZ-001', endId: 'LZ-521',
+    start: 0, end: 1042, chapterKey: null
+  });
+  const direct = helper.resolvePlaybackRange(manifest, { mode: 'entry', lerntextId: 'LZ-012' });
+  assert.equal(direct.startIndex, 11);
+  assert.equal(direct.endIndex, 21, 'direkter Einstieg bleibt bis zum Ende seines sichtbaren Kapitels aktiv');
+  assert.equal(direct.start, 22);
+  assert.equal(direct.end, 44);
+  assert.equal(helper.resolvePlaybackRange(manifest, { mode: 'chapter', chapterKey: 'missing' }), null);
+});
+
 test('browser canonical paths reject invalid subjects', () => {
   assert.deepEqual(helper.continuousPodcastPaths('Steuern'), {
     slug: 'steuern', sidecarPath: 'podcast/continuous/steuern.json',
