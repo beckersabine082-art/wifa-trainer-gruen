@@ -24,7 +24,7 @@ function injectStagingRuntime(html) {
   const anchor = '<script src="js/api.js"></script>';
   if (!String(html).includes(anchor)) throw new Error('Staging-Preview: API-Skriptanker fehlt');
   const directOpen = '<script>window.addEventListener("load",function(){setTimeout(function(){'
-    + "zeigeBereich('lerntextePodcastView');"
+    + "window.requireAuth('lerntextePodcastView');"
     + '},0);});</script>\n';
   return String(html).replace(anchor, marker + anchor).replace('</body>', directOpen + '</body>');
 }

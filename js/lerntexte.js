@@ -2513,6 +2513,19 @@ async function lerntexteContinuousStarten(targetIndex, options) {
     }
     window.WifaAnalytics?.audioError(fach, lerntexteAudioPlaylist[targetIndex] && lerntexteAudioPlaylist[targetIndex].titel, error?.code || error?.name);
     if (!sourceApplied) {
+      if (typeof window !== 'undefined' && window.WIFA_STAGING_PREVIEW === true) {
+        lerntexteContinuousFallbackAktiv = false;
+        lerntexteContinuousFallbackFach = '';
+        lerntexteAudioFehler = true;
+        lerntexteAudioAktiv = false;
+        const unauthorized = error && error.code === 'storage/unauthorized';
+        lerntextePilotStatus(unauthorized
+          ? 'Podcast-Berechtigung fehlt. Bitte mit einem bestätigten Konto anmelden.'
+          : 'Staging-Podcast konnte nicht geladen werden. Bitte Kapitel erneut laden.');
+        lerntexteAudioSteuerungAktualisieren();
+        lerntexteAudioMediaSessionAktualisieren();
+        return { started: false, fallback: false };
+      }
       lerntexteContinuousFallbackAktiv = true;
       lerntexteContinuousFallbackFach = fach;
       lerntextePilotStatus('Podcast-Bundle nicht verfügbar. Einzelkapitel wird geladen …');

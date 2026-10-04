@@ -4497,6 +4497,36 @@ test('Recht-Bundle: fehlendes Sidecar fällt beim Vordergrundstart auf Legacy-Au
   assertVisibleUnit(56);
 });
 
+test('Staging-Bundle: fehlgeschlagener Staging-Abruf bleibt geschlossen und lädt keinen Legacy-Pfad', async () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries();
+  fixture.eventWindow.WIFA_STAGING_PREVIEW = true;
+  fixture.eventWindow.WIFA_PODCAST_STORAGE_PREFIX = 'podcast/staging/lerntext-rev2/';
+  let legacyLoads = 0;
+  fixture.eventWindow.lerntextePilotDependencies.loadBundleManifest = async () => {
+    const error = new Error('Firebase Storage: User does not have permission.');
+    error.code = 'storage/unauthorized';
+    throw error;
+  };
+  fixture.eventWindow.lerntextePilotDependencies.loadManifest = async () => {
+    legacyLoads += 1;
+    return block2ManifestFor(fixture, entries[0]);
+  };
+  fixture.eventWindow.lerntextePilotDependencies.loadMp3Url = async () => {
+    legacyLoads += 1;
+    return 'https://example.test/legacy.mp3';
+  };
+  fixture.context.window.__renderEntries(entries, 'Recht');
+
+  const started = await fixture.context.window.lerntexteAudioAbspielen();
+
+  assert.equal(started, false);
+  assert.equal(legacyLoads, 0);
+  assert.equal(fixture.audio.src, '');
+  assert.equal(fixture.context.window.__subjectState().fallback, false);
+  assert.match(fixture.status.textContent, /Anmeldung|Berechtigung/);
+});
+
 test('Recht-Legacy: ohne Bundle-Loader folgen Dropdown, Lerntext und Karaoke der Navigation', async () => {
   const fixture = createBlock2Context();
   const entries = continuousRechtEntries();
