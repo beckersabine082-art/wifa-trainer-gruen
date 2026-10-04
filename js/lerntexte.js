@@ -63,7 +63,11 @@ const lerntexteAudioTestStatischeQuelle = "https://beckersabine082-art.github.io
 
 function lerntexteContinuousDescriptor(fach) {
   const paths = lerntexteContinuousHelper('continuousPodcastPaths');
-  return paths && fach ? Object.freeze(Object.assign({ fach: fach }, paths(fach))) : null;
+  if (!paths || !fach) return null;
+  const storagePrefix = typeof window !== 'undefined' && window.WIFA_PODCAST_STORAGE_PREFIX
+    ? String(window.WIFA_PODCAST_STORAGE_PREFIX)
+    : 'podcast/';
+  return Object.freeze(Object.assign({ fach: fach, storagePrefix: storagePrefix }, paths(fach, { prefix: storagePrefix })));
 }
 
 function lerntexteContinuousHelper(name) {
@@ -398,6 +402,7 @@ async function lerntexteContinuousAktuelleEintraege(sessionId, descriptor, data)
     return {
       index: index,
       fach: String(entry.fach || ''),
+      ...(entry.id ? { lerntextId: String(entry.id) } : {}),
       titel: String(entry.titel || ''),
       hauptkapitel: String(entry.hauptkapitel || ''),
       hauptkapitelNr: String(entry.hauptkapitelNr || ''),
@@ -421,7 +426,8 @@ async function lerntexteContinuousAssetsValidieren(assets, sessionId, descriptor
     mp3Metadata: assets.mp3Metadata,
     currentEntries: currentEntries,
     expectedFach: descriptor.fach,
-    expectedMp3Prefix: descriptor.mp3Prefix
+    expectedMp3Prefix: descriptor.mp3Prefix,
+    expectedStoragePrefix: descriptor.storagePrefix
   });
   return result && typeof result === 'object' ? result : { valid: false, reason: 'Podcast-Bundle-Prüfung ist ungültig.' };
 }
@@ -778,11 +784,14 @@ function lerntexteContinuousFortschrittState(index, localTime, completed) {
   const position = Math.max(0, Math.min(duration, Number(localTime) || 0));
   const marks = Array.isArray(chapter.wortZeitmarken) ? chapter.wortZeitmarken : [];
   const finalWordIndex = marks.length ? Number(marks[marks.length - 1].wortIndex) || 0 : 0;
+  const versioned = Number(lerntexteContinuousState.manifest.schemaVersion) === 2;
   return {
     nutzer: lerntextePilotUid,
     fach: item.eintrag.fach,
-    einheit: item.eintrag.titel || '',
-    firebasePfad: chapter.legacyMp3Path,
+    einheit: versioned ? chapter.lerntextId : (item.eintrag.titel || ''),
+    firebasePfad: versioned
+      ? lerntexteContinuousState.descriptor.sidecarPath + '#' + lerntexteContinuousState.manifest.bundleVersion
+      : chapter.legacyMp3Path,
     lerntextHash: chapter.lerntextHash,
     sekundenPosition: position,
     wortIndex: completed === true ? finalWordIndex : Math.max(0, Number(lerntextePilotLastValidWordIndex) || 0),
@@ -1125,7 +1134,7 @@ function resyncPilotHighlight(time, textRoot, manifest) {
   return -1;
 }
 
-async function lerntextePilotFortschrittLaden(uid, entryOverride) {
+async function lerntextePilotFortschrittLaden(uid, entryOverride, progressIdentity) {
   if (typeof uid !== 'string' || !uid.trim()) {
     throw new Error('Nutzer ist für Podcast-Fortschritt erforderlich.');
   }
@@ -1135,17 +1144,21 @@ async function lerntextePilotFortschrittLaden(uid, entryOverride) {
     const fach = entry && entry.fach || lerntexteAktuellesFach;
     const result = await window.lerntextePodcastFortschrittLaden(uid, fach);
     const currentPath = lerntextePodcastPfade(fach, entry).mp3Path;
+    const acceptedPaths = new Set([currentPath]);
+    if (progressIdentity && progressIdentity.firebasePfad) acceptedPaths.add(progressIdentity.firebasePfad);
+    const isAccepted = function (progressEntry) {
+      if (!progressEntry) return false;
+      const stableIdMatch = progressIdentity
+        && progressEntry.einheit === progressIdentity.einheit;
+      return stableIdMatch || acceptedPaths.has(progressEntry.firebasePfad);
+    };
     if (Array.isArray(result)) {
-      return result.filter(function (entry) {
-        return entry && entry.firebasePfad === currentPath;
-      });
+      return result.filter(isAccepted);
     }
     if (!result || !Array.isArray(result.data)) {
       return [];
     }
-    return result.data.filter(function (entry) {
-      return entry && entry.firebasePfad === currentPath;
-    });
+    return result.data.filter(isAccepted);
   }
 
   return [];
@@ -1171,22 +1184,39 @@ async function lerntextePilotProgressLaden(eintrag, currentHash, sessionId, opti
   if (!uid) return resultState;
 
   try {
-    const result = await lerntextePilotFortschrittLaden(uid, eintrag);
+    const identity = options.progressIdentity || null;
+    const result = await lerntextePilotFortschrittLaden(uid, eintrag, identity);
     lerntexteAudioSessionPruefen(sessionId);
     const entries = Array.isArray(result)
       ? result
       : result && Array.isArray(result.data)
         ? result.data
         : [];
-    const matchingEntries = entries.filter(function (entry) {
-      return entry
+    const legacyPath = lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path;
+    const matchingEntries = entries.map(function (entry) {
+      if (!entry) return null;
+      const currentStableMatch = identity && entry.einheit === identity.einheit && entry.firebasePfad === identity.firebasePfad;
+      const historicalStableMatch = identity && entry.einheit === identity.einheit && entry.firebasePfad !== identity.firebasePfad;
+      const legacyMatch = entry.einheit === eintrag.titel && entry.firebasePfad === legacyPath;
+      const valid = entry
         && entry.nutzer === uid
         && entry.fach === eintrag.fach
-        && entry.einheit === eintrag.titel
-        && entry.firebasePfad === lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path
+        && (currentStableMatch || historicalStableMatch || legacyMatch)
         && entry.lerntextHash === currentHash;
-    });
-    matchingEntries.forEach(function (entry) {
+      if (!valid) return null;
+      return { entry: entry, rank: currentStableMatch ? 3 : legacyMatch ? 2 : 1,
+        historicalStableMatch: Boolean(historicalStableMatch) };
+    }).filter(Boolean).sort(function (left, right) { return left.rank - right.rank; });
+    matchingEntries.forEach(function (match) {
+      let entry = match.entry;
+      if (match.historicalStableMatch) {
+        entry = Object.assign({}, entry, {
+          firebasePfad: identity.firebasePfad,
+          sekundenPosition: 0,
+          wortIndex: 0,
+          mappedFromFirebasePfad: match.entry.firebasePfad
+        });
+      }
       if (entry.completed === true) {
         resultState.completedState = entry;
       } else if (entry.completed === false) {
@@ -1957,7 +1987,7 @@ async function lerntexteFachWaehlen(fach) {
 }
 
 function lerntexteKapitelSchluessel(eintrag) {
-  return lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path;
+  return eintrag && eintrag.id ? String(eintrag.id) : lerntextePodcastPfade(eintrag.fach, eintrag).mp3Path;
 }
 
 function lerntexteBaueKapitelDropdown() {
@@ -1965,6 +1995,8 @@ function lerntexteBaueKapitelDropdown() {
   select.innerHTML = '<option value="">Alle Kapitel</option>';
 
   const gesehen = new Set();
+  const stableIds = lerntexteDaten.length > 0 && lerntexteDaten.every(function (eintrag) { return Boolean(eintrag && eintrag.id); });
+  const groups = new Map();
 
   lerntexteDaten.forEach(function (eintrag) {
     const key = lerntexteKapitelSchluessel(eintrag);
@@ -1973,8 +2005,22 @@ function lerntexteBaueKapitelDropdown() {
 
     const option = document.createElement("option");
     option.value = key;
-    option.textContent = "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel);
-    select.appendChild(option);
+    option.textContent = stableIds ? (eintrag.titel || eintrag.hauptkapitel)
+      : "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel);
+    if (!stableIds) {
+      select.appendChild(option);
+      return;
+    }
+    const groupKey = String(eintrag.chapterKey || (String(eintrag.hauptkapitelNr || '') + '\u0000' + String(eintrag.hauptkapitel || '')));
+    let group = groups.get(groupKey);
+    if (!group) {
+      group = document.createElement('optgroup');
+      group.label = 'Kapitel ' + eintrag.hauptkapitelNr + ' – ' + eintrag.hauptkapitel;
+      group.dataset.chapterKey = groupKey;
+      groups.set(groupKey, group);
+      select.appendChild(group);
+    }
+    group.appendChild(option);
   });
 }
 
@@ -2253,7 +2299,12 @@ async function lerntexteContinuousStarten(targetIndex, options) {
     const chapter = assets.manifest.chapters[targetIndex];
     const item = lerntexteAudioPlaylist[targetIndex];
     if (!chapter || !item || !item.eintrag) throw new Error('Startkapitel fehlt im Podcast-Bundle.');
-    const progress = await lerntextePilotProgressLaden(item.eintrag, chapter.lerntextHash, sessionId, { silent: true });
+    const progressIdentity = Number(assets.manifest.schemaVersion) === 2 ? {
+      einheit: chapter.lerntextId,
+      firebasePfad: descriptor.sidecarPath + '#' + assets.manifest.bundleVersion
+    } : null;
+    const progress = await lerntextePilotProgressLaden(item.eintrag, chapter.lerntextHash, sessionId,
+      { silent: true, progressIdentity: progressIdentity });
     lerntexteAudioSessionPruefen(sessionId, fach);
     lerntextePilotUid = progress.uid;
     lerntextePilotResumeState = progress.resumeState;

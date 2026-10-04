@@ -1,0 +1,666 @@
+{
+  "prefix": "podcast/staging/lerntext-rev2/",
+  "count": 110,
+  "objects": [
+    {
+      "path": "podcast/staging/lerntext-rev2/betriebliches-management-einsatzfelder-der-personalentwicklung.json",
+      "generation": "1791128916710434",
+      "size": 30670,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/betriebliches-management-einsatzfelder-der-personalentwicklung.mp3",
+      "generation": "1791128916397601",
+      "size": 1555479,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.json",
+      "generation": "1791128876547026",
+      "size": 31512,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.mp3",
+      "generation": "1791128876338533",
+      "size": 1548582,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.json",
+      "generation": "1791128963822766",
+      "size": 40892,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.mp3",
+      "generation": "1791128963475940",
+      "size": 1924119,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/bwl-einzelunternehmen-und-gbr-egbr.json",
+      "generation": "1791130264105958",
+      "size": 43680,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/bwl-einzelunternehmen-und-gbr-egbr.mp3",
+      "generation": "1791130263892010",
+      "size": 1900608,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.json",
+      "generation": "1791130303188587",
+      "size": 64911,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.mp3",
+      "generation": "1791130302920566",
+      "size": 2951358,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/bwl-teilbereiche-des-rechnungswesens.json",
+      "generation": "1791130237280371",
+      "size": 45559,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/bwl-teilbereiche-des-rechnungswesens.mp3",
+      "generation": "1791130237064521",
+      "size": 2226617,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/betriebliches-management.json",
+      "generation": "1791131279222558",
+      "size": 753806,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/betriebliches-management/3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10.mp3",
+      "generation": "1791131171821516",
+      "size": 50801206,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/betriebliches-rechnungswesen-und-controlling.json",
+      "generation": "1791135506767658",
+      "size": 644645,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/betriebliches-rechnungswesen-und-controlling/91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66.mp3",
+      "generation": "1791135415672919",
+      "size": 43125908,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/bwl.json",
+      "generation": "1791134086928082",
+      "size": 1000634,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/bwl/e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12.mp3",
+      "generation": "1791133953604436",
+      "size": 72011172,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/fuehrung-und-zusammenarbeit.json",
+      "generation": "1791130911979646",
+      "size": 1176801,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/fuehrung-und-zusammenarbeit/5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c.mp3",
+      "generation": "1791130769650065",
+      "size": 78025709,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/investition-und-finanzierung.json",
+      "generation": "1791135208677213",
+      "size": 631539,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/investition-und-finanzierung/c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077.mp3",
+      "generation": "1791135108414734",
+      "size": 43849709,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/logistik.json",
+      "generation": "1791134485363311",
+      "size": 878967,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/logistik/c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c.mp3",
+      "generation": "1791134366899304",
+      "size": 60603080,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/marketing.json",
+      "generation": "1791132469719715",
+      "size": 553294,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/marketing/6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878.mp3",
+      "generation": "1791132380119855",
+      "size": 36137735,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/rechnungswesen.json",
+      "generation": "1791131690418967",
+      "size": 895424,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/rechnungswesen/0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8.mp3",
+      "generation": "1791131567915371",
+      "size": 64003596,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/recht.json",
+      "generation": "1791133331652448",
+      "size": 1609876,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/recht/a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97.mp3",
+      "generation": "1791133145372723",
+      "size": 111318352,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/steuern.json",
+      "generation": "1791132165989192",
+      "size": 1157963,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/steuern/59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849.mp3",
+      "generation": "1791132023529872",
+      "size": 79606535,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/unternehmensfuehrung.json",
+      "generation": "1791134882606107",
+      "size": 897802,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/unternehmensfuehrung/6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255.mp3",
+      "generation": "1791134766670776",
+      "size": 62143155,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/vertrieb.json",
+      "generation": "1791132702718734",
+      "size": 469135,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/vertrieb/a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265.mp3",
+      "generation": "1791132622784141",
+      "size": 33076706,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/vwl.json",
+      "generation": "1791133640812894",
+      "size": 489905,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/continuous/vwl/024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f.mp3",
+      "generation": "1791133552845583",
+      "size": 32483309,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.json",
+      "generation": "1791128797432363",
+      "size": 33514,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.mp3",
+      "generation": "1791128797150923",
+      "size": 1574600,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.json",
+      "generation": "1791128837804642",
+      "size": 37221,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.mp3",
+      "generation": "1791128837561341",
+      "size": 1595289,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.json",
+      "generation": "1791128758223952",
+      "size": 43440,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.mp3",
+      "generation": "1791128757909791",
+      "size": 2092452,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.json",
+      "generation": "1791130412503880",
+      "size": 42190,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.mp3",
+      "generation": "1791130412285247",
+      "size": 2106558,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/marketing-porters-five-forces-und-konkurrenzanalyse.json",
+      "generation": "1791129492911844",
+      "size": 30899,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/marketing-porters-five-forces-und-konkurrenzanalyse.mp3",
+      "generation": "1791129492635691",
+      "size": 1461438,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/rechnungswesen-aufbau-und-logik-der-bilanz.json",
+      "generation": "1791129074572053",
+      "size": 37215,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/rechnungswesen-aufbau-und-logik-der-bilanz.mp3",
+      "generation": "1791129074295726",
+      "size": 1745128,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.json",
+      "generation": "1791129030724626",
+      "size": 63605,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.mp3",
+      "generation": "1791129030329314",
+      "size": 3046026,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.json",
+      "generation": "1791130080764935",
+      "size": 74752,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.mp3",
+      "generation": "1791130080489652",
+      "size": 3574535,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-besondere-kaufkonstellationen.json",
+      "generation": "1791129858754087",
+      "size": 67824,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-besondere-kaufkonstellationen.mp3",
+      "generation": "1791129858346433",
+      "size": 3346956,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.json",
+      "generation": "1791130018647136",
+      "size": 51319,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.mp3",
+      "generation": "1791130018421678",
+      "size": 2518770,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-form-nichtigkeit-und-anfechtung.json",
+      "generation": "1791129625024501",
+      "size": 40298,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-form-nichtigkeit-und-anfechtung.mp3",
+      "generation": "1791129624689296",
+      "size": 2034773,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.json",
+      "generation": "1791129814080216",
+      "size": 58793,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.mp3",
+      "generation": "1791129813749620",
+      "size": 2695253,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.json",
+      "generation": "1791129777408788",
+      "size": 49550,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.mp3",
+      "generation": "1791129777036429",
+      "size": 2225676,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-mietvertrag-und-pachtvertrag.json",
+      "generation": "1791129910550268",
+      "size": 52945,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-mietvertrag-und-pachtvertrag.mp3",
+      "generation": "1791129910311774",
+      "size": 2482408,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.json",
+      "generation": "1791129724440037",
+      "size": 40432,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.mp3",
+      "generation": "1791129724126142",
+      "size": 1844184,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.json",
+      "generation": "1791129679214117",
+      "size": 51503,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.mp3",
+      "generation": "1791129678912641",
+      "size": 2365170,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.json",
+      "generation": "1791129963747760",
+      "size": 51945,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.mp3",
+      "generation": "1791129963497169",
+      "size": 2553252,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.json",
+      "generation": "1791129455862577",
+      "size": 46016,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.mp3",
+      "generation": "1791129455571883",
+      "size": 2124426,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.json",
+      "generation": "1791129172510165",
+      "size": 38668,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.mp3",
+      "generation": "1791129172247096",
+      "size": 1816285,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.json",
+      "generation": "1791129267838842",
+      "size": 40323,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.mp3",
+      "generation": "1791129267551121",
+      "size": 2063299,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.json",
+      "generation": "1791129218836027",
+      "size": 37581,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.mp3",
+      "generation": "1791129218553431",
+      "size": 1957033,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.json",
+      "generation": "1791129126857970",
+      "size": 45540,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.mp3",
+      "generation": "1791129126525972",
+      "size": 2317836,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.json",
+      "generation": "1791129404971429",
+      "size": 39470,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.mp3",
+      "generation": "1791129404759823",
+      "size": 1810643,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-steuerschuldner-und-reverse-charge-verfahren.json",
+      "generation": "1791129359188874",
+      "size": 40533,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-steuerschuldner-und-reverse-charge-verfahren.mp3",
+      "generation": "1791129358949807",
+      "size": 1793715,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.json",
+      "generation": "1791129317317872",
+      "size": 43268,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.mp3",
+      "generation": "1791129317026545",
+      "size": 2024429,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.json",
+      "generation": "1791130362906998",
+      "size": 57562,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.mp3",
+      "generation": "1791130362658784",
+      "size": 2715002,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.json",
+      "generation": "1791129575036083",
+      "size": 36457,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.mp3",
+      "generation": "1791129574738853",
+      "size": 1600932,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.json",
+      "generation": "1791129535219942",
+      "size": 36950,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.mp3",
+      "generation": "1791129534916408",
+      "size": 1703750,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-bip-bne-und-inlands-inlaenderkonzept.json",
+      "generation": "1791130176682276",
+      "size": 19803,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-bip-bne-und-inlands-inlaenderkonzept.mp3",
+      "generation": "1791130176482854",
+      "size": 981830,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-entstehungs-verwendungs-und-verteilungsrechnung.json",
+      "generation": "1791130160344246",
+      "size": 20401,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-entstehungs-verwendungs-und-verteilungsrechnung.mp3",
+      "generation": "1791130160159380",
+      "size": 1131668,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.json",
+      "generation": "1791130205826441",
+      "size": 23231,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.mp3",
+      "generation": "1791130205646639",
+      "size": 1021640,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-funktionen-des-wettbewerbs.json",
+      "generation": "1791130141849272",
+      "size": 13429,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-funktionen-des-wettbewerbs.mp3",
+      "generation": "1791130141649895",
+      "size": 732308,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.json",
+      "generation": "1791130188133650",
+      "size": 11587,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.mp3",
+      "generation": "1791130187959557",
+      "size": 560213,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-preisbildung-bei-monopol-und-oligopol.json",
+      "generation": "1791130128176163",
+      "size": 21746,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-preisbildung-bei-monopol-und-oligopol.mp3",
+      "generation": "1791130127986348",
+      "size": 999070,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.json",
+      "generation": "1791130111757851",
+      "size": 22141,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.mp3",
+      "generation": "1791130111571639",
+      "size": 982770,
+      "contentType": "audio/mpeg"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-verschiebung-von-angebots-und-nachfragekurven.json",
+      "generation": "1791130096069430",
+      "size": 19126,
+      "contentType": "application/json"
+    },
+    {
+      "path": "podcast/staging/lerntext-rev2/vwl-verschiebung-von-angebots-und-nachfragekurven.mp3",
+      "generation": "1791130095893922",
+      "size": 818199,
+      "contentType": "audio/mpeg"
+    }
+  ]
+}

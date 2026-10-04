@@ -112,7 +112,7 @@ test('rejects wrong subject, slug, path prefix, and mixed current subjects', () 
 
 test('generic validation retains hash, encoding, identity, sample, and word-mark gates', () => {
   const cases = [
-    input => { input.manifest.schemaVersion = 2; },
+    input => { input.manifest.schemaVersion = 3; },
     input => { input.manifest.bundleHash = 'invalid'; },
     input => { input.mp3Metadata.customMetadata.manifestHash = 'c'.repeat(64); },
     input => { input.manifest.encoding.channels = 2; },
@@ -125,6 +125,44 @@ test('generic validation retains hash, encoding, identity, sample, and word-mark
     const input = genericFixture();
     change(input);
     assert.equal(helper.validateContinuousBundle(input).valid, false);
+  }
+});
+
+test('accepts schema 2 only with exact stable IDs, version, origins, hashes and contiguous visible chapter groups', () => {
+  const input = genericFixture();
+  input.expectedStoragePrefix = 'podcast/staging/lerntext-rev2/';
+  input.expectedMp3Prefix = 'podcast/staging/lerntext-rev2/continuous/steuern/';
+  input.manifest.schemaVersion = 2;
+  input.manifest.bundleVersion = 'TEST-BUNDLE-v2';
+  input.manifest.mp3Path = input.expectedMp3Prefix + HASH + '.mp3';
+  input.manifest.chapters.forEach((chapter, index) => {
+    chapter.lerntextId = `LZ-ST-${index + 1}`;
+    chapter.chapterKey = index < 2 ? 'ui-wq-1' : 'ui-wq-2';
+    chapter.origin = index === 1 ? 'regenerated' : 'reused';
+    chapter.segmentHash = String(index + 1).padStart(64, 'a').slice(-64);
+    input.currentEntries[index].lerntextId = chapter.lerntextId;
+  });
+  input.manifest.chapterGroups = [
+    { chapterKey: 'ui-wq-1', chapterNumber: input.manifest.chapters[0].hauptkapitelNr,
+      chapterTitle: input.manifest.chapters[0].hauptkapitel, startIndex: 0, endIndex: 1,
+      lerntextIds: ['LZ-ST-1', 'LZ-ST-2'] },
+    { chapterKey: 'ui-wq-2', chapterNumber: input.manifest.chapters[2].hauptkapitelNr,
+      chapterTitle: input.manifest.chapters[2].hauptkapitel, startIndex: 2, endIndex: 2,
+      lerntextIds: ['LZ-ST-3'] }
+  ];
+  assert.deepEqual(helper.validateContinuousBundle(input), { valid: true, reason: null });
+
+  for (const mutate of [
+    value => { delete value.manifest.bundleVersion; },
+    value => { value.manifest.chapters[1].lerntextId = 'LZ-ST-1'; },
+    value => { value.manifest.chapters[1].origin = 'unknown'; },
+    value => { value.manifest.chapters[1].segmentHash = 'bad'; },
+    value => { value.manifest.chapterGroups[0].endIndex = 0; },
+    value => { value.manifest.chapterGroups[1].lerntextIds = ['LZ-ST-2']; }
+  ]) {
+    const broken = structuredClone(input);
+    mutate(broken);
+    assert.equal(helper.validateContinuousBundle(broken).valid, false);
   }
 });
 
@@ -155,7 +193,7 @@ test('accepts a hash-bound 57-chapter Recht bundle matching current entries', ()
 });
 
 test('rejects wrong schema, subject, encoding, or chapter count', () => {
-  invalidWith(input => { input.manifest.schemaVersion = 2; });
+  invalidWith(input => { input.manifest.schemaVersion = 3; });
   invalidWith(input => { input.manifest.fach = 'Steuern'; });
   invalidWith(input => { input.manifest.encoding.sampleRateHz = 44100; });
   invalidWith(input => { input.manifest.chapters.pop(); });

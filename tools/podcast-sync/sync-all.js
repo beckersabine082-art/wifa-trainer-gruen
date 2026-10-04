@@ -2,7 +2,12 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const { sha256Lerntext, podcastPaths } = require('./hash-paths.js');
+const {
+  PRODUCTION_PODCAST_PREFIX,
+  sha256Lerntext,
+  podcastPaths,
+  assertStagingWriteTargets
+} = require('./hash-paths.js');
 const { countTtsTokens } = require('./audit-pilot.js');
 const { generateLocalAudio } = require('./local-audio.js');
 const { buildPodcastManifest, writePodcastManifest } = require('./build-manifest.js');
@@ -27,7 +32,7 @@ function formatFailedReport(report) {
   return 'FAILED: ' + (report.identity || report) + ' | ERROR: ' + (report.error || 'unknown');
 }
 
-function validateEntries(lerntexte) {
+function validateEntries(lerntexte, { prefix = PRODUCTION_PODCAST_PREFIX } = {}) {
   const reports = [];
   const collisions = [];
   const seenPaths = new Map();
@@ -36,7 +41,7 @@ function validateEntries(lerntexte) {
     const fach = String(entry && entry.fach || '').trim();
     const titel = String(entry && entry.titel || '').trim();
     const lerntext = String(entry && entry.lerntext || '');
-    const paths = podcastPaths(fach, titel);
+    const paths = podcastPaths(fach, titel, { prefix });
     const report = {
       entry,
       fach,
@@ -153,8 +158,8 @@ function summarize(reports, collisions) {
   };
 }
 
-async function inspectAll({ lerntexte, bucket }) {
-  const inspected = validateEntries(lerntexte);
+async function inspectAll({ lerntexte, bucket, prefix = PRODUCTION_PODCAST_PREFIX }) {
+  const inspected = validateEntries(lerntexte, { prefix });
   for (let i = 0; i < inspected.reports.length; i += 8) {
     await Promise.all(inspected.reports.slice(i, i + 8).map(async report => {
       if (report.status === 'EMPTY') return;
@@ -173,29 +178,49 @@ function dryRunBlocksLiveSync(result) {
   return result.summary.EMPTY > 0 || result.summary.OVER_2000_TOKENS > 0 || result.summary.PATH_COLLISIONS > 0;
 }
 
-async function syncAll({ lerntexte, adminClient, tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-sync-')), now = new Date().toISOString(), adapters = {}, onStatus = () => {} }) {
+async function syncAll({ lerntexte, adminClient, tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-sync-')),
+  now = new Date().toISOString(), adapters = {}, onStatus = () => {},
+  sourcePrefix = PRODUCTION_PODCAST_PREFIX, targetPrefix } = {}) {
+  const stagingMode = targetPrefix !== undefined;
+  const effectiveTargetPrefix = targetPrefix || sourcePrefix;
+  if (stagingMode) {
+    const targets = [], sources = [];
+    for (const entry of Array.isArray(lerntexte) ? lerntexte : []) {
+      const source = podcastPaths(entry?.fach, entry?.titel, { prefix: sourcePrefix });
+      const target = podcastPaths(entry?.fach, entry?.titel, { prefix: effectiveTargetPrefix });
+      sources.push(source.mp3Path, source.jsonPath);
+      targets.push(target.mp3Path, target.jsonPath);
+    }
+    assertStagingWriteTargets(targets, { targetPrefix: effectiveTargetPrefix, sourcePaths: sources });
+  }
   const bucket = adminClient && adminClient.storage().bucket();
-  const inspection = await inspectAll({ lerntexte, bucket });
+  const inspection = await inspectAll({ lerntexte, bucket, prefix: sourcePrefix });
   if (dryRunBlocksLiveSync(inspection)) return { inspection, generated: [], failed: inspection.reports.filter(report => report.status !== 'VALID/SKIP') };
 
   const generated = [];
   const failed = [];
   for (const report of inspection.reports.filter(item => item.status === 'SYNC_NEEDED')) {
-    const localMp3Path = path.join(tempDir, path.basename(report.mp3Path));
-    const localJsonPath = path.join(tempDir, path.basename(report.jsonPath));
+    const targetPaths = podcastPaths(report.fach, report.titel, { prefix: effectiveTargetPrefix });
+    const targetReport = { ...report, mp3Path: targetPaths.mp3Path, jsonPath: targetPaths.jsonPath };
+    const localMp3Path = path.join(tempDir, path.basename(targetReport.mp3Path));
+    const localJsonPath = path.join(tempDir, path.basename(targetReport.jsonPath));
     try {
-      reportStatus(report, await readFirebaseAssetState({ bucket, report }));
-      if (report.status === 'VALID/SKIP') { onStatus({status:'SKIP', identity:report.identity}); continue; }
+      reportStatus(targetReport, await readFirebaseAssetState({ bucket, report: targetReport }));
+      if (targetReport.status === 'VALID/SKIP') { onStatus({status:'SKIP', identity:report.identity}); continue; }
       onStatus({status:'GENERATING', identity:report.identity});
       const audio = await (adapters.generateLocal || generateLocalAudio)({ lerntext: report.lerntext, outputPath: localMp3Path });
-      const manifest = (adapters.buildManifest || buildPodcastManifest)({ fach: report.fach, titel: report.titel, lerntext: report.lerntext, lerntextHash: report.lerntextHash, wortZeitmarken: audio.wortZeitmarken, updatedAt: now });
+      const manifest = (adapters.buildManifest || buildPodcastManifest)({ fach: report.fach, titel: report.titel,
+        lerntext: report.lerntext, lerntextHash: report.lerntextHash, wortZeitmarken: audio.wortZeitmarken,
+        updatedAt: now, storagePrefix: effectiveTargetPrefix });
       (adapters.writeManifest || writePodcastManifest)({ outputPath: localJsonPath, manifest });
-      const published = await withPublishLock(bucket, report.mp3Path, async () => {
-        reportStatus(report, await readFirebaseAssetState({ bucket, report }));
-        if (report.status === 'VALID/SKIP') return false;
-        await (adapters.publish || publishToFirebase)({ mp3Path: localMp3Path, jsonPath: localJsonPath, storageMp3Path: report.mp3Path, storageJsonPath: report.jsonPath, lerntextHash: report.lerntextHash, adminClient, expectedState: report.assetState });
-        reportStatus(report, await readFirebaseAssetState({ bucket, report }));
-        if (report.status !== 'VALID/SKIP') throw new Error('Firebase-Verifikation nach Upload fehlgeschlagen');
+      const published = await withPublishLock(bucket, targetReport.mp3Path, async () => {
+        reportStatus(targetReport, await readFirebaseAssetState({ bucket, report: targetReport }));
+        if (targetReport.status === 'VALID/SKIP') return false;
+        await (adapters.publish || publishToFirebase)({ mp3Path: localMp3Path, jsonPath: localJsonPath,
+          storageMp3Path: targetReport.mp3Path, storageJsonPath: targetReport.jsonPath,
+          lerntextHash: report.lerntextHash, adminClient, expectedState: targetReport.assetState });
+        reportStatus(targetReport, await readFirebaseAssetState({ bucket, report: targetReport }));
+        if (targetReport.status !== 'VALID/SKIP') throw new Error('Firebase-Verifikation nach Upload fehlgeschlagen');
         return true;
       });
       if (!published) { onStatus({status:'SKIP', identity:report.identity}); continue; }

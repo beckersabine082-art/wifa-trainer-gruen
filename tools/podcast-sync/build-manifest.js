@@ -51,7 +51,7 @@ function validateManifestStructure(manifest) {
   });
 }
 
-function buildPodcastManifest({ fach, titel, lerntext, lerntextHash, wortZeitmarken, updatedAt }) {
+function buildPodcastManifest({ fach, titel, lerntext, lerntextHash, wortZeitmarken, updatedAt, storagePrefix }) {
   requireNonEmptyString(fach, 'fach');
   requireNonEmptyString(titel, 'titel');
   if (typeof lerntext !== 'string' || lerntext.trim() === '') {
@@ -95,7 +95,7 @@ function buildPodcastManifest({ fach, titel, lerntext, lerntextHash, wortZeitmar
     };
   });
 
-  const paths = podcastPaths(fach, titel);
+  const paths = podcastPaths(fach, titel, storagePrefix ? { prefix: storagePrefix } : undefined);
   return {
     fach,
     titel,

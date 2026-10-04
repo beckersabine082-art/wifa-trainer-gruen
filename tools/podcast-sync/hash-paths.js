@@ -9,6 +9,18 @@
 
 const crypto = require('crypto');
 
+const PRODUCTION_PODCAST_PREFIX = 'podcast/';
+const STAGING_PODCAST_PREFIX = 'podcast/staging/lerntext-rev2/';
+
+function normalizePodcastPrefix(prefix = PRODUCTION_PODCAST_PREFIX) {
+  const value = String(prefix || '').trim().replace(/\\/g, '/');
+  if (!value.startsWith(PRODUCTION_PODCAST_PREFIX) || value.startsWith('/') ||
+      value.includes('..') || value.includes('//')) {
+    throw new TypeError('Podcast-Präfix ist ungültig');
+  }
+  return value.endsWith('/') ? value : value + '/';
+}
+
 /**
  * Computes canonical SHA-256 hash of raw lerntext
  *
@@ -85,8 +97,8 @@ function podcastSlug(value) {
  * @param {string} titel - Unit title (e.g., "Rechtssubjekte und Rechtsobjekte")
  * @returns {object} {mp3Path, jsonPath}
  */
-function podcastPaths(fach, titel) {
-  const base = 'podcast/' + podcastSlug(fach) + '-' + podcastSlug(titel);
+function podcastPaths(fach, titel, { prefix = PRODUCTION_PODCAST_PREFIX } = {}) {
+  const base = normalizePodcastPrefix(prefix) + podcastSlug(fach) + '-' + podcastSlug(titel);
 
   return {
     mp3Path: base + '.mp3',
@@ -94,20 +106,43 @@ function podcastPaths(fach, titel) {
   };
 }
 
-function continuousPodcastPaths(fach) {
+function continuousPodcastPaths(fach, { prefix = PRODUCTION_PODCAST_PREFIX } = {}) {
   if (typeof fach !== 'string' || !fach.trim()) throw new TypeError('Fach fehlt');
   const slug = podcastSlug(fach);
   if (!slug) throw new TypeError('Fach hat keinen gültigen Slug');
+  const base = normalizePodcastPrefix(prefix) + 'continuous/' + slug;
   return {
     slug,
-    sidecarPath: 'podcast/continuous/' + slug + '.json',
-    mp3Prefix: 'podcast/continuous/' + slug + '/'
+    sidecarPath: base + '.json',
+    mp3Prefix: base + '/'
   };
 }
 
+function assertStagingWriteTargets(targets, { targetPrefix, sourcePaths = [] } = {}) {
+  const prefix = normalizePodcastPrefix(targetPrefix);
+  if (prefix !== STAGING_PODCAST_PREFIX) throw new Error('Staging-Zielpräfix ist nicht freigegeben');
+  if (!Array.isArray(targets) || !targets.length) throw new Error('Staging-Zielliste fehlt');
+  const sources = new Set(Array.isArray(sourcePaths) ? sourcePaths : []);
+  const seen = new Set();
+  for (const rawPath of targets) {
+    const storagePath = String(rawPath || '').replace(/\\/g, '/');
+    if (!storagePath.startsWith(prefix) || storagePath.includes('..') || storagePath.includes('//')) {
+      throw new Error('Staging-Zielpfad liegt außerhalb des freigegebenen Präfixes: ' + storagePath);
+    }
+    if (seen.has(storagePath)) throw new Error('Staging-Zielpfad doppelt: ' + storagePath);
+    if (sources.has(storagePath)) throw new Error('Quelle und Ziel dürfen nicht identisch sein: ' + storagePath);
+    seen.add(storagePath);
+  }
+  return [...targets];
+}
+
 module.exports = {
+  PRODUCTION_PODCAST_PREFIX,
+  STAGING_PODCAST_PREFIX,
+  normalizePodcastPrefix,
   sha256Lerntext,
   podcastSlug,
   podcastPaths,
-  continuousPodcastPaths
+  continuousPodcastPaths,
+  assertStagingWriteTargets
 };

@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
-const { continuousPodcastPaths, podcastPaths, sha256Lerntext } = require('./hash-paths');
+const { continuousPodcastPaths, podcastPaths, sha256Lerntext, assertStagingWriteTargets } = require('./hash-paths');
 const { buildSubjectBundle, publishSubjectBundle, validateCatalog, orderedSubjectEntries, runFfmpeg } = require('./continuous-bundle');
 const { validateContinuousBundle } = require('../../js/podcast-continuous');
 const { tokenizeVisibleWords } = require('./normalize-lerntext');
@@ -37,9 +37,11 @@ async function readBundleObject(bucket, storagePath, contentType) {
   return { bytes, metadata };
 }
 
-async function verifySubjectBundle({ fach, catalog, bucket, workDir, ffmpeg = runFfmpeg }) {
+async function verifySubjectBundle({ fach, catalog, bucket, workDir, ffmpeg = runFfmpeg, targetPrefix }) {
   validateCatalog(catalog);
-  const entries = orderedSubjectEntries(catalog, fach), paths = continuousPodcastPaths(fach);
+  const entries = orderedSubjectEntries(catalog, fach);
+  const paths = continuousPodcastPaths(fach, targetPrefix ? { prefix: targetPrefix } : undefined);
+  if (targetPrefix) assertStagingWriteTargets([paths.sidecarPath], { targetPrefix, sourcePaths: [] });
   const sidecarObject = await readBundleObject(bucket, paths.sidecarPath, 'application/json');
   let sidecar;
   try { sidecar = JSON.parse(sidecarObject.bytes.toString('utf8')); }
@@ -50,13 +52,15 @@ async function verifySubjectBundle({ fach, catalog, bucket, workDir, ffmpeg = ru
   }
   const mp3Object = await readBundleObject(bucket, sidecar.mp3Path, 'audio/mpeg');
   if (sha256(mp3Object.bytes) !== sidecar.bundleHash) throw new Error(fach + ': MP3 bundleHash ungültig');
-  const currentEntries = entries.map((entry, index) => ({ index, fach, titel: entry.titel,
+  const currentEntries = entries.map((entry, index) => ({ index, fach,
+    ...(entry.id ? { lerntextId: String(entry.id) } : {}),
+    titel: entry.titel,
     hauptkapitel: entry.hauptkapitel, hauptkapitelNr: String(entry.hauptkapitelNr), unterkapitelNr: String(entry.unterkapitelNr),
     lerntextHash: sha256Lerntext(entry.lerntext), legacyMp3Path: podcastPaths(fach, entry.titel).mp3Path,
     legacyJsonPath: podcastPaths(fach, entry.titel).jsonPath }));
   const validation = validateContinuousBundle({ manifest: sidecar, manifestHash: sha256(sidecarObject.bytes),
     mp3Metadata: { customMetadata: mp3Object.metadata.metadata }, currentEntries,
-    expectedFach: fach, expectedMp3Prefix: paths.mp3Prefix });
+    expectedFach: fach, expectedMp3Prefix: paths.mp3Prefix, expectedStoragePrefix: targetPrefix });
   if (!validation.valid) throw new Error(fach + ': Bundle ungültig: ' + validation.reason);
   for (let index = 0; index < entries.length; index++) {
     const words = tokenizeVisibleWords(entries[index].lerntext), marks = sidecar.chapters[index].wortZeitmarken;
@@ -89,9 +93,13 @@ async function verifySubjectBundle({ fach, catalog, bucket, workDir, ffmpeg = ru
 }
 
 async function syncBundles({ bucket, loadCatalog = loadBundleCatalog,
-  onlySubject = null, dryRun = false, verifyOnly = false, workDir, ffmpeg, withLock,
-  buildBundle = buildSubjectBundle, publishBundle = publishSubjectBundle } = {}) {
+  onlySubject = null, dryRun = false, verifyOnly = false, workDir, ffmpeg, probeAudio, withLock,
+  buildBundle = buildSubjectBundle, publishBundle = publishSubjectBundle, targetPrefix } = {}) {
   if (dryRun && verifyOnly) throw new Error('--dry-run und --verify-only dürfen nicht kombiniert werden');
+  if (targetPrefix) {
+    const preflight = continuousPodcastPaths('preflight', { prefix: targetPrefix });
+    assertStagingWriteTargets([preflight.sidecarPath], { targetPrefix, sourcePaths: [] });
+  }
   // Never pass a subject filter to the API loader: validation precedes selection.
   const catalog = await loadCatalog();
   const subjects = validateCatalog(catalog);
@@ -102,15 +110,17 @@ async function syncBundles({ bucket, loadCatalog = loadBundleCatalog,
     for (const fach of subjects.filter(value => onlySubject === null || value === onlySubject)) {
       const subjectDir = fs.mkdtempSync(path.join(root, continuousPodcastPaths(fach).slug + '-'));
       try {
-        const bundle = await (verifyOnly ? verifySubjectBundle : buildBundle)({ fach, catalog, bucket, workDir: subjectDir, ffmpeg });
+        const bundle = await (verifyOnly ? verifySubjectBundle : buildBundle)({ fach, catalog, bucket,
+          workDir: subjectDir, ffmpeg, probeAudio, targetPrefix });
+        const targetPaths = continuousPodcastPaths(fach, targetPrefix ? { prefix: targetPrefix } : undefined);
         const result = { fach, status: verifyOnly ? 'VERIFIED' : dryRun ? 'DRY_RUN' : 'PUBLISHED', chapters: bundle.sidecar.chapters.length,
           words: bundle.sidecar.chapters.reduce((sum, chapter) => sum + chapter.wortZeitmarken.length, 0),
           bytes: bundle.byteSize, duration: bundle.sidecar.duration, sampleCount: bundle.sidecar.sampleCount,
           decodedSamples: bundle.decodedSamples, decodeStatus: 'VERIFIED', bundleHash: bundle.sidecar.bundleHash,
           manifestHash: createHash('sha256').update(bundle.sidecarBytes).digest('hex'),
-          mp3Path: bundle.sidecar.mp3Path, sidecarPath: continuousPodcastPaths(fach).sidecarPath,
+          mp3Path: bundle.sidecar.mp3Path, sidecarPath: targetPaths.sidecarPath,
           historicalSources: bundle.sources?.filter(source => source.contract === 'historical').length };
-        if (!dryRun && !verifyOnly) await publishBundle({ bundle, bucket, loadCatalog, withLock });
+        if (!dryRun && !verifyOnly) await publishBundle({ bundle, bucket, loadCatalog, withLock, targetPrefix });
         report.subjects.push(result);
       } catch (error) {
         report.failed++;
@@ -125,16 +135,21 @@ async function syncBundles({ bucket, loadCatalog = loadBundleCatalog,
 }
 
 async function runCli(argv = process.argv.slice(2), adapters = {}) {
-  let onlySubject = null, dryRun = false, verifyOnly = false;
+  let onlySubject = null, dryRun = false, verifyOnly = false, targetPrefix;
   for (let index = 0; index < argv.length; index++) {
     if (argv[index] === '--dry-run' && !dryRun) dryRun = true;
     else if (argv[index] === '--verify-only' && !verifyOnly) verifyOnly = true;
     else if (argv[index] === '--only-subject' && onlySubject === null && argv[index + 1] && !argv[index + 1].startsWith('--')) onlySubject = argv[++index];
+    else if (argv[index] === '--target-prefix' && targetPrefix === undefined && argv[index + 1] && !argv[index + 1].startsWith('--')) targetPrefix = argv[++index];
     else throw new Error('Ungültiges Argument: ' + argv[index]);
   }
   if (dryRun && verifyOnly) throw new Error('--dry-run und --verify-only dürfen nicht kombiniert werden');
+  if (targetPrefix) {
+    const preflight = continuousPodcastPaths('preflight', { prefix: targetPrefix });
+    assertStagingWriteTargets([preflight.sidecarPath], { targetPrefix, sourcePaths: [] });
+  }
   const admin = await (adapters.createAdminClient || (() => require('./sync-all').createAdminClient()))();
-  const result = await (adapters.sync || syncBundles)({ bucket: admin.storage().bucket(), onlySubject, dryRun, verifyOnly });
+  const result = await (adapters.sync || syncBundles)({ bucket: admin.storage().bucket(), onlySubject, dryRun, verifyOnly, targetPrefix });
   (adapters.write || console.log)(JSON.stringify(result));
   if (result.failed) process.exitCode = 1;
   return result;

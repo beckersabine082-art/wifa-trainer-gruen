@@ -527,6 +527,42 @@ test('continuous paths use 13 distinct canonical slugs in Node and browser', fun
   }
 });
 
+test('staging prefix creates only isolated segment and continuous bundle paths', function() {
+  const targetPrefix = 'podcast/staging/lerntext-rev2/';
+  assert.deepStrictEqual(hashPaths.podcastPaths('Recht', 'Vertrag', { prefix: targetPrefix }), {
+    mp3Path: 'podcast/staging/lerntext-rev2/recht-vertrag.mp3',
+    jsonPath: 'podcast/staging/lerntext-rev2/recht-vertrag.json'
+  });
+  assert.deepStrictEqual(hashPaths.continuousPodcastPaths('Recht', { prefix: targetPrefix }), {
+    slug: 'recht',
+    sidecarPath: 'podcast/staging/lerntext-rev2/continuous/recht.json',
+    mp3Prefix: 'podcast/staging/lerntext-rev2/continuous/recht/'
+  });
+});
+
+test('staging target audit rejects productive, ambiguous and source-equal write paths', function() {
+  const targetPrefix = 'podcast/staging/lerntext-rev2/';
+  const safe = [
+    'podcast/staging/lerntext-rev2/recht-vertrag.mp3',
+    'podcast/staging/lerntext-rev2/recht-vertrag.json',
+    'podcast/staging/lerntext-rev2/continuous/recht.json'
+  ];
+  assert.deepStrictEqual(hashPaths.assertStagingWriteTargets(safe, {
+    targetPrefix,
+    sourcePaths: ['podcast/recht-vertrag.mp3', 'podcast/recht-vertrag.json']
+  }), safe);
+  for (const targets of [
+    ['podcast/recht-vertrag.mp3'],
+    ['podcast/staging/lerntext-rev2x/recht.mp3'],
+    ['podcast/staging/lerntext-rev2/../recht.mp3'],
+    ['podcast/staging/lerntext-rev2/recht.mp3', 'podcast/staging/lerntext-rev2/recht.mp3']
+  ]) {
+    assert.throws(() => hashPaths.assertStagingWriteTargets(targets, { targetPrefix, sourcePaths: safe }), /Staging|Ziel|Pfad|doppelt/i);
+  }
+  assert.throws(() => hashPaths.assertStagingWriteTargets(safe, { targetPrefix: 'podcast/', sourcePaths: [] }), /Staging|Präfix/i);
+  assert.throws(() => hashPaths.assertStagingWriteTargets(safe, { targetPrefix, sourcePaths: [safe[0]] }), /Quelle|Ziel/i);
+});
+
 process.on('exit', function() {
   console.log(`\n${passedCount}/${testCount} tests passed`);
 });

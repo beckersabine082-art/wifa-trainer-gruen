@@ -102,7 +102,14 @@ function createBackend() {
     Set,
     Map,
     Error,
-    SpreadsheetApp: { getActiveSpreadsheet: () => spreadsheet, getUi: () => ({ alert() {} }) },
+    SpreadsheetApp: {
+      getActiveSpreadsheet: () => spreadsheet,
+      openById: (spreadsheetId) => {
+        assert.equal(spreadsheetId, '1cJ8Wa92r-_LRmMOf3h3kTqfHV8Qz3ZjERuCP1Un25r8');
+        return spreadsheet;
+      },
+      getUi: () => ({ alert() {} })
+    },
     ContentService: {
       MimeType: { JSON: 'application/json' },
       createTextOutput(value) {

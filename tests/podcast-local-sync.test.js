@@ -84,3 +84,50 @@ test('gültiges Paar wird auch dann geschützt, wenn es während der Erzeugung e
   assert.equal(bucket.data.get(paths.jsonPath).generation,11);
   fs.rmdirSync(tempDir);
 });
+
+test('Staging-Sync liest den produktiven Altstand, schreibt aber ausschließlich in den Staging-Präfix', async () => {
+  const bucket = store();
+  const production = podcastPaths(entry.fach, entry.titel);
+  const targetPrefix = 'podcast/staging/lerntext-rev2/';
+  const staging = podcastPaths(entry.fach, entry.titel, { prefix: targetPrefix });
+  const oldHash = sha256Lerntext('Alter Text.');
+  bucket.data.set(production.mp3Path, { generation: 1, metadata: { lerntextHash: oldHash }, buffer: Buffer.from('old-audio') });
+  bucket.data.set(production.jsonPath, { generation: 2, metadata: {}, buffer: Buffer.from(JSON.stringify({ lerntextHash: oldHash })) });
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'staging-sync-test-'));
+  const result = await syncAll({
+    lerntexte: [entry],
+    adminClient: { storage: () => ({ bucket: () => bucket }) },
+    tempDir,
+    sourcePrefix: 'podcast/',
+    targetPrefix,
+    adapters: { generateLocal: async ({ outputPath }) => {
+      fs.writeFileSync(outputPath, Buffer.alloc(1500, 1));
+      return { wortZeitmarken: [
+        { wortIndex: 0, wort: 'Ein', start: 0, end: 0.3 },
+        { wortIndex: 1, wort: 'Test', start: 0.3, end: 0.8 }
+      ] };
+    } }
+  });
+  assert.equal(result.generated.length, 1);
+  assert.deepEqual([...bucket.data.keys()].sort(), [
+    production.jsonPath, production.mp3Path, staging.jsonPath, staging.mp3Path
+  ].sort());
+  assert.equal(bucket.data.get(production.mp3Path).buffer.toString(), 'old-audio');
+  const manifest = JSON.parse(bucket.data.get(staging.jsonPath).buffer.toString('utf8'));
+  assert.equal(manifest.mp3Path, staging.mp3Path);
+  assert.equal(manifest.jsonPath, staging.jsonPath);
+  fs.rmdirSync(tempDir);
+});
+
+test('Staging-Sync lehnt produktive und quellgleiche Zielpräfixe vor der Erzeugung ab', async () => {
+  let generated = false;
+  for (const targetPrefix of ['podcast/', 'podcast/staging/lerntext-rev2/../']) {
+    await assert.rejects(syncAll({
+      lerntexte: [entry],
+      sourcePrefix: 'podcast/',
+      targetPrefix,
+      adapters: { generateLocal: async () => { generated = true; } }
+    }), /Staging|Präfix|Ziel|Quelle/i);
+  }
+  assert.equal(generated, false);
+});

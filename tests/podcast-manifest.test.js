@@ -58,6 +58,13 @@ test('gültiges Manifest enthält alle erwarteten Daten', function() {
   assert.deepStrictEqual(manifest.wortZeitmarken, validMarks);
 });
 
+test('Staging-Manifest bindet MP3 und JSON ausschließlich an den Zielpräfix', function() {
+  const prefix = 'podcast/staging/lerntext-rev2/';
+  const manifest = buildPodcastManifest(validInput({ storagePrefix: prefix }));
+  assert.strictEqual(manifest.mp3Path, prefix + 'recht-rechtssubjekte-und-rechtsobjekte.mp3');
+  assert.strictEqual(manifest.jsonPath, prefix + 'recht-rechtssubjekte-und-rechtsobjekte.json');
+});
+
 test('podcastText wird ignoriert und nicht gespeichert', function() {
   const manifest = buildPodcastManifest(validInput({ podcastText: 'ALTER PODCASTTEXT' }));
   assert.strictEqual(manifest.podcastText, undefined);

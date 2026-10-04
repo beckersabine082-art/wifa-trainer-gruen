@@ -37,26 +37,40 @@
       .replace(/^-+|-+$/g, '');
   }
 
-  function continuousPodcastPaths(fach) {
+  function normalizePodcastPrefix(prefix) {
+    const value = String(prefix || 'podcast/').trim().replace(/\\/g, '/');
+    if (!value.startsWith('podcast/') || value.startsWith('/') || value.includes('..') || value.includes('//')) {
+      throw new TypeError('Podcast-Präfix ist ungültig');
+    }
+    return value.endsWith('/') ? value : value + '/';
+  }
+
+  function continuousPodcastPaths(fach, options) {
     if (typeof fach !== 'string' || !fach.trim()) throw new TypeError('Fach fehlt');
     const slug = podcastSlug(fach);
     if (!slug) throw new TypeError('Fach hat keinen gültigen Slug');
+    const prefix = normalizePodcastPrefix(options && options.prefix);
     return {
       slug: slug,
-      sidecarPath: 'podcast/continuous/' + slug + '.json',
-      mp3Prefix: 'podcast/continuous/' + slug + '/'
+      sidecarPath: prefix + 'continuous/' + slug + '.json',
+      mp3Prefix: prefix + 'continuous/' + slug + '/'
     };
   }
 
   function validateContinuousBundle(input) {
     if (!isRecord(input)) return invalid('input');
-    const { manifest, manifestHash, mp3Metadata, currentEntries, expectedFach, expectedMp3Prefix } = input;
+    const { manifest, manifestHash, mp3Metadata, currentEntries, expectedFach, expectedMp3Prefix,
+      expectedStoragePrefix } = input;
     let paths;
-    try { paths = continuousPodcastPaths(expectedFach); }
+    try { paths = continuousPodcastPaths(expectedFach, expectedStoragePrefix ? { prefix: expectedStoragePrefix } : undefined); }
     catch { return invalid('subject'); }
     if (expectedMp3Prefix !== paths.mp3Prefix) return invalid('bundle-path');
-    if (!isRecord(manifest) || manifest.schemaVersion !== 1 || manifest.fach !== expectedFach) {
+    if (!isRecord(manifest) || ![1, 2].includes(manifest.schemaVersion) || manifest.fach !== expectedFach) {
       return invalid('schema');
+    }
+    const versioned = manifest.schemaVersion === 2;
+    if (versioned && (typeof manifest.bundleVersion !== 'string' || !manifest.bundleVersion.trim())) {
+      return invalid('bundle-version');
     }
     if (!isSha256(manifest.bundleHash) || !isSha256(manifestHash) ||
         manifest.mp3Path !== expectedMp3Prefix + manifest.bundleHash + '.mp3') {
@@ -100,6 +114,12 @@
           chapter.legacyMp3Path.slice(0, -4) !== chapter.legacyJsonPath.slice(0, -5)) {
         return invalid('chapter-identity');
       }
+      if (versioned && (typeof chapter.lerntextId !== 'string' || !chapter.lerntextId.trim() ||
+          chapter.lerntextId !== current.lerntextId || typeof chapter.chapterKey !== 'string' ||
+          !chapter.chapterKey.trim() || !['reused', 'regenerated'].includes(chapter.origin) ||
+          !isSha256(chapter.segmentHash))) {
+        return invalid('chapter-versioned-identity');
+      }
       if (!Number.isSafeInteger(chapter.startSample) || !Number.isSafeInteger(chapter.endSample) ||
           chapter.startSample !== previousEndSample || chapter.endSample <= chapter.startSample ||
           chapter.endSample > manifest.sampleCount ||
@@ -127,6 +147,29 @@
       previousEndSample = chapter.endSample;
     }
     if (previousEndSample !== manifest.sampleCount) return invalid('sample-count');
+    if (versioned) {
+      if (new Set(manifest.chapters.map(function (chapter) { return chapter.lerntextId; })).size !== manifest.chapters.length ||
+          !Array.isArray(manifest.chapterGroups) || manifest.chapterGroups.length === 0) {
+        return invalid('chapter-groups');
+      }
+      let nextIndex = 0;
+      for (const group of manifest.chapterGroups) {
+        if (!isRecord(group) || typeof group.chapterKey !== 'string' || !group.chapterKey.trim() ||
+            typeof group.chapterNumber !== 'string' || !group.chapterNumber.trim() ||
+            typeof group.chapterTitle !== 'string' || !group.chapterTitle.trim() ||
+            group.startIndex !== nextIndex || !Number.isInteger(group.endIndex) || group.endIndex < group.startIndex ||
+            group.endIndex >= manifest.chapters.length || !Array.isArray(group.lerntextIds)) {
+          return invalid('chapter-groups');
+        }
+        const grouped = manifest.chapters.slice(group.startIndex, group.endIndex + 1);
+        if (grouped.some(function (chapter) { return chapter.chapterKey !== group.chapterKey; }) ||
+            JSON.stringify(group.lerntextIds) !== JSON.stringify(grouped.map(function (chapter) { return chapter.lerntextId; }))) {
+          return invalid('chapter-groups');
+        }
+        nextIndex = group.endIndex + 1;
+      }
+      if (nextIndex !== manifest.chapters.length) return invalid('chapter-groups');
+    }
     return { valid: true, reason: null };
   }
 

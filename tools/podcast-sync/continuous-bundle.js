@@ -3,7 +3,12 @@ const path = require('node:path');
 const { createHash, randomUUID } = require('node:crypto');
 const { execFile } = require('node:child_process');
 const { promisify } = require('node:util');
-const { sha256Lerntext, podcastPaths, continuousPodcastPaths } = require('./hash-paths');
+const {
+  sha256Lerntext,
+  podcastPaths,
+  continuousPodcastPaths,
+  assertStagingWriteTargets
+} = require('./hash-paths');
 const { tokenizeVisibleWords } = require('./normalize-lerntext');
 const { withPublishLock } = require('./publish-lock');
 const { validateContinuousBundle } = require('../../js/podcast-continuous');
@@ -14,6 +19,30 @@ const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
 async function runFfmpeg(args, executable = process.env.PODCAST_FFMPEG || 'ffmpeg') {
   await execFileAsync(executable, args, { windowsHide: true, timeout: 30 * 60 * 1000, maxBuffer: 5 * 1024 * 1024 });
+}
+
+async function probeAudioProperties(filePath, executable = process.env.PODCAST_FFMPEG || 'ffmpeg') {
+  const { stderr = '' } = await execFileAsync(executable, ['-hide_banner', '-nostdin', '-i', filePath,
+    '-map', '0:a:0', '-c', 'copy', '-f', 'null', '-'], {
+    windowsHide: true, timeout: 5 * 60 * 1000, maxBuffer: 5 * 1024 * 1024
+  });
+  const audioLine = String(stderr).split(/\r?\n/).find(line => /Audio:/.test(line)) || '';
+  const audio = audioLine.match(/Audio:\s*([^,]+),\s*(\d+)\s*Hz,\s*([^,]+)(?:,.*?\s(\d+)\s*kb\/s)?/i);
+  if (!audio) throw new Error('Audioeigenschaften konnten nicht ermittelt werden');
+  const channelText = audio[3].trim().toLowerCase();
+  const channels = channelText === 'mono' ? 1 : channelText === 'stereo' ? 2 : Number((channelText.match(/(\d+)\s*channels?/) || [])[1]);
+  if (!Number.isInteger(channels) || channels <= 0) throw new Error('Audiokanalzahl konnte nicht ermittelt werden');
+  const encoder = (String(stderr).match(/encoder\s*:\s*([^\r\n]+)/i) || [])[1];
+  const start = (String(stderr).match(/Duration:.*?start:\s*(-?\d+(?:\.\d+)?)/i) || [])[1];
+  return {
+    codec: audio[1].trim().split(/\s+/)[0],
+    sampleRateHz: Number(audio[2]),
+    channels,
+    bitrateKbps: audio[4] ? Number(audio[4]) : null,
+    profile: audio[1].trim(),
+    encoder: encoder ? encoder.trim() : null,
+    startTimeSeconds: start === undefined ? null : Number(start)
+  };
 }
 
 // Stable sorting matches the production playlist, including API order for ties.
@@ -56,7 +85,10 @@ function validateCatalog(catalog) {
 }
 
 function currentEntries(entries) {
-  return entries.map((entry, index) => ({ index, fach: entry.fach, titel: entry.titel,
+  return entries.map((entry, index) => ({ index, fach: entry.fach,
+    ...(entry.id ? { lerntextId: String(entry.id) } : {}),
+    ...(entry.chapterKey ? { chapterKey: String(entry.chapterKey) } : {}),
+    titel: entry.titel,
     hauptkapitel: entry.hauptkapitel, hauptkapitelNr: String(entry.hauptkapitelNr), unterkapitelNr: String(entry.unterkapitelNr),
     lerntextHash: sha256Lerntext(entry.lerntext), legacyMp3Path: podcastPaths(entry.fach, entry.titel).mp3Path,
     legacyJsonPath: podcastPaths(entry.fach, entry.titel).jsonPath }));
@@ -90,8 +122,7 @@ function validateObjectBytes(metadata, bytes, label) {
   }
 }
 
-async function readValidatedSource(bucket, entry) {
-  const paths = podcastPaths(entry.fach, entry.titel);
+async function readValidatedSource(bucket, entry, { paths = podcastPaths(entry.fach, entry.titel), origin = 'reused' } = {}) {
   const [mp3Metadata] = await bucket.file(paths.mp3Path).getMetadata();
   const [jsonMetadata] = await bucket.file(paths.jsonPath).getMetadata();
   if (!mp3Metadata.generation || !jsonMetadata.generation) throw new Error(entry.titel + ': Legacy-Generation fehlt');
@@ -113,7 +144,8 @@ async function readValidatedSource(bucket, entry) {
   }
   if (manifest.mp3Path !== paths.mp3Path || manifest.jsonPath !== paths.jsonPath) throw new Error(entry.titel + ': Legacy-mp3Path/jsonPath ungültig');
   const marks = validateMarks(manifest, entry);
-  return { mp3Bytes, marks, receipt: { paths, lerntextHash, mp3Hash, jsonHash,
+  return { mp3Bytes, marks, receipt: { paths, lerntextHash, mp3Hash, jsonHash, origin,
+    sourceIdentity: { fach: entry.fach, titel: entry.titel },
     contract: bound ? 'manifestHash' : 'historical', generations: { mp3: mp3Metadata.generation, json: jsonMetadata.generation } } };
 }
 
@@ -137,7 +169,35 @@ function appendPcm(input, output, io) {
   } finally { io.closeSync(source); if (destination !== undefined) io.closeSync(destination); }
 }
 
-async function buildSubjectBundle({ fach, catalog, lerntexte, bucket, workDir, ffmpeg = runFfmpeg, fsAdapter: io = fs }) {
+function readBytes(filePath, offset, length, io) {
+  if (length <= 0) return Buffer.alloc(0);
+  const buffer = Buffer.alloc(length);
+  const descriptor = io.openSync(filePath, 'r');
+  try {
+    const bytesRead = io.readSync(descriptor, buffer, 0, length, offset);
+    if (bytesRead !== length) throw new Error('PCM-Grenzfenster unvollständig');
+    return buffer;
+  } finally { io.closeSync(descriptor); }
+}
+
+function auditPcmJoin({ previousTail, nextHead, actualJoin, previousSamples, nextSamples,
+  previousOrigin = 'unknown', nextOrigin = 'unknown' }) {
+  if (![previousTail, nextHead, actualJoin].every(Buffer.isBuffer) ||
+      [previousTail, nextHead, actualJoin].some(buffer => buffer.length % 2)) {
+    throw new Error('PCM-Grenze hat ungültige Samplebytes');
+  }
+  const expected = Buffer.concat([previousTail, nextHead]);
+  if (actualJoin.length > expected.length) throw new Error('PCM-Grenze enthält künstliche Stille oder Lücke');
+  if (actualJoin.length < expected.length) throw new Error('PCM-Grenze enthält Überlappung oder abgeschnittene Samples');
+  if (!actualJoin.equals(expected)) throw new Error('PCM-Grenze enthält einen Timing-Sprung');
+  return { verified: true, insertedSamples: 0, overlapSamples: 0,
+    previousSamples, nextSamples, previousOrigin, nextOrigin,
+    transition: previousOrigin + '->' + nextOrigin, joinHash: sha256(actualJoin) };
+}
+
+async function buildSubjectBundle({ fach, catalog, lerntexte, bucket, workDir, ffmpeg = runFfmpeg,
+  fsAdapter: io = fs, targetPrefix, sourceResolver, probeAudio,
+  bundleVersion } = {}) {
   validateCatalog(catalog);
   const entries = orderedSubjectEntries(catalog, fach);
   if (lerntexte !== undefined) {
@@ -146,29 +206,64 @@ async function buildSubjectBundle({ fach, catalog, lerntexte, bucket, workDir, f
   }
   if (!bucket || typeof bucket.file !== 'function') throw new Error('Firebase-Bucket fehlt');
   if (!workDir || !io.existsSync(workDir)) throw new Error('Arbeitsverzeichnis fehlt');
-  const paths = continuousPodcastPaths(fach);
+  const paths = continuousPodcastPaths(fach, targetPrefix ? { prefix: targetPrefix } : undefined);
+  if (targetPrefix) assertStagingWriteTargets([paths.sidecarPath], { targetPrefix, sourcePaths: [] });
   const ownedDir = io.mkdtempSync(path.join(workDir, paths.slug + '-'));
   const pcm = path.join(ownedDir, 'bundle.pcm'), mp3FilePath = path.join(ownedDir, 'bundle.mp3');
   const decoded = path.join(ownedDir, 'decoded.pcm');
-  const sources = [], chapters = [];
+  const sources = [], chapters = [], sourceAudioProperties = [], boundaryAudit = [];
+  const audioProbe = probeAudio || (ffmpeg === runFfmpeg ? probeAudioProperties : async () => ({
+    codec: 'test-double', sampleRateHz: SAMPLE_RATE, channels: 1, bitrateKbps: null,
+    profile: 'injected-ffmpeg', encoder: null, startTimeSeconds: null
+  }));
   let total = 0, success = false;
   try {
     io.writeFileSync(pcm, Buffer.alloc(0));
     for (let index = 0; index < entries.length; index++) {
       // Read/decode one pair at a time; never retain a subject's source audio in memory.
       const entry = entries[index];
-      const { mp3Bytes, marks, receipt } = await readValidatedSource(bucket, entry);
+      const resolved = typeof sourceResolver === 'function' ? sourceResolver(entry) : null;
+      const sourceEntry = resolved?.sourceEntry ? { ...resolved.sourceEntry, lerntext: entry.lerntext } : entry;
+      const { mp3Bytes, marks, receipt } = await readValidatedSource(bucket, sourceEntry, {
+        paths: resolved?.paths || podcastPaths(sourceEntry.fach, sourceEntry.titel),
+        origin: resolved?.origin || 'reused'
+      });
       const sourceMp3 = path.join(ownedDir, `source-${index}.mp3`), sourcePcm = path.join(ownedDir, `source-${index}.pcm`);
       try {
         io.writeFileSync(sourceMp3, mp3Bytes);
+        const properties = await audioProbe(sourceMp3);
+        if (!properties || typeof properties.codec !== 'string' || !Number.isFinite(properties.sampleRateHz) ||
+            !Number.isInteger(properties.channels) || properties.channels <= 0) {
+          throw new Error(entry.titel + ': Audioeigenschaften ungültig');
+        }
+        sourceAudioProperties.push({ ...properties });
         await ffmpeg(['-nostdin', '-v', 'error', '-xerror', '-y', '-i', sourceMp3,
           '-f', 's16le', '-ac', '1', '-ar', String(SAMPLE_RATE), sourcePcm]);
         const samples = sampleCount(sourcePcm, io), end = total + samples;
         if (!Number.isSafeInteger(end)) throw new Error('Bundle-Samples überschreiten Integerbereich');
         if (marks.at(-1).end > samples / SAMPLE_RATE + 0.001) throw new Error(entry.titel + ': Wortzeitmarke überschreitet Decode-Dauer');
-        appendPcm(sourcePcm, pcm, io);
+        if (index === 0) appendPcm(sourcePcm, pcm, io);
+        else {
+          const windowBytes = Math.min(4096, total * 2, samples * 2);
+          const previousTail = readBytes(pcm, total * 2 - windowBytes, windowBytes, io);
+          const nextHead = readBytes(sourcePcm, 0, windowBytes, io);
+          appendPcm(sourcePcm, pcm, io);
+          const actualJoin = readBytes(pcm, total * 2 - windowBytes, windowBytes * 2, io);
+          boundaryAudit.push({ index: index - 1, atSample: total,
+            previousTitel: entries[index - 1].titel, nextTitel: entry.titel,
+            ...auditPcmJoin({ previousTail, nextHead, actualJoin,
+              previousSamples: chapters[index - 1].endSample - chapters[index - 1].startSample,
+              nextSamples: samples, previousOrigin: sources[index - 1].origin, nextOrigin: receipt.origin }) });
+        }
         const { fach: _fach, ...identity } = currentEntries([entry])[0];
-        chapters.push({ ...identity, index, startSample: total, endSample: end,
+        chapters.push({ ...identity, index,
+          ...(bundleVersion ? {
+            lerntextId: String(entry.id || ''),
+            chapterKey: String(entry.chapterKey || ''),
+            origin: receipt.origin,
+            segmentHash: receipt.mp3Hash
+          } : {}),
+          startSample: total, endSample: end,
           start: total / SAMPLE_RATE, end: end / SAMPLE_RATE, wortZeitmarken: marks });
         sources.push(receipt); total = end;
       } finally {
@@ -184,11 +279,40 @@ async function buildSubjectBundle({ fach, catalog, lerntexte, bucket, workDir, f
       '-f', 's16le', '-ac', '1', '-ar', String(SAMPLE_RATE), decoded]);
     if (sampleCount(decoded, io) !== total) throw new Error('Bundle-MP3 Decode-Samples stimmen nicht');
     const bundleHash = sha256(mp3Bytes);
-    const sidecar = { schemaVersion: 1, fach, bundleHash, mp3Path: paths.mp3Prefix + bundleHash + '.mp3',
+    const comparableProperties = sourceAudioProperties.map(value => JSON.stringify(value));
+    let chapterGroups;
+    if (bundleVersion) {
+      if (!chapters.every(chapter => chapter.lerntextId && chapter.chapterKey)) {
+        throw new Error('Versioniertes Bundle benötigt stabile Lerntext-IDs und Kapitelkeys');
+      }
+      chapterGroups = [];
+      for (const chapter of chapters) {
+        let group = chapterGroups[chapterGroups.length - 1];
+        if (!group || group.chapterKey !== chapter.chapterKey) {
+          group = { chapterKey: chapter.chapterKey, chapterNumber: chapter.hauptkapitelNr,
+            chapterTitle: chapter.hauptkapitel, startIndex: chapter.index, endIndex: chapter.index,
+            lerntextIds: [] };
+          chapterGroups.push(group);
+        }
+        group.endIndex = chapter.index;
+        group.lerntextIds.push(chapter.lerntextId);
+      }
+      if (new Set(chapters.map(chapter => chapter.lerntextId)).size !== chapters.length) {
+        throw new Error('Versioniertes Bundle enthält doppelte Lerntext-IDs');
+      }
+    }
+    const sidecar = { schemaVersion: bundleVersion ? 2 : 1,
+      ...(bundleVersion ? { bundleVersion: String(bundleVersion), chapterGroups } : {}),
+      fach, bundleHash, mp3Path: paths.mp3Prefix + bundleHash + '.mp3',
       duration: total / SAMPLE_RATE, sampleCount: total,
-      encoding: { container: 'mp3', codec: 'mp3', bitrateKbps: 96, sampleRateHz: SAMPLE_RATE, channels: 1, pcmFormat: 's16le' }, chapters };
+      encoding: { container: 'mp3', codec: 'mp3', bitrateKbps: 96, sampleRateHz: SAMPLE_RATE, channels: 1,
+        pcmFormat: 's16le', sourceNormalization: 'decode-each-to-canonical-pcm',
+        encoderPaddingHandling: 'single-final-encode' },
+      sourceAudioProperties, sourceAudioUniform: new Set(comparableProperties).size === 1,
+      boundaryAudit, chapters };
     success = true;
     return { sidecar, sidecarBytes: Buffer.from(JSON.stringify(sidecar)), mp3FilePath, workDir: ownedDir,
+      targetPrefix: targetPrefix || null,
       fsAdapter: io, entries, sources, byteSize: mp3Bytes.length, decodedSamples: total };
   } finally {
     // Only paths created in this invocation are removed; the caller owns workDir.
@@ -209,13 +333,18 @@ async function revalidateSources(bundle, bucket, loadCatalog) {
   if (bundle.sources.length !== entries.length) throw new Error('Quellbelege unvollständig');
   for (let index = 0; index < entries.length; index++) {
     // Re-read both exact byte streams, including historical audio and JSON.
-    const { receipt, marks } = await readValidatedSource(bucket, entries[index]);
+    const expected = bundle.sources[index];
+    const sourceEntry = { ...entries[index], fach: expected.sourceIdentity.fach, titel: expected.sourceIdentity.titel };
+    const { receipt, marks } = await readValidatedSource(bucket, sourceEntry, {
+      paths: expected.paths,
+      origin: expected.origin
+    });
     if (JSON.stringify(receipt) !== JSON.stringify(bundle.sources[index])) throw new Error(entries[index].titel + ': Legacy-Generation oder Bytes geändert');
     if (JSON.stringify(marks) !== JSON.stringify(bundle.sidecar.chapters[index].wortZeitmarken)) throw new Error('Bundle-Wortzeitmarken stimmen nicht mit Quelle überein');
   }
 }
 
-function validateBundle(bundle, mp3Bytes) {
+function validateBundle(bundle, mp3Bytes, { targetPrefix } = {}) {
   if (!bundle?.sidecar || !Array.isArray(bundle.entries) || !Array.isArray(bundle.sources) || !Buffer.isBuffer(bundle.sidecarBytes)) {
     throw new Error('Bundle ungültig');
   }
@@ -223,8 +352,17 @@ function validateBundle(bundle, mp3Bytes) {
   if (!Buffer.from(JSON.stringify(bundle.sidecar)).equals(bundle.sidecarBytes) || sha256(mp3Bytes) !== bundle.sidecar.bundleHash) {
     throw new Error('Bundle-Hash oder Sidecar-Bytes ungültig');
   }
+  const paths = continuousPodcastPaths(bundle.sidecar.fach, targetPrefix ? { prefix: targetPrefix } : undefined);
+  if ((bundle.targetPrefix || null) !== (targetPrefix || null) || bundle.sidecar.mp3Path !== paths.mp3Prefix + bundle.sidecar.bundleHash + '.mp3') {
+    throw new Error('Bundle-Zielpräfix stimmt nicht überein');
+  }
+  if (targetPrefix) assertStagingWriteTargets([paths.sidecarPath, bundle.sidecar.mp3Path], {
+    targetPrefix,
+    sourcePaths: bundle.sources.flatMap(source => [source.paths.mp3Path, source.paths.jsonPath])
+  });
   const validation = validateContinuousBundle({ manifest: bundle.sidecar, manifestHash,
-    expectedFach: bundle.sidecar.fach, expectedMp3Prefix: continuousPodcastPaths(bundle.sidecar.fach).mp3Prefix,
+    expectedFach: bundle.sidecar.fach, expectedMp3Prefix: paths.mp3Prefix,
+    expectedStoragePrefix: targetPrefix,
     currentEntries: currentEntries(bundle.entries),
     mp3Metadata: { customMetadata: { bundleHash: bundle.sidecar.bundleHash, manifestHash } } });
   if (!validation.valid) throw new Error('Bundle ungültig: ' + validation.reason);
@@ -245,11 +383,11 @@ async function readPublished(bucket, storagePath, bytes, type, hashes = {}) {
   return metadata;
 }
 
-async function publishSubjectBundle({ bundle, bucket, loadCatalog, withLock = withPublishLock }) {
+async function publishSubjectBundle({ bundle, bucket, loadCatalog, withLock = withPublishLock, targetPrefix } = {}) {
   const mp3Bytes = (bundle?.fsAdapter || fs).readFileSync(bundle.mp3FilePath);
-  const manifestHash = validateBundle(bundle, mp3Bytes);
+  const manifestHash = validateBundle(bundle, mp3Bytes, { targetPrefix });
   if (typeof loadCatalog !== 'function') throw new Error('Aktueller Katalog: loadCatalog fehlt');
-  const paths = continuousPodcastPaths(bundle.sidecar.fach);
+  const paths = continuousPodcastPaths(bundle.sidecar.fach, targetPrefix ? { prefix: targetPrefix } : undefined);
   return withLock(bucket, paths.sidecarPath, async () => {
     const mp3File = bucket.file(bundle.sidecar.mp3Path), sidecarFile = bucket.file(paths.sidecarPath);
     const [sidecarExists] = await sidecarFile.exists();
@@ -280,4 +418,5 @@ async function publishSubjectBundle({ bundle, bucket, loadCatalog, withLock = wi
   });
 }
 
-module.exports = { buildSubjectBundle, publishSubjectBundle, orderedSubjectEntries, validateCatalog, revalidateSources, runFfmpeg };
+module.exports = { buildSubjectBundle, publishSubjectBundle, orderedSubjectEntries, validateCatalog,
+  revalidateSources, readValidatedSource, runFfmpeg, probeAudioProperties, auditPcmJoin };

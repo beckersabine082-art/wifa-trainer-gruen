@@ -60,8 +60,10 @@ function fixture(t, fach = 'Steuern', count = 2) {
     }
   };
   const loadCatalog = async () => catalog.map(entry => ({ ...entry }));
+  const probeAudio = async () => ({ codec: 'mp3', sampleRateHz: 22050, channels: 1,
+    bitrateKbps: 96, profile: 'mp3', encoder: 'test', startTimeSeconds: 0 });
   const withLock = async (_bucket, key, action) => { assert.equal(key, `podcast/continuous/${fach.toLowerCase()}.json`); return action(); };
-  return { fach, catalog, objects, bucket, workDir, ffmpeg, calls, pcms, events, reads, loadCatalog, withLock };
+  return { fach, catalog, objects, bucket, workDir, ffmpeg, probeAudio, calls, pcms, events, reads, loadCatalog, withLock };
 }
 const build = f => builder.buildSubjectBundle({ ...f, lerntexte: f.catalog });
 const publish = (f, bundle) => builder.publishSubjectBundle({ ...f, bundle });
@@ -93,6 +95,126 @@ test('variable subjects build complete ordered sample timelines and clean only o
   assert.ok(f.reads.every(read => read.generation === (read.name.endsWith('.mp3') ? '1' : '2')));
   assert.deepEqual(fs.readdirSync(f.workDir).sort(), ['keep.txt', path.basename(bundle.workDir)].sort());
   assert.deepEqual(fs.readdirSync(bundle.workDir), ['bundle.mp3']);
+});
+
+test('Staging-Bundle liest produktive Segmente und veröffentlicht MP3 und Sidecar nur im Zielpräfix', async t => {
+  const f = fixture(t);
+  const targetPrefix = 'podcast/staging/lerntext-rev2/';
+  const bundle = await builder.buildSubjectBundle({ ...f, lerntexte: f.catalog, targetPrefix });
+  assert.match(bundle.sidecar.mp3Path, /^podcast\/staging\/lerntext-rev2\/continuous\/steuern\/[a-f0-9]{64}\.mp3$/);
+  assert.ok(bundle.sources.every(receipt => receipt.paths.mp3Path.startsWith('podcast/') &&
+    !receipt.paths.mp3Path.startsWith(targetPrefix)));
+  f.withLock = async (_bucket, key, action) => {
+    assert.equal(key, targetPrefix + 'continuous/steuern.json');
+    return action();
+  };
+  const result = await builder.publishSubjectBundle({ ...f, bundle, targetPrefix });
+  assert.equal(result.sidecarPath, targetPrefix + 'continuous/steuern.json');
+  assert.ok(f.events.length > 0);
+  assert.ok(f.events.every(event => event.name.startsWith(targetPrefix)));
+  assert.equal([...f.objects.keys()].filter(name => name.startsWith('podcast/continuous/')).length, 0);
+});
+
+test('Staging-Bundle lehnt ein produktives Ziel vor Decode und Publish ab', async t => {
+  const f = fixture(t);
+  await assert.rejects(builder.buildSubjectBundle({ ...f, lerntexte: f.catalog, targetPrefix: 'podcast/' }), /Staging|Präfix|Ziel/i);
+  assert.equal(f.calls.length, 0);
+  const bundle = await build(f);
+  await assert.rejects(builder.publishSubjectBundle({ ...f, bundle, targetPrefix: 'podcast/staging/lerntext-rev2/' }), /Staging|Pfad|Ziel/i);
+  assert.equal(f.events.length, 0);
+});
+
+test('Bundle verwendet pro Lerntext den freigegebenen Quellpfad und bewahrt reused/regenerated Herkunft', async t => {
+  const f = fixture(t);
+  const current = f.catalog[0];
+  const oldEntry = { ...current, fach: 'Altes Fach', titel: 'Alter Titel' };
+  const oldPaths = podcastPaths(oldEntry.fach, oldEntry.titel);
+  const oldManifest = { fach: oldEntry.fach, titel: oldEntry.titel, lerntextHash: hash(current.lerntext), ...oldPaths,
+    wortZeitmarken: [{ wortIndex: 0, wort: current.lerntext, start: 0, end: 0.2 }] };
+  const oldJson = Buffer.from(JSON.stringify(oldManifest));
+  f.objects.set(oldPaths.jsonPath, { bytes: oldJson, generation: '22', metadata: {}, contentType: 'application/json' });
+  f.objects.set(oldPaths.mp3Path, { bytes: Buffer.from('old-source'), generation: '21', contentType: 'audio/mpeg',
+    metadata: { lerntextHash: oldManifest.lerntextHash, manifestHash: hash(oldJson) } });
+  const targetPrefix = 'podcast/staging/lerntext-rev2/';
+  const bundle = await builder.buildSubjectBundle({ ...f, lerntexte: f.catalog, targetPrefix,
+    sourceResolver(entry) {
+      if (entry.titel === current.titel) return { sourceEntry: oldEntry, paths: oldPaths, origin: 'reused' };
+      return { sourceEntry: entry, paths: podcastPaths(entry.fach, entry.titel), origin: 'regenerated' };
+    }
+  });
+  assert.deepEqual(bundle.sources.map(source => source.origin), ['reused', 'regenerated']);
+  assert.equal(bundle.sources[0].paths.mp3Path, oldPaths.mp3Path);
+  assert.equal(bundle.sources[0].sourceIdentity.fach, oldEntry.fach);
+  assert.ok(f.reads.some(read => read.name === oldPaths.mp3Path));
+  assert.equal(bundle.sidecar.chapters[0].titel, current.titel);
+});
+
+test('Bundle protokolliert Audioeigenschaften und prüft reused-regenerated Grenzen auf PCM-Sampleebene', async t => {
+  const f = fixture(t, 'Steuern', 3);
+  const origins = ['reused', 'regenerated', 'reused'];
+  const probes = [
+    { codec: 'mp3', sampleRateHz: 22050, channels: 1, bitrateKbps: 32, profile: 'layer3', encoder: 'LAME3.100', startTimeSeconds: 0.025 },
+    { codec: 'mp3', sampleRateHz: 22050, channels: 1, bitrateKbps: 48, profile: 'layer3', encoder: 'LAME3.100', startTimeSeconds: 0.025 },
+    { codec: 'mp3', sampleRateHz: 44100, channels: 2, bitrateKbps: 128, profile: 'layer3', encoder: 'other', startTimeSeconds: 0.011 }
+  ];
+  let probeIndex = 0;
+  const bundle = await builder.buildSubjectBundle({ ...f, lerntexte: f.catalog,
+    sourceResolver(entry) {
+      const index = f.catalog.findIndex(candidate => candidate.titel === entry.titel);
+      return { sourceEntry: entry, paths: podcastPaths(entry.fach, entry.titel), origin: origins[index] };
+    },
+    probeAudio: async () => probes[probeIndex++]
+  });
+  assert.deepEqual(bundle.sidecar.sourceAudioProperties, probes);
+  assert.equal(bundle.sidecar.boundaryAudit.length, 2);
+  assert.deepEqual(bundle.sidecar.boundaryAudit.map(boundary => boundary.transition), [
+    'reused->regenerated', 'regenerated->reused'
+  ]);
+  assert.ok(bundle.sidecar.boundaryAudit.every(boundary => boundary.verified === true &&
+    boundary.insertedSamples === 0 && boundary.overlapSamples === 0));
+  assert.equal(bundle.sidecar.encoding.sourceNormalization, 'decode-each-to-canonical-pcm');
+  assert.equal(f.calls.filter(args => args.includes('libmp3lame')).length, 1);
+});
+
+test('versioniertes Staging-Sidecar bindet stabile Lerntext-IDs, Kapitelgruppen, Herkunft und Segmenthashes', async t => {
+  const f = fixture(t, 'Steuern', 3);
+  f.catalog.forEach((entry, index) => {
+    entry.id = `LZ-ST-${index + 1}`;
+    entry.chapterKey = index < 2 ? 'ui-wq-steuern-1' : 'ui-wq-steuern-2';
+    entry.hauptkapitelNr = index < 2 ? '1' : '2';
+    entry.hauptkapitel = index < 2 ? 'Grundbegriffe des Steuerrechts' : 'Abgabenordnung';
+  });
+  const bundle = await builder.buildSubjectBundle({ ...f, lerntexte: f.catalog,
+    targetPrefix: 'podcast/staging/lerntext-rev2/', bundleVersion: 'TEST-BUNDLE-v2' });
+
+  assert.equal(bundle.sidecar.schemaVersion, 2);
+  assert.equal(bundle.sidecar.bundleVersion, 'TEST-BUNDLE-v2');
+  assert.deepEqual(bundle.sidecar.chapters.map(chapter => chapter.lerntextId), ['LZ-ST-1', 'LZ-ST-2', 'LZ-ST-3']);
+  assert.deepEqual(bundle.sidecar.chapters.map(chapter => chapter.chapterKey), [
+    'ui-wq-steuern-1', 'ui-wq-steuern-1', 'ui-wq-steuern-2'
+  ]);
+  assert.ok(bundle.sidecar.chapters.every(chapter => chapter.origin === 'reused' && /^[a-f0-9]{64}$/.test(chapter.segmentHash)));
+  assert.deepEqual(bundle.sidecar.chapterGroups, [
+    { chapterKey: 'ui-wq-steuern-1', chapterNumber: '1', chapterTitle: 'Grundbegriffe des Steuerrechts',
+      startIndex: 0, endIndex: 1, lerntextIds: ['LZ-ST-1', 'LZ-ST-2'] },
+    { chapterKey: 'ui-wq-steuern-2', chapterNumber: '2', chapterTitle: 'Abgabenordnung',
+      startIndex: 2, endIndex: 2, lerntextIds: ['LZ-ST-3'] }
+  ]);
+});
+
+test('PCM-Grenzprüfung erkennt künstliche Stille und Überlappung', () => {
+  const previousTail = Buffer.from([1, 2, 3, 4]);
+  const nextHead = Buffer.from([5, 6, 7, 8]);
+  const expected = Buffer.concat([previousTail, nextHead]);
+  const ok = builder.auditPcmJoin({ previousTail, nextHead, actualJoin: expected,
+    previousSamples: 10, nextSamples: 20, previousOrigin: 'reused', nextOrigin: 'regenerated' });
+  assert.equal(ok.verified, true);
+  assert.equal(ok.insertedSamples, 0);
+  assert.equal(ok.overlapSamples, 0);
+  assert.throws(() => builder.auditPcmJoin({ previousTail, nextHead,
+    actualJoin: Buffer.concat([previousTail, Buffer.alloc(2), nextHead]), previousSamples: 10, nextSamples: 20 }), /Stille|Lücke|Grenze/i);
+  assert.throws(() => builder.auditPcmJoin({ previousTail, nextHead,
+    actualJoin: Buffer.concat([previousTail.subarray(0, 2), nextHead]), previousSamples: 10, nextSamples: 20 }), /Überlapp|Grenze/i);
 });
 
 test('rejects empty, partial, foreign and colliding subject lists before decode', async t => {
@@ -208,7 +330,7 @@ test('orchestrator loads full catalog before filtering, validates all collisions
   const f = fixture(t); const g = fixture(t, 'Recht', 1); const catalog = [...f.catalog, ...g.catalog];
   for (const [key, value] of g.objects) f.objects.set(key, value);
   let loads = 0, active = 0, maximum = 0; const order = [];
-  const result = await cli.syncBundles({ bucket: f.bucket, workDir: f.workDir, dryRun: true,
+  const result = await cli.syncBundles({ bucket: f.bucket, workDir: f.workDir, dryRun: true, probeAudio: f.probeAudio,
     loadCatalog: async (...args) => { assert.equal(args.length, 0); loads++; return catalog; },
     buildBundle: async options => { active++; maximum = Math.max(maximum, active); order.push(options.fach);
       try { if (options.fach === 'Recht') throw new Error('source failed'); return await builder.buildSubjectBundle({ ...options, ffmpeg: f.ffmpeg }); }
@@ -235,6 +357,44 @@ test('CLI parses exact subject, rejects unit filtering and emits JSON report', a
   assert.deepEqual(JSON.parse(lines[0]), result);
   await assert.rejects(cli.runCli(['--only', 'Steuern / Kapitel 1']), /Argument/);
   await assert.rejects(cli.runCli(['--only-subject']), /Argument/);
+});
+
+test('Bundle-Orchestrator propagates the exact staging target prefix through build, publish and report', async t => {
+  const f = fixture(t);
+  const targetPrefix = 'podcast/staging/lerntext-rev2/';
+  f.withLock = async (_bucket, key, action) => {
+    assert.equal(key, targetPrefix + 'continuous/steuern.json');
+    return action();
+  };
+  const seen = [];
+  const result = await cli.syncBundles({ ...f, targetPrefix,
+    buildBundle: async options => {
+      seen.push(['build', options.targetPrefix]);
+      return builder.buildSubjectBundle({ ...options, ffmpeg: f.ffmpeg, lerntexte: options.catalog });
+    },
+    publishBundle: async options => {
+      seen.push(['publish', options.targetPrefix]);
+      return builder.publishSubjectBundle(options);
+    }
+  });
+  assert.deepEqual(seen, [['build', targetPrefix], ['publish', targetPrefix]]);
+  assert.equal(result.failed, 0);
+  assert.equal(result.subjects[0].sidecarPath, targetPrefix + 'continuous/steuern.json');
+  assert.ok(f.events.every(event => event.name.startsWith(targetPrefix)));
+});
+
+test('CLI accepts only the approved staging target prefix', async () => {
+  const targetPrefix = 'podcast/staging/lerntext-rev2/';
+  const calls = [];
+  await cli.runCli(['--dry-run', '--target-prefix', targetPrefix], {
+    createAdminClient: async () => ({ storage: () => ({ bucket: () => ({}) }) }),
+    sync: async options => { calls.push(options); return { subjects: [], failed: 0 }; },
+    write() {}
+  });
+  assert.equal(calls[0].targetPrefix, targetPrefix);
+  await assert.rejects(cli.runCli(['--dry-run', '--target-prefix', 'podcast/'], {
+    createAdminClient: async () => { throw new Error('must not access storage'); }
+  }), /Staging|Präfix|Ziel/i);
 });
 
 test('complete API loader rejects empty and foreign subject responses, including an unselected subject', async () => {

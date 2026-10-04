@@ -450,6 +450,32 @@ function configureContinuousRechtBundle(fixture, entries, fach = 'Recht', slug =
   return { manifest, manifestHash, chapters };
 }
 
+function configureVersionedStagingBundle(fixture, entries, fach = 'Recht', slug = 'recht') {
+  fixture.eventWindow.WIFA_PODCAST_STORAGE_PREFIX = 'podcast/staging/lerntext-rev2/';
+  const bundle = configureContinuousRechtBundle(fixture, entries, fach, slug);
+  bundle.manifest.schemaVersion = 2;
+  bundle.manifest.bundleVersion = 'WIFA-PODCAST-STAGING-TEST-v2';
+  bundle.manifest.mp3Path = 'podcast/staging/lerntext-rev2/continuous/' + slug + '/' + bundle.manifest.bundleHash + '.mp3';
+  bundle.chapters.forEach((chapter, index) => {
+    chapter.lerntextId = entries[index].id;
+    chapter.chapterKey = entries[index].chapterKey;
+    chapter.origin = index % 2 ? 'regenerated' : 'reused';
+    chapter.segmentHash = String(index + 1).padStart(64, 'a').slice(-64);
+  });
+  bundle.manifest.chapterGroups = [];
+  bundle.chapters.forEach((chapter, index) => {
+    let group = bundle.manifest.chapterGroups.at(-1);
+    if (!group || group.chapterKey !== chapter.chapterKey) {
+      group = { chapterKey: chapter.chapterKey, chapterNumber: chapter.hauptkapitelNr,
+        chapterTitle: chapter.hauptkapitel, startIndex: index, endIndex: index, lerntextIds: [] };
+      bundle.manifest.chapterGroups.push(group);
+    }
+    group.endIndex = index;
+    group.lerntextIds.push(chapter.lerntextId);
+  });
+  return bundle;
+}
+
 function deferred() {
   let resolve;
   let reject;
@@ -3941,6 +3967,61 @@ test('Recht-Bundle: Dropdown bietet 57 eindeutige MP3-Pfade auch bei wiederholte
   assert.strictEqual(values[55], 'podcast/recht-recht-einheit-56.mp3');
   assert.strictEqual(values[56], 'podcast/recht-recht-einheit-57.mp3');
   assert.match(options[56].textContent, /Recht Einheit 57/);
+});
+
+test('Staging-Bundle: Dropdown gruppiert sichtbare Kapitel und verwendet ausschließlich stabile Lerntext-IDs', () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries(4).map((entry, index) => ({ ...entry,
+    id: `LZ-RE-${index + 1}`, chapterKey: index < 2 ? 'ui-wq-re-1' : 'ui-wq-re-2',
+    hauptkapitelNr: index < 2 ? '1' : '2', hauptkapitel: index < 2 ? 'BGB Allgemeiner Teil' : 'BGB Schuldrecht' }));
+  fixture.context.window.__renderEntries(entries, 'Recht');
+
+  const select = fixture.document.getElementById('lerntexteKapitelSelect');
+  const groups = select.childNodes.slice(1);
+  assert.equal(groups.length, 2);
+  assert.deepEqual(Array.from(groups, group => group.label), ['Kapitel 1 – BGB Allgemeiner Teil', 'Kapitel 2 – BGB Schuldrecht']);
+  assert.deepEqual(Array.from(groups.flatMap(group => group.childNodes), option => option.value),
+    ['LZ-RE-1', 'LZ-RE-2', 'LZ-RE-3', 'LZ-RE-4']);
+  assert.ok(groups.flatMap(group => group.childNodes).every(option => !option.value.startsWith('podcast/')));
+});
+
+test('Staging-Bundle: Resume speichert ID plus Bundle-Version und verwendet keinen Offset einer anderen Version', async () => {
+  const fixture = createBlock2Context();
+  const entries = continuousRechtEntries(3).map((entry, index) => ({ ...entry,
+    id: `LZ-RE-${index + 1}`, chapterKey: 'ui-wq-re-1', hauptkapitel: 'BGB Allgemeiner Teil' }));
+  const bundle = configureVersionedStagingBundle(fixture, entries);
+  const resumePath = 'podcast/staging/lerntext-rev2/continuous/recht.json#' + bundle.manifest.bundleVersion;
+  const progress = configureBlock3Progress(fixture, [{
+    nutzer: 'user-123', fach: 'Recht', einheit: entries[1].id, firebasePfad: resumePath,
+    lerntextHash: fixture.expectedHash, sekundenPosition: 1.5, wortIndex: 1, completed: false
+  }]);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+  fixture.context.window.__selectChapter(entries[1].id);
+  await fixture.context.window.lerntexteAudioAbspielen();
+  assert.equal(fixture.audio.currentTime, bundle.chapters[1].start + 1.5);
+
+  await fixture.document.getElementById('lerntexteAudioPauseBtn').onclick();
+  await flushAsync();
+  const saved = progress.saveCalls.at(-1);
+  assert.equal(saved.einheit, entries[1].id);
+  assert.equal(saved.firebasePfad, resumePath);
+
+  const stale = createBlock2Context();
+  const staleBundle = configureVersionedStagingBundle(stale, entries);
+  configureBlock3Progress(stale, [{
+    nutzer: 'user-123', fach: 'Recht', einheit: entries[1].id,
+    firebasePfad: 'podcast/staging/lerntext-rev2/continuous/recht.json#OLD-VERSION',
+    lerntextHash: stale.expectedHash, sekundenPosition: 2.5, wortIndex: 1, completed: false
+  }]);
+  const mapped = await stale.context.window.lerntextePilotFortschrittLaden('user-123', entries[1], {
+    einheit: entries[1].id,
+    firebasePfad: 'podcast/staging/lerntext-rev2/continuous/recht.json#' + staleBundle.manifest.bundleVersion
+  });
+  assert.equal(mapped.length, 1, 'ältere Bundle-Version bleibt über die stabile Lerntext-ID auffindbar');
+  stale.context.window.__renderEntries(entries, 'Recht');
+  stale.context.window.__selectChapter(entries[1].id);
+  await stale.context.window.lerntexteAudioAbspielen();
+  assert.equal(stale.audio.currentTime, staleBundle.chapters[1].start);
 });
 
 test('Recht-Bundle: Dropdown springt direkt und schnell zwischen logischen Einheiten ohne Medienwechsel', async () => {

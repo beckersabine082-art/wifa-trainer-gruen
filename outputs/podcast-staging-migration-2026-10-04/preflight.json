@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "bundleVersion": "WIFA-PODCAST-STAGING-LZREV2-20261004-v1",
+  "targetPrefix": "podcast/staging/lerntext-rev2/",
+  "dryRun": true,
+  "plan": {
+    "ids": 521,
+    "subjects": 13,
+    "chapters": 48,
+    "reused": 479,
+    "regenerated": 42,
+    "pathMigrations": 4
+  },
+  "reuseAudit": {
+    "count": 479,
+    "uniform": false,
+    "distribution": {
+      "{\"codec\":\"mp3\",\"profile\":\"mp3 (mp3float)\",\"sampleRateHz\":22050,\"channels\":1,\"bitrateKbps\":96,\"encoder\":\"Lavf61.7.100\",\"startTimeSeconds\":0.050113}": 446,
+      "{\"codec\":\"mp3\",\"profile\":\"mp3 (mp3float)\",\"sampleRateHz\":24000,\"channels\":1,\"bitrateKbps\":128,\"encoder\":\"Lavf61.7.100\",\"startTimeSeconds\":0}": 33
+    }
+  },
+  "writeTargetSlots": 110,
+  "writeTargetPlan": {
+    "exactRegeneratedSegmentObjects": 84,
+    "exactBundleSidecars": 13,
+    "closedContentAddressedBundleMp3Patterns": 13,
+    "allUnderStagingPrefix": true
+  },
+  "subjects": []
+}
