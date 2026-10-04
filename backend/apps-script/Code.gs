@@ -24,7 +24,8 @@ const OPENAI_API_KEY = PropertiesService
   .getProperty('OPENAI_API_KEY');
 
 function getSpreadsheet_() {
-  return SpreadsheetApp.getActiveSpreadsheet();
+  // Staging-only: Produktion Version 114 behält ihren unveränderten, gebundenen Datenzugriff.
+  return SpreadsheetApp.openById('1cJ8Wa92r-_LRmMOf3h3kTqfHV8Qz3ZjERuCP1Un25r8');
 }
 
 function getSheetByNameSafe_(name) {
@@ -2892,7 +2893,7 @@ function getLerntexte(fach) {
     return [];
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet_();
   const sheet = ss.getSheetByName("Lerntexte");
 
   if (!sheet) {
