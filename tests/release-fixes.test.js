@@ -81,10 +81,11 @@ test('protected browser calls send current tokens in POST body and fail closed o
   vm.createContext(c);vm.runInContext(read('js/api.js').replace("await import('./firebase-config.js')",'({auth:fixtureAuth})'),c);
   await c.apiGet('getProgress',{nutzer:'victim',fach:'Recht'});
   await c.bewertePruefungsAntworten([{antwort:'fixture'}]);
+  await c.apiPost('usageOptOutStatus');
   for(const call of calls){assert.equal(call.options.method,'POST');assert.equal(JSON.parse(call.options.body).idToken,'verified-token');assert.ok(!call.url.includes('verified-token'));assert.equal(call.options.referrerPolicy,'no-referrer');}
   c.fixtureAuth.currentUser=null;await assert.rejects(c.apiPost('frageKilian',{frage:'test'}));
   c.fixtureAuth.currentUser=user;user.getIdToken=async()=>{c.fixtureAuth.currentUser=null;return 'old';};
-  await assert.rejects(c.apiPost('frageKilian',{frage:'test'}));assert.equal(calls.length,2);
+  await assert.rejects(c.apiPost('frageKilian',{frage:'test'}));assert.equal(calls.length,3);
   user.getIdToken=async()=> 'verified-token';c.fixtureAuth.currentUser=user;
   c.fetch=async()=>({ok:true,json:async()=>{c.fixtureAuth.currentUser=null;return {success:true,data:'old-user-data'};}});
   await assert.rejects(c.apiPost('getLernstand'));

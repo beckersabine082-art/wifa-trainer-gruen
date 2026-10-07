@@ -192,6 +192,15 @@ test('POST routing protects both statistics routes and does not echo malformed b
   assert.deepEqual(post('{"idToken":"private-token",'),{success:false,error:'invalid_request'});
   assert.equal(post({action:'setupUsageStatistics'}).success,false);
 });
+test('POST routing sends authenticated opt-out status through the verified usage handler',()=>{
+  const h=setup();
+  h.ctx.ContentService={MimeType:{JSON:'json'},createTextOutput:text=>({text,setMimeType(){return this;}})};
+  vm.runInNewContext(fs.readFileSync('backend/apps-script/Code.gs','utf8'),h.ctx);
+  const response=JSON.parse(h.ctx.doPost({postData:{contents:JSON.stringify({action:'usageOptOutStatus',idToken:token()})}}).text);
+  assert.deepEqual(response,{success:true,optedOut:false});
+  assert.equal(h.calls.fetch,1);
+  assert.equal(h.calls.write,0);
+});
 test('setup is private to the editor, idempotent and leaves collection disabled',()=>{
   const h=setup(); const originalRows=plain(h.rows);
   h.ctx.setupUsageStatistics_();h.ctx.setupUsageStatistics_();

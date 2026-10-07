@@ -1,5 +1,15 @@
 // Fixed public curriculum allowlist. Generated 2026-09-10; review changes before release.
 window.WIFA_ANALYTICS_TOPICS = Object.freeze({
+  "recht|ui-wq-recht-at": "ui-wq-recht-at",
+  "recht|ui-wq-recht-schuld": "ui-wq-recht-schuld",
+  "recht|ui-wq-recht-sachen": "ui-wq-recht-sachen",
+  "recht|ui-wq-recht-handel": "ui-wq-recht-handel",
+  "recht|ui-wq-recht-arbeit": "ui-wq-recht-arbeit",
+  "recht|ui-wq-recht-wettbewerb": "ui-wq-recht-wettbewerb",
+  "recht|ui-wq-recht-gewerbe": "ui-wq-recht-gewerbe",
+  "steuern|ui-wq-steuern-grundlagen": "ui-wq-steuern-grundlagen",
+  "steuern|ui-wq-steuern-unternehmen": "ui-wq-steuern-unternehmen",
+  "steuern|ui-wq-steuern-ao": "ui-wq-steuern-ao",
   "betriebliches_management|7-Phasen-Modell nach Streich": "betriebliches_management_a145cefcd4db",
   "betriebliches_management|Benchmarking als Vergleichsinstrument": "betriebliches_management_fcaa26b17cb0",
   "betriebliches_management|Betriebliche Planungsprozesse": "betriebliches_management_70ccb6fbf2a1",

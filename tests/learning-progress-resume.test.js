@@ -445,7 +445,7 @@ test('shuffle navigation still does not persist progress while the shuffle flag 
   assert.equal(posted, false);
 });
 
-test('lernstand loads from topic counts without questionsForTopic requests', async () => {
+test('lernstand loads topic counts plus one stable-ID inventory for a legacy catalog', async () => {
   const source = fs.readFileSync(path.join(__dirname, '../js/lernstand.js'), 'utf8').replace(/^import[\s\S]*?;\s*/gm, '').replace(/^export /gm, '');
   const stripped = source
     .replace(/^import\s+.*?;\s*$/gm, '')
@@ -520,8 +520,7 @@ test('lernstand loads from topic counts without questionsForTopic requests', asy
   vm.runInContext(stripped, context);
   await context.window.ladeWifaLernstand();
 
-  assert.deepEqual(requestActions, ['trainerCatalog', 'topics']);
-  assert.ok(!requestActions.includes('questionsForTopic'));
+  assert.deepEqual(requestActions, ['trainerCatalog', 'topics', 'questionsForTopic']);
   const status = elements.get('lernstandStatus');
   const list = elements.get('lernstandListe');
   assert.ok(status.textContent.includes('Lernversuche geladen') || status.textContent.includes('Noch keine Fragen bearbeitet'));

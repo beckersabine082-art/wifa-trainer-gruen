@@ -146,6 +146,8 @@ test('Recht exposes seven pools with 567 unique IDs and the exact approved count
   ]);
   assert.equal(catalog.topics.length,7);
   assert.equal(catalog.topics.reduce((sum,topic) => sum + topic.anzahl,0),567);
+  assert.equal(catalog.questionIds.length,567);
+  assert.equal(new Set(catalog.questionIds).size,567);
   assert.equal(ids.length,567);
   assert.equal(new Set(ids).size,567);
 });
@@ -163,6 +165,8 @@ test('Steuern exposes three pools with 233 unique IDs and the exact approved cou
   ]);
   assert.equal(catalog.topics.length,3);
   assert.equal(catalog.topics.reduce((sum,topic) => sum + topic.anzahl,0),233);
+  assert.equal(catalog.questionIds.length,233);
+  assert.equal(new Set(catalog.questionIds).size,233);
   assert.equal(ids.length,233);
   assert.equal(new Set(ids).size,233);
 });

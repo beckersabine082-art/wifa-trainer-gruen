@@ -13,13 +13,13 @@ const expected = {
 
 function createContext(activeGroup, progressRows) {
   const tables = buildAll(manifest);
-  tables.Trainer_Migrationen = tables.Trainer_Migrationen.map((row,i) => i && row[12] === activeGroup ? row.map((v,j) => j === 8 ? 'AKTIV' : v) : row);
+  const activeGroups = new Set(Array.isArray(activeGroup) ? activeGroup : [activeGroup]);
+  tables.Trainer_Migrationen = tables.Trainer_Migrationen.map((row,i) => i && activeGroups.has(row[12]) ? row.map((v,j) => j === 8 ? 'AKTIV' : v) : row);
   if(progressRows) tables.NutzerFortschritt=progressRows;
   const reads=new Map();
   const sheets = new Map(Object.entries(tables).map(([name,rows]) => [name,{getDataRange:()=>({getValues:()=>{reads.set(name,(reads.get(name)||0)+1);return rows;}})}]));
   const bySource = new Map();
   manifest.primaryAssignments.forEach(x => {
-    if (x.pilot) return;
     if (!bySource.has(x.source)) bySource.set(x.source,[]);
     bySource.get(x.source).push({id:x.id,thema:x.oldTopic,frage:x.question,aktiv:'ja'});
   });
@@ -111,4 +111,28 @@ test('Resume löst historische Quellfachzustände eines Mehrquellenfachs über s
   const progress=context.getTrainerCompatibleProgress_('u-1','trainer','VWL','tr-v2:ui-wq-0002');
   assert.equal(progress.letzteFrageId,'BWL-0001');
   assert.equal(progress.auswahl,'tr-v2:ui-wq-0002');
+});
+
+test('aktive Kataloge liefern 2686 globale IDs und weisen die 743 Aliaszugriffe explizit als Duplikate aus',()=>{
+  const context=createContext(Object.keys(expected));
+  const subjects=[
+    ['Rechnungswesen',122],['BWL',283],['VWL',283],['Unternehmensführung',235],
+    ['Führung und Zusammenarbeit',205],['Betriebliches Management',264],['Logistik',317],['Marketing',191],['Vertrieb',191],
+    ['Investition und Finanzierung',269],['Betriebliches Rechnungswesen und Controlling',269]
+  ];
+  const catalogs=subjects.map(([fach,count])=>{
+    const catalog=context.getTrainerCatalogFrontend(fach);
+    assert.equal(catalog.active,true,fach);
+    assert.equal(catalog.questionIds.length,count,fach);
+    assert.equal(new Set(catalog.questionIds).size,count,fach);
+    return catalog;
+  });
+  const pilotBySource=Object.groupBy(manifest.primaryAssignments.filter(item=>item.pilot),item=>item.source);
+  assert.equal(pilotBySource.Recht.length,567);
+  assert.equal(pilotBySource.Steuern.length,233);
+  const reachable=[...pilotBySource.Recht.map(item=>item.id),...pilotBySource.Steuern.map(item=>item.id),
+    ...catalogs.flatMap(catalog=>catalog.questionIds)];
+  assert.equal(reachable.length,3429);
+  assert.equal(new Set(reachable).size,2686);
+  assert.equal(reachable.length-new Set(reachable).size,743);
 });

@@ -2,7 +2,7 @@ const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-function boot({origin = 'https://wifa-trainer.de', pathname='/', consent, blocked = false} = {}) {
+function boot({origin = 'https://wifa-trainer.de', pathname='/', consent, blocked = false, apiPost} = {}) {
   const storage = new Map(consent ? [['wifa.analytics.consent.v1', JSON.stringify(consent)]] : []);
   const frames = [], elements = new Map(), timers = [];
   class Element extends EventTarget {
@@ -21,6 +21,7 @@ function boot({origin = 'https://wifa-trainer.de', pathname='/', consent, blocke
     location: {origin, pathname, hostname: new URL(origin).hostname},
     WIFA_ANALYTICS_SETTINGS: {enabled:true, measurementId:'G-TEST123', productionOrigin:'https://wifa-trainer.de', productionPath:'/'},
     localStorage: {getItem:k => storage.get(k) || null, setItem(k,v) {if (blocked) throw Error(); storage.set(k,v);}},
+    apiPost,
   });
   const ctx = {window:win, document:doc, Date, Set, Map, WeakMap, URL, setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length;}, clearTimeout:()=>{}};
   vm.runInNewContext(fs.readFileSync('js/analytics-core.js','utf8'),ctx);
@@ -75,4 +76,14 @@ test('failed persistence must never undo a withdrawal on the next refresh', () =
 test('published test and preview pages are excluded even on the production host', () => {
   const b=boot({pathname:'/tests/analytics-browser.html'});
   b.win.WifaAnalytics.choose(true); assert.equal(b.frames.length,0);
+});
+test('interne Nutzungsstatistik zeigt den authentifiziert geladenen Status an', async () => {
+  const actions=[];
+  const b=boot({apiPost:async action=>(actions.push(action),{success:true,optedOut:false})});
+  b.doc.body.children.find(element=>element.id==='analyticsSettings').dispatchEvent(new Event('click'));
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(actions,['usageOptOutStatus']);
+  assert.equal(b.elements.get('internalUsageStatus').textContent,'Interne Nutzungsstatistik ist für dieses Konto aktiviert.');
+  assert.equal(b.elements.get('internalUsageOptOut').disabled,false);
+  assert.equal(b.elements.get('internalUsageOptIn').disabled,true);
 });

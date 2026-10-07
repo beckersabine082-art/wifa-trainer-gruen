@@ -738,11 +738,12 @@ function getTrainerRolloutActiveSource_(metadata) {
 
 function getTrainerRolloutCatalog_(fach, contract, migration) {
   const metadata=getTrainerRolloutMetadata_(contract);
-  if(!metadata.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,fallbackReason:"invalid_metadata",migrationStatus:migration.status,topics:[]};
+  if(!metadata.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,fallbackReason:"invalid_metadata",migrationStatus:migration.status,questionIds:[],topics:[]};
   const source=getTrainerRolloutActiveSource_(metadata);
-  if(!source.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,fallbackReason:"invalid_source",migrationStatus:migration.status,topics:[]};
+  if(!source.valid)return {active:false,version:"legacy",fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,fallbackReason:"invalid_source",migrationStatus:migration.status,questionIds:[],topics:[]};
   const topics=metadata.topics.slice().sort(function(a,b){return Number(a.Sortierung||0)-Number(b.Sortierung||0);}).map(function(x){const k=String(x.UIThemenKey||"").trim();return {uiThemenKey:k,thema:String(x.Anzeigename||"").trim(),anzahl:metadata.assignments.filter(function(a){return metadata.assignmentById[String(a.TrainerID||"").trim()].uiThemenKey===k;}).length,sortierung:Number(x.Sortierung||0),version:TRAINER_ROLLOUT_VERSION_};});
-  return {active:true,version:TRAINER_ROLLOUT_VERSION_,fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,migrationId:migration.migrationId,migrationStatus:migration.status,topics:topics};
+  const questionIds=metadata.assignments.map(function(item){return String(item.TrainerID||"").trim();});
+  return {active:true,version:TRAINER_ROLLOUT_VERSION_,fach:fach,fachKey:contract.fachKey,fachgruppeCode:contract.groupCode,migrationId:migration.migrationId,migrationStatus:migration.status,questionIds:questionIds,topics:topics};
 }
 
 function getTrainerRolloutQuestions_(fach, uiKey, contract, migration) {
@@ -769,12 +770,13 @@ function getTrainerCatalogFrontend(fach) {
       fach: safeFach,
       fallbackReason: "",
       migrationStatus: "",
+      questionIds: getActiveQuestions(safeFach).map(function(question) { return String(question.id || "").trim(); }).filter(Boolean),
       topics: getTopicsForSheet(safeFach)
     };
   }
   const migration = getTrainerPilotMigration_();
   if (!migration) {
-    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "missing_migration", migrationStatus: "", topics: []};
+    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "missing_migration", migrationStatus: "", questionIds: [], topics: []};
   }
   const migrationStatus = String(migration.status || "").trim().toUpperCase();
   if (!migration.active) {
@@ -785,16 +787,17 @@ function getTrainerCatalogFrontend(fach) {
       fach: safeFach,
       fallbackReason: rolledBack ? "" : "inactive_migration",
       migrationStatus: migrationStatus,
+      questionIds: rolledBack ? getActiveQuestions(safeFach).map(function(question) { return String(question.id || "").trim(); }).filter(Boolean) : [],
       topics: rolledBack ? getTopicsForSheet(safeFach) : []
     };
   }
   const metadata = getTrainerPilotRuntimeMetadata_();
   if (!metadata.valid) {
-    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_metadata", migrationStatus: migrationStatus, topics: []};
+    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_metadata", migrationStatus: migrationStatus, questionIds: [], topics: []};
   }
   const source = getTrainerPilotActiveSource_(metadata, safeFach);
   if (!source.valid) {
-    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_source", migrationStatus: migrationStatus, topics: []};
+    return {active: false, version: "legacy", fach: safeFach, fallbackReason: "invalid_source", migrationStatus: migrationStatus, questionIds: [], topics: []};
   }
   const topics = metadata.topics.filter(function(item) {
     return String(item.Quellfach || "").trim() === safeFach &&
@@ -822,6 +825,9 @@ function getTrainerCatalogFrontend(fach) {
     migrationId: migration.migrationId,
     migrationStatus: migrationStatus,
     fach: safeFach,
+    questionIds: metadata.assignments.filter(function(item) {
+      return String(item.Quellfach || "").trim() === safeFach;
+    }).map(function(item) { return String(item.TrainerID || "").trim(); }),
     topics: topics
   };
 }
@@ -1232,7 +1238,7 @@ function doPost(e) {
       return ContentService.createTextOutput(JSON.stringify({success:false,error:'invalid_request'}))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    if (body && (body.action === 'usageRecord' || body.action === 'usageRead')) {
+    if (body && ['usageRecord','usageRead','usageOptOutStatus','usageOptOut','usageOptIn'].includes(body.action)) {
       return ContentService.createTextOutput(JSON.stringify(usageHandle_(body)))
         .setMimeType(ContentService.MimeType.JSON);
     }

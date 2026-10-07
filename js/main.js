@@ -26,6 +26,9 @@ const faecherNachTeilbereich = {
   let aktuellePruefungsDaten = [];
   let letztePruefungsAntworten = [];
   let aktuellesThema = "";
+  let aktuellesTrainerThemaKey = "";
+  let aktuelleTrainerKatalogVersion = "";
+  let aktuelleFrageQuellthema = "";
   let aktuelleMusterloesung = "";
   let aktuelleStichpunkte = [];
   let aktuelleFrageId = "";
@@ -71,7 +74,7 @@ const faecherNachTeilbereich = {
   function trainerEinstiegStateAusProduktivemKontext() {
     const teilbereich = String(aktuellerTeilbereich || "").trim();
     const fach = String(aktuellesFach || "").trim();
-    const thema = String(aktuellesThema || "").trim();
+    const thema = String(aktuellesTrainerThemaKey || aktuellesThema || "").trim();
     return {
       teilbereich,
       fach: (faecherNachTeilbereich[teilbereich] || []).includes(fach) ? fach : "",
@@ -124,8 +127,11 @@ const faecherNachTeilbereich = {
       if (!trainerEinstiegsDialogState || trainerEinstiegsDialogState.fach !== fachZumLaden) return;
       trainerEinstiegSetzeOptionen(themaSelect, themen.map(function(eintrag) {
         const name = typeof eintrag === "string" ? eintrag : String(eintrag.thema || "").trim();
+        const value = typeof eintrag === "string"
+          ? eintrag
+          : String(eintrag.value || eintrag.uiThemenKey || name).trim();
         const anzahl = typeof eintrag === "object" ? Number(eintrag.anzahl || 0) : 0;
-        return { value: name, label: anzahl > 0 ? name + " (" + anzahl + " Fragen)" : name };
+        return { value, label: anzahl > 0 ? name + " (" + anzahl + " Fragen)" : name };
       }), "-- Thema wählen --");
       themaSelect.value = trainerEinstiegsDialogState.thema || "";
       themaSelect.disabled = false;

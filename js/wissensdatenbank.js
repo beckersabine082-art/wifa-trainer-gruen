@@ -48,7 +48,7 @@ async function kartenFachWaehlen() {
   try {
     document.getElementById("kartenStatus").textContent = "Themen werden geladen...";
 
-    const result = await apiGet("topics", { fach });
+    const result = await apiGet("cardTopics", { fach });
 
     if (!result.success) {
       throw new Error(result.error || "Themen konnten nicht geladen werden.");
