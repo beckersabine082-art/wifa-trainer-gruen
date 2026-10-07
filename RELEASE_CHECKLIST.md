@@ -94,8 +94,25 @@ Status: **GO**
 - [x] keine Trainer-Metadaten dupliziert
 - [x] keine Nutzerleistung verändert
 - [x] Backend Version 121 separat abgenommen
-- [ ] Frontend abgenommen
-- [ ] kompletter Produktions-Smoke-Test
+- [ ] Frontend abgenommen — Smoke-Test am 07.10.2026 gestoppt; Client auf Vor-Release-Stand zurückgeschaltet
+- [ ] kompletter Produktions-Smoke-Test — NO-GO wegen Lernstand-Gesamtsumme 3.429 statt 2.686 eindeutiger IDs und nicht verfügbarem Status der internen Nutzungsstatistik
+
+## Produktions-Smoke und Rollback 2026-10-07
+
+- Login, Trainer Recht, weiteres WQ-Fach, HQ-Fach, Quiz, Karteikarten, Lerntexte,
+  Podcast Recht und Logistik, Kapitel-/Einzeltextwahl, Resume, Lernstand sowie
+  Logout/Login wurden im angemeldeten Produktionsbrowser ausgeführt.
+- Podcast Recht und Logistik lieferten reale Dauer und erfolgreiche Wiedergabe.
+- Der Lernstand summierte Alias-Fächer mehrfach und zeigte 3.429 statt 2.686
+  eindeutiger Trainer-IDs.
+- Die interne Nutzungsstatistik meldete vor und nach Logout/Login reproduzierbar
+  `Status nicht verfügbar`.
+- Daraufhin wurden ausschließlich Frontend und Apps-Script-Deployment gemäß
+  `ROLLBACK_PLAN.md` zurückgeschaltet. Sheetdaten, Nutzerleistungen und immutable
+  Podcastobjekte blieben unverändert.
+- Frontend-Rollback-Commit: `e6600b49f76448885a982befe0d48963625cd053`.
+- Apps-Script-Deployment-ID unverändert; Version zurück auf 114.
+- Finaler Produktionsstatus: **ROLLBACK/STOP**.
 
 ## Entscheidung
 

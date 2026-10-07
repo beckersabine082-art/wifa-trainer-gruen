@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "executedAt": "2026-10-07T19:22:23+02:00",
+  "result": "ROLLBACK_STOP",
+  "passed": [
+    "login",
+    "trainerRecht",
+    "trainerAdditionalWq",
+    "trainerHq",
+    "quiz",
+    "flashcards",
+    "learningTexts",
+    "podcastRechtPlayback",
+    "podcastRechtAllChapters",
+    "podcastRechtChapterSelection",
+    "podcastRechtSingleTextSelection",
+    "podcastVisibleNumbering",
+    "podcastSecondSubjectPlayback",
+    "resume",
+    "learningProgressLoad",
+    "logoutLogin"
+  ],
+  "failed": [
+    {
+      "gate": "learningProgressUniqueTrainerBalance",
+      "expected": 2686,
+      "actual": 3429,
+      "cause": "The learning-progress overview sums alias subject pools instead of unique trainer IDs."
+    },
+    {
+      "gate": "internalUsageAnalyticsStatus",
+      "expected": "available",
+      "actual": "Status nicht verfügbar",
+      "reproducedAfterLogoutLogin": true
+    }
+  ],
+  "rollback": {
+    "frontend": {
+      "previousReleaseCommit": "0fbe836f2cf9ffeb42c090b8018551fabac8a619",
+      "rollbackCommit": "e6600b49f76448885a982befe0d48963625cd053",
+      "preReleaseTree": "88fa86e3ec137f2a28a8c286b1cf4ed7db6ed6a2",
+      "status": "PUBLISHED"
+    },
+    "appsScript": {
+      "deploymentId": "AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA",
+      "fromVersion": 121,
+      "toVersion": 114,
+      "status": "DEPLOYMENT_UPDATED"
+    },
+    "sheetDataRolledBack": false,
+    "userProgressChangedByRollback": false,
+    "podcastObjectsChangedByRollback": false
+  },
+  "podcastPromotionVersion": "WIFA-PODCAST-PROD-LZREV2-20261007-v2",
+  "finalStatus": "ROLLBACK/STOP"
+}
