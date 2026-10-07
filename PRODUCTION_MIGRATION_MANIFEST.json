@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
-  "auditRevision": "FINAL-RELEASE-AUDIT-20261007-2",
-  "state": "BLOCKED_NO_GO_AUTHENTICATED_STORAGE_GATE",
+  "auditRevision": "FINAL-RELEASE-AUDIT-20261007-3",
+  "state": "READY_GO_AWAITING_EXPLICIT_PRODUCTION_APPROVAL",
   "writeEnabled": false,
-  "auditedAt": "2026-10-07T13:32:25.6199388+02:00",
+  "auditedAt": "2026-10-07T15:00:40.8432774+02:00",
   "source": {
     "branch": "codex/rahmenplan-gesamtrollout-rev2",
     "headBeforeReleaseBlockerFixes": "aeb97c30d3b8f15f3f26613d1135ec5719a6f73f",
@@ -240,18 +240,17 @@
       "evidence": "Immutable production runtime config and exact 110-object promotion manifest."
     },
     {
+      "id": "B4_AUTHENTICATED_STORAGE_RECHECK_OPEN",
+      "status": "RESOLVED",
+      "evidence": "Authenticated normal-browser read-only diagnostic: 13/13 sidecars, 13/13 bundles, 13/13 loadedmetadata and 13/13 finite durations greater than zero; Recht navigation checks passed."
+    },
+    {
       "id": "B5_FRESH_PRODUCTION_SNAPSHOT_OPEN",
       "status": "RESOLVED",
       "evidence": "Atomic preflight implementation and race-abort tests; backup intentionally created only immediately before an authorized first write."
     }
   ],
-  "blockingConditions": [
-    {
-      "id": "B4_AUTHENTICATED_STORAGE_RECHECK_OPEN",
-      "status": "OPEN",
-      "description": "The read-only diagnostic exists, but the audit environment has no access to the user's signed-in normal-browser Firebase session. A real 13/13 sidecar, 13/13 bundle and 13/13 loadedmetadata PASS remains mandatory."
-    }
-  ],
+  "blockingConditions": [],
   "dryRun": {
     "report": "release/WIFA-GESAMT-PROD-20261007-RC1/dry-run/PRODUCTION_DRY_RUN_20261007.json",
     "liveEvidence": "release/WIFA-GESAMT-PROD-20261007-RC1/dry-run/PRODUCTION_LIVE_EVIDENCE_20261007.json",
@@ -283,10 +282,10 @@
     "postWrite": "read back every affected record and recompute all balances"
   },
   "approval": {
-    "currentDecision": "NO-GO",
+    "currentDecision": "GO",
     "dataConflictsFound": 0,
-    "releaseBlockers": 1,
+    "releaseBlockers": 0,
     "productionExecutionAuthorized": false,
-    "requiredNextApproval": "First obtain the authenticated 13/13/13 PASS. Then rerun the final gate and request a separate explicit production execution approval."
+    "requiredNextApproval": "Obtain a separate explicit production execution approval, establish the change window, and run the atomic preflight immediately before the first write."
   }
 }

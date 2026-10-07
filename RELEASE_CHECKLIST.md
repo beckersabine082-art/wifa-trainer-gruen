@@ -2,9 +2,9 @@
 
 Release: `WIFA-GESAMT-PROD-20261007-RC1`
 
-Audit: `FINAL-RELEASE-AUDIT-20261007-2`
+Audit: `FINAL-RELEASE-AUDIT-20261007-3`
 
-Status: **NO-GO**
+Status: **GO**
 
 ## Releasequelle
 
@@ -36,8 +36,11 @@ Status: **NO-GO**
 - [x] fehlendes neues Bundle fail-closed
 - [x] read-only Diagnosemodus nur bei explizitem lokalen Queryparameter
 - [x] Diagnose zeigt/persistiert keine Tokens oder Download-URLs
-- [ ] angemeldeter Normalbrowser meldet
-  `13/13 Sidecars | 13/13 Bundles | 13/13 loadedmetadata | PASS`
+- [x] angemeldeter Normalbrowser meldet
+  `13/13 Sidecars | 13/13 Bundles | 13/13 loadedmetadata | 13/13 duration > 0 | PASS`
+- [x] Recht meldet 48-Kapitel-Navigation, Alle Kapitel, Kapitel 1,
+  Einzeltextziel und Nummerierung als PASS; Start bei
+  `1.1 Anspruchsprüfung und Gutachtenstil`
 
 ## Read-only Produktions-Dry-Run
 
@@ -63,12 +66,12 @@ Status: **NO-GO**
 - [x] vorhandene Trainer-Metadaten werden nicht dupliziert
 - [x] Nutzerdaten außerhalb der Migration
 - [x] atomarer Preflight und Race-Abbruch
-- [x] releasebezogene Tests 420/420
+- [x] aktuelle releasebezogene Tests 431/431
 - [x] 11 bekannte Fehler als identische `main`-Baseline dokumentiert
 
 ## Unmittelbar vor einem später freigegebenen Write
 
-- [ ] B4-PASS dokumentiert
+- [x] B4-PASS dokumentiert
 - [ ] separate ausdrückliche Produktionsfreigabe
 - [ ] Change Window aktiv
 - [ ] aktueller `main`-Commit ermittelt
@@ -94,8 +97,8 @@ Status: **NO-GO**
 
 ## Entscheidung
 
-- Gelöste Blocker: **B1, B2, B3, B5**
-- Offener Blocker: **B4**
+- Gelöste Blocker: **B1, B2, B3, B4, B5**
+- Offener Blocker: **keiner**
 - Offene Datenkonflikte: **0**
-- Technischer Audit: **NO-GO**
+- Technischer Audit: **GO**
 - Produktionsausführung autorisiert: **nein**

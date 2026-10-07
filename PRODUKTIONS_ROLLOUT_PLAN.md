@@ -2,7 +2,7 @@
 
 Release: `WIFA-GESAMT-PROD-20261007-RC1`
 
-Status: **vorbereitet, nicht freigegeben**
+Status: **technischer Audit GO, Produktionsausführung nicht freigegeben**
 
 Produktionsausführung: **nein**
 
@@ -20,13 +20,10 @@ Produktionsausführung: **nein**
 
 ## Noch vor jeder Ausführung
 
-1. Authentifizierten lokalen Diagnosemodus aufrufen:
-   `http://127.0.0.1:4173/?podcastDiagnostic=1`.
-2. Nur bei
-   `13/13 Sidecars | 13/13 Bundles | 13/13 loadedmetadata | PASS`
-   B4 schließen.
-3. Separate ausdrückliche Produktionsfreigabe einholen.
-4. Festes Change Window beginnen; keine parallelen redaktionellen Writes.
+1. B4-Nachweis aus `FINAL_RELEASE_AUDIT.md` gegenprüfen:
+   `13/13 Sidecars | 13/13 Bundles | 13/13 loadedmetadata | 13/13 duration > 0 | PASS`.
+2. Separate ausdrückliche Produktionsfreigabe einholen.
+3. Festes Change Window beginnen; keine parallelen redaktionellen Writes.
 
 ## Atomarer Preflight
 

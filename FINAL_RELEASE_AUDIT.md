@@ -1,16 +1,16 @@
 # Finaler Release-/Deployment-Audit
 
-Auditkennung: `FINAL-RELEASE-AUDIT-20261007-2`
+Auditkennung: `FINAL-RELEASE-AUDIT-20261007-3`
 
 Release: `WIFA-GESAMT-PROD-20261007-RC1`
 
 Fachrevision: `WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE`
 
-Entscheidung: **NO-GO**
+Entscheidung: **GO**
 
-Das NO-GO beruht ausschließlich auf dem noch nicht in einer angemeldeten normalen
-Browsersitzung ausgeführten Storage-Diagnosegate. Es ist keine Produktionsmigration
-erfolgt. Produktion blieb auf Apps Script Version 114, Deployment
+Der authentifizierte read-only Podcast-Nachweis wurde am 7. Oktober 2026 im
+angemeldeten normalen Browser vollständig bestanden. Es ist keine
+Produktionsmigration erfolgt. Produktion blieb auf Apps Script Version 114, Deployment
 `AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA`
 und Spreadsheet `1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y`.
 
@@ -21,7 +21,7 @@ und Spreadsheet `1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y`.
 | B1 – verbindliche Pakete revisionssicher | **GELÖST** | Vier logische Pakete mit fünf Endartefakten liegen unter `release/WIFA-GESAMT-PROD-20261007-RC1/packages/`. Pfad, Revision und SHA-256 sind im Produktionsmanifest festgelegt. `release-artifacts.js` bricht bei fehlender Datei, falschem Hash, falscher Revision oder nicht versioniertem Ausführungspfad ab. |
 | B2 – Spreadsheet-Routing | **GELÖST** | `Code.gs` enthält nur den Build-Platzhalter. `build-apps-script.js` erzeugt explizit STAGING oder PRODUCTION. Fehlende/ungültige Umgebung endet fail-closed; Script Properties werden nicht verwendet. |
 | B3 – Produktionspodcast | **GELÖST** | Version `WIFA-PODCAST-PROD-LZREV2-20261007-v1`, immutable Zielpräfix und vollständiges 110-Objekt-Promotionmanifest sind vorbereitet. 26 Runtimeobjekte sind explizit markiert; keine Storagekopie wurde ausgeführt. |
-| B4 – authentifizierter Live-Storage-Recheck | **OFFEN** | Der read-only Diagnosemodus ist implementiert und getestet. Die verfügbare Codex-Browsersitzung besitzt jedoch nicht die angemeldete Firebase-Sitzung des normalen Browsers. Der echte Bericht `13/13 Sidecars | 13/13 Bundles | 13/13 loadedmetadata | PASS` fehlt deshalb noch. Keine Auth-Umgehung wurde eingebaut. |
+| B4 – authentifizierter Live-Storage-Recheck | **GELÖST** | Nutzerbestätigter Normalbrowser-Nachweis: `13/13 Sidecars | 13/13 Bundles | 13/13 loadedmetadata | 13/13 duration > 0 | PASS`. Recht zusätzlich: 48-Kapitel-Navigation, Alle Kapitel, Kapitel 1, Einzeltextziel und Nummerierung bestanden; Start `1.1 Anspruchsprüfung und Gutachtenstil`. Der Lauf war read-only. |
 | B5 – frische Rollbackbasis | **GELÖST** | `production-preflight.js` erzwingt Altwertprüfung, frische Sheetkopie, Git-Referenz, Apps-Script-114-Nachweis, Podcastinventar, Run-Report und unmittelbaren zweiten Konfliktcheck. Die Sicherung wird absichtlich erst unmittelbar vor einem freigegebenen ersten Write erzeugt. |
 
 ## Versionierte Ausführungsquellen
@@ -39,8 +39,8 @@ Ausführungsquelle.
 
 ## Read-only Produktions-Dry-Run
 
-Live gelesen am 7. Oktober 2026. Stabile IDs wurden verwendet; Zeilennummern sind
-keine Identität.
+Nach dem B4-Nachweis am 7. Oktober 2026 erneut live und read-only gelesen. Stabile
+IDs wurden verwendet; Zeilennummern sind keine Identität.
 
 - 9/9 Trainerdatensätze entsprechen vollständig den erwarteten Altwerten.
 - 53/53 neue Quiz-IDs fehlen wie erwartet; 14/14 Bestandsfragen entsprechen den
@@ -49,8 +49,9 @@ keine Identität.
   tatsächlich gepatcht.
 - `Karteikarten_Ergaenzungen` ist noch nicht vorhanden.
 - Die fünf fachlichen Trainer-Metadatentabellen sind in Produktion und Staging
-  zeilenidentisch: 48 Themen, 196 Detailgruppen, 2.686 Primärzuordnungen,
-  2.770 Rahmenplanbezüge und 577 Abdeckungsknoten.
+  weiterhin vollständig und ohne doppelte stabile Schlüssel vorhanden: 48 Themen,
+  196 Detailgruppen, 2.686 Primärzuordnungen, 2.770 Rahmenplanbezüge und 577
+  Abdeckungsknoten.
 - Die acht Gesamtrollout-Fachgruppen haben im produktiven append-only
   Migrationsledger bereits den jüngsten Status `AKTIV`; diese vorhandenen
   Metadaten werden nicht dupliziert.
@@ -74,8 +75,8 @@ Der vollständige zellgenaue Patchplan liegt in
 
 ## Tests
 
-- Releasebezogene Auswahl: **420/420 bestanden**.
-- Gesamte JavaScript-/MJS-Suite: **814/825 bestanden**.
+- Aktuelle releasebezogene Auswahl: **431/431 bestanden**.
+- Gesamte JavaScript-/MJS-Suite: **816/827 bestanden**.
 - Die 11 Fehler sind dieselben auf `main`: 3 Prüfungssimulation, 3
   Quiz-Kilian-Tastatur, 1 robots, 1 Erfolgsanimation und 3 Usage-Client.
 - Zusätzliche Browser-`.cjs`-Runner benötigen ihre Browserumgebung und sind nicht
@@ -83,6 +84,7 @@ Der vollständige zellgenaue Patchplan liegt in
 
 ## Schlussentscheidung
 
-**NO-GO.** B1, B2, B3 und B5 sind gelöst. B4 bleibt offen, bis der read-only
-Diagnosemodus im bereits angemeldeten normalen Browser den exakten 13/13/13-PASS
-liefert. Ein späteres GO wäre weiterhin keine Ausführungsfreigabe.
+**GO.** B1 bis B5 sind gelöst. Der technische Release-Audit ist konfliktfrei.
+Dieses GO bestätigt ausschließlich die technische Rolloutbereitschaft; es ist
+keine Produktions- oder Ausführungsfreigabe. Vor jedem tatsächlichen Write bleiben
+eine separate ausdrückliche Produktionsfreigabe und der atomare Preflight Pflicht.
