@@ -249,7 +249,6 @@ async function openAuthArea() {
 }
 
 function setLoggedOutAuthState() {
-	if (typeof window.trainerPilotPoolCacheLeeren === 'function') window.trainerPilotPoolCacheLeeren();
 	window.aktuellerNutzer = null;
 	clearDesiredView();
 	showStatus('');

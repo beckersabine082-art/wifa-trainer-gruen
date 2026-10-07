@@ -422,7 +422,7 @@ const bewertungText = bereinigeBewertungText(
       const speicherung = window.speichereWifaAttempt({
         bereich: aktuellerTeilbereich || ermittleTeilbereich(aktuellesFach),
         fach: aktuellesFach,
-        thema: String((typeof aktuelleFrageQuellthema !== "undefined" && aktuelleFrageQuellthema) || aktuellesThema || "").trim(),
+        thema: aktuellesThema,
         frageId: aktuelleFrageId,
           antwort: antwort,
         erreichtePunkte: punkte,

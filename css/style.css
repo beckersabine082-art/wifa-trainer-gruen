@@ -3065,15 +3065,6 @@ select:focus {
   letter-spacing: 0.01em;
 }
 
-#lerntexteKapitelSelect .lerntexte-alle-option,
-#lerntexteKapitelSelect .lerntexte-kapitel-option {
-  font-weight: 700;
-}
-
-#lerntexteKapitelSelect .lerntexte-lerneinheit-option {
-  font-weight: 400;
-}
-
 .lerntexte-einheit {
   margin: 0 0 28px;
   padding: 0 0 18px;
