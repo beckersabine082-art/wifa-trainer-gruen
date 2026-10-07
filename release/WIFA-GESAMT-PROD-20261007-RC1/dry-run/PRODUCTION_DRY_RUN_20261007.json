@@ -1,0 +1,4034 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "mode": "READ_ONLY_PATCH_PLAN",
+  "generatedFromVersionedArtifacts": true,
+  "counts": {
+    "trainerContentIds": 9,
+    "trainerContentCells": 32,
+    "trainerMetadataWrites": 0,
+    "quizCreateRows": 53,
+    "quizCreateCells": 742,
+    "quizUpdateRows": 14,
+    "quizUpdateCells": 84,
+    "flashcardOverlayRows": 38,
+    "learningTextRows": 260,
+    "learningTextCells": 454,
+    "podcastObjects": 110,
+    "unknownConflicts": 0,
+    "userDataWrites": 0
+  },
+  "protectedSheets": [
+    "NutzerFortschritt",
+    "PodcastFortschritt",
+    "Nutzerkonten",
+    "Analytics"
+  ],
+  "trainerMetadata": {
+    "mode": "SKIP_IDENTICAL",
+    "existingRowsPreserved": true
+  },
+  "writes": {
+    "trainerContent": [
+      {
+        "id": "VWL-0127",
+        "sheet": "VWL",
+        "columns": [
+          "C",
+          "E",
+          "F"
+        ]
+      },
+      {
+        "id": "IF-0091",
+        "sheet": "Investition und Finanzierung",
+        "columns": [
+          "C",
+          "E",
+          "F"
+        ]
+      },
+      {
+        "id": "BR-0076",
+        "sheet": "Rechnungswesen",
+        "columns": [
+          "C",
+          "E",
+          "F",
+          "M",
+          "N"
+        ]
+      },
+      {
+        "id": "UF-0058",
+        "sheet": "Unternehmensführung",
+        "columns": [
+          "C",
+          "E",
+          "F",
+          "M"
+        ]
+      },
+      {
+        "id": "BM-0260",
+        "sheet": "Betriebliches Management",
+        "columns": [
+          "C",
+          "E",
+          "F"
+        ]
+      },
+      {
+        "id": "BM-0154",
+        "sheet": "Betriebliches Management",
+        "columns": [
+          "C",
+          "E",
+          "F"
+        ]
+      },
+      {
+        "id": "IF-0152",
+        "sheet": "Investition und Finanzierung",
+        "columns": [
+          "C",
+          "E",
+          "F",
+          "M",
+          "N"
+        ]
+      },
+      {
+        "id": "M-0021",
+        "sheet": "Marketing",
+        "columns": [
+          "C",
+          "E",
+          "F"
+        ]
+      },
+      {
+        "id": "V-0077",
+        "sheet": "Vertrieb",
+        "columns": [
+          "C",
+          "E",
+          "F"
+        ]
+      }
+    ],
+    "quizCreates": [
+      {
+        "id": "QZ26-WQ1-01-01",
+        "quizKey": "VWL::QZ26-WQ1-01-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ1-02-01",
+        "quizKey": "VWL::QZ26-WQ1-02-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ1-02-02",
+        "quizKey": "VWL::QZ26-WQ1-02-02",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ1-03-01",
+        "quizKey": "VWL::QZ26-WQ1-03-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ1-04-01",
+        "quizKey": "BWL::QZ26-WQ1-04-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ1-04-02",
+        "quizKey": "BWL::QZ26-WQ1-04-02",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ1-04-03",
+        "quizKey": "BWL::QZ26-WQ1-04-03",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ1-05-01",
+        "quizKey": "BWL::QZ26-WQ1-05-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ2-01-01",
+        "quizKey": "Rechnungswesen::QZ26-WQ2-01-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ2-02-01",
+        "quizKey": "Rechnungswesen::QZ26-WQ2-02-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-01-01",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-01-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-02-01",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-02-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-03-01",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-03-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-04-01",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-04-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-05-01",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-05-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-06-01",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-06-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-06-02",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-06-02",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-WQ4-08-01",
+        "quizKey": "Unternehmensführung::QZ26-WQ4-08-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-01-01",
+        "quizKey": "Recht::QZ26-Q-R-01-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-02-01",
+        "quizKey": "Recht::QZ26-Q-R-02-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-03-01",
+        "quizKey": "Recht::QZ26-Q-R-03-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-04-01",
+        "quizKey": "Recht::QZ26-Q-R-04-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-05-01",
+        "quizKey": "Recht::QZ26-Q-R-05-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-06-01",
+        "quizKey": "Recht::QZ26-Q-R-06-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-07-01",
+        "quizKey": "Recht::QZ26-Q-R-07-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-R-08-01",
+        "quizKey": "Recht::QZ26-Q-R-08-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-ST-01-01",
+        "quizKey": "Steuern::QZ26-Q-ST-01-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-Q-ST-02-01",
+        "quizKey": "Steuern::QZ26-Q-ST-02-01",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ59-001",
+        "quizKey": "Betriebliches Management::QZ26-HQ59-001",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ59-002",
+        "quizKey": "Führung und Zusammenarbeit::QZ26-HQ59-002",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ59-003",
+        "quizKey": "Führung und Zusammenarbeit::QZ26-HQ59-003",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ59-004",
+        "quizKey": "Führung und Zusammenarbeit::QZ26-HQ59-004",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ59-005",
+        "quizKey": "Führung und Zusammenarbeit::QZ26-HQ59-005",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-001",
+        "quizKey": "Investition und Finanzierung::QZ26-HQ678-001",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-002",
+        "quizKey": "Investition und Finanzierung::QZ26-HQ678-002",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-003",
+        "quizKey": "Betriebliches Rechnungswesen und Controlling::QZ26-HQ678-003",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-004",
+        "quizKey": "Logistik::QZ26-HQ678-004",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-005",
+        "quizKey": "Logistik::QZ26-HQ678-005",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-006",
+        "quizKey": "Logistik::QZ26-HQ678-006",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-007",
+        "quizKey": "Logistik::QZ26-HQ678-007",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-008",
+        "quizKey": "Logistik::QZ26-HQ678-008",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-009",
+        "quizKey": "Logistik::QZ26-HQ678-009",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-010",
+        "quizKey": "Logistik::QZ26-HQ678-010",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-011",
+        "quizKey": "Logistik::QZ26-HQ678-011",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-012",
+        "quizKey": "Marketing::QZ26-HQ678-012",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-013",
+        "quizKey": "Marketing::QZ26-HQ678-013",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-014",
+        "quizKey": "Marketing::QZ26-HQ678-014",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-015",
+        "quizKey": "Marketing::QZ26-HQ678-015",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-016",
+        "quizKey": "Marketing::QZ26-HQ678-016",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-017",
+        "quizKey": "Marketing::QZ26-HQ678-017",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-018",
+        "quizKey": "Vertrieb::QZ26-HQ678-018",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-019",
+        "quizKey": "Vertrieb::QZ26-HQ678-019",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      },
+      {
+        "id": "QZ26-HQ678-020",
+        "quizKey": "Vertrieb::QZ26-HQ678-020",
+        "fields": [
+          "Quiz Key",
+          "Fach",
+          "Frage ID",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Richtige Option",
+          "Aktiv",
+          "Erstellt am",
+          "Quizfrage",
+          "Geprüft",
+          "Hinweis / Begründung",
+          "Schwierigkeitsgrad"
+        ]
+      }
+    ],
+    "quizUpdates": [
+      {
+        "id": "BR-0068",
+        "quizKey": "Rechnungswesen::BR-0068",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0104",
+        "quizKey": "Rechnungswesen::BR-0104",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0070",
+        "quizKey": "Rechnungswesen::BR-0070",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0071",
+        "quizKey": "Rechnungswesen::BR-0071",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0074",
+        "quizKey": "Rechnungswesen::BR-0074",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0077",
+        "quizKey": "Rechnungswesen::BR-0077",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0075",
+        "quizKey": "Rechnungswesen::BR-0075",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0073",
+        "quizKey": "Rechnungswesen::BR-0073",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0079",
+        "quizKey": "Rechnungswesen::BR-0079",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0078",
+        "quizKey": "Rechnungswesen::BR-0078",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0081",
+        "quizKey": "Rechnungswesen::BR-0081",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0082",
+        "quizKey": "Rechnungswesen::BR-0082",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0083",
+        "quizKey": "Rechnungswesen::BR-0083",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      },
+      {
+        "id": "BR-0085",
+        "quizKey": "Rechnungswesen::BR-0085",
+        "fields": [
+          "Quizfrage",
+          "Antwort A",
+          "Antwort B",
+          "Antwort C",
+          "Antwort D",
+          "Hinweis / Begründung"
+        ]
+      }
+    ],
+    "flashcardOverlay": [
+      {
+        "id": "BWL-0127",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0123",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0078",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0080",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0082",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "UF-0236",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "UF-0198",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "UF-0138",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "UF-0237",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "UF-0238",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BWL-0083",
+        "kind": "update",
+        "fields": [
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0015",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0068",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0087",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0089",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "BR-0097",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "UF-0060",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "VWL-0154",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0175",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0176",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0182",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0689",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0690",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0691",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0692",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0693",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0359",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "R-0694",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "ST-0214",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "PF-0153",
+        "kind": "update",
+        "fields": [
+          "back"
+        ]
+      },
+      {
+        "id": "PF-0072",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "PF-0170",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "L-0321",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "L-0240",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "L-0322",
+        "kind": "create",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "L-0264",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "V-0038",
+        "kind": "update",
+        "fields": [
+          "front",
+          "back"
+        ]
+      },
+      {
+        "id": "L-0177",
+        "kind": "update",
+        "fields": [
+          "back"
+        ]
+      }
+    ],
+    "learningTexts": [
+      {
+        "id": "LZ-FZ-45",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-46",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-47",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-50",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-49",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-48",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-51",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-53",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-20",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-52",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-23",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-FZ-26",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-FZ-54",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-30",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-FZ-28",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-29",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-56",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-57",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-35",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BM-43",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BM-44",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-FZ-55",
+        "fields": [
+          "Fach",
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BM-45",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BM-46",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BM-16",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-BM-18",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-BM-47",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BM-48",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BM-20",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-BM-21",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-BM-22",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-BM-23",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-BM-24",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-BM-25",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-BM-32",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RW-04",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RW-09",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RW-36",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-39",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-08",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-ST-09",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-ST-40",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-41",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-43",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-16",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-ST-42",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-20",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-ST-24",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-ST-26",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-ST-29",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-30",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-06",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Lerntext",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-ST-36",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-MKT-42",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-10",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-09",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-06",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-14",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-MKT-13",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-39",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-16",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-17",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-18",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-21",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-22",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-19",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-20",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-23",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-24",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-25",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-26",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-27",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VT-02",
+        "fields": [
+          "Fach",
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VT-03",
+        "fields": [
+          "Fach",
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-28",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-29",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-30",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-31",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-32",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-36",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-38",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-40",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-41",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-MKT-33",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-34",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-35",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-MKT-37",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VT-01",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-04",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-05",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-06",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-07",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-08",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-09",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-10",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-11",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-12",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-13",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-14",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-15",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-16",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-17",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-18",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-19",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-20",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-21",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-22",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-23",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VT-25",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-24",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr",
+          "Lerntext",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VT-26",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-27",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VT-28",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-RE-51",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-04",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-07",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Lerntext",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-52",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-02",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-05",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-53",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-54",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-55",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-13",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-14",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-15",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-17",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-18",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-27",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-26",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-24",
+        "fields": [
+          "Lerntext",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-38",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-RE-40",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-RE-56",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-37",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-39",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-41",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-RE-57",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-RE-47",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-RE-50",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-43",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VWL-44",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VWL-01",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-02",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-03",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-04",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-05",
+        "fields": [
+          "Hauptkapitel",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-06",
+        "fields": [
+          "Hauptkapitel",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-45",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VWL-07",
+        "fields": [
+          "Hauptkapitel",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-08",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-09",
+        "fields": [
+          "Hauptkapitel",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-10",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-11",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-VWL-46",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VWL-12",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-13",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-14",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-15",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-17",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-16",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VWL-18",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-19",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-20",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-21",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-22",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-23",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-24",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-25",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-47",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VWL-26",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-27",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-28",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-29",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-30",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-31",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-32",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-33",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-34",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-35",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-36",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-37",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-48",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-VWL-38",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-39",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-40",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-VWL-41",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-VWL-42",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr"
+        ]
+      },
+      {
+        "id": "LZ-BWL-34",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-35",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-36",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-37",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-38",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-13",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-BWL-39",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-01",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-40",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BWL-26",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-BWL-30",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-LO-31",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-LO-12",
+        "fields": [
+          "Titel"
+        ]
+      },
+      {
+        "id": "LZ-LO-32",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-LO-33",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-LO-17",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-18",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-19",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-34",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-LO-20",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-21",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-22",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-35",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-LO-23",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-24",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-25",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-LO-26",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-24",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-26",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-25",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-08",
+        "fields": [
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-UF-12",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-14",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-28",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-13",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-27",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-15",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-16",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-29",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-17",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-18",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-19",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-30",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-UF-20",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-UF-23",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-IF-01",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-02",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-03",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-05",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-06",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-07",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-08",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-09",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-10",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-11",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-34",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-IF-12",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-13",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-14",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-04",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-IF-15",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-33",
+        "fields": [
+          "Hauptkapitel",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-IF-16",
+        "fields": [
+          "Hauptkapitel",
+          "Lerntext"
+        ]
+      },
+      {
+        "id": "LZ-IF-23",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-IF-32",
+        "fields": [
+          "Hauptkapitel_Nr",
+          "Hauptkapitel",
+          "Unterkapitel_Nr",
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-IF-17",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-18",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-19",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-20",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-21",
+        "fields": [
+          "Hauptkapitel"
+        ]
+      },
+      {
+        "id": "LZ-IF-26",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BRC-22",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      },
+      {
+        "id": "LZ-BRC-21",
+        "fields": [
+          "Reihenfolge_Fach"
+        ]
+      }
+    ],
+    "podcast": [
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-einsatzfelder-der-personalentwicklung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-einsatzfelder-der-personalentwicklung.json",
+        "sourceGeneration": "1791128916710434"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-einsatzfelder-der-personalentwicklung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-einsatzfelder-der-personalentwicklung.mp3",
+        "sourceGeneration": "1791128916397601"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.json",
+        "sourceGeneration": "1791128876547026"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.mp3",
+        "sourceGeneration": "1791128876338533"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.json",
+        "sourceGeneration": "1791128963822766"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.mp3",
+        "sourceGeneration": "1791128963475940"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/bwl-einzelunternehmen-und-gbr-egbr.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-einzelunternehmen-und-gbr-egbr.json",
+        "sourceGeneration": "1791130264105958"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/bwl-einzelunternehmen-und-gbr-egbr.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-einzelunternehmen-und-gbr-egbr.mp3",
+        "sourceGeneration": "1791130263892010"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.json",
+        "sourceGeneration": "1791130303188587"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.mp3",
+        "sourceGeneration": "1791130302920566"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/bwl-teilbereiche-des-rechnungswesens.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-teilbereiche-des-rechnungswesens.json",
+        "sourceGeneration": "1791130237280371"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/bwl-teilbereiche-des-rechnungswesens.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-teilbereiche-des-rechnungswesens.mp3",
+        "sourceGeneration": "1791130237064521"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-management.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-management.json",
+        "sourceGeneration": "1791131279222558"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-management/3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-management/3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10.mp3",
+        "sourceGeneration": "1791131171821516"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-rechnungswesen-und-controlling.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-rechnungswesen-und-controlling.json",
+        "sourceGeneration": "1791135506767658"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-rechnungswesen-und-controlling/91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-rechnungswesen-und-controlling/91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66.mp3",
+        "sourceGeneration": "1791135415672919"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/bwl.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/bwl.json",
+        "sourceGeneration": "1791134086928082"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/bwl/e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/bwl/e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12.mp3",
+        "sourceGeneration": "1791133953604436"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/fuehrung-und-zusammenarbeit.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/fuehrung-und-zusammenarbeit.json",
+        "sourceGeneration": "1791130911979646"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/fuehrung-und-zusammenarbeit/5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/fuehrung-und-zusammenarbeit/5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c.mp3",
+        "sourceGeneration": "1791130769650065"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/investition-und-finanzierung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/investition-und-finanzierung.json",
+        "sourceGeneration": "1791135208677213"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/investition-und-finanzierung/c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/investition-und-finanzierung/c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077.mp3",
+        "sourceGeneration": "1791135108414734"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/logistik.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/logistik.json",
+        "sourceGeneration": "1791134485363311"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/logistik/c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/logistik/c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c.mp3",
+        "sourceGeneration": "1791134366899304"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/marketing.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/marketing.json",
+        "sourceGeneration": "1791132469719715"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/marketing/6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/marketing/6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878.mp3",
+        "sourceGeneration": "1791132380119855"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/rechnungswesen.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/rechnungswesen.json",
+        "sourceGeneration": "1791131690418967"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/rechnungswesen/0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/rechnungswesen/0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8.mp3",
+        "sourceGeneration": "1791131567915371"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/recht.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/recht.json",
+        "sourceGeneration": "1791133331652448"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/recht/a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/recht/a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97.mp3",
+        "sourceGeneration": "1791133145372723"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/steuern.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/steuern.json",
+        "sourceGeneration": "1791132165989192"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/steuern/59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/steuern/59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849.mp3",
+        "sourceGeneration": "1791132023529872"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/unternehmensfuehrung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/unternehmensfuehrung.json",
+        "sourceGeneration": "1791134882606107"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/unternehmensfuehrung/6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/unternehmensfuehrung/6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255.mp3",
+        "sourceGeneration": "1791134766670776"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/vertrieb.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vertrieb.json",
+        "sourceGeneration": "1791132702718734"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/vertrieb/a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vertrieb/a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265.mp3",
+        "sourceGeneration": "1791132622784141"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/vwl.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vwl.json",
+        "sourceGeneration": "1791133640812894"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/continuous/vwl/024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vwl/024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f.mp3",
+        "sourceGeneration": "1791133552845583"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.json",
+        "sourceGeneration": "1791128797432363"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.mp3",
+        "sourceGeneration": "1791128797150923"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.json",
+        "sourceGeneration": "1791128837804642"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.mp3",
+        "sourceGeneration": "1791128837561341"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.json",
+        "sourceGeneration": "1791128758223952"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.mp3",
+        "sourceGeneration": "1791128757909791"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.json",
+        "sourceGeneration": "1791130412503880"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.mp3",
+        "sourceGeneration": "1791130412285247"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/marketing-porters-five-forces-und-konkurrenzanalyse.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/marketing-porters-five-forces-und-konkurrenzanalyse.json",
+        "sourceGeneration": "1791129492911844"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/marketing-porters-five-forces-und-konkurrenzanalyse.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/marketing-porters-five-forces-und-konkurrenzanalyse.mp3",
+        "sourceGeneration": "1791129492635691"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-aufbau-und-logik-der-bilanz.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-aufbau-und-logik-der-bilanz.json",
+        "sourceGeneration": "1791129074572053"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-aufbau-und-logik-der-bilanz.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-aufbau-und-logik-der-bilanz.mp3",
+        "sourceGeneration": "1791129074295726"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.json",
+        "sourceGeneration": "1791129030724626"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.mp3",
+        "sourceGeneration": "1791129030329314"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.json",
+        "sourceGeneration": "1791130080764935"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.mp3",
+        "sourceGeneration": "1791130080489652"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-besondere-kaufkonstellationen.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-besondere-kaufkonstellationen.json",
+        "sourceGeneration": "1791129858754087"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-besondere-kaufkonstellationen.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-besondere-kaufkonstellationen.mp3",
+        "sourceGeneration": "1791129858346433"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.json",
+        "sourceGeneration": "1791130018647136"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.mp3",
+        "sourceGeneration": "1791130018421678"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-form-nichtigkeit-und-anfechtung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-form-nichtigkeit-und-anfechtung.json",
+        "sourceGeneration": "1791129625024501"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-form-nichtigkeit-und-anfechtung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-form-nichtigkeit-und-anfechtung.mp3",
+        "sourceGeneration": "1791129624689296"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.json",
+        "sourceGeneration": "1791129814080216"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.mp3",
+        "sourceGeneration": "1791129813749620"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.json",
+        "sourceGeneration": "1791129777408788"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.mp3",
+        "sourceGeneration": "1791129777036429"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-mietvertrag-und-pachtvertrag.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-mietvertrag-und-pachtvertrag.json",
+        "sourceGeneration": "1791129910550268"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-mietvertrag-und-pachtvertrag.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-mietvertrag-und-pachtvertrag.mp3",
+        "sourceGeneration": "1791129910311774"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.json",
+        "sourceGeneration": "1791129724440037"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.mp3",
+        "sourceGeneration": "1791129724126142"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.json",
+        "sourceGeneration": "1791129679214117"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.mp3",
+        "sourceGeneration": "1791129678912641"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.json",
+        "sourceGeneration": "1791129963747760"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.mp3",
+        "sourceGeneration": "1791129963497169"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.json",
+        "sourceGeneration": "1791129455862577"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.mp3",
+        "sourceGeneration": "1791129455571883"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.json",
+        "sourceGeneration": "1791129172510165"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.mp3",
+        "sourceGeneration": "1791129172247096"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.json",
+        "sourceGeneration": "1791129267838842"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.mp3",
+        "sourceGeneration": "1791129267551121"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.json",
+        "sourceGeneration": "1791129218836027"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.mp3",
+        "sourceGeneration": "1791129218553431"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.json",
+        "sourceGeneration": "1791129126857970"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.mp3",
+        "sourceGeneration": "1791129126525972"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.json",
+        "sourceGeneration": "1791129404971429"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.mp3",
+        "sourceGeneration": "1791129404759823"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerschuldner-und-reverse-charge-verfahren.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerschuldner-und-reverse-charge-verfahren.json",
+        "sourceGeneration": "1791129359188874"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerschuldner-und-reverse-charge-verfahren.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerschuldner-und-reverse-charge-verfahren.mp3",
+        "sourceGeneration": "1791129358949807"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.json",
+        "sourceGeneration": "1791129317317872"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.mp3",
+        "sourceGeneration": "1791129317026545"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.json",
+        "sourceGeneration": "1791130362906998"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.mp3",
+        "sourceGeneration": "1791130362658784"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.json",
+        "sourceGeneration": "1791129575036083"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.mp3",
+        "sourceGeneration": "1791129574738853"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.json",
+        "sourceGeneration": "1791129535219942"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.mp3",
+        "sourceGeneration": "1791129534916408"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-bip-bne-und-inlands-inlaenderkonzept.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-bip-bne-und-inlands-inlaenderkonzept.json",
+        "sourceGeneration": "1791130176682276"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-bip-bne-und-inlands-inlaenderkonzept.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-bip-bne-und-inlands-inlaenderkonzept.mp3",
+        "sourceGeneration": "1791130176482854"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-entstehungs-verwendungs-und-verteilungsrechnung.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-entstehungs-verwendungs-und-verteilungsrechnung.json",
+        "sourceGeneration": "1791130160344246"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-entstehungs-verwendungs-und-verteilungsrechnung.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-entstehungs-verwendungs-und-verteilungsrechnung.mp3",
+        "sourceGeneration": "1791130160159380"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.json",
+        "sourceGeneration": "1791130205826441"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.mp3",
+        "sourceGeneration": "1791130205646639"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-funktionen-des-wettbewerbs.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-funktionen-des-wettbewerbs.json",
+        "sourceGeneration": "1791130141849272"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-funktionen-des-wettbewerbs.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-funktionen-des-wettbewerbs.mp3",
+        "sourceGeneration": "1791130141649895"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.json",
+        "sourceGeneration": "1791130188133650"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.mp3",
+        "sourceGeneration": "1791130187959557"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-preisbildung-bei-monopol-und-oligopol.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preisbildung-bei-monopol-und-oligopol.json",
+        "sourceGeneration": "1791130128176163"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-preisbildung-bei-monopol-und-oligopol.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preisbildung-bei-monopol-und-oligopol.mp3",
+        "sourceGeneration": "1791130127986348"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.json",
+        "sourceGeneration": "1791130111757851"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.mp3",
+        "sourceGeneration": "1791130111571639"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-verschiebung-von-angebots-und-nachfragekurven.json",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-verschiebung-von-angebots-und-nachfragekurven.json",
+        "sourceGeneration": "1791130096069430"
+      },
+      {
+        "sourcePath": "podcast/staging/lerntext-rev2/vwl-verschiebung-von-angebots-und-nachfragekurven.mp3",
+        "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-verschiebung-von-angebots-und-nachfragekurven.mp3",
+        "sourceGeneration": "1791130095893922"
+      }
+    ]
+  },
+  "liveEvidence": {
+    "schemaVersion": 1,
+    "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+    "mode": "READ_ONLY",
+    "readAt": "2026-10-07T13:32:25.6199388+02:00",
+    "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+    "unknownConflicts": 0,
+    "trainerMetadataMatches": true,
+    "expectedOldChecks": {
+      "trainerContent": {
+        "expectedOld": 9,
+        "conflicts": 0
+      },
+      "quizCreates": {
+        "expectedAbsent": 53,
+        "conflicts": 0
+      },
+      "quizUpdates": {
+        "expectedOld": 14,
+        "conflicts": 0
+      },
+      "learningTexts": {
+        "expectedOldRows": 521,
+        "plannedWriteRows": 260,
+        "conflicts": 0
+      },
+      "flashcardOverlay": {
+        "tableAbsent": true,
+        "conflicts": 0
+      }
+    },
+    "trainerMetadata": {
+      "Trainer_Themen": {
+        "rows": 48,
+        "sha256": "63bfb7173a52a8d40880044bc13722ce1706ca7ca076cf6f3c223e2b0a2e0b5c"
+      },
+      "Trainer_Detailgruppen": {
+        "rows": 196,
+        "sha256": "ff3131a5ca81e62a0fe51549f62593a1965d42990e73083fc88254adc893a483"
+      },
+      "Trainer_Zuordnung": {
+        "rows": 2686,
+        "sha256": "1842781bbc93847b313d6b83b9a46b452fc00b88dfda8b9ebd651fb41753f0f3"
+      },
+      "Trainer_Rahmenplanbezug": {
+        "rows": 2770,
+        "sha256": "2b6c53bdce58b61aa01aea4c2f82f639a0bd196a0d40e58042cd3fff18f61fa0"
+      },
+      "Rahmenplan_Abdeckung": {
+        "rows": 577,
+        "sha256": "4269a078717122f6eedda9dae471ec4f09f15c106545adee104c5f4cb730376e"
+      },
+      "latestStatuses": {
+        "WQ-1": "AKTIV",
+        "WQ-2": "AKTIV",
+        "WQ-4": "AKTIV",
+        "HQ-5": "AKTIV",
+        "HQ-6": "AKTIV",
+        "HQ-7": "AKTIV",
+        "HQ-8": "AKTIV",
+        "HQ-9": "AKTIV"
+      }
+    },
+    "protectedSheetsReadOnly": [
+      "NutzerFortschritt",
+      "PodcastFortschritt",
+      "Lernstand"
+    ],
+    "writesPerformed": 0
+  }
+}

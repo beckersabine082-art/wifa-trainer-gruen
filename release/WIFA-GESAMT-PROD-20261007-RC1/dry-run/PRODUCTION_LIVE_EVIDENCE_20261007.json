@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "mode": "READ_ONLY",
+  "readAt": "2026-10-07T13:32:25.6199388+02:00",
+  "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+  "unknownConflicts": 0,
+  "trainerMetadataMatches": true,
+  "expectedOldChecks": {
+    "trainerContent": { "expectedOld": 9, "conflicts": 0 },
+    "quizCreates": { "expectedAbsent": 53, "conflicts": 0 },
+    "quizUpdates": { "expectedOld": 14, "conflicts": 0 },
+    "learningTexts": { "expectedOldRows": 521, "plannedWriteRows": 260, "conflicts": 0 },
+    "flashcardOverlay": { "tableAbsent": true, "conflicts": 0 }
+  },
+  "trainerMetadata": {
+    "Trainer_Themen": { "rows": 48, "sha256": "63bfb7173a52a8d40880044bc13722ce1706ca7ca076cf6f3c223e2b0a2e0b5c" },
+    "Trainer_Detailgruppen": { "rows": 196, "sha256": "ff3131a5ca81e62a0fe51549f62593a1965d42990e73083fc88254adc893a483" },
+    "Trainer_Zuordnung": { "rows": 2686, "sha256": "1842781bbc93847b313d6b83b9a46b452fc00b88dfda8b9ebd651fb41753f0f3" },
+    "Trainer_Rahmenplanbezug": { "rows": 2770, "sha256": "2b6c53bdce58b61aa01aea4c2f82f639a0bd196a0d40e58042cd3fff18f61fa0" },
+    "Rahmenplan_Abdeckung": { "rows": 577, "sha256": "4269a078717122f6eedda9dae471ec4f09f15c106545adee104c5f4cb730376e" },
+    "latestStatuses": {
+      "WQ-1": "AKTIV",
+      "WQ-2": "AKTIV",
+      "WQ-4": "AKTIV",
+      "HQ-5": "AKTIV",
+      "HQ-6": "AKTIV",
+      "HQ-7": "AKTIV",
+      "HQ-8": "AKTIV",
+      "HQ-9": "AKTIV"
+    }
+  },
+  "protectedSheetsReadOnly": [
+    "NutzerFortschritt",
+    "PodcastFortschritt",
+    "Lernstand"
+  ],
+  "writesPerformed": 0
+}

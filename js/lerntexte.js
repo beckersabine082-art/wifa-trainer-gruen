@@ -65,9 +65,11 @@ function lerntexteContinuousDescriptor(fach) {
   const paths = lerntexteContinuousHelper('continuousPodcastPaths');
   if (!paths || !fach) return null;
   const storagePrefix = typeof window !== 'undefined' && window.WIFA_PODCAST_STORAGE_PREFIX
-    ? String(window.WIFA_PODCAST_STORAGE_PREFIX)
-    : 'podcast/';
-  return Object.freeze(Object.assign({ fach: fach, storagePrefix: storagePrefix }, paths(fach, { prefix: storagePrefix })));
+    ? String(window.WIFA_PODCAST_STORAGE_PREFIX) : '';
+  const bundleVersion = typeof window !== 'undefined' && window.WIFA_PODCAST_BUNDLE_VERSION
+    ? String(window.WIFA_PODCAST_BUNDLE_VERSION) : '';
+  if (!storagePrefix || !bundleVersion) return null;
+  return Object.freeze(Object.assign({ fach: fach, storagePrefix: storagePrefix, bundleVersion: bundleVersion }, paths(fach, { prefix: storagePrefix })));
 }
 
 function lerntexteContinuousHelper(name) {
@@ -427,7 +429,8 @@ async function lerntexteContinuousAssetsValidieren(assets, sessionId, descriptor
     currentEntries: currentEntries,
     expectedFach: descriptor.fach,
     expectedMp3Prefix: descriptor.mp3Prefix,
-    expectedStoragePrefix: descriptor.storagePrefix
+    expectedStoragePrefix: descriptor.storagePrefix,
+    expectedBundleVersion: descriptor.bundleVersion
   });
   return result && typeof result === 'object' ? result : { valid: false, reason: 'Podcast-Bundle-Prüfung ist ungültig.' };
 }

@@ -1,0 +1,859 @@
+{
+  "schemaVersion": 1,
+  "revision": "WIFA-TR-INHALT-9-20260929-REV1-FINAL",
+  "planReference": "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE",
+  "status": "FACHLICH FINALISIERTER UMSETZUNGSENTWURF – KEINE SCHREIBFREIGABE",
+  "preparedAt": "2026-09-29",
+  "applyAllowed": false,
+  "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+  "identityRule": "ID in Spalte A plus verifiziertes Quellblatt; jede ID genau einmal; keine festen Zeilenpositionen verwenden.",
+  "comparisonRule": "Vor späterer Anwendung A,B,C,E,F,I,K,L,M,N,O vollständig frisch lesen; fehlende/leere Zellen als leere Zeichenfolge behandeln. Zeichenfolgen sonst exakt vergleichen, insbesondere echte Zeilenumbrüche versus literale Backslash-n. Bei jeder Abweichung stoppen.",
+  "scope": {
+    "ids": 9,
+    "newIds": 0,
+    "changedCells": 32,
+    "allowedColumns": [
+      "C",
+      "E",
+      "F",
+      "M",
+      "N"
+    ],
+    "sourceDataWritesThisTurn": 0,
+    "structuralChanges": 0
+  },
+  "protected": {
+    "tables": [
+      "Trainer_Themen",
+      "Trainer_Detailgruppen",
+      "Trainer_Zuordnung",
+      "Trainer_Rahmenplanbezug",
+      "Rahmenplan_Abdeckung",
+      "Trainer_Migrationen"
+    ],
+    "otherContent": [
+      "Quizfragen",
+      "Karteikarten",
+      "Lerntexte",
+      "Podcast"
+    ],
+    "columns": [
+      "A",
+      "B",
+      "D",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "O"
+    ],
+    "note": "Auch sämtliche weiteren Spalten und andere IDs bleiben unverändert. Keine Änderung von Benutzerleistungen, UID, Resume, Thema, Quellfach, Sortierung, UI-Keys oder Strukturversion."
+  },
+  "executionRules": [
+    "Dieses Artefakt spezifiziert Inhalte; es führt selbst keinen Write aus. Erst nach separatem Inhalts-Schreibauftrag anwenden.",
+    "Felder genau nach changes ersetzen; keine Synonyme, Kürzungen, Ergänzungen oder neue IDs durch Sol. Schlüssel und HTML als zusammengehörigen Datensatz behandeln.",
+    "Pro ID alle vorgesehenen Felder in einem zusammengehörigen Schreibvorgang aktualisieren; keine vollständige A:O-Zeile überschreiben. Vorher Inhalte und Formatfelder sichern.",
+    "Vor jedem Datensatz nochmals ID und erwartete alte Feldwerte prüfen; bei Konflikt stoppen, nicht überschreiben.",
+    "Nach jedem Datensatz C,E,F,L,M,N,O frisch lesen; erwarteten Solltext und unveränderte Felder prüfen. Bei Abweichung stoppen.",
+    "Neue Zeilenumbrüche als echte LF-Zeilenumbrüche speichern. Kein Markdown-Codezaun in Sheet-Zellen. HTML nur nach M, Schlüssel nur nach N.",
+    "Historische Leistungen unverändert erhalten. Die geänderte Aufgabenausprägung und bei IF-0152 die neue Maximalpunktzahl im Inhaltsänderungsprotokoll datieren; alte Ergebnisse nicht neu bewerten.",
+    "Für spätere Funktionsprüfung frischen Frontend-Kontext beziehungsweise neu geladenen Pool verwenden, damit kein alter Sitzungspool angezeigt wird; keine Leistungs-/Resume-Daten löschen.",
+    "Struktur- und Abdeckungsmetadaten in diesem Inhaltsauftrag nicht ändern. Umsetzungserfolg lokal dokumentieren; Abdeckungsstatus erst in gesonderter fachlicher Prüfung bewerten.",
+    "V-0077 vor tatsächlicher Veröffentlichung gegen die verlinkten Normen erneut prüfen; bei geänderter Rechtslage berichten, keine eigene neue Rechtsauslegung implementieren.",
+    "Rollback ersetzt ausschließlich die tatsächlich geänderten Inhaltsfelder durch deren expectedFields-Werte; niemals Lernstände, Nutzerantworten oder komplette Zeilen aus einem Backup zurückspielen."
+  ],
+  "sources": [
+    {
+      "key": "BWL-BUCH",
+      "title": "BWL-Fachbuch",
+      "url": "https://drive.google.com/file/d/1xkreHE83NBITTKR-hikpNuP3jDhkOmgTbz0EndPzGyQ/view",
+      "locator": "Rechtsformen: Konsequenzen der Rechtsformwahl; Haftung und Geschäftsführung bei Personen- und Kapitalgesellschaften",
+      "supports": "Rechtsformabhängigkeit von Haftung, Leitung und Formalitäten; keine allgemeine Rangfolge des Aufwands im Ausland."
+    },
+    {
+      "key": "BWL-SKRIPT",
+      "title": "BWL-Begleitmaterial Teil 3 – Unternehmensformen",
+      "url": "https://drive.google.com/file/d/1xK943DtuBCUNzgD2XzWcEbUQQUypXR_4/view",
+      "locator": "Einführung/Rechtsformwahl; Merkmale Personen-/Kapitalgesellschaften",
+      "supports": "Vergleichskriterien Haftung, Leitung, Formalitäten und Kosten. Länderspezifische Aussagen sind daraus nicht ableitbar."
+    },
+    {
+      "key": "IHK-ZWEIG",
+      "title": "IHK Frankfurt – Zweigniederlassung",
+      "url": "https://www.frankfurt-main.ihk.de/hauptnavigation/gruendung-und-foerderung/rechtsinformationen-fuer-gruender/rechtsformen-gesellschaftrechtsformen/zweigniederlassung-5249992",
+      "locator": "Abschnitte 1.1 und 2.1",
+      "supports": "Rechtliche Eigenständigkeit der Tochtergesellschaft versus organisatorisch verselbstständigte, rechtlich unselbstständige Zweigniederlassung. Deutsche Einordnung; Auslandsfall nur mit ausdrücklichen Modellannahmen."
+    },
+    {
+      "key": "HGB126",
+      "title": "§ 126 HGB",
+      "url": "https://www.gesetze-im-internet.de/hgb/__126.html",
+      "locator": "Persönliche Haftung der OHG-Gesellschafter",
+      "supports": "Persönliche gesamtschuldnerische Haftung für OHG-Verbindlichkeiten; kein pauschaler Durchgriff für Tochterverbindlichkeiten."
+    },
+    {
+      "key": "RW-BUCH",
+      "title": "Rechnungswesen – Fachbuch",
+      "url": "https://drive.google.com/file/d/1zqk_mU8Zd3PndqjplX63tnVyGMMXY0vCxM0O5AQw3us/view",
+      "locator": "Kap. 3 Grundlagen der KLR; 3.4/3.4.1 (ab S. 77 laut Inhaltsverzeichnis); Kap. 5 Planungsrechnung",
+      "supports": "Einheits-/Periodenbezug, Kosten- versus Ergebnisrechnung und davon getrennte zeitliche Systeme Ist/Normal/Plan."
+    },
+    {
+      "key": "RW-SKRIPT",
+      "title": "Cichy – Skript Rechnungswesen Wirt16",
+      "url": "https://drive.google.com/file/d/1AynQtSVxGiIj_8TV9RkjbQcfY1uQAJQ4/view",
+      "locator": "S. 51–52: Kostenträgerzeit- und Kostenträgerstückrechnung",
+      "supports": "Periode versus Stückkalkulation; Ergebnis erst im Vergleich mit Erlösen."
+    },
+    {
+      "key": "IFRC-BUCH",
+      "title": "Betriebliches Rechnungswesen und Controlling – Fachbuch",
+      "url": "https://drive.google.com/file/d/1zhxAWWnPxwJcnTHtCUXPrA4shOCE1O9nzgmjVw_scBs/view",
+      "locator": "Kap. 1.1.2, S. 22–23",
+      "supports": "Make-or-Buy: entscheidend ist, ob Fixkosten beim Fremdbezug tatsächlich wegfallen."
+    },
+    {
+      "key": "IFRC-SKRIPT",
+      "title": "Cichy – Wirtschaftsfachwirte16 Skript IFRC",
+      "url": "https://drive.google.com/file/d/1yQQMeHsJWVX0VhOdAaL6Fv6GgZ3EM8ya/view",
+      "locator": "KLR-Teil S. 4–5; Finanzierungsteil, Tabelle zur Deckung des Kapitalbedarfs",
+      "supports": "Nicht abbaubare Fixkosten als Gegenfall; private Darlehen als Fremdkapitalquelle."
+    },
+    {
+      "key": "UF-BUCH",
+      "title": "Unternehmensführung – Fachbuch",
+      "url": "https://drive.google.com/file/d/1TdExKekAL1ccNTi2rhwJHTVFlVMtk_gpUbiHhNFypjQ/view",
+      "locator": "Ablauforganisation, Darstellungsformen, Flussdiagramm, Abb. 1.14",
+      "supports": "Tätigkeiten, gerichtete Folge, Entscheidung und Rückschleife; ergänzende tabellarische Beschreibung/Legende zulässig."
+    },
+    {
+      "key": "UF-SKRIPT",
+      "title": "Caumanns – Organisationsgestaltung ab Teil B",
+      "url": "https://drive.google.com/file/d/1lQMJ9VzRLHJBgXf1vbXNFKh03eMsZBI8/view",
+      "locator": "S. 12: Aufbau-/Ablauforganisation; S. 38–40: Prozessbestandteile und Folgebeziehungen",
+      "supports": "Zuordnung von Aufgaben, Aufgabenträgern und logischen Folgebeziehungen. Keine eigenständige verbindliche Sonderdefinition des Arbeitsablaufdiagramms."
+    },
+    {
+      "key": "BM-BUCH",
+      "title": "Betriebliches Management – Fachbuch",
+      "url": "https://drive.google.com/file/d/1PtB953W3xqjxL3zEhdUnDGtTIDx1xWF2OO-yCrbuysw/view",
+      "locator": "Kap. 2.3.3, Tabelle 2.4 und Abb. 2.6; Kap. 2.3.4 Jobenrichment",
+      "supports": "Strategie → Stellenaufgaben/Anforderungen → Profilvergleich → Entwicklung; qualitativ höherwertige Aufgaben und Verantwortung."
+    },
+    {
+      "key": "BM-SKRIPT",
+      "title": "Holger Jung – Modul Personalentwicklung",
+      "url": "https://drive.google.com/file/d/1aG6JusikKDZkEeWmtLwDtOtHBafhE6LZ/view",
+      "locator": "2.3.1 Zielsetzung; 2.3.3 Phasen, Stellenbeschreibung und Anforderungsprofil; 2.3.5 strategische Ausrichtung",
+      "supports": "Zielorientierung und Anforderungs-/Qualifikationsabgleich. Die freigegebene Auslegung von strategischer Positionierung ist keine wörtliche Definition dieser Quelle."
+    },
+    {
+      "key": "IF-BUCH",
+      "title": "Investition und Finanzierung – Fachbuch",
+      "url": "https://drive.google.com/file/d/1NawmOMqXYTvWt4JHJxA-yUDLj4Pfmd7S2hi44spdPVU/view",
+      "locator": "Kap. 2.2.1, Absatz private Darlehen/Gesellschafterdarlehen",
+      "supports": "Private Personen können Unternehmen Darlehen geben; Gesellschafterstellung kennzeichnet den besonderen Fall des Gesellschafterdarlehens."
+    },
+    {
+      "key": "M-BUCH",
+      "title": "Marketing – Fachbuch",
+      "url": "https://drive.google.com/file/d/11K4e63_LoN7tTg96Qp228fInxuqv9of27IF3i_Df1_o/view",
+      "locator": "Kap. 1.3.2, Unterabschnitt Konkurrenzanalyse",
+      "supports": "Systematische Einzelwettbewerberanalyse: Ziele, Strategien, Fähigkeiten, Marketinginstrumente und Reaktionsprofil."
+    },
+    {
+      "key": "MV-SKRIPT",
+      "title": "Sebastian von Meer – MuV 260817",
+      "url": "https://drive.google.com/file/d/1rtmwv28npk3_aAu69AawvmTJSGIDx4PV/view",
+      "locator": "S. 25–28: Markt-/Wettbewerbsanalyse, Positionierung und SWOT",
+      "supports": "Marktanteil, Image/Positionierung und Trennung eigener Stärken/Schwächen vom Umfeld; nicht alleiniger Beleg für vollständiges Reaktionsprofil oder aktuelle Rechtsdetails."
+    },
+    {
+      "key": "V-BUCH",
+      "title": "Vertrieb – Fachbuch",
+      "url": "https://drive.google.com/file/d/1XgUERuEkVij4rcNg_1lOIxJJAzySPK1JhxELFduojs8/view",
+      "locator": "Kap. 5.3.1 Besonderheiten des Verbrauchsgüterkaufs",
+      "supports": "Didaktischer Rahmen Kaufvertrag/Verbrauchsgüterkauf. Definition mit bloßer Dienstleistung ist zu weit; Rechtsstand und Mängelrechte sind anhand des aktuellen BGB zu korrigieren."
+    },
+    {
+      "key": "BGB437",
+      "title": "§ 437 BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__437.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Mängelrechte"
+    },
+    {
+      "key": "BGB438",
+      "title": "§ 438 BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__438.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Regelfrist zwei Jahre ab Ablieferung"
+    },
+    {
+      "key": "BGB439",
+      "title": "§ 439 BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__439.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Wahlrecht, Kosten und Grenzen der Nacherfüllung"
+    },
+    {
+      "key": "BGB474",
+      "title": "§ 474 BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__474.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Verbrauchsgüterkauf, Ware versus reine Dienstleistung"
+    },
+    {
+      "key": "BGB475",
+      "title": "§ 475 BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__475.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Versandgefahr; Information vor Nacherfüllung; angemessene Frist"
+    },
+    {
+      "key": "BGB475d",
+      "title": "§ 475d BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__475d.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Sonderfälle ohne ausdrückliche Fristsetzung"
+    },
+    {
+      "key": "BGB475e",
+      "title": "§ 475e BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__475e.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Ablaufhemmungen sowie zwölfmonatige Verlängerung bei Nachbesserung"
+    },
+    {
+      "key": "BGB445a",
+      "title": "§ 445a BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__445a.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Lieferantenregress bei neu hergestellten Sachen"
+    },
+    {
+      "key": "BGB478",
+      "title": "§ 478 BGB",
+      "url": "https://www.gesetze-im-internet.de/bgb/__478.html",
+      "locator": "Geltende Fassung, abgerufen 29.09.2026",
+      "supports": "Sonderregeln des Unternehmerregresses"
+    },
+    {
+      "key": "EGBGB72",
+      "title": "Art. 229 § 72 EGBGB",
+      "url": "https://www.gesetze-im-internet.de/bgbeg/art_229__72.html",
+      "locator": "Übergangsvorschrift zum Reparaturgesetz",
+      "supports": "Neue kaufrechtliche Regeln für Verträge ab 31.07.2026."
+    }
+  ],
+  "records": [
+    {
+      "id": "VWL-0127",
+      "defect": "Die Aufgabe setzt rechtliche Eigenständigkeit mit Haftungsbeschränkung gleich und verlangt vier Nachteile, obwohl mehrere Lösungsaspekte dasselbe Haftungsrisiko wiederholen. Direkte Detailsteuerung durch die deutsche Leitung und generell höherer Buchführungsaufwand sind nicht allgemein richtig.",
+      "decision": "Vergleich in vier klar benannten Kriterien statt pauschaler Vier-Nachteile-Aufgabe. Deutsches Ausgangsunternehmen als OHG konkretisieren; Haftungsregime der ausländischen Kapitalgesellschaft ausdrücklich als Modellannahme festlegen.",
+      "contentCode": "1.3.3.2",
+      "sources": [
+        "BWL-BUCH",
+        "BWL-SKRIPT",
+        "IHK-ZWEIG",
+        "HGB126"
+      ],
+      "changes": {
+        "C": "Die Circle Harbor OHG möchte einen außereuropäischen Markt erschließen. Sie vergleicht eine rechtlich unselbstständige Zweigniederlassung mit einer rechtlich eigenständigen Tochter-Kapitalgesellschaft. Für die Aufgabe gilt: Nach dem Recht des Gaststaats haftet für Verbindlichkeiten der Tochtergesellschaft grundsätzlich nur deren Gesellschaftsvermögen. Die OHG hat ihre Einlage vollständig geleistet; zusätzliche Garantien, eigene Pflichtverletzungen und besondere Haftungsdurchgriffe sind ausgeschlossen. Vergleichen Sie beide Formen hinsichtlich (1) Rechtsträgerschaft und Haftung, (2) Geschäftsführung und Vertretung, (3) Beteiligung eines örtlichen Investors am Auslandsgeschäft und (4) Buchführungs- und Verwaltungsaufwand. Erläutern Sie dabei, welche Aussagen ohne Kenntnis des Gaststaats nicht allgemein getroffen werden können.",
+        "E": "1. Rechtsträgerschaft und Haftung: Die Zweigniederlassung ist Teil der OHG; aus ihrem Geschäft entstehen Rechte und Pflichten der OHG. Für deren Verbindlichkeiten haften neben der OHG auch ihre Gesellschafter nach den für die OHG geltenden Regeln persönlich und gesamtschuldnerisch. Die Tochtergesellschaft ist dagegen ein eigener Rechtsträger. Unter den ausdrücklich gesetzten Annahmen haften OHG und OHG-Gesellschafter nicht allein aufgrund der Beteiligung für deren Verbindlichkeiten. Die OHG trägt aber das wirtschaftliche Risiko, ihre Beteiligung zu verlieren. Rechtliche Eigenständigkeit allein würde eine Haftungsbeschränkung noch nicht beweisen.\n\n2. Geschäftsführung und Vertretung: Die Zweigniederlassung kann organisatorisch weitgehend selbstständig arbeiten und durch eine bevollmächtigte örtliche Leitung handeln; Vertragspartner bleibt die OHG. Nicht jedes Tagesgeschäft muss unmittelbar aus Deutschland geführt werden. Die Tochtergesellschaft handelt durch ihre nach dem örtlichen Recht bestellten Vertretungsorgane; der Einfluss der OHG folgt ihren Gesellschafterrechten und den vereinbarten Leitungsregeln.\n\n3. Örtlicher Investor: An einer Zweigniederlassung können keine eigenen Gesellschaftsanteile erworben werden, weil sie keine separate Gesellschaft ist. An der Tochtergesellschaft kann ein örtlicher Investor nach Maßgabe des örtlichen Rechts beteiligt werden. Andere Finanzierungs- oder Kooperationsformen sind bei beiden Gestaltungen möglich.\n\n4. Aufwand: Bei der Zweigniederlassung müssen Auslandsaktivitäten in die Rechnungslegung der OHG eingehen; zusätzliche örtliche Pflichten können hinzukommen. Die Tochtergesellschaft hat eigene gesellschafts- und rechnungslegungsbezogene Pflichten; außerdem können bei der OHG Beteiligungs- und Konzernpflichten entstehen. Welche Form insgesamt aufwendiger oder steuerlich günstiger ist, hängt vom Gaststaat, der Rechtsform und der konkreten Gestaltung ab. Eine generell aufwendigere Zweigniederlassung darf nicht behauptet werden.",
+        "F": "Zweigniederlassung Teil der OHG; Rechte und Pflichten bei der OHG; persönliche gesamtschuldnerische OHG-Gesellschafterhaftung; Tochtergesellschaft eigener Rechtsträger; Haftungsbeschränkung nur nach ausdrücklicher Aufgabenannahme; Beteiligungsverlust als wirtschaftliches Risiko; örtliche Leitung mit Vollmacht möglich; Tochtergesellschaft eigene Vertretungsorgane; keine eigenen Gesellschaftsanteile an Zweigniederlassung; örtlicher Investor an Tochter beteiligbar; Rechnungslegungsaufwand gaststaat- und gestaltungsabhängig; keine pauschale Aufwandsrangfolge"
+      },
+      "acceptance": [
+        "Alle vier Vergleichskriterien behandelt; Haftungsargumente nicht als vier verschiedene Nachteile zählen.",
+        "Rechtliche Unselbstständigkeit ausdrücklich von organisatorischer Selbstständigkeit getrennt.",
+        "Keine allgemeine Behauptung zu Aufwand, Steuerersparnis oder Haftungsbeschränkung im Ausland."
+      ],
+      "auditNote": "Bestehender Primärbezug 1.3.3.2 und UI/Detailkey bleiben unverändert. 1.3.3.1 nur inhaltlicher Querverweis; Außenwirtschaftskontext ist kein Freihandelsbeleg.",
+      "sourceSheet": "VWL",
+      "expectedFields": {
+        "A": "VWL-0127",
+        "B": "Außenwirtschaft, Freihandel & Protektionismus",
+        "C": "Ein deutsches Personenhandelsunternehmen der Circle-Harbor-Fallwelt möchte einen außereuropäischen Markt erschließen. Zur Wahl stehen eine rechtlich eigenständige Auslandsgesellschaft oder eine rechtlich unselbstständige Zweigniederlassung des deutschen Unternehmens. Erläutern Sie vier mögliche Nachteile der unselbstständigen Zweigniederlassung gegenüber einer eigenständigen Gesellschaft.",
+        "E": "Mögliche Nachteile sind insbesondere: Die deutsche Unternehmensleitung bleibt unmittelbar für die Vorgänge der Zweigniederlassung verantwortlich und muss das Auslandsgeschäft direkt steuern. Ansprüche und Risiken der Zweigniederlassung treffen rechtlich das deutsche Unternehmen; bei einer Personenhandelsgesellschaft kann dadurch auch die persönliche Haftung der Gesellschafter stärker ins Gewicht fallen. Ausländische Geschäftspartner oder Behörden können bei Forderungen unter Umständen auf das Vermögen des deutschen Hauptunternehmens zugreifen. Außerdem ist die laufende buchhalterische und bilanzielle Einbeziehung der Zweigniederlassung regelmäßig komplexer als die Behandlung einer rechtlich getrennten Beteiligung. Je nach Staat können zusätzlich steuerliche, regulatorische und organisatorische Nachteile entstehen.",
+        "F": "fehlende rechtliche Haftungstrennung; direkte Verantwortung des deutschen Hauptunternehmens; möglicher Zugriff auf Vermögen des Hauptunternehmens; persönliche Haftungsrisiken bei Personengesellschaft; aufwendigere laufende buchhalterische/bilanzielle Einbeziehung; länderspezifische regulatorische Risiken",
+        "I": "ja",
+        "K": "WQ",
+        "L": "TEXT",
+        "M": "",
+        "N": "",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "VWL-0127",
+        "source": "VWL",
+        "primaryCode": "1.3.3.2",
+        "uiKey": "ui-wq-0003",
+        "uiTopic": "Existenzgründung und Unternehmensrechtsformen",
+        "detailKey": "dg-wq-0064",
+        "detailLabel": "Auslandsgesellschaft und Zweigniederlassung – Haftung und Leitung"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O",
+        "M",
+        "N"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "IF-0091",
+      "defect": "Die Zahlenrechnung ist richtig, aber die alternativeabhängige Vermeidbarkeit der 48.000 € Fixkosten ist nicht vorgegeben. Bei unverändert fortbestehenden Fixkosten wäre die angegebene kritische Menge nicht begründet.",
+      "decision": "Zahlen und Teilaufgaben erhalten; Entscheidungsmodell ausdrücklich in Frage und Lösung ergänzen.",
+      "contentCode": "6.4.1.2",
+      "sources": [
+        "IFRC-BUCH",
+        "IFRC-SKRIPT"
+      ],
+      "changes": {
+        "C": "Circle Harbor kann ein Bauteil selbst herstellen oder zukaufen. Bei Eigenfertigung entstehen jährlich 48.000 € fixe Kosten und 6,50 € variable Kosten je Stück. Die 48.000 € fallen ausschließlich bei Eigenfertigung an und entfallen im betrachteten Jahr vollständig bei Fremdbezug. Der Lieferant verlangt 11,30 € je Stück. Die Stückkosten bleiben im betrachteten Mengenbereich konstant, die Fertigungskapazität reicht aus; weitere entscheidungsrelevante Kosten einschließlich Opportunitätskosten werden im Modell nicht berücksichtigt. a) Berechnen Sie die kritische Jahresmenge. b) Welche Alternative ist bei 12.000 Stück pro Jahr kostengünstiger und um wie viel? c) Nennen Sie zwei qualitative Kriterien, die zusätzlich zu prüfen sind.",
+        "E": "Die 48.000 € sind alternativabhängige, bei Fremdbezug vollständig vermeidbare Fixkosten. Deshalb gelten für die Jahresmenge x die relevanten Kostenfunktionen K_Eigen = 48.000 € + 6,50 € × x und K_Fremd = 11,30 € × x.\n\na) Gleichsetzen ergibt x = 48.000 € / (11,30 € − 6,50 €) = 10.000 Stück pro Jahr. Bei dieser Menge sind beide Alternativen gleich teuer; unterhalb ist Fremdbezug, oberhalb Eigenfertigung kostengünstiger, jeweils innerhalb der Modellannahmen.\n\nb) Bei 12.000 Stück: Eigenfertigung = 48.000 € + 12.000 × 6,50 € = 126.000 €. Fremdbezug = 12.000 × 11,30 € = 135.600 €. Die Eigenfertigung ist um 9.600 € pro Jahr günstiger.\n\nc) Zwei geeignete Kriterien sind beispielsweise die gesicherte Qualität und die Lieferzuverlässigkeit. Auch Lieferantenabhängigkeit, Schutz von Know-how oder Flexibilität sind begründbare Antworten.\n\nEinordnung: Würden die 48.000 € bei beiden Alternativen unverändert bestehen bleiben, wären sie für diesen Vergleich nicht entscheidungsrelevant. Aus ihnen dürfte dann keine kritische Menge von 10.000 Stück abgeleitet werden.",
+        "F": "48.000 € alternativabhängige und vermeidbare Fixkosten; relevante Kostenfunktionen; kritische Jahresmenge 10.000 Stück; unterhalb Fremdbezug oberhalb Eigenfertigung; Eigenfertigung 126.000 €; Fremdbezug 135.600 €; Vorteil Eigenfertigung 9.600 € pro Jahr; zwei qualitative Kriterien; unvermeidbare gemeinsame Fixkosten nicht entscheidungsrelevant"
+      },
+      "acceptance": [
+        "48.000 / 4,80 = 10.000; 126.000; 135.600; 9.600 bleiben unverändert.",
+        "Keine kritische Menge aus unvermeidbaren Fixkosten behaupten.",
+        "Fragetyp TEXT bleibt erhalten."
+      ],
+      "auditNote": "Primär 6.4.1.2; methodischer Querverweis 6.1.2.2#1. Keine Verschiebung der Quellzeile.",
+      "sourceSheet": "Investition und Finanzierung",
+      "expectedFields": {
+        "A": "IF-0091",
+        "B": "Statische Investitionsrechnung",
+        "C": "Circle Harbor kann ein Bauteil selbst herstellen oder zukaufen. Bei Eigenfertigung entstehen jährlich 48.000 € fixe Kosten und 6,50 € variable Kosten je Stück. Der Lieferant verlangt 11,30 € je Stück. a) Berechnen Sie die kritische Menge. b) Welche Alternative ist bei 12.000 Stück kostengünstiger und um wie viel? c) Nennen Sie zwei qualitative Kriterien, die zusätzlich zu prüfen sind.",
+        "E": "a) Kritische Menge = Fixkostendifferenz / Differenz der variablen Stückkosten = 48.000 € / (11,30 € − 6,50 €) = 10.000 Stück. b) Bei 12.000 Stück: Eigenfertigung = 48.000 + 12.000 × 6,50 = 126.000 €. Fremdbezug = 12.000 × 11,30 = 135.600 €. Die Eigenfertigung ist um 9.600 € günstiger. c) Mögliche qualitative Kriterien sind z. B. Qualität, Lieferzuverlässigkeit, Abhängigkeit vom Lieferanten, Schutz von Know-how, Kapazitätsauslastung oder Flexibilität.",
+        "F": "kritische Menge 10.000 Stück; Eigenfertigung 126.000 €; Fremdbezug 135.600 €; Vorteil Eigenfertigung 9.600 €; zwei qualitative Kriterien",
+        "I": "ja",
+        "K": "HQ",
+        "L": "TEXT",
+        "M": "",
+        "N": "",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "IF-0091",
+        "source": "Investition und Finanzierung",
+        "primaryCode": "6.4.1.2",
+        "uiKey": "ui-hq-0020",
+        "uiTopic": "Kosten- und Leistungsrechnung",
+        "detailKey": "dg-hq-0157",
+        "detailLabel": "Entscheidungen bezüglich Fremdbezug oder Eigenfertigung"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O",
+        "M",
+        "N"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "BR-0076",
+      "defect": "Stückrechnung wird unzutreffend als alleinige Ermittlung des geplanten Produktgewinns beschrieben; Zeitrechnung wird fälschlich als immer vergangenheitsorientiert dargestellt. Die falschen Aussagen stehen auch im HTML. Der aktuelle Schlüssel nutzt Pipe-Trenner, während der vorhandene Lückentextparser Semikolon-/Zeilenlisten oder JSON erwartet.",
+      "decision": "Alle fünf Satzabschnitte fachlich bereinigen, acht Lücken und Fragetyp erhalten. Volltext, HTML, Stichpunkte und Schlüssel synchron ersetzen; keine Änderung am Anwendungscode.",
+      "contentCode": "2.3.4.1",
+      "sources": [
+        "RW-BUCH",
+        "RW-SKRIPT"
+      ],
+      "changes": {
+        "C": "Ergänzen Sie die acht Lücken jeweils mit dem Wortbestandteil „stück“ oder „zeit“. Unterscheiden Sie den Bezug auf eine Einheit beziehungsweise einen Auftrag vom Bezug auf eine Periode.",
+        "E": "Die Kostenträgerstückrechnung ermittelt die Kosten je Produkteinheit oder Auftrag; auf Vollkostenbasis sind dies die Selbstkosten.\nDie Kostenträgerzeitrechnung erfasst die Kosten der Kostenträger für eine abgegrenzte Periode.\nDie Kostenträgerstückrechnung hat die einzelne Einheit oder den Auftrag als Bezugsobjekt; die Kostenträgerzeitrechnung einen Zeitraum.\nWird die Kostenträgerzeitrechnung um die zugehörigen Leistungen beziehungsweise Erlöse der Periode ergänzt, lässt sich das Betriebsergebnis ermitteln. Die Kostenträgerstückrechnung allein ermittelt noch keinen Produktgewinn; dazu ist zusätzlich der zugehörige Erlös beziehungsweise Preis einzubeziehen.\nSowohl die Kostenträgerstückrechnung als auch die Kostenträgerzeitrechnung können mit Planwerten durchgeführt werden; der Periodenbezug bedeutet nicht automatisch Vergangenheitsorientierung.",
+        "F": "stück; zeit; stück; zeit; zeit; stück; stück; zeit",
+        "M": "<div><p>Die Kostenträger<input type='text' style='width:80px'>rechnung ermittelt die Kosten je Produkteinheit oder Auftrag; auf Vollkostenbasis sind dies die Selbstkosten.</p><p>Die Kostenträger<input type='text' style='width:80px'>rechnung erfasst die Kosten der Kostenträger für eine abgegrenzte Periode.</p><p>Die Kostenträger<input type='text' style='width:80px'>rechnung hat die einzelne Einheit oder den Auftrag als Bezugsobjekt; die Kostenträger<input type='text' style='width:80px'>rechnung einen Zeitraum.</p><p>Wird die Kostenträger<input type='text' style='width:80px'>rechnung um die zugehörigen Leistungen beziehungsweise Erlöse der Periode ergänzt, lässt sich das Betriebsergebnis ermitteln. Die Kostenträger<input type='text' style='width:80px'>rechnung allein ermittelt noch keinen Produktgewinn; dazu ist zusätzlich der zugehörige Erlös beziehungsweise Preis einzubeziehen.</p><p>Sowohl die Kostenträger<input type='text' style='width:80px'>rechnung als auch die Kostenträger<input type='text' style='width:80px'>rechnung können mit Planwerten durchgeführt werden; der Periodenbezug bedeutet nicht automatisch Vergangenheitsorientierung.</p></div>",
+        "N": "stück;zeit;stück;zeit;zeit;stück;stück;zeit"
+      },
+      "acceptance": [
+        "Exakt acht Texteingabefelder und acht Lösungseinträge, Reihenfolge stück;zeit;stück;zeit;zeit;stück;stück;zeit.",
+        "Vollständig richtige Eingabe wird durch den vorhandenen Lückentextbewerter mit 8/8 bewertet; jeweils ein falscher Wert ergibt 7/8.",
+        "Musterlösung entspricht dem mit Lösungen ausgefüllten HTML.",
+        "Kein pauschaler Vergangenheitsbezug und keine Gewinnermittlung ohne Erlösbezug."
+      ],
+      "auditNote": "Primär 2.3.4.1 bleibt; Abgrenzung zu Stückrechnung ist kein vollständiger Beleg sämtlicher Kalkulationsverfahren.",
+      "sourceSheet": "Rechnungswesen",
+      "expectedFields": {
+        "A": "BR-0076",
+        "B": "KLR: Kostenträgerrechnung & Kalkulation",
+        "C": "Ergänzen Sie im Lückentext jeweils die Wortbestandteile „stück“ und „zeit“.",
+        "E": "Die Kostenträgerstückrechnung ermittelt die Selbstkosten für ein Produkt oder einen Auftrag.\\nDie Kostenträgerzeitrechnung ermittelt unter Berücksichtigung von Umsatz und Selbstkosten das Betriebsergebnis.\\nDie Kostenträgerstückrechnung bezieht sich auf Mengen, die Kostenträgerzeitrechnung bezieht sich auf einen Zeitraum.\\nDie Kostenträgerzeitrechnung gibt Auskunft über den wirtschaftlichen Erfolg eines Unternehmens, die Kostenträgerstückrechnung über den geplanten Gewinn an einem Produkt.\\nDie Kostenträgerstückrechnung kann Planwerte für die Zukunft ermitteln, die Kostenträgerzeitrechnung ist immer vergangenheitsorientiert.",
+        "F": "stück;zeit;stück;zeit;zeit;stück;stück;zeit",
+        "I": "ja",
+        "K": "WQ",
+        "L": "LUECKENTEXT",
+        "M": "<div><p>Die Kostenträger<input type='text' style='width:80px'>rechnung ermittelt die Selbstkosten für ein Produkt oder einen Auftrag.</p><p>Die Kostenträger<input type='text' style='width:80px'>rechnung ermittelt unter Berücksichtigung von Umsatz und Selbstkosten das Betriebsergebnis.</p><p>Die Kostenträger<input type='text' style='width:80px'>rechnung bezieht sich auf Mengen, die Kostenträger<input type='text' style='width:80px'>rechnung bezieht sich auf einen Zeitraum.</p><p>Die Kostenträger<input type='text' style='width:80px'>rechnung gibt Auskunft über den wirtschaftlichen Erfolg eines Unternehmens, die Kostenträger<input type='text' style='width:80px'>rechnung über den geplanten Gewinn an einem Produkt.</p><p>Die Kostenträger<input type='text' style='width:80px'>rechnung kann Planwerte für die Zukunft ermitteln, die Kostenträger<input type='text' style='width:80px'>rechnung ist immer vergangenheitsorientiert.</p></div>",
+        "N": "stück|zeit|stück|zeit|zeit|stück|stück|zeit",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "BR-0076",
+        "source": "Rechnungswesen",
+        "primaryCode": "2.3.4.1",
+        "uiKey": "ui-wq-0007",
+        "uiTopic": "Kosten- und Leistungsrechnung",
+        "detailKey": "dg-wq-0040",
+        "detailLabel": "Kostenträgerzeitrechnung"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F",
+        "M",
+        "N"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "UF-0058",
+      "defect": "Die bestehende Lösung beschreibt Reihenfolge und Zuständigkeiten korrekt. Es fehlt jedoch eine vorgelegte Ablaufdarstellung mit einer eigenständigen Interpretationsleistung zu Entscheidung, Rückschleife und Übergaben.",
+      "decision": "Eine beschriftete Ablaufgrafik in HTML ergänzen; Fragetyp Text beibehalten. Die Lernenden interpretieren Darstellung und Verantwortungsübergänge.",
+      "contentCode": "4.1.4.2#2",
+      "sources": [
+        "UF-BUCH",
+        "UF-SKRIPT"
+      ],
+      "changes": {
+        "C": "Das Arbeitsablaufdiagramm zeigt die Veröffentlichung eines Artikels. a) Beschreiben Sie den Ablauf mit den zuständigen Stellen vom Start bis zur Veröffentlichung. b) Erläutern Sie den Ja- und den Nein-Zweig der Entscheidung [C] und nennen Sie den Schritt, zu dem die Rückschleife führt. c) Benennen Sie zwei Übergaben zwischen verschiedenen Stellen und erläutern Sie die Bedeutung der Freigabe für die Veröffentlichung. d) Ein Vorschlag verbindet [D] unmittelbar mit [F]. Beurteilen Sie diese Änderung.",
+        "E": "a) Der Mitarbeiter erstellt den Artikel [A] und übergibt ihn zur fachlichen Prüfung an die Abteilungsleiterin [B]. Diese entscheidet in [C], ob der Artikel freigabefähig ist. Bei Nein überarbeitet der Mitarbeiter den Artikel [D]; anschließend folgt erneut die fachliche Prüfung [B]. Bei Ja erteilt die Abteilungsleiterin die Freigabe [E]. Erst danach veröffentlicht der Administrator den Artikel [F]; der Prozess endet.\n\nb) Der Ja-Zweig führt zur Freigabe [E] und danach zur Veröffentlichung [F]. Der Nein-Zweig führt zur Überarbeitung [D] und von dort zurück zur Prüfung [B], nicht direkt zur Veröffentlichung. Die Rückschleife kann so oft durchlaufen werden, wie fachlicher Änderungsbedarf besteht.\n\nc) Zwei Übergaben sind beispielsweise Mitarbeiter → Abteilungsleiterin bei [A] → [B] und Abteilungsleiterin → Administrator bei [E] → [F]. Auch die Rückgabe zur Überarbeitung sowie die erneute Vorlage sind richtige Beispiele. Die Trennung von Erstellung, Prüfung/Freigabe und technischer Veröffentlichung macht Zuständigkeiten und Kontrollen nachvollziehbar. Die Freigabe ist die notwendige Voraussetzung für die Veröffentlichung.\n\nd) Die direkte Verbindung [D] → [F] wäre fachlich falsch: Sie würde nach einer Änderung die erneute Prüfung und Freigabe umgehen. Der richtige Rückweg lautet [D] → [B] → [C] und erst bei Ja weiter über [E] nach [F].",
+        "F": "Mitarbeiter erstellt Artikel A; Abteilungsleiterin prüft B; Entscheidung C freigabefähig; Nein führt zur Überarbeitung D; Rückschleife D zurück zu B; Ja führt zur Freigabe E; Administrator veröffentlicht F erst nach Freigabe; zwei korrekte Stellenübergaben; Trennung Erstellung Prüfung Veröffentlichung; D direkt zu F umgeht Prüfung und Freigabe",
+        "M": "<div><p><strong>Arbeitsablaufdiagramm: Artikel veröffentlichen</strong></p><div style='font-family:monospace;white-space:pre-wrap' aria-label='Ablauf mit Prüfung, Entscheidung und Rückschleife'>(Start)\n   ↓\n[A] Mitarbeiter: Artikel erstellen\n   ↓\n[B] Abteilungsleiterin: Artikel fachlich prüfen\n   ↓\n[C] Entscheidung: Artikel freigabefähig?\n   ├─ Nein → [D] Mitarbeiter: Artikel überarbeiten\n   │                       └─ zurück zu [B]\n   └─ Ja   → [E] Abteilungsleiterin: Freigabe erteilen\n                           ↓\n             [F] Administrator: Artikel veröffentlichen\n                           ↓\n                         (Ende)</div><p>Legende: Pfeile zeigen den Ablauf und die Übergaben. [A], [B], [D], [E] und [F] sind Tätigkeiten; [C] ist die Entscheidung. Die jeweilige Stelle steht am Schritt.</p></div>"
+      },
+      "acceptance": [
+        "Grafik nach bestehender HTML-Bereinigung sichtbar; keine externe Bilddatei oder neue UI-Funktion erforderlich.",
+        "Nein-Zweig geht über D nach B; Ja-Zweig über E nach F; kein direkter Weg D→F.",
+        "Textantwort bleibt nutzbar; keine unbeabsichtigten Eingabefelder aus der Darstellung."
+      ],
+      "auditNote": "Fachlicher Ergänzungsbezug 4.1.4.2#2 (Arbeitsablaufdiagramm; #2 ist lokale Kennung). Der bestehende technische Primäranker 4.1.3 und dg-wq-0067 werden in diesem Inhaltsauftrag nicht verändert. Die konkrete Detailabdeckung ist getrennt von der historischen Primärzuordnung zu dokumentieren; kein automatisches Hochstufen des gesamten Elternpunkts.",
+      "sourceSheet": "Unternehmensführung",
+      "expectedFields": {
+        "A": "UF-0058",
+        "B": "Aufbau- & Ablauforganisation",
+        "C": "Beschreiben Sie den Arbeitsablauf zur Veröffentlichung eines Artikels mit den zuständigen Stellen in der richtigen Reihenfolge.",
+        "E": "Der Ablauf ist als Prozessfolge zu verstehen: Zunächst erstellt der zuständige Mitarbeiter den Artikel. Danach prüft die Abteilungsleiterin Inhalt, Qualität und Freigabefähigkeit. Besteht Änderungsbedarf, geht der Artikel zur Überarbeitung an den Mitarbeiter zurück; anschließend erfolgt eine erneute Prüfung beziehungsweise die Freigabe durch die Abteilungsleiterin. Erst nach dieser Freigabe veröffentlicht der Administrator den Artikel. Die Trennung von Erstellung, fachlicher Prüfung/Freigabe und technischer Veröffentlichung schafft klare Verantwortlichkeiten und wirkt als Kontrollprinzip gegen fehlerhafte Veröffentlichungen.",
+        "F": "Artikel erstellen Mitarbeiter; Prüfung Abteilungsleitung; bei Bedarf Rückgabe/Überarbeitung; Freigabe Abteilungsleitung; Veröffentlichung Administrator; klare Reihenfolge; getrennte Verantwortlichkeiten; Kontrollfunktion vor Veröffentlichung",
+        "I": "ja",
+        "K": "WQ",
+        "L": "Text",
+        "M": "",
+        "N": "",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "UF-0058",
+        "source": "Unternehmensführung",
+        "primaryCode": "4.1.3",
+        "uiKey": "ui-wq-0010",
+        "uiTopic": "Betriebsorganisation",
+        "detailKey": "dg-wq-0067",
+        "detailLabel": "Aufbauorganisation"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F",
+        "M"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O",
+        "N"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "BM-0260",
+      "defect": "Stellenbeschreibung und Kompetenzbereiche sind vorhanden. Es fehlt eine konkret vorgegebene OE-Strategie, aus der veränderte Aufgaben und daraus die künftigen Anforderungen schlüssig hergeleitet werden.",
+      "decision": "Den bestehenden Besetzungsfall um eine bereichsübergreifende digitale Prozessorganisation erweitern. Die Kette OE-Ziel → Stellenaufgabe → Kompetenz muss ausdrücklich bearbeitet werden.",
+      "contentCode": "5.2.3.3#2",
+      "sources": [
+        "BM-BUCH",
+        "BM-SKRIPT"
+      ],
+      "changes": {
+        "C": "Circle Harbor stellt bisher getrennte Abteilungsabläufe auf bereichsübergreifende, digital unterstützte Prozesse um. Ziele sind kürzere Durchlaufzeiten, weniger Übergabefehler und ein einheitliches Kennzahlenberichtswesen. Die Position „Leitung Organisation und Controlling“ soll diese organisatorische Veränderung umsetzen. Entwickeln Sie vier zentrale Elemente der Stellenbeschreibung. Leiten Sie anschließend für Fach-, Methoden-, Sozial- und persönliche/Führungskompetenz jeweils eine konkrete Anforderung ab. Begründen Sie jede Anforderung durch die Kette OE-Ziel → neue Stellenaufgabe → erforderliche Kompetenz. Erläutern Sie abschließend, wie daraus individueller Personalentwicklungsbedarf ermittelt wird.",
+        "E": "Vier Elemente der Stellenbeschreibung sind:\n1. Stellenbezeichnung und organisatorische Einordnung: Leitung Organisation und Controlling, Anbindung an die Geschäftsführung und festgelegte Schnittstellen zu den beteiligten Fachbereichen.\n2. Ziele und Hauptaufgaben: bereichsübergreifende Abläufe gestalten, digitale Prozessumstellung koordinieren, Übergabefehler senken sowie gemeinsame Kennzahlen und Berichte aufbauen.\n3. Befugnisse und Verantwortung: vereinbarte Projekt-, Informations- und Entscheidungsbefugnisse sowie Verantwortung für Umsetzung, Termine und Ergebnisqualität. Aufgabe, Befugnis und Verantwortung müssen zusammenpassen.\n4. Zusammenarbeit und Vertretung: geregelte Zusammenarbeit mit Fachbereichen und IT sowie festgelegte Vertretung der Stelle.\n\nVier begründete Kompetenzanforderungen sind:\n• Fachkompetenz: Einheitliche Kennzahlen erfordern die Aufgabe, aussagekräftige Kennzahlendefinitionen und Berichte zu entwickeln. Dafür sind Controllingkenntnisse, Verständnis der betrieblichen Abläufe und Kenntnisse der Datenqualität erforderlich.\n• Methodenkompetenz: Kürzere Durchlaufzeiten erfordern die Analyse und Neugestaltung abteilungsübergreifender Abläufe. Dafür werden Prozessanalyse, Datenanalyse und Projektmanagement benötigt.\n• Sozialkompetenz: Weniger Übergabefehler erfordern gemeinsame Regeln zwischen Fachbereichen. Dafür sind Moderation, verständliche Kommunikation sowie Konflikt- und Kooperationsfähigkeit nötig.\n• Persönliche/Führungskompetenz: Die dauerhafte Umsetzung der neuen Organisation erfordert Entscheidungen, Priorisierung und die Begleitung der Beschäftigten. Dafür braucht die Stellenleitung Verantwortungsbereitschaft, Entscheidungsfähigkeit, Integrität und Veränderungskompetenz.\n\nDie Anforderungen werden mit beobachtbaren Kriterien als Sollprofil festgehalten und mit dem aktuellen Qualifikationsprofil sowie dem Entwicklungspotenzial der Person verglichen. Aus festgestellten Lücken werden konkrete Entwicklungsziele und Maßnahmen abgeleitet. Die strategische Herleitung beginnt somit beim OE-Ziel und nicht bei einer beliebigen Liste persönlicher Eigenschaften.",
+        "F": "OE-Strategie bereichsübergreifende digitale Prozesse; kürzere Durchlaufzeiten weniger Übergabefehler einheitliche Kennzahlen; vier Elemente der Stellenbeschreibung; Kongruenz Aufgabe Befugnis Verantwortung; OE-Ziel zu neuer Aufgabe zu Kompetenz; Fachkompetenz Controlling und Datenqualität; Methodenkompetenz Prozessanalyse und Projektmanagement; Sozialkompetenz Moderation und Konfliktlösung; Führungskompetenz Entscheidung und Veränderung; Sollprofil mit Qualifikationsprofil und Potenzial abgleichen; Entwicklungsbedarf aus konkreten Lücken"
+      },
+      "acceptance": [
+        "Vier Stellenbeschreibungselemente und vier Kompetenzbereiche jeweils begründet.",
+        "Jede Kompetenz aus einem vorgegebenen OE-Ziel und einer Stellenaufgabe abgeleitet.",
+        "Keine bloße Wiederholung einer allgemeinen Kompetenzliste."
+      ],
+      "auditNote": "Spezifischer Inhaltsbezug 5.2.3.3#2; zusätzlich 5.2.3.3#1 und 5.2.1. Technischer Primäranker 5.2.3, UI und Detailgruppe bleiben erhalten.",
+      "sourceSheet": "Betriebliches Management",
+      "expectedFields": {
+        "A": "BM-0260",
+        "B": "Personalentwicklung",
+        "C": "Circle Harbor möchte die Position „Leitung Organisation und Controlling“ neu besetzen. Entwickeln Sie vier zentrale Elemente der Stellenbeschreibung und leiten Sie daraus vier Kompetenzbereiche eines Anforderungsprofils mit jeweils einer kurzen Begründung ab.",
+        "E": "Eine geeignete Stellenbeschreibung enthält zum Beispiel: 1. Stellenbezeichnung und organisatorische Einordnung einschließlich vorgesetzter/nachgeordneter Stellen und Schnittstellen. 2. Ziele und Hauptaufgaben, etwa Organisationsentwicklung, Prozessoptimierung, Planung, Berichtswesen und Controlling. 3. Befugnisse und Verantwortung, zum Beispiel Freigabe- oder Weisungsrechte im vereinbarten Rahmen sowie Verantwortung für Termine, Qualität und Berichte. 4. Vertretungsregelung und Zusammenarbeit mit Geschäftsführung, Fachbereichen und Projekten. Daraus lässt sich ein Anforderungsprofil ableiten. Fachkompetenz: sichere Kenntnisse in Controlling, Organisation, Kennzahlen und betriebswirtschaftlichen Zusammenhängen, weil fachlich richtige Analysen und Steuerungsimpulse erwartet werden. Methodenkompetenz: Prozessanalyse, Projektmanagement, Problemlösung und Datenanalyse, weil komplexe Veränderungs- und Steuerungsaufgaben strukturiert bearbeitet werden müssen. Sozialkompetenz: Kommunikation, Moderation, Konflikt- und Kooperationsfähigkeit, weil bereichsübergreifend mit unterschiedlichen Stakeholdern gearbeitet wird. Persönliche/Führungskompetenz: Entscheidungsfähigkeit, Verantwortungsbereitschaft, Integrität, Belastbarkeit und Veränderungsfähigkeit, weil die Stelle Führungs- und Umsetzungsverantwortung trägt. Aufgabe, Befugnis und Verantwortung müssen dabei möglichst kongruent gestaltet sein.",
+        "F": "Stellenbezeichnung und Einordnung; Ziele/Hauptaufgaben; Befugnisse und Verantwortung; Vertretung/Schnittstellen; Fachkompetenz Controlling/Organisation; Methodenkompetenz Analyse/Projekt; Sozialkompetenz Kommunikation/Konflikt; persönliche/Führungskompetenz Entscheidung/Verantwortung; jede Kompetenz begründet; Kongruenzprinzip",
+        "I": "ja",
+        "K": "HQ",
+        "L": "TEXT",
+        "M": "",
+        "N": "",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "BM-0260",
+        "source": "Betriebliches Management",
+        "primaryCode": "5.2.3",
+        "uiKey": "ui-hq-0014",
+        "uiTopic": "Organisations- und Personalentwicklung",
+        "detailKey": "dg-hq-0084",
+        "detailLabel": "Personalentwicklung (PE)"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O",
+        "M",
+        "N"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "BM-0154",
+      "defect": "Job Enrichment wird zutreffend beschrieben. Künftige Schlüsselrolle, strategischer Kompetenzbedarf, Soll-Ist-/Potenzialabgleich und begründeter Entwicklungsweg bleiben jedoch unverbunden.",
+      "decision": "Die Stellvertretungsfunktion mit einem konkreten Unternehmensbedarf verbinden; Job Enrichment als geeignete Maßnahme in einen überprüfbaren Entwicklungsweg einordnen. Die freigegebene Auslegung bleibt ausdrücklich intern.",
+      "contentCode": "5.2.3.4#4",
+      "sources": [
+        "BM-BUCH",
+        "BM-SKRIPT"
+      ],
+      "changes": {
+        "C": "Die Circle Harbor Service GmbH will ihr wachsendes Servicegeschäft künftig bereichsübergreifend mit gemeinsamen Qualitätsstandards und digitalem Kennzahlenbericht steuern. Eine erfahrene Teamleitung soll innerhalb von zwölf Monaten auf die Stellvertretung der Bereichsleitung vorbereitet werden. Sie beherrscht das operative Tagesgeschäft und die Führung ihres Teams; Erfahrung mit bereichsübergreifender Projektsteuerung und Kennzahleninterpretation fehlt bislang. Die Person strebt die Zielrolle an. a) Leiten Sie den strategischen Entwicklungsbedarf aus Unternehmensziel und Zielrolle ab und beschreiben Sie den erforderlichen Soll-Ist- und Potenzialabgleich. b) Begründen Sie die Eignung von Job Enrichment und nennen Sie zwei konkrete Entwicklungsaufgaben. c) Ergänzen Sie den Entwicklungsweg um begleitende Maßnahmen und eine überprüfbare Erfolgskontrolle. Erläutern Sie die Abgrenzung zu Job Enlargement.",
+        "E": "a) Das Unternehmen benötigt für sein Wachstum eine Person, die mehrere Teams anhand gemeinsamer Standards und Kennzahlen koordinieren und die Bereichsleitung wirksam vertreten kann. Zur Zielrolle gehören deshalb bereichsübergreifende Projektsteuerung, Kennzahleninterpretation, Abstimmung zwischen Teams und begründete Priorisierungsentscheidungen. Diese Sollanforderungen werden mit den vorhandenen Fähigkeiten verglichen: Operative Erfahrung und Teamführung sind Stärken; bei Projektsteuerung und Kennzahlen bestehen Entwicklungsbedarfe. Zusätzlich sind Lernfähigkeit, Motivation und das Potenzial für die erweiterte Verantwortung anhand bisheriger Leistungen, eines Entwicklungsgesprächs und beobachteter Entwicklungsaufgaben zu prüfen. Berufserfahrung allein beweist die Eignung für die Zielrolle nicht.\n\nb) Job Enrichment ist geeignet, weil die Person qualitativ anspruchsvollere Aufgaben und zusätzliche Planungs-, Entscheidungs- und Kontrollverantwortung übernimmt. Zwei passende Aufgaben sind die Leitung eines bereichsübergreifenden Projekts zur Einführung gemeinsamer Qualitätsstandards mit vereinbarten Entscheidungsbefugnissen und die eigenverantwortliche Auswertung des Kennzahlenberichts mit Vorschlägen und Entscheidungen zur Verbesserung innerhalb eines festgelegten Rahmens.\n\nc) Ein verbindlicher Entwicklungsplan ergänzt die Aufgaben um Schulungen in Projektsteuerung und Kennzahlenanalyse, Begleitung durch die Bereichsleitung als Mentorin oder Mentor sowie regelmäßiges Feedback. Ausreichende Zeit, abgestufte Befugnisse und realistische Belastung sind sicherzustellen. Nach sechs Monaten wird der Fortschritt überprüft; bis Monat zwölf muss die Person beispielsweise einen abgestimmten Projektmeilenstein eigenverantwortlich erreicht, Kennzahlenabweichungen korrekt erklärt und nachvollziehbare Maßnahmen mit den Fachbereichen vereinbart haben. Erst nach Prüfung der Zielerreichung wird über die Übernahme der Stellvertretung entschieden; eine Beförderung ist nicht automatisch garantiert.\n\nJob Enlargement würde vor allem zusätzliche, gleichwertige Tätigkeiten umfassen. Hier geht es dagegen um höhere Verantwortung und den gezielten Aufbau der Kompetenzen für eine künftig benötigte Rolle.",
+        "F": "Unternehmensstrategie mit Zielrolle verbinden; Stellvertretung Bereichsleitung innerhalb zwölf Monaten; Sollanforderungen aus Rolle; Istprofil operative Erfahrung und Teamführung; Lücken Projektsteuerung und Kennzahlen; Potenzial und Motivation prüfen; Job Enrichment qualitativ höherwertige Verantwortung; zwei konkrete Entwicklungsaufgaben; Schulung Mentoring Feedback; Zeit Befugnisse Belastung beachten; überprüfbare Erfolgskriterien nach sechs und zwölf Monaten; keine automatische Beförderung; Job Enlargement nur gleichwertige Erweiterung"
+      },
+      "acceptance": [
+        "Strategischer Bedarf, künftige Zielrolle und Entwicklungsmaßnahmen bilden eine erkennbare Begründungskette.",
+        "Job Enrichment bleibt enthalten und wird von Job Enlargement abgegrenzt.",
+        "Keine Definition als angeblich wörtliche DIHK-Aussage; im öffentlichen Fragetext ist kein solcher Quellenanspruch enthalten."
+      ],
+      "auditNote": "5.2.3.4#4 wird intern als „strategischer Kompetenzaufbau und künftige Rollenbesetzung“ ausgelegt. Dies ist eine freigegebene didaktische Auslegung, keine wörtliche DIHK-Definition. Zusätzlich Job Enrichment 5.2.3.4#3. Technischer Primäranker 5.2.3 bleibt.",
+      "sourceSheet": "Betriebliches Management",
+      "expectedFields": {
+        "A": "BM-0154",
+        "B": "Personalentwicklung",
+        "C": "Fallbezug: Die folgenden betrieblichen Angaben und Situationen beziehen sich auf die Circle Harbor Service GmbH.\n\nEine erfahrene Führungskraft soll auf eine deutlich verantwortungsvollere Stellvertretungsfunktion vorbereitet werden. Welche Personalentwicklungsform ist besonders geeignet, welche Voraussetzungen sind wichtig und welche neuen Aufgaben könnten übertragen werden?",
+        "E": "Besonders geeignet ist Job Enrichment, weil Aufgaben qualitativ erweitert und mit zusätzlicher Verantwortung versehen werden. Die Person sollte die Beförderung anstreben, fachlich geeignet sein und mit der neuen Verantwortung umgehen können. Geeignete Entwicklungsaufgaben sind beispielsweise Leitung kleinerer Projekte, Stellvertretung einer Gruppen- oder Abteilungsleitung, strukturierte Einarbeitung neuer Beschäftigter, Betreuung von Auszubildenden oder Übernahme von Trainingsaufgaben.",
+        "F": "Job Enrichment; Beförderungswunsch; fachliche Eignung; Verantwortungsbereitschaft; Projektleitung; Stellvertretung; Einarbeitung; Betreuung Auszubildende; Training",
+        "I": "ja",
+        "K": "HQ",
+        "L": "TEXT",
+        "M": "",
+        "N": "",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "BM-0154",
+        "source": "Betriebliches Management",
+        "primaryCode": "5.2.3",
+        "uiKey": "ui-hq-0014",
+        "uiTopic": "Organisations- und Personalentwicklung",
+        "detailKey": "dg-hq-0084",
+        "detailLabel": "Personalentwicklung (PE)"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O",
+        "M",
+        "N"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "IF-0152",
+      "defect": "Die Aufgabe enthält Gesellschafterdarlehen, aber keine privaten Geldgeber außerhalb des Gesellschafterkreises. Die alte fünfte Ankreuzzeile („können ... nachrangig sein“) ist als alleinige Zuordnungsgrundlage mehrdeutig, da Nachrang keine exklusive Eigenschaft einer Kreditform ist. „Grundpfandrecht“ allein kennzeichnet zudem nicht ausschließlich eine Hypothek.",
+      "decision": "Fünfte Antwortspalte und sechsten Fall für einen privaten Nichtgesellschafter ergänzen. Zeile 5 durch ausdrückliche Gesellschafterstellung eindeutig machen; Hypothek im vierten Fall konkret benennen. Fragetyp ANKREUZ und sämtliche bestehenden Kreditformen erhalten.",
+      "contentCode": "6.2.2.1#3",
+      "sources": [
+        "IF-BUCH",
+        "IFRC-SKRIPT"
+      ],
+      "changes": {
+        "C": "Ordnen Sie jedem der sechs langfristig ausgestalteten Finanzierungsfälle genau eine passende Kreditform zu. Wählen Sie pro Zeile ein Feld. Unterscheiden Sie insbesondere das Darlehen eines Gesellschafters vom Darlehen einer nicht beteiligten Privatperson. Die Laufzeiten gelten für diese Fälle; private Darlehen und Gesellschafterdarlehen sind nicht zwingend immer langfristig.",
+        "E": "Zuordnung: 1 = Schuldscheindarlehen; 2 = Gesellschafterdarlehen; 3 = Anleihe; 4 = Hypothekendarlehen; 5 = Gesellschafterdarlehen; 6 = privates Darlehen eines Nichtgesellschafters.\n\nEin Schuldscheindarlehen ist eine häufig großvolumige Fremdfinanzierung, typischerweise durch institutionelle Kapitalgeber. Bei einer Anleihe wird die Finanzierung in Schuldverschreibungen aufgeteilt. Das Hypothekendarlehen im vierten Fall ist ausdrücklich durch eine Hypothek besichert; nicht jedes andere Grundpfandrecht ist eine Hypothek.\n\nPrivate Darlehen können von natürlichen Personen stammen, die nicht am Unternehmen beteiligt sind. Ein Gesellschafterdarlehen wird dagegen durch einen Gesellschafter seiner Gesellschaft gewährt. Entscheidend ist die Gesellschafterstellung des Darlehensgebers, nicht allein seine Eigenschaft als Privatperson. Eine Privatperson kann selbst Gesellschafter sein; Gesellschafter können auch juristische Personen sein. Beide Darlehensfälle bleiben bei einem gewöhnlichen Rückzahlungsanspruch grundsätzlich Fremdfinanzierung. Ein vereinbarter Nachrang betrifft die Rangstellung und macht ein Darlehen nicht automatisch zu Eigenkapital. Die fünfte Zeile ist wegen der ausdrücklich genannten Gesellschafterstellung zuzuordnen, nicht allein wegen des Nachrangs.\n\nLaufzeit, Zinsen, Tilgung und Sicherheiten werden vereinbart. Weder private Darlehen noch Gesellschafterdarlehen sind durch ihre Bezeichnung zwingend langfristig.",
+        "F": "1 Schuldscheindarlehen; 2 Gesellschafterdarlehen; 3 Anleihe; 4 Hypothekendarlehen; 5 Gesellschafterdarlehen; 6 privates Darlehen eines Nichtgesellschafters; Privatperson muss nicht Gesellschafter sein; Gesellschafterstellung ist Abgrenzungskriterium; Rückzahlungsanspruch grundsätzlich Fremdkapital; Nachrang nicht automatisch Eigenkapital; Hypothek konkret benannt; Laufzeit vertraglich vereinbart",
+        "M": "<div><p>Je Zeile ist genau eine Antwort richtig. Die Fälle sind für diese Aufgabe langfristig ausgestaltet.</p><table><thead><tr><th>Aussage/Fall</th><th>Hypothekendarlehen</th><th>Schuldscheindarlehen</th><th>Gesellschafterdarlehen</th><th>Anleihe</th><th>Privates Darlehen eines Nichtgesellschafters</th></tr></thead><tbody><tr><td>1. Ein institutioneller Kapitalgeber gewährt einen langfristigen Großkredit, der durch einen Schuldschein dokumentiert wird.</td><td><input type='checkbox' value='1=Hypothekendarlehen'></td><td><input type='checkbox' value='1=Schuldscheindarlehen'></td><td><input type='checkbox' value='1=Gesellschafterdarlehen'></td><td><input type='checkbox' value='1=Anleihe'></td><td><input type='checkbox' value='1=Privates Darlehen eines Nichtgesellschafters'></td></tr><tr><td>2. Ein Gesellschafter gibt seiner Gesellschaft ein langfristiges Darlehen mit Rückzahlungsanspruch statt einer Eigenkapitaleinlage.</td><td><input type='checkbox' value='2=Hypothekendarlehen'></td><td><input type='checkbox' value='2=Schuldscheindarlehen'></td><td><input type='checkbox' value='2=Gesellschafterdarlehen'></td><td><input type='checkbox' value='2=Anleihe'></td><td><input type='checkbox' value='2=Privates Darlehen eines Nichtgesellschafters'></td></tr><tr><td>3. Ein Unternehmen beschafft Kapital, indem es viele Schuldverschreibungen ausgibt.</td><td><input type='checkbox' value='3=Hypothekendarlehen'></td><td><input type='checkbox' value='3=Schuldscheindarlehen'></td><td><input type='checkbox' value='3=Gesellschafterdarlehen'></td><td><input type='checkbox' value='3=Anleihe'></td><td><input type='checkbox' value='3=Privates Darlehen eines Nichtgesellschafters'></td></tr><tr><td>4. Eine Bank gewährt einen langfristigen Immobilienkredit, der ausdrücklich durch eine Hypothek gesichert ist.</td><td><input type='checkbox' value='4=Hypothekendarlehen'></td><td><input type='checkbox' value='4=Schuldscheindarlehen'></td><td><input type='checkbox' value='4=Gesellschafterdarlehen'></td><td><input type='checkbox' value='4=Anleihe'></td><td><input type='checkbox' value='4=Privates Darlehen eines Nichtgesellschafters'></td></tr><tr><td>5. Ein Gesellschafter gewährt seiner Gesellschaft ein Darlehen. Für seinen Rückzahlungsanspruch wird vertraglich ein Nachrang vereinbart.</td><td><input type='checkbox' value='5=Hypothekendarlehen'></td><td><input type='checkbox' value='5=Schuldscheindarlehen'></td><td><input type='checkbox' value='5=Gesellschafterdarlehen'></td><td><input type='checkbox' value='5=Anleihe'></td><td><input type='checkbox' value='5=Privates Darlehen eines Nichtgesellschafters'></td></tr><tr><td>6. Eine nicht am Unternehmen beteiligte Privatperson gewährt diesem aus ihrem eigenen Vermögen für acht Jahre ein unbesichertes Darlehen mit Rückzahlungsanspruch; Schuldverschreibungen werden nicht ausgegeben.</td><td><input type='checkbox' value='6=Hypothekendarlehen'></td><td><input type='checkbox' value='6=Schuldscheindarlehen'></td><td><input type='checkbox' value='6=Gesellschafterdarlehen'></td><td><input type='checkbox' value='6=Anleihe'></td><td><input type='checkbox' value='6=Privates Darlehen eines Nichtgesellschafters'></td></tr></tbody></table></div>",
+        "N": "1=Schuldscheindarlehen;2=Gesellschafterdarlehen;3=Anleihe;4=Hypothekendarlehen;5=Gesellschafterdarlehen;6=Privates Darlehen eines Nichtgesellschafters"
+      },
+      "acceptance": [
+        "Sechs Fälle, fünf Optionen je Fall, exakt 30 Checkboxen; pro Fall genau ein korrekter Schlüssel.",
+        "6/6 bei den sechs richtigen Antworten; 5/6 bei jeweils einer falschen Antwort.",
+        "Fall 6 muss ausdrücklich Nichtgesellschafter betreffen; Nachrang allein darf nicht als eindeutige Kreditform gewertet werden.",
+        "Historische Leistungen nicht auf die neue Maximalpunktzahl umrechnen oder überschreiben."
+      ],
+      "auditNote": "Primär 6.3.4.3, UI Finanzierungsarten und dg-hq-0160 bleiben. Der bereits vorhandene Querverweis 6.2.2.1#3 erhält durch den ergänzten Fall einen konkreteren Inhaltsbeleg; keine zweite Primärzuordnung.",
+      "sourceSheet": "Investition und Finanzierung",
+      "expectedFields": {
+        "A": "IF-0152",
+        "B": "Kurz- & langfristige Kreditfinanzierung",
+        "C": "Ordnen Sie Merkmale langfristigen Kreditformen zu.",
+        "E": "Typische langfristige Kreditformen unterscheiden sich nach Kapitalgeber, Besicherung und Ausgestaltung. Ein Hypothekendarlehen ist langfristig und grundpfandrechtlich besichert. Ein Schuldscheindarlehen ist eine häufig großvolumige langfristige Fremdfinanzierung auf Grundlage eines Schuldscheins, typischerweise mit institutionellen Kapitalgebern. Ein Gesellschafterdarlehen bleibt grundsätzlich Fremdkapital; ein vereinbarter Nachrang verändert den Rang, nicht automatisch die Kapitalart. Bei einer Anleihe wird der Kreditbetrag über viele Schuldverschreibungen auf Kapitalgeber verteilt.",
+        "F": "Hypothekendarlehen langfristig/grundpfandrechtlich besichert; Schuldscheindarlehen langfristige großvolumige Fremdfinanzierung; institutionelle Kapitalgeber; Gesellschafterdarlehen grundsätzlich Fremdkapital; Nachrang ändert Rang nicht automatisch Kapitalart; Anleihe viele Schuldverschreibungen/Kapitalgeber",
+        "I": "ja",
+        "K": "HQ",
+        "L": "ANKREUZ",
+        "M": "<div><p>Wählen Sie die passende Kreditform.</p><table><tr><th>Aussage/Fall</th><th>Hypothekendarlehen</th><th>Schuldscheindarlehen</th><th>Gesellschafterdarlehen</th><th>Anleihe</th></tr><tr><td>Langfristiger Großkredit bei Kapitalsammelstellen, dokumentiert durch einen Schuldschein.</td><td><input type='checkbox' value='1=Hypothekendarlehen'></td><td><input type='checkbox' value='1=Schuldscheindarlehen'></td><td><input type='checkbox' value='1=Gesellschafterdarlehen'></td><td><input type='checkbox' value='1=Anleihe'></td></tr><tr><td>Gesellschafter stellt dem Unternehmen Kapital mit Rückzahlungsanspruch als Fremdkapital zur Verfügung.</td><td><input type='checkbox' value='2=Hypothekendarlehen'></td><td><input type='checkbox' value='2=Schuldscheindarlehen'></td><td><input type='checkbox' value='2=Gesellschafterdarlehen'></td><td><input type='checkbox' value='2=Anleihe'></td></tr><tr><td>Viele Kapitalgeber erwerben ausgegebene Schuldverschreibungen.</td><td><input type='checkbox' value='3=Hypothekendarlehen'></td><td><input type='checkbox' value='3=Schuldscheindarlehen'></td><td><input type='checkbox' value='3=Gesellschafterdarlehen'></td><td><input type='checkbox' value='3=Anleihe'></td></tr><tr><td>Immobiliendarlehen, das durch ein Grundpfandrecht gesichert ist.</td><td><input type='checkbox' value='4=Hypothekendarlehen'></td><td><input type='checkbox' value='4=Schuldscheindarlehen'></td><td><input type='checkbox' value='4=Gesellschafterdarlehen'></td><td><input type='checkbox' value='4=Anleihe'></td></tr><tr><td>Rückzahlungs- und Zinsansprüche können im Insolvenzfall nachrangig sein.</td><td><input type='checkbox' value='5=Hypothekendarlehen'></td><td><input type='checkbox' value='5=Schuldscheindarlehen'></td><td><input type='checkbox' value='5=Gesellschafterdarlehen'></td><td><input type='checkbox' value='5=Anleihe'></td></tr></table></div>",
+        "N": "1=Schuldscheindarlehen;2=Gesellschafterdarlehen;3=Anleihe;4=Hypothekendarlehen;5=Gesellschafterdarlehen",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "IF-0152",
+        "source": "Investition und Finanzierung",
+        "primaryCode": "6.3.4.3",
+        "uiKey": "ui-hq-0019",
+        "uiTopic": "Finanzierungsarten",
+        "detailKey": "dg-hq-0160",
+        "detailLabel": "Langfristige Kredite"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F",
+        "M",
+        "N"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "M-0021",
+      "defect": "USP-Nutzen und Positionierung werden erklärt, aber es fehlt das systematische Profil eines einzelnen relevanten Wettbewerbers einschließlich Zielen, Strategie, Fähigkeiten, Instrumenten und wahrscheinlichen Reaktionen.",
+      "decision": "USP-Aufgabe um ein vollständiges Untersuchungsraster für konkrete Wettbewerber ergänzen. Keine realen Wettbewerberdaten erfinden; erwartete Reaktionen ausdrücklich als begründete Hypothesen behandeln.",
+      "contentCode": "8.1.3.2#4",
+      "sources": [
+        "M-BUCH",
+        "MV-SKRIPT"
+      ],
+      "changes": {
+        "C": "Circle Harbor möchte sich mit einem klaren USP vom Wettbewerb abheben. a) Erläutern Sie die Bedeutung des USP für die Marketingplanung und nennen Sie mindestens vier Nutzen einer systematischen USP-Analyse. b) Entwickeln Sie für einen konkret auszuwählenden Hauptwettbewerber ein Untersuchungsraster mit sechs Bereichen: Marktrolle/Zielgruppen, Ziele, Strategie, Fähigkeiten/Stärken/Schwächen, Marketinginstrumente und erwartete Reaktionen. Benennen Sie für jeden Bereich die zu erhebenden Informationen. c) Erläutern Sie, wie Circle Harbor das Wettbewerberprofil zur Prüfung des eigenen USP nutzt und wie gesicherte Befunde von Annahmen getrennt werden.",
+        "E": "a) Ein USP ist ein für die Zielgruppe relevanter und nachvollziehbarer besonderer Nutzen, durch den sich das Angebot vom Wettbewerb abhebt. Er unterstützt die Positionierung und die abgestimmte Auswahl der Marketinginstrumente. Eine systematische USP-Analyse hilft beispielsweise, Schwächen des eigenen Angebots oder der Kommunikation aufzudecken, unbesetzte Marktnischen zu erkennen, Anregungen für Neu- und Weiterentwicklungen zu gewinnen und Zielgruppen passender anzusprechen.\n\nb) Für jeden ausgewählten Hauptwettbewerber wird dasselbe Raster verwendet:\n1. Marktrolle und Zielgruppen: In welchen Teilmärkten und Regionen bietet er an, welche Kundengruppen bedient er, und wie relevant sind Marktanteil, Bekanntheit und Positionierung?\n2. Ziele: Welche erkennbaren Wachstums-, Marktanteils-, Ertrags- oder Innovationsziele verfolgt er?\n3. Strategie: Setzt er etwa auf niedrige Kosten, besondere Qualität, Service, Innovation oder eine Nische?\n4. Fähigkeiten, Stärken und Schwächen: Welche finanziellen, technischen, personellen und vertrieblichen Möglichkeiten besitzt er; wo liegen belegbare Leistungsgrenzen?\n5. Marketinginstrumente: Wie gestaltet er Produkte und Service, Preise und Konditionen, Kommunikation sowie Absatzwege?\n6. Erwartete Reaktionen: Wie könnte er auf eine Preissenkung, ein neues Angebot oder eine Serviceverbesserung von Circle Harbor reagieren? Frühere Reaktionen und seine Handlungsmöglichkeiten liefern Anhaltspunkte, aber keine sichere Vorhersage.\n\nc) Circle Harbor vergleicht diese Profile mit den eigenen Fähigkeiten und den Bedürfnissen der Zielgruppe. Der behauptete USP muss relevant, tatsächlich leistbar und gegenüber den betrachteten Alternativen unterscheidbar sein. Mögliche Nachahmung oder Gegenmaßnahmen werden bei der Entscheidung berücksichtigt. Für Befunde werden Quelle und Stand festgehalten, beispielsweise veröffentlichte Angebote, Geschäftsberichte, Marktstudien oder rechtmäßig gewonnene Kundeninformationen. Nicht belegte Ziele oder Reaktionen werden als Annahmen gekennzeichnet und später überprüft. Ein allgemeines Branchenmodell oder eine reine Liste eigener Vorteile ersetzt dieses Einzelwettbewerberprofil nicht.",
+        "F": "USP zielgruppenrelevant nachvollziehbar unterscheidbar; Positionierung und abgestimmter Marketing-Mix; mindestens vier Nutzen der USP-Analyse; konkreten Hauptwettbewerber auswählen; Marktrolle und Zielgruppen; Ziele; Strategie; Fähigkeiten Stärken Schwächen; Marketinginstrumente; erwartetes Reaktionsprofil; eigene Leistungsfähigkeit und Kundennutzen vergleichen; Quellen und Stand; Befunde von Annahmen trennen; keine Gleichsetzung mit bloßer Branchenanalyse"
+      },
+      "acceptance": [
+        "Die sechs Profilbereiche sind in Frage, Lösung und Stichpunkten vorhanden.",
+        "Ursprünglicher USP-Lernzweck und vier Nutzen bleiben erhalten.",
+        "Reaktionen sind begründete Hypothesen; keine erfundenen Fakten über reale Wettbewerber."
+      ],
+      "auditNote": "Spezifischer Bezug 8.1.3.2#4; Primäranker 8.1.3.2 und UI Marketingplanung bleiben unverändert.",
+      "sourceSheet": "Marketing",
+      "expectedFields": {
+        "A": "M-0021",
+        "B": "Marketingstrategien & strategische Analyse",
+        "C": "Circle Harbor möchte sich mit einem klaren USP vom Wettbewerb abheben. Erläutern Sie, warum eine eindeutige Alleinstellung für die Marketingplanung wichtig ist, und nennen Sie mindestens vier konkrete Nutzen einer systematischen USP-Analyse.",
+        "E": "Ein klarer USP schafft eine eindeutige Positionierung und gibt dem Einsatz der Marketinginstrumente eine gemeinsame Richtung. Eine systematische Analyse kann Schwächen an Produkt oder Kommunikation aufdecken, unbesetzte Marktnischen sichtbar machen, Informationen für Neu- und Weiterentwicklungen liefern, die Zielgruppenansprache verbessern und die Abgrenzung gegenüber Wettbewerbern erleichtern.",
+        "F": "klare Positionierung; gezielter Einsatz der Marketinginstrumente; Schwächen erkennen; Marktnischen erkennen; Informationen für Produktentwicklung; Informationen für Produktverbesserung; bessere Abgrenzung zum Wettbewerb",
+        "I": "ja",
+        "K": "HQ",
+        "L": "Text",
+        "M": "",
+        "N": "",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "M-0021",
+        "source": "Marketing",
+        "primaryCode": "8.1.3.2",
+        "uiKey": "ui-hq-0027",
+        "uiTopic": "Marketingplanung",
+        "detailKey": "dg-hq-0117",
+        "detailLabel": "Marketingstrategien"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O",
+        "M",
+        "N"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    },
+    {
+      "id": "V-0077",
+      "defect": "Die vorhandene Lösung erläutert Versandgefahr, Zweijahresfrist und Regress, aber nicht die Tatbestandsmerkmale des Verbrauchsgüterkaufs sowie das Verhältnis zwischen Nacherfüllung und weiteren Mängelrechten. Der Fall ist undatiert; die seit 31.07.2026 für Neuverträge geltenden Reparaturregeln fehlen. Das Fachbuch fasst die Definition mit einer bloßen Dienstleistung zu weit.",
+      "decision": "Bestehenden Fall um eindeutige Parteien, Neuware, Vertragsdatum und abgestufte Mängelrechte erweitern. Aktuellen Rechtsstand einschließlich Reparaturverlängerung berücksichtigen; keine Ausweitung auf digitale Produkte oder eigenständige Herstellerreparaturpflicht.",
+      "contentCode": "8.5.3.1",
+      "sources": [
+        "V-BUCH",
+        "MV-SKRIPT",
+        "BGB474",
+        "BGB437",
+        "BGB439",
+        "BGB475",
+        "BGB475d",
+        "BGB438",
+        "BGB475e",
+        "BGB445a",
+        "BGB478",
+        "EGBGB72"
+      ],
+      "changes": {
+        "C": "Eine Privatkundin kauft am 1. August 2026 bei Circle Harbor als gewerblichem Händler ein neues Haushaltsgerät ausschließlich für ihren privaten Gebrauch. Es gelten deutsches Recht und die gesetzlichen Mängelrechte; besondere Garantien, digitale Elemente und Einbaufälle bleiben außer Betracht. Ein von Circle Harbor ausgewählter Paketdienst verliert die erste Sendung. Das anschließend gelieferte Gerät wird der Kundin am 8. August 2026 übergeben. Nach einigen Wochen zeigt sich ein erheblicher Sachmangel, der nachweislich schon bei dieser Übergabe vorhanden war. a) Ordnen Sie den Vertrag ein. b) Wer trägt das Risiko des ersten Transportverlusts? c) Welche Nacherfüllung kann die Kundin verlangen, wer trägt deren Kosten und welche Grenzen bestehen? d) Wann kommen Rücktritt, Minderung oder Schadensersatz in Betracht? e) Erläutern Sie die grundsätzliche Verjährungsfrist sowie die Wirkung einer Nachbesserung nach dem für diesen Vertrag geltenden Recht. f) Erläutern Sie die Grundidee des Lieferantenregresses.",
+        "E": "a) Es liegt ein Verbrauchsgüterkauf vor: Eine Verbraucherin kauft eine Ware von einem Unternehmer (§ 474 BGB). Ein reiner Dienstleistungsvertrag wäre kein Verbrauchsgüterkauf; ein Vertrag über eine Ware kann jedoch zusätzlich eine Dienstleistung umfassen.\n\nb) Weil der Händler den Paketdienst ausgewählt hat, geht die Gefahr des zufälligen Transportverlusts nicht schon mit der Übergabe an diesen auf die Kundin über (§ 475 Abs. 2 BGB). Die Ausnahme einer eigenständigen Beauftragung eines nicht zuvor vom Händler benannten Beförderers liegt nicht vor.\n\nc) Wegen des bei Übergabe vorhandenen Mangels kann die Kundin grundsätzlich zwischen Beseitigung des Mangels und Lieferung einer mangelfreien Sache wählen (§§ 437 Nr. 1, 439 BGB). Sie muss dem Verkäufer das Gerät zur Nacherfüllung zur Verfügung stellen. Die erforderlichen Transport-, Wege-, Arbeits- und Materialkosten trägt der Verkäufer. Die gewählte Art kann unter den gesetzlichen Voraussetzungen, insbesondere bei unverhältnismäßigen Kosten, verweigert werden; dann ist die andere Art zu prüfen. Nacherfüllung muss innerhalb angemessener Zeit nach der Mangelmitteilung und ohne erhebliche Unannehmlichkeiten erfolgen. Vor der Nacherfüllung muss der Händler über das Wahlrecht und die gesetzliche Fristverlängerung bei Nachbesserung informieren (§ 475 Abs. 4 und 6 BGB).\n\nd) Weitere Rechte richten sich nach ihren jeweiligen Voraussetzungen (§ 437 Nr. 2 und 3 BGB). Grundsätzlich erhält der Verkäufer Gelegenheit zur Nacherfüllung. Beim Verbrauchsgüterkauf ist eine ausdrücklich gesetzte Frist beispielsweise entbehrlich, wenn nach der Mangelmitteilung eine angemessene Zeit ohne Nacherfüllung vergangen ist, sich trotz versuchter Nacherfüllung ein Mangel zeigt oder die Nacherfüllung ordnungsgemäß verweigert wird (§ 475d BGB). Die Regel „immer zwei Reparaturversuche“ gilt daher nicht pauschal. Rücktritt scheidet bei einem nur unerheblichen Mangel aus; Minderung kann auch dann möglich sein. Schadensersatz setzt zusätzliche Voraussetzungen voraus, insbesondere grundsätzlich ein Vertretenmüssen; er entsteht nicht allein aus dem Vorliegen eines Mangels.\n\ne) Bei dieser neuen beweglichen Ware beträgt die grundsätzliche Verjährungsfrist zwei Jahre ab Ablieferung des tatsächlich übergebenen Geräts (§ 438 Abs. 1 Nr. 3 und Abs. 2 BGB). Für diesen am 1. August 2026 geschlossenen Vertrag gilt bereits das neue Recht: Erfolgt Nacherfüllung durch Nachbesserung, verlängert sich die ursprüngliche Verjährungsfrist einmalig um zwölf Monate (§ 475e Abs. 5 BGB). Das bedeutet weder einen vollständigen Neubeginn noch zwölf zusätzliche Monate nach jeder weiteren Reparatur. Daneben sind gegebenenfalls die Mindestnachlaufzeiten aus § 475e Abs. 3 und 4 zu beachten. Auf vor dem 31. Juli 2026 geschlossene Kaufverträge findet insoweit das bisherige Recht Anwendung (Art. 229 § 72 EGBGB).\n\nf) Der Verkäufer kann unter den Voraussetzungen der §§ 445a ff. und 478 BGB gegenüber seinem Lieferanten Rückgriff nehmen, etwa auf Ersatz bestimmter Nacherfüllungsaufwendungen beim Verkauf einer neu hergestellten Sache, wenn der relevante Mangel bereits beim Gefahrübergang auf den Verkäufer vorhanden war. Das ist ein Anspruch innerhalb der Lieferkette. Die Kundin behält ihre gesetzlichen Ansprüche gegen ihren Verkäufer und muss sich nicht zunächst an dessen Lieferanten wenden.",
+        "F": "Verbraucherin kauft Ware vom Unternehmer; reine Dienstleistung nicht ausreichend; Transportgefahr bei Händlerauswahl nicht schon beim Paketdienst; Mangel bei Gefahrübergang; Wahlrecht Reparatur oder mangelfreie Ersatzlieferung; Verkäufer trägt erforderliche Nacherfüllungskosten; gesetzliche Verweigerungsgrenzen; angemessene Zeit ohne erhebliche Unannehmlichkeiten; Information über Wahlrecht und Fristverlängerung; weitere Mängelrechte unter eigenen Voraussetzungen; §475d keine pauschalen zwei Reparaturversuche; Rücktritt nicht bei unerheblichem Mangel; Schadensersatz zusätzliche Voraussetzungen; grundsätzlich zwei Jahre ab Ablieferung; Vertrag ab 31.07.2026; Nachbesserung einmalig zwölf Monate Verlängerung der ursprünglichen Verjährungsfrist; §475e weitere Mindestnachlaufzeiten; Lieferantenregress getrennt vom Kundenanspruch"
+      },
+      "acceptance": [
+        "Fall ausdrücklich am 01.08.2026 geschlossen und mit neuem Recht gelöst.",
+        "Kauf einer Ware Verbraucher→Unternehmer; reine Dienstleistungen nicht fälschlich einbezogen.",
+        "Nacherfüllung zuerst als grundsätzliches System; Ausnahmen und zusätzliche Voraussetzungen der weiteren Rechte benannt.",
+        "Keine pauschale Zwei-Versuche-Regel, kein allgemeiner Neubeginn der Frist nach Reparatur.",
+        "Aktualisierungshinweis für Sol: Normen vor einer späteren Veröffentlichung erneut lesen; bei Rechtsänderung stoppen statt selbst fachlich umformulieren."
+      ],
+      "auditNote": "Primärbezug 8.5.3.1 bleibt. Quellenhierarchie: aktuelle Normen sind für Rechtsaussagen maßgeblich; das geprüfte MuV-Skript liefert nur didaktischen Verbraucherschutzkontext, keinen Nachweis der 2026er Rechtsänderung.",
+      "sourceSheet": "Vertrieb",
+      "expectedFields": {
+        "A": "V-0077",
+        "B": "Verbraucherschutz & AGB",
+        "C": "Bei einem Verbrauchsgüterkauf wird eine Ware durch einen vom Händler ausgewählten Paketdienst versandt und geht auf dem Transport verloren. Monate später entsteht außerdem ein berechtigter Mängelfall beim Ersatzgerät. Erläutern Sie Gefahrtragung beim Versand, die regelmäßige Verjährung von Mängelansprüchen und die Grundidee des Rückgriffs des Verkäufers in der Lieferkette.",
+        "E": "Beim Verbrauchsgüterkauf geht die Transportgefahr bei einem vom Unternehmer ausgewählten Beförderer grundsätzlich nicht bereits mit Übergabe an den Paketdienst auf den Verbraucher über; § 475 Abs. 2 BGB begrenzt die allgemeine Versendungskaufregel. Für normale bewegliche Sachen verjähren Mängelansprüche im Regelfall in zwei Jahren ab Ablieferung, sofern keine Sonderregel greift. Muss der Verkäufer gegenüber dem Verbraucher wegen eines Mangels einstehen, kann das Gesetz unter den Voraussetzungen der Lieferantenregress-Regeln Rückgriffsansprüche innerhalb der Lieferkette ermöglichen.",
+        "F": "Verbrauchsgüterkauf; Transportgefahr nicht automatisch beim Paketdienst; §475 Abs 2; zwei Jahre regelmäßige Mängelverjährung; Ablieferung; Lieferantenregress; Rückgriff in Lieferkette",
+        "I": "ja",
+        "K": "HQ",
+        "L": "Text",
+        "M": "",
+        "N": "",
+        "O": ""
+      },
+      "preservedMapping": {
+        "id": "V-0077",
+        "source": "Vertrieb",
+        "primaryCode": "8.5.3.1",
+        "uiKey": "ui-hq-0031",
+        "uiTopic": "Spezielle Rechtsaspekte",
+        "detailKey": "dg-hq-0134",
+        "detailLabel": "Besonderheiten des Verbrauchsgüterkaufs"
+      },
+      "writeColumns": [
+        "C",
+        "E",
+        "F"
+      ],
+      "untouchedColumns": [
+        "A",
+        "B",
+        "D",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "O",
+        "M",
+        "N"
+      ],
+      "explanationField": "Kein separates Erklärungsfeld für diese neun Datensätze gefunden. Erläuterungen sind vollständig in Musterlösung E enthalten; O bleibt unverändert.",
+      "implementationStatus": "NUR VORBEREITET – NICHT ANGEWENDET"
+    }
+  ]
+}

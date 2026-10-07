@@ -2,8 +2,9 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
+const { buildAppsScriptSource } = require('../tools/release/build-apps-script');
 
-const source = fs.readFileSync('backend/apps-script/Code.gs', 'utf8');
+const source = buildAppsScriptSource(fs.readFileSync('backend/apps-script/Code.gs', 'utf8'), 'STAGING');
 const STAGING_ID = '1cJ8Wa92r-_LRmMOf3h3kTqfHV8Qz3ZjERuCP1Un25r8';
 const header = ['ID','Fach','Hauptkapitel_Nr','Hauptkapitel','Unterkapitel_Nr','Titel','Lerntext','Podcast_Text','Kurzfassung','Prüfungsfokus','Reihenfolge_Fach','Reihenfolge_Kapitel','Aktiv','Quelle_Buchseiten','Hinweis'];
 

@@ -1,0 +1,5722 @@
+{
+  "schemaVersion": 1,
+  "revision": "WIFA-LZ-GESAMT-20261004-FINAL",
+  "frameworkRevision": "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE",
+  "subjects": [
+    {
+      "fach": "Führung und Zusammenarbeit",
+      "chapters": [
+        {
+          "fach": "Führung und Zusammenarbeit",
+          "chapterKey": "ui-hq-0032",
+          "chapterNumber": "1",
+          "chapterTitle": "Zusammenarbeit, Kommunikation und Kooperation",
+          "entries": [
+            {
+              "id": "LZ-FZ-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-hq-0004",
+              "primaryCode": "9.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "dg-hq-0004",
+              "primaryCode": "9.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "dg-hq-0004",
+              "primaryCode": "9.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-45",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 3.5,
+              "detailGroupKey": "dg-hq-0001",
+              "primaryCode": "9.1.4",
+              "crossReferences": [
+                "9.1.1",
+                "9.1.4.1",
+                "9.1.4.3",
+                "9.1.4.4"
+              ]
+            },
+            {
+              "id": "LZ-FZ-04",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 4,
+              "detailGroupKey": "dg-hq-0001",
+              "primaryCode": "9.1.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-05",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 5,
+              "detailGroupKey": "dg-hq-0001",
+              "primaryCode": "9.1.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-06",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 6,
+              "detailGroupKey": "dg-hq-0001",
+              "primaryCode": "9.1.4.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-07",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 7,
+              "detailGroupKey": "dg-hq-0001",
+              "primaryCode": "9.1.4.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-46",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 7.5,
+              "detailGroupKey": "dg-hq-0001",
+              "primaryCode": "9.1.4.3",
+              "crossReferences": [
+                "9.1.4.2"
+              ]
+            },
+            {
+              "id": "LZ-FZ-08",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 8,
+              "detailGroupKey": "dg-hq-0001",
+              "primaryCode": "9.1.4.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-09",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 9,
+              "detailGroupKey": "dg-hq-0022",
+              "primaryCode": "9.1.5",
+              "crossReferences": [
+                "5.4.4.1#1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-47",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 9.25,
+              "detailGroupKey": "dg-hq-0022",
+              "primaryCode": "9.1.5",
+              "crossReferences": [
+                "5.4.4.1#2"
+              ]
+            },
+            {
+              "id": "LZ-FZ-50",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 13,
+              "sortKey": 9.5,
+              "detailGroupKey": "dg-hq-0022",
+              "primaryCode": "9.1.5",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Führung und Zusammenarbeit",
+          "chapterKey": "ui-hq-0033",
+          "chapterNumber": "2",
+          "chapterTitle": "Mitarbeitergespräche",
+          "entries": [
+            {
+              "id": "LZ-FZ-49",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 1,
+              "sortKey": 9.75,
+              "detailGroupKey": "dg-hq-0002",
+              "primaryCode": "9.2",
+              "crossReferences": [
+                "5.4.4.6#2",
+                "5.4.4.7",
+                "5.4.4.6"
+              ]
+            },
+            {
+              "id": "LZ-FZ-10",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 2,
+              "sortKey": 10,
+              "detailGroupKey": "dg-hq-0003",
+              "primaryCode": "9.2.1",
+              "crossReferences": [
+                "5.4.4.7"
+              ]
+            },
+            {
+              "id": "LZ-FZ-11",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 3,
+              "sortKey": 11,
+              "detailGroupKey": "dg-hq-0002",
+              "primaryCode": "9.2.2.1",
+              "crossReferences": [
+                "5.4.4.7"
+              ]
+            },
+            {
+              "id": "LZ-FZ-12",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 4,
+              "sortKey": 12,
+              "detailGroupKey": "dg-hq-0002",
+              "primaryCode": "9.2.2.2",
+              "crossReferences": [
+                "5.4.4.7"
+              ]
+            },
+            {
+              "id": "LZ-FZ-13",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 5,
+              "sortKey": 13,
+              "detailGroupKey": "dg-hq-0002",
+              "primaryCode": "9.2.2.3",
+              "crossReferences": [
+                "5.4.4.7"
+              ]
+            },
+            {
+              "id": "LZ-FZ-14",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 6,
+              "sortKey": 14,
+              "detailGroupKey": "dg-hq-0002",
+              "primaryCode": "9.2.2.4",
+              "crossReferences": [
+                "5.4.4.7",
+                "9.4.3"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Führung und Zusammenarbeit",
+          "chapterKey": "ui-hq-0034",
+          "chapterNumber": "3",
+          "chapterTitle": "Konfliktmanagement",
+          "entries": [
+            {
+              "id": "LZ-FZ-15",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 1,
+              "sortKey": 15,
+              "detailGroupKey": "dg-hq-0005",
+              "primaryCode": "9.3.1",
+              "crossReferences": [
+                "5.4.4.4"
+              ]
+            },
+            {
+              "id": "LZ-FZ-16",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 2,
+              "sortKey": 16,
+              "detailGroupKey": "dg-hq-0005",
+              "primaryCode": "9.3.2",
+              "crossReferences": [
+                "5.4.4.4"
+              ]
+            },
+            {
+              "id": "LZ-FZ-17",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 3,
+              "sortKey": 17,
+              "detailGroupKey": "dg-hq-0005",
+              "primaryCode": "9.3.3",
+              "crossReferences": [
+                "5.4.4.4",
+                "5.4.4.5"
+              ]
+            },
+            {
+              "id": "LZ-FZ-48",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 4,
+              "sortKey": 17.5,
+              "detailGroupKey": "dg-hq-0005",
+              "primaryCode": "9.3.3",
+              "crossReferences": [
+                "5.4.4.4",
+                "9.3.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-18",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 5,
+              "sortKey": 18,
+              "detailGroupKey": "dg-hq-0005",
+              "primaryCode": "9.3.4",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Führung und Zusammenarbeit",
+          "chapterKey": "ui-hq-0035",
+          "chapterNumber": "4",
+          "chapterTitle": "Mitarbeiterförderung",
+          "entries": [
+            {
+              "id": "LZ-FZ-19",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 1,
+              "sortKey": 19,
+              "detailGroupKey": "dg-hq-0006",
+              "primaryCode": "9.4.1",
+              "crossReferences": [
+                "5.2.3.1",
+                "5.2.3.4#4",
+                "9.5.10"
+              ]
+            },
+            {
+              "id": "LZ-FZ-21",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 2,
+              "sortKey": 21,
+              "detailGroupKey": "dg-hq-0006",
+              "primaryCode": "9.4.1",
+              "crossReferences": [
+                "5.2.3.4#2",
+                "5.2.3.4#3",
+                "5.2.3.5#1",
+                "5.2.3.5#2",
+                "5.2.3.5#3",
+                "9.5.10"
+              ]
+            },
+            {
+              "id": "LZ-FZ-51",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 3,
+              "sortKey": 21.2,
+              "detailGroupKey": "dg-hq-0023",
+              "primaryCode": "9.4.1",
+              "crossReferences": [
+                "5.4.4.6#1",
+                "5.4.4.6#4"
+              ]
+            },
+            {
+              "id": "LZ-FZ-53",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 4,
+              "sortKey": 21.4,
+              "detailGroupKey": "dg-hq-0006",
+              "primaryCode": "9.4.1",
+              "crossReferences": [
+                "9.5.10"
+              ]
+            },
+            {
+              "id": "LZ-FZ-20",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 5,
+              "sortKey": 21.6,
+              "detailGroupKey": "dg-hq-0020",
+              "primaryCode": "9.4.2.1",
+              "crossReferences": [
+                "5.2.3.3#2",
+                "5.2.3.3#4",
+                "9.4.2.2"
+              ]
+            },
+            {
+              "id": "LZ-FZ-52",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 6,
+              "sortKey": 21.8,
+              "detailGroupKey": "dg-hq-0020",
+              "primaryCode": "9.4.2.1",
+              "crossReferences": [
+                "5.2.3.3#4",
+                "5.4.4.6#4"
+              ]
+            },
+            {
+              "id": "LZ-FZ-22",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 7,
+              "sortKey": 22,
+              "detailGroupKey": "dg-hq-0020",
+              "primaryCode": "9.4.2.2",
+              "crossReferences": [
+                "5.2.3.4#1",
+                "5.2.3.4#4",
+                "9.4.3"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Führung und Zusammenarbeit",
+          "chapterKey": "ui-hq-0036",
+          "chapterNumber": "5",
+          "chapterTitle": "Ausbildung",
+          "entries": [
+            {
+              "id": "LZ-FZ-23",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 1,
+              "sortKey": 23,
+              "detailGroupKey": "dg-hq-0007",
+              "primaryCode": "9.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-24",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 2,
+              "sortKey": 24,
+              "detailGroupKey": "dg-hq-0010",
+              "primaryCode": "9.5.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-25",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 3,
+              "sortKey": 25,
+              "detailGroupKey": "dg-hq-0009",
+              "primaryCode": "9.5.3",
+              "crossReferences": [
+                "9.5.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-26",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 4,
+              "sortKey": 26,
+              "detailGroupKey": "dg-hq-0008",
+              "primaryCode": "9.5.4",
+              "crossReferences": [
+                "9.5.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-27",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 5,
+              "sortKey": 27,
+              "detailGroupKey": "dg-hq-0021",
+              "primaryCode": "9.5.5",
+              "crossReferences": [
+                "9.5.1",
+                "9.5.9"
+              ]
+            },
+            {
+              "id": "LZ-FZ-54",
+              "ordinalInFach": 37,
+              "ordinalInChapter": 6,
+              "sortKey": 28.5,
+              "detailGroupKey": "dg-hq-0021",
+              "primaryCode": "9.5.5",
+              "crossReferences": [
+                "9.1.3"
+              ]
+            },
+            {
+              "id": "LZ-FZ-30",
+              "ordinalInFach": 38,
+              "ordinalInChapter": 7,
+              "sortKey": 30,
+              "detailGroupKey": "dg-hq-0012",
+              "primaryCode": "9.5.6",
+              "crossReferences": [
+                "9.5.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-31",
+              "ordinalInFach": 39,
+              "ordinalInChapter": 8,
+              "sortKey": 31,
+              "detailGroupKey": "dg-hq-0013",
+              "primaryCode": "9.5.7",
+              "crossReferences": [
+                "9.5.1",
+                "9.5.8"
+              ]
+            },
+            {
+              "id": "LZ-FZ-28",
+              "ordinalInFach": 40,
+              "ordinalInChapter": 9,
+              "sortKey": 31.333333333,
+              "detailGroupKey": "dg-hq-0011",
+              "primaryCode": "9.5.8",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-29",
+              "ordinalInFach": 41,
+              "ordinalInChapter": 10,
+              "sortKey": 31.666666667,
+              "detailGroupKey": "dg-hq-0011",
+              "primaryCode": "9.5.8",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-32",
+              "ordinalInFach": 42,
+              "ordinalInChapter": 11,
+              "sortKey": 32,
+              "detailGroupKey": "dg-hq-0014",
+              "primaryCode": "9.5.9",
+              "crossReferences": [
+                "9.5.10"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Führung und Zusammenarbeit",
+          "chapterKey": "ui-hq-0037",
+          "chapterNumber": "6",
+          "chapterTitle": "Moderation von Projektgruppen",
+          "entries": [
+            {
+              "id": "LZ-FZ-33",
+              "ordinalInFach": 43,
+              "ordinalInChapter": 1,
+              "sortKey": 33,
+              "detailGroupKey": "dg-hq-0016",
+              "primaryCode": "9.6.1.1",
+              "crossReferences": [
+                "4.2.4.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-34",
+              "ordinalInFach": 44,
+              "ordinalInChapter": 2,
+              "sortKey": 34,
+              "detailGroupKey": "dg-hq-0016",
+              "primaryCode": "9.6.1.2",
+              "crossReferences": [
+                "4.2.4.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-56",
+              "ordinalInFach": 45,
+              "ordinalInChapter": 3,
+              "sortKey": 35,
+              "detailGroupKey": "dg-hq-0016",
+              "primaryCode": "9.6.1.2",
+              "crossReferences": [
+                "5.4.3.1",
+                "5.4.3.3",
+                "9.6.4"
+              ]
+            },
+            {
+              "id": "LZ-FZ-36",
+              "ordinalInFach": 46,
+              "ordinalInChapter": 4,
+              "sortKey": 36,
+              "detailGroupKey": "dg-hq-0017",
+              "primaryCode": "9.6.2",
+              "crossReferences": [
+                "5.4.4.3",
+                "9.6.2.1",
+                "9.6.2.2",
+                "9.6.2.3"
+              ]
+            },
+            {
+              "id": "LZ-FZ-57",
+              "ordinalInFach": 47,
+              "ordinalInChapter": 5,
+              "sortKey": 36.5,
+              "detailGroupKey": "dg-hq-0017",
+              "primaryCode": "9.6.2",
+              "crossReferences": [
+                "5.4.4.3",
+                "9.6.2.1",
+                "9.6.2.5",
+                "9.6.3.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-37",
+              "ordinalInFach": 48,
+              "ordinalInChapter": 6,
+              "sortKey": 37,
+              "detailGroupKey": "dg-hq-0017",
+              "primaryCode": "9.6.2.4",
+              "crossReferences": [
+                "5.4.2.2#1",
+                "5.4.2.2#2",
+                "5.4.2.2#3",
+                "5.4.2.2#4",
+                "5.4.2.2#6"
+              ]
+            },
+            {
+              "id": "LZ-FZ-38",
+              "ordinalInFach": 49,
+              "ordinalInChapter": 7,
+              "sortKey": 38,
+              "detailGroupKey": "dg-hq-0017",
+              "primaryCode": "9.6.3",
+              "crossReferences": [
+                "5.4.4.3",
+                "9.6.2.5",
+                "9.6.3.1",
+                "9.6.3.2"
+              ]
+            },
+            {
+              "id": "LZ-FZ-35",
+              "ordinalInFach": 50,
+              "ordinalInChapter": 8,
+              "sortKey": 38.5,
+              "detailGroupKey": "dg-hq-0016",
+              "primaryCode": "9.6.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-39",
+              "ordinalInFach": 51,
+              "ordinalInChapter": 9,
+              "sortKey": 39,
+              "detailGroupKey": "dg-hq-0018",
+              "primaryCode": "9.6.4",
+              "crossReferences": [
+                "5.4.3.4"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Führung und Zusammenarbeit",
+          "chapterKey": "ui-hq-0038",
+          "chapterNumber": "7",
+          "chapterTitle": "Präsentationstechniken",
+          "entries": [
+            {
+              "id": "LZ-FZ-40",
+              "ordinalInFach": 52,
+              "ordinalInChapter": 1,
+              "sortKey": 40,
+              "detailGroupKey": "dg-hq-0019",
+              "primaryCode": "9.7.1",
+              "crossReferences": [
+                "5.4.4.2",
+                "9.7.3.1",
+                "9.7.4.3"
+              ]
+            },
+            {
+              "id": "LZ-FZ-41",
+              "ordinalInFach": 53,
+              "ordinalInChapter": 2,
+              "sortKey": 41,
+              "detailGroupKey": "dg-hq-0019",
+              "primaryCode": "9.7.2.1",
+              "crossReferences": [
+                "5.4.4.2",
+                "9.7.3.2"
+              ]
+            },
+            {
+              "id": "LZ-FZ-42",
+              "ordinalInFach": 54,
+              "ordinalInChapter": 3,
+              "sortKey": 42,
+              "detailGroupKey": "dg-hq-0019",
+              "primaryCode": "9.7.3.3",
+              "crossReferences": [
+                "5.4.4.2",
+                "9.7.2.1",
+                "9.7.3.1",
+                "9.7.4.1"
+              ]
+            },
+            {
+              "id": "LZ-FZ-43",
+              "ordinalInFach": 55,
+              "ordinalInChapter": 4,
+              "sortKey": 43,
+              "detailGroupKey": "dg-hq-0019",
+              "primaryCode": "9.7.3.4",
+              "crossReferences": [
+                "5.4.4.2",
+                "9.7.2.2",
+                "9.7.4.2"
+              ]
+            },
+            {
+              "id": "LZ-FZ-44",
+              "ordinalInFach": 56,
+              "ordinalInChapter": 5,
+              "sortKey": 44,
+              "detailGroupKey": "dg-hq-0019",
+              "primaryCode": "9.7.4",
+              "crossReferences": [
+                "5.4.4.2",
+                "9.7.4.1",
+                "9.7.4.2",
+                "9.7.4.3"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Betriebliches Management",
+      "chapters": [
+        {
+          "fach": "Betriebliches Management",
+          "chapterKey": "ui-hq-0013",
+          "chapterNumber": "1",
+          "chapterTitle": "Betriebliche Planungsprozesse",
+          "entries": [
+            {
+              "id": "LZ-BM-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-hq-0080",
+              "primaryCode": "5.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "dg-hq-0080",
+              "primaryCode": "5.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "dg-hq-0080",
+              "primaryCode": "5.1.1",
+              "crossReferences": [
+                "5.1.2"
+              ]
+            },
+            {
+              "id": "LZ-BM-04",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 4,
+              "detailGroupKey": "dg-hq-0080",
+              "primaryCode": "5.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-43",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 4.5,
+              "detailGroupKey": "dg-hq-0080",
+              "primaryCode": "5.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-05",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 5,
+              "detailGroupKey": "dg-hq-0081",
+              "primaryCode": "5.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-06",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 6,
+              "detailGroupKey": "dg-hq-0083",
+              "primaryCode": "5.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-07",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 7,
+              "detailGroupKey": "dg-hq-0083",
+              "primaryCode": "5.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-08",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 8,
+              "detailGroupKey": "dg-hq-0083",
+              "primaryCode": "5.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-44",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 8.333333333,
+              "detailGroupKey": "dg-hq-0083",
+              "primaryCode": "5.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-FZ-55",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 8.666666667,
+              "detailGroupKey": "dg-hq-0025",
+              "primaryCode": "5.1.4",
+              "crossReferences": [
+                "5.4.3.2"
+              ]
+            },
+            {
+              "id": "LZ-BM-09",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 9,
+              "detailGroupKey": "dg-hq-0081",
+              "primaryCode": "5.1.5",
+              "crossReferences": [
+                "5.4.2.3#1"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Betriebliches Management",
+          "chapterKey": "ui-hq-0014",
+          "chapterNumber": "2",
+          "chapterTitle": "Organisations- und Personalentwicklung",
+          "entries": [
+            {
+              "id": "LZ-BM-10",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 1,
+              "sortKey": 10,
+              "detailGroupKey": "dg-hq-0082",
+              "primaryCode": "5.2.1",
+              "crossReferences": [
+                "5.2.2.2#1"
+              ]
+            },
+            {
+              "id": "LZ-BM-45",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 2,
+              "sortKey": 10.5,
+              "detailGroupKey": "dg-hq-0082",
+              "primaryCode": "5.2.2",
+              "crossReferences": [
+                "5.2.1"
+              ]
+            },
+            {
+              "id": "LZ-BM-11",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 3,
+              "sortKey": 11,
+              "detailGroupKey": "dg-hq-0082",
+              "primaryCode": "5.2.2.1",
+              "crossReferences": [
+                "5.2.1"
+              ]
+            },
+            {
+              "id": "LZ-BM-12",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 4,
+              "sortKey": 12,
+              "detailGroupKey": "dg-hq-0082",
+              "primaryCode": "5.2.2.2#2",
+              "crossReferences": [
+                "5.2.2.2#1",
+                "9.3.4"
+              ]
+            },
+            {
+              "id": "LZ-BM-46",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 5,
+              "sortKey": 12.5,
+              "detailGroupKey": "dg-hq-0082",
+              "primaryCode": "5.2.2.2#2",
+              "crossReferences": [
+                "9.3.4"
+              ]
+            },
+            {
+              "id": "LZ-BM-13",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 6,
+              "sortKey": 13,
+              "detailGroupKey": "dg-hq-0082",
+              "primaryCode": "5.2.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-14",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 7,
+              "sortKey": 14,
+              "detailGroupKey": "dg-hq-0084",
+              "primaryCode": "5.2.3.1",
+              "crossReferences": [
+                "5.2.1",
+                "5.2.3.3#2",
+                "5.2.3.4#4",
+                "5.2.3.4#5"
+              ]
+            },
+            {
+              "id": "LZ-BM-15",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 8,
+              "sortKey": 15,
+              "detailGroupKey": "dg-hq-0084",
+              "primaryCode": "5.2.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-16",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 9,
+              "sortKey": 16,
+              "detailGroupKey": "dg-hq-0084",
+              "primaryCode": "5.2.3.3",
+              "crossReferences": [
+                "5.2.3.3#1",
+                "5.2.3.3#2"
+              ]
+            },
+            {
+              "id": "LZ-BM-17",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 10,
+              "sortKey": 17,
+              "detailGroupKey": "dg-hq-0084",
+              "primaryCode": "5.2.3.3",
+              "crossReferences": [
+                "5.2.3.3#2",
+                "5.2.3.3#3",
+                "5.2.3.3#4",
+                "5.2.3.4#4",
+                "5.2.3.4#5"
+              ]
+            },
+            {
+              "id": "LZ-BM-18",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 11,
+              "sortKey": 18,
+              "detailGroupKey": "dg-hq-0084",
+              "primaryCode": "5.2.3.4",
+              "crossReferences": [
+                "5.2.3.4#1",
+                "5.2.3.4#2",
+                "5.2.3.4#3",
+                "5.2.3.4#4",
+                "5.2.3.4#5"
+              ]
+            },
+            {
+              "id": "LZ-BM-19",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 12,
+              "sortKey": 19,
+              "detailGroupKey": "dg-hq-0084",
+              "primaryCode": "5.2.3.5",
+              "crossReferences": [
+                "5.2.3.4#1",
+                "5.2.3.5#1",
+                "5.2.3.5#2",
+                "5.2.3.5#3"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Betriebliches Management",
+          "chapterKey": "ui-hq-0015",
+          "chapterNumber": "3",
+          "chapterTitle": "Informationstechnologie und Wissensmanagement",
+          "entries": [
+            {
+              "id": "LZ-BM-47",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 1,
+              "sortKey": 19.333333333,
+              "detailGroupKey": "dg-hq-0085",
+              "primaryCode": "5.3.1",
+              "crossReferences": [
+                "5.3.1.1"
+              ]
+            },
+            {
+              "id": "LZ-BM-48",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 2,
+              "sortKey": 19.666666667,
+              "detailGroupKey": "dg-hq-0085",
+              "primaryCode": "5.3.1",
+              "crossReferences": [
+                "5.3.1.1"
+              ]
+            },
+            {
+              "id": "LZ-BM-20",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 3,
+              "sortKey": 20,
+              "detailGroupKey": "dg-hq-0085",
+              "primaryCode": "5.3.1.1",
+              "crossReferences": [
+                "5.2.2.3"
+              ]
+            },
+            {
+              "id": "LZ-BM-21",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 4,
+              "sortKey": 21,
+              "detailGroupKey": "dg-hq-0085",
+              "primaryCode": "5.3.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-22",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 5,
+              "sortKey": 22,
+              "detailGroupKey": "dg-hq-0085",
+              "primaryCode": "5.3.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-23",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 6,
+              "sortKey": 23,
+              "detailGroupKey": "dg-hq-0085",
+              "primaryCode": "5.3.1.4",
+              "crossReferences": [
+                "5.3.2.2#1",
+                "5.3.2.2#2"
+              ]
+            },
+            {
+              "id": "LZ-BM-24",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 7,
+              "sortKey": 24,
+              "detailGroupKey": "dg-hq-0085",
+              "primaryCode": "5.3.1.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-25",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 8,
+              "sortKey": 25,
+              "detailGroupKey": "dg-hq-0086",
+              "primaryCode": "5.3.2",
+              "crossReferences": [
+                "5.3.2.1",
+                "5.3.2.2#1",
+                "5.3.2.2#2"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Betriebliches Management",
+          "chapterKey": "ui-hq-0016",
+          "chapterNumber": "4",
+          "chapterTitle": "Managementtechniken",
+          "entries": [
+            {
+              "id": "LZ-BM-26",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 1,
+              "sortKey": 26,
+              "detailGroupKey": "dg-hq-0087",
+              "primaryCode": "5.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-27",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 2,
+              "sortKey": 27,
+              "detailGroupKey": "dg-hq-0088",
+              "primaryCode": "5.4.2.1",
+              "crossReferences": [
+                "5.4.2.1#1",
+                "5.4.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-BM-28",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 3,
+              "sortKey": 28,
+              "detailGroupKey": "dg-hq-0088",
+              "primaryCode": "5.4.2.2",
+              "crossReferences": [
+                "5.4.2.2#1",
+                "5.4.2.2#2",
+                "5.4.2.2#3",
+                "5.4.2.2#4",
+                "5.4.2.2#5",
+                "5.4.2.2#6",
+                "9.6.2.4"
+              ]
+            },
+            {
+              "id": "LZ-BM-29",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 4,
+              "sortKey": 29,
+              "detailGroupKey": "dg-hq-0088",
+              "primaryCode": "5.4.2.3",
+              "crossReferences": [
+                "5.1.5",
+                "5.4.2.3#1",
+                "5.4.2.3#2",
+                "5.4.2.3#3"
+              ]
+            },
+            {
+              "id": "LZ-BM-30",
+              "ordinalInFach": 37,
+              "ordinalInChapter": 5,
+              "sortKey": 30,
+              "detailGroupKey": "dg-hq-0089",
+              "primaryCode": "5.4.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-31",
+              "ordinalInFach": 38,
+              "ordinalInChapter": 6,
+              "sortKey": 31,
+              "detailGroupKey": "dg-hq-0089",
+              "primaryCode": "5.4.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-32",
+              "ordinalInFach": 39,
+              "ordinalInChapter": 7,
+              "sortKey": 32,
+              "detailGroupKey": "dg-hq-0026",
+              "primaryCode": "5.4.3.2",
+              "crossReferences": [
+                "4.1.4.2#3"
+              ]
+            },
+            {
+              "id": "LZ-BM-33",
+              "ordinalInFach": 40,
+              "ordinalInChapter": 8,
+              "sortKey": 33,
+              "detailGroupKey": "dg-hq-0089",
+              "primaryCode": "5.4.3.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-34",
+              "ordinalInFach": 41,
+              "ordinalInChapter": 9,
+              "sortKey": 34,
+              "detailGroupKey": "dg-hq-0089",
+              "primaryCode": "5.4.3.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-35",
+              "ordinalInFach": 42,
+              "ordinalInChapter": 10,
+              "sortKey": 35,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.1",
+              "crossReferences": [
+                "5.4.4.1#1",
+                "5.4.4.1#2",
+                "5.4.4.6#3"
+              ]
+            },
+            {
+              "id": "LZ-BM-36",
+              "ordinalInFach": 43,
+              "ordinalInChapter": 11,
+              "sortKey": 36,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-37",
+              "ordinalInFach": 44,
+              "ordinalInChapter": 12,
+              "sortKey": 37,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-38",
+              "ordinalInFach": 45,
+              "ordinalInChapter": 13,
+              "sortKey": 38,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BM-39",
+              "ordinalInFach": 46,
+              "ordinalInChapter": 14,
+              "sortKey": 39,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.5",
+              "crossReferences": [
+                "9.3.3"
+              ]
+            },
+            {
+              "id": "LZ-BM-40",
+              "ordinalInFach": 47,
+              "ordinalInChapter": 15,
+              "sortKey": 40,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.6",
+              "crossReferences": [
+                "5.4.4.6#1",
+                "5.4.4.6#2",
+                "5.4.4.6#3",
+                "5.4.4.6#4"
+              ]
+            },
+            {
+              "id": "LZ-BM-41",
+              "ordinalInFach": 48,
+              "ordinalInChapter": 16,
+              "sortKey": 41,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.7",
+              "crossReferences": [
+                "5.2.3.3#3"
+              ]
+            },
+            {
+              "id": "LZ-BM-42",
+              "ordinalInFach": 49,
+              "ordinalInChapter": 17,
+              "sortKey": 42,
+              "detailGroupKey": "dg-hq-0090",
+              "primaryCode": "5.4.4.8",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Rechnungswesen",
+      "chapters": [
+        {
+          "fach": "Rechnungswesen",
+          "chapterKey": "ui-wq-0005",
+          "chapterNumber": "1",
+          "chapterTitle": "Grundlegende Aspekte des Rechnungswesens",
+          "entries": [
+            {
+              "id": "LZ-RW-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-wq-0028",
+              "primaryCode": "2.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "dg-wq-0033",
+              "primaryCode": "2.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "dg-wq-0031",
+              "primaryCode": "2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-04",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 4,
+              "detailGroupKey": "dg-wq-0034",
+              "primaryCode": "2.1.4",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Rechnungswesen",
+          "chapterKey": "ui-wq-0006",
+          "chapterNumber": "2",
+          "chapterTitle": "Finanzbuchhaltung",
+          "entries": [
+            {
+              "id": "LZ-RW-05",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 1,
+              "sortKey": 5,
+              "detailGroupKey": "dg-wq-0038",
+              "primaryCode": "2.2.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-06",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 2,
+              "sortKey": 6,
+              "detailGroupKey": "dg-wq-0030",
+              "primaryCode": "2.2.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-07",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 3,
+              "sortKey": 7,
+              "detailGroupKey": "dg-wq-0030",
+              "primaryCode": "2.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-08",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 4,
+              "sortKey": 8,
+              "detailGroupKey": "dg-wq-0032",
+              "primaryCode": "2.2.2",
+              "crossReferences": [
+                "2.2.2.1"
+              ]
+            },
+            {
+              "id": "LZ-RW-09",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 5,
+              "sortKey": 9,
+              "detailGroupKey": "dg-wq-0032",
+              "primaryCode": "2.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-10",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 6,
+              "sortKey": 10,
+              "detailGroupKey": "dg-wq-0032",
+              "primaryCode": "2.2.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-11",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 7,
+              "sortKey": 11,
+              "detailGroupKey": "dg-wq-0032",
+              "primaryCode": "2.2.2.3",
+              "crossReferences": [
+                "1.2.1.4",
+                "2.1.1"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Rechnungswesen",
+          "chapterKey": "ui-wq-0007",
+          "chapterNumber": "3",
+          "chapterTitle": "Kosten- und Leistungsrechnung",
+          "entries": [
+            {
+              "id": "LZ-RW-12",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 1,
+              "sortKey": 12,
+              "detailGroupKey": "dg-wq-0036",
+              "primaryCode": "2.3.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-13",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 2,
+              "sortKey": 13,
+              "detailGroupKey": "dg-wq-0036",
+              "primaryCode": "2.3.1.2",
+              "crossReferences": [
+                "2.3.4.1"
+              ]
+            },
+            {
+              "id": "LZ-RW-14",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 3,
+              "sortKey": 14,
+              "detailGroupKey": "dg-wq-0037",
+              "primaryCode": "2.3.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-15",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 4,
+              "sortKey": 15,
+              "detailGroupKey": "dg-wq-0036",
+              "primaryCode": "2.3.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-16",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 5,
+              "sortKey": 16,
+              "detailGroupKey": "dg-wq-0036",
+              "primaryCode": "2.3.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-17",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 6,
+              "sortKey": 17,
+              "detailGroupKey": "dg-wq-0036",
+              "primaryCode": "2.3.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-18",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 7,
+              "sortKey": 18,
+              "detailGroupKey": "dg-wq-0035",
+              "primaryCode": "2.3.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-19",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 8,
+              "sortKey": 19,
+              "detailGroupKey": "dg-wq-0035",
+              "primaryCode": "2.3.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-20",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 9,
+              "sortKey": 20,
+              "detailGroupKey": "dg-wq-0040",
+              "primaryCode": "2.3.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-21",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 10,
+              "sortKey": 21,
+              "detailGroupKey": "dg-wq-0039",
+              "primaryCode": "2.3.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-22",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 11,
+              "sortKey": 22,
+              "detailGroupKey": "dg-wq-0039",
+              "primaryCode": "2.3.4.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-23",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 12,
+              "sortKey": 23,
+              "detailGroupKey": "dg-wq-0039",
+              "primaryCode": "2.3.4.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-24",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 13,
+              "sortKey": 24,
+              "detailGroupKey": "dg-wq-0039",
+              "primaryCode": "2.3.4.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-25",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 14,
+              "sortKey": 25,
+              "detailGroupKey": "dg-wq-0043",
+              "primaryCode": "2.3.4.6",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-36",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 15,
+              "sortKey": 25.5,
+              "detailGroupKey": "dg-wq-0043",
+              "primaryCode": "2.3.4.6",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-26",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 16,
+              "sortKey": 26,
+              "detailGroupKey": "dg-wq-0027",
+              "primaryCode": "2.3.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-27",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 17,
+              "sortKey": 27,
+              "detailGroupKey": "dg-wq-0027",
+              "primaryCode": "2.3.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-28",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 18,
+              "sortKey": 28,
+              "detailGroupKey": "dg-wq-0027",
+              "primaryCode": "2.3.5.2",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Rechnungswesen",
+          "chapterKey": "ui-wq-0008",
+          "chapterNumber": "4",
+          "chapterTitle": "Auswertung der betriebswirtschaftlichen Zahlen",
+          "entries": [
+            {
+              "id": "LZ-RW-29",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 1,
+              "sortKey": 29,
+              "detailGroupKey": "dg-wq-0042",
+              "primaryCode": "2.4.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-30",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 2,
+              "sortKey": 30,
+              "detailGroupKey": "dg-wq-0041",
+              "primaryCode": "2.4.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-31",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 3,
+              "sortKey": 31,
+              "detailGroupKey": "dg-wq-0041",
+              "primaryCode": "2.4.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-32",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 4,
+              "sortKey": 32,
+              "detailGroupKey": "dg-wq-0041",
+              "primaryCode": "2.4.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-33",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 5,
+              "sortKey": 33,
+              "detailGroupKey": "dg-wq-0041",
+              "primaryCode": "2.4.2.3",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Rechnungswesen",
+          "chapterKey": "ui-wq-0009",
+          "chapterNumber": "5",
+          "chapterTitle": "Planungsrechnung",
+          "entries": [
+            {
+              "id": "LZ-RW-34",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 1,
+              "sortKey": 34,
+              "detailGroupKey": "dg-wq-0029",
+              "primaryCode": "2.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RW-35",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 2,
+              "sortKey": 35,
+              "detailGroupKey": "dg-wq-0029",
+              "primaryCode": "2.5.2",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Steuern",
+      "chapters": [
+        {
+          "fach": "Steuern",
+          "chapterKey": "ui-wq-steuern-grundlagen",
+          "chapterNumber": "1",
+          "chapterTitle": "Grundbegriffe des Steuerrechts",
+          "entries": [
+            {
+              "id": "LZ-ST-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "tr-wq-s01",
+              "primaryCode": "3.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "tr-wq-s01",
+              "primaryCode": "3.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "tr-wq-s01",
+              "primaryCode": "3.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-04",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 4,
+              "detailGroupKey": "tr-wq-s01",
+              "primaryCode": "3.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-05",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 5,
+              "detailGroupKey": "tr-wq-s01",
+              "primaryCode": "3.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-39",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 6,
+              "detailGroupKey": "tr-wq-s01",
+              "primaryCode": "3.2.1",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Steuern",
+          "chapterKey": "ui-wq-steuern-unternehmen",
+          "chapterNumber": "2",
+          "chapterTitle": "Unternehmensbezogene Steuern",
+          "entries": [
+            {
+              "id": "LZ-ST-07",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 1,
+              "sortKey": 7,
+              "detailGroupKey": "tr-wq-s02",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-08",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 2,
+              "sortKey": 8,
+              "detailGroupKey": "tr-wq-s02",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-09",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 3,
+              "sortKey": 9,
+              "detailGroupKey": "tr-wq-s04",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-10",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 4,
+              "sortKey": 10,
+              "detailGroupKey": "tr-wq-s03",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-11",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 5,
+              "sortKey": 11,
+              "detailGroupKey": "tr-wq-s03",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-12",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 6,
+              "sortKey": 12,
+              "detailGroupKey": "tr-wq-s03",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-13",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 7,
+              "sortKey": 13,
+              "detailGroupKey": "tr-wq-s03",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-40",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 8,
+              "sortKey": 13.25,
+              "detailGroupKey": "tr-wq-s03",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-41",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 9,
+              "sortKey": 13.5,
+              "detailGroupKey": "tr-wq-s03",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-43",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 10,
+              "sortKey": 13.75,
+              "detailGroupKey": "tr-wq-s04",
+              "primaryCode": "3.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-14",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 11,
+              "sortKey": 14,
+              "detailGroupKey": "tr-wq-s05",
+              "primaryCode": "3.2.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-15",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 12,
+              "sortKey": 15,
+              "detailGroupKey": "tr-wq-s05",
+              "primaryCode": "3.2.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-16",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 13,
+              "sortKey": 16,
+              "detailGroupKey": "tr-wq-s05",
+              "primaryCode": "3.2.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-42",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 14,
+              "sortKey": 16.5,
+              "detailGroupKey": "tr-wq-s05",
+              "primaryCode": "3.2.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-17",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 15,
+              "sortKey": 17,
+              "detailGroupKey": "tr-wq-s06",
+              "primaryCode": "3.2.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-18",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 16,
+              "sortKey": 18,
+              "detailGroupKey": "tr-wq-s06",
+              "primaryCode": "3.2.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-19",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 17,
+              "sortKey": 19,
+              "detailGroupKey": "tr-wq-s06",
+              "primaryCode": "3.2.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-20",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 18,
+              "sortKey": 20,
+              "detailGroupKey": "tr-wq-s07",
+              "primaryCode": "3.2.2.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-21",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 19,
+              "sortKey": 21,
+              "detailGroupKey": "tr-wq-s08",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-22",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 20,
+              "sortKey": 22,
+              "detailGroupKey": "tr-wq-s08",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-23",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 21,
+              "sortKey": 23,
+              "detailGroupKey": "tr-wq-s09",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-24",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 22,
+              "sortKey": 24,
+              "detailGroupKey": "tr-wq-s08",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-25",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 23,
+              "sortKey": 25,
+              "detailGroupKey": "tr-wq-s08",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-26",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 24,
+              "sortKey": 26,
+              "detailGroupKey": "tr-wq-s09",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-27",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 25,
+              "sortKey": 27,
+              "detailGroupKey": "tr-wq-s08",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-28",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 26,
+              "sortKey": 28,
+              "detailGroupKey": "tr-wq-s09",
+              "primaryCode": "3.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-31",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 27,
+              "sortKey": 31,
+              "detailGroupKey": "tr-wq-s10",
+              "primaryCode": "3.2.2.6",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-32",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 28,
+              "sortKey": 32,
+              "detailGroupKey": "tr-wq-s10",
+              "primaryCode": "3.2.2.6",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-29",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 29,
+              "sortKey": 32.333333333,
+              "detailGroupKey": "tr-wq-s11",
+              "primaryCode": "3.2.2.7",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-30",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 30,
+              "sortKey": 32.666666667,
+              "detailGroupKey": "tr-wq-s11",
+              "primaryCode": "3.2.2.7",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-33",
+              "ordinalInFach": 37,
+              "ordinalInChapter": 31,
+              "sortKey": 33,
+              "detailGroupKey": "tr-wq-s12",
+              "primaryCode": "3.2.2.8",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-34",
+              "ordinalInFach": 38,
+              "ordinalInChapter": 32,
+              "sortKey": 34,
+              "detailGroupKey": "tr-wq-s12",
+              "primaryCode": "3.2.2.8",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-35",
+              "ordinalInFach": 39,
+              "ordinalInChapter": 33,
+              "sortKey": 35,
+              "detailGroupKey": "tr-wq-s12",
+              "primaryCode": "3.2.2.8",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Steuern",
+          "chapterKey": "ui-wq-steuern-ao",
+          "chapterNumber": "3",
+          "chapterTitle": "Abgabenordnung",
+          "entries": [
+            {
+              "id": "LZ-ST-06",
+              "ordinalInFach": 40,
+              "ordinalInChapter": 1,
+              "sortKey": 35.5,
+              "detailGroupKey": "tr-wq-s13",
+              "primaryCode": "3.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-36",
+              "ordinalInFach": 41,
+              "ordinalInChapter": 2,
+              "sortKey": 36,
+              "detailGroupKey": "tr-wq-s13",
+              "primaryCode": "3.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-37",
+              "ordinalInFach": 42,
+              "ordinalInChapter": 3,
+              "sortKey": 37,
+              "detailGroupKey": "tr-wq-s13",
+              "primaryCode": "3.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-ST-38",
+              "ordinalInFach": 43,
+              "ordinalInChapter": 4,
+              "sortKey": 38,
+              "detailGroupKey": "tr-wq-s13",
+              "primaryCode": "3.2.3",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Marketing",
+      "chapters": [
+        {
+          "fach": "Marketing",
+          "chapterKey": "ui-hq-0027",
+          "chapterNumber": "1",
+          "chapterTitle": "Marketingplanung",
+          "entries": [
+            {
+              "id": "LZ-MKT-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-hq-0118",
+              "primaryCode": "8.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-42",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 1.5,
+              "detailGroupKey": "dg-hq-0118",
+              "primaryCode": "8.1.1",
+              "crossReferences": [
+                "8.3.1"
+              ]
+            },
+            {
+              "id": "LZ-MKT-02",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 2,
+              "detailGroupKey": "dg-hq-0116",
+              "primaryCode": "8.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-10",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 2.5,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3",
+              "crossReferences": [
+                "8.1.4",
+                "8.1.3.2#4"
+              ]
+            },
+            {
+              "id": "LZ-MKT-03",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 3,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-04",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 4,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3.1#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-05",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 5,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3.1#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-09",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 6,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3.1#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-07",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 7,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3.1#3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-06",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 7.5,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3.1#4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-08",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 8,
+              "detailGroupKey": "dg-hq-0117",
+              "primaryCode": "8.1.3.1#4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-11",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 11,
+              "detailGroupKey": "dg-hq-0120",
+              "primaryCode": "8.1.3.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-12",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 13,
+              "sortKey": 12,
+              "detailGroupKey": "dg-hq-0121",
+              "primaryCode": "8.1.3.2#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-14",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 14,
+              "sortKey": 14,
+              "detailGroupKey": "dg-hq-0123",
+              "primaryCode": "8.1.3.2#3",
+              "crossReferences": [
+                "8.1.3.2#4"
+              ]
+            },
+            {
+              "id": "LZ-MKT-13",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 15,
+              "sortKey": 14.5,
+              "detailGroupKey": "dg-hq-0122",
+              "primaryCode": "8.1.3.2#5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-15",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 16,
+              "sortKey": 15,
+              "detailGroupKey": "dg-hq-0115",
+              "primaryCode": "8.1.4",
+              "crossReferences": [
+                "8.1.1"
+              ]
+            },
+            {
+              "id": "LZ-MKT-39",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 17,
+              "sortKey": 15.5,
+              "detailGroupKey": "dg-hq-0115",
+              "primaryCode": "8.1.4",
+              "crossReferences": [
+                "8.1.3",
+                "8.1.3.2#4"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Marketing",
+          "chapterKey": "ui-hq-0028",
+          "chapterNumber": "2",
+          "chapterTitle": "Marketinginstrumentarium / Marketing-Mix",
+          "entries": [
+            {
+              "id": "LZ-MKT-16",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 1,
+              "sortKey": 16,
+              "detailGroupKey": "dg-hq-0114",
+              "primaryCode": "8.2.1",
+              "crossReferences": [
+                "8.2.6"
+              ]
+            },
+            {
+              "id": "LZ-MKT-17",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 2,
+              "sortKey": 17,
+              "detailGroupKey": "dg-hq-0119",
+              "primaryCode": "8.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-18",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 3,
+              "sortKey": 18,
+              "detailGroupKey": "dg-hq-0119",
+              "primaryCode": "8.2.2",
+              "crossReferences": [
+                "7.3.3#2"
+              ]
+            },
+            {
+              "id": "LZ-MKT-21",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 4,
+              "sortKey": 21,
+              "detailGroupKey": "dg-hq-0119",
+              "primaryCode": "8.2.2.1",
+              "crossReferences": [
+                "8.2.2.1#1",
+                "8.2.2.1#3",
+                "8.2.2.1#4",
+                "8.2.2.2"
+              ]
+            },
+            {
+              "id": "LZ-MKT-22",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 5,
+              "sortKey": 22,
+              "detailGroupKey": "dg-hq-0119",
+              "primaryCode": "8.2.2.1#1",
+              "crossReferences": [
+                "8.1.3.1#2",
+                "8.2.2.2"
+              ]
+            },
+            {
+              "id": "LZ-MKT-19",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 6,
+              "sortKey": 22.333333333,
+              "detailGroupKey": "dg-hq-0119",
+              "primaryCode": "8.2.2.1#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-20",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 7,
+              "sortKey": 22.666666667,
+              "detailGroupKey": "dg-hq-0119",
+              "primaryCode": "8.2.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-23",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 8,
+              "sortKey": 23,
+              "detailGroupKey": "dg-hq-0119",
+              "primaryCode": "8.2.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-24",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 9,
+              "sortKey": 24,
+              "detailGroupKey": "dg-hq-0124",
+              "primaryCode": "8.2.3",
+              "crossReferences": [
+                "8.2.3.2",
+                "8.2.3.3",
+                "8.2.3.5"
+              ]
+            },
+            {
+              "id": "LZ-MKT-25",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 10,
+              "sortKey": 25,
+              "detailGroupKey": "dg-hq-0124",
+              "primaryCode": "8.2.3",
+              "crossReferences": [
+                "8.2.3.1",
+                "8.2.3.2",
+                "8.2.3.3"
+              ]
+            },
+            {
+              "id": "LZ-MKT-26",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 11,
+              "sortKey": 26,
+              "detailGroupKey": "dg-hq-0124",
+              "primaryCode": "8.2.3.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-27",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 12,
+              "sortKey": 27,
+              "detailGroupKey": "dg-hq-0124",
+              "primaryCode": "8.2.3.6",
+              "crossReferences": [
+                "8.2.3.5"
+              ]
+            },
+            {
+              "id": "LZ-VT-02",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 13,
+              "sortKey": 27.333333333,
+              "detailGroupKey": "dg-hq-0126",
+              "primaryCode": "8.2.4",
+              "crossReferences": [
+                "8.3.1"
+              ]
+            },
+            {
+              "id": "LZ-VT-03",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 14,
+              "sortKey": 27.666666667,
+              "detailGroupKey": "dg-hq-0126",
+              "primaryCode": "8.2.4",
+              "crossReferences": [
+                "8.2.4.1",
+                "8.2.4.2",
+                "8.3.1"
+              ]
+            },
+            {
+              "id": "LZ-MKT-28",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 15,
+              "sortKey": 28,
+              "detailGroupKey": "dg-hq-0126",
+              "primaryCode": "8.2.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-29",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 16,
+              "sortKey": 29,
+              "detailGroupKey": "dg-hq-0126",
+              "primaryCode": "8.2.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-30",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 17,
+              "sortKey": 30,
+              "detailGroupKey": "dg-hq-0126",
+              "primaryCode": "8.2.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-31",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 18,
+              "sortKey": 31,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5",
+              "crossReferences": [
+                "8.2.5.1"
+              ]
+            },
+            {
+              "id": "LZ-MKT-32",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 19,
+              "sortKey": 32,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-36",
+              "ordinalInFach": 37,
+              "ordinalInChapter": 20,
+              "sortKey": 36,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-38",
+              "ordinalInFach": 38,
+              "ordinalInChapter": 21,
+              "sortKey": 38,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-40",
+              "ordinalInFach": 39,
+              "ordinalInChapter": 22,
+              "sortKey": 40,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-41",
+              "ordinalInFach": 40,
+              "ordinalInChapter": 23,
+              "sortKey": 41,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-33",
+              "ordinalInFach": 41,
+              "ordinalInChapter": 24,
+              "sortKey": 42,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-34",
+              "ordinalInFach": 42,
+              "ordinalInChapter": 25,
+              "sortKey": 43,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-35",
+              "ordinalInFach": 43,
+              "ordinalInChapter": 26,
+              "sortKey": 44,
+              "detailGroupKey": "dg-hq-0125",
+              "primaryCode": "8.2.5.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-MKT-37",
+              "ordinalInFach": 44,
+              "ordinalInChapter": 27,
+              "sortKey": 45,
+              "detailGroupKey": "dg-hq-0114",
+              "primaryCode": "8.2.6",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Vertrieb",
+      "chapters": [
+        {
+          "fach": "Vertrieb",
+          "chapterKey": "ui-hq-0029",
+          "chapterNumber": "1",
+          "chapterTitle": "Vertriebsmanagement",
+          "entries": [
+            {
+              "id": "LZ-VT-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-hq-0127",
+              "primaryCode": "8.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-04",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 4,
+              "detailGroupKey": "dg-hq-0127",
+              "primaryCode": "8.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-05",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 5,
+              "detailGroupKey": "dg-hq-0127",
+              "primaryCode": "8.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-06",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 6,
+              "detailGroupKey": "dg-hq-0128",
+              "primaryCode": "8.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-07",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 7,
+              "detailGroupKey": "dg-hq-0128",
+              "primaryCode": "8.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-08",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 8,
+              "detailGroupKey": "dg-hq-0128",
+              "primaryCode": "8.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-09",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 9,
+              "detailGroupKey": "dg-hq-0128",
+              "primaryCode": "8.3.2",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Vertrieb",
+          "chapterKey": "ui-hq-0030",
+          "chapterNumber": "2",
+          "chapterTitle": "Internationale Geschäftsbeziehungen und Geschäftsentwicklung",
+          "entries": [
+            {
+              "id": "LZ-VT-10",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 1,
+              "sortKey": 10,
+              "detailGroupKey": "dg-hq-0129",
+              "primaryCode": "8.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-11",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 2,
+              "sortKey": 11,
+              "detailGroupKey": "dg-hq-0129",
+              "primaryCode": "8.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-12",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 3,
+              "sortKey": 12,
+              "detailGroupKey": "dg-hq-0129",
+              "primaryCode": "8.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-13",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 4,
+              "sortKey": 13,
+              "detailGroupKey": "dg-hq-0129",
+              "primaryCode": "8.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-14",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 5,
+              "sortKey": 14,
+              "detailGroupKey": "dg-hq-0130",
+              "primaryCode": "8.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-15",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 6,
+              "sortKey": 15,
+              "detailGroupKey": "dg-hq-0130",
+              "primaryCode": "8.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-16",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 7,
+              "sortKey": 16,
+              "detailGroupKey": "dg-hq-0130",
+              "primaryCode": "8.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-17",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 8,
+              "sortKey": 17,
+              "detailGroupKey": "dg-hq-0130",
+              "primaryCode": "8.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-18",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 9,
+              "sortKey": 18,
+              "detailGroupKey": "dg-hq-0131",
+              "primaryCode": "8.4.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-19",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 10,
+              "sortKey": 19,
+              "detailGroupKey": "dg-hq-0131",
+              "primaryCode": "8.4.3",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Vertrieb",
+          "chapterKey": "ui-hq-0031",
+          "chapterNumber": "3",
+          "chapterTitle": "Spezielle Rechtsaspekte",
+          "entries": [
+            {
+              "id": "LZ-VT-20",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 1,
+              "sortKey": 20,
+              "detailGroupKey": "dg-hq-0132",
+              "primaryCode": "8.5.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-21",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 2,
+              "sortKey": 21,
+              "detailGroupKey": "dg-hq-0132",
+              "primaryCode": "8.5.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-22",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 3,
+              "sortKey": 22,
+              "detailGroupKey": "dg-hq-0132",
+              "primaryCode": "8.5.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-23",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 4,
+              "sortKey": 23,
+              "detailGroupKey": "dg-hq-0133",
+              "primaryCode": "8.5.2.1",
+              "crossReferences": [
+                "8.5.2.2"
+              ]
+            },
+            {
+              "id": "LZ-VT-25",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 5,
+              "sortKey": 25,
+              "detailGroupKey": "dg-hq-0133",
+              "primaryCode": "8.5.2.1",
+              "crossReferences": [
+                "8.5.2.2"
+              ]
+            },
+            {
+              "id": "LZ-VT-24",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 6,
+              "sortKey": 25.5,
+              "detailGroupKey": "dg-hq-0133",
+              "primaryCode": "8.5.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-26",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 7,
+              "sortKey": 26,
+              "detailGroupKey": "dg-hq-0134",
+              "primaryCode": "8.5.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VT-27",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 8,
+              "sortKey": 27,
+              "detailGroupKey": "dg-hq-0135",
+              "primaryCode": "8.5.3.2",
+              "crossReferences": [
+                "3.1.2.5#7"
+              ]
+            },
+            {
+              "id": "LZ-VT-28",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 9,
+              "sortKey": 28,
+              "detailGroupKey": "dg-hq-0135",
+              "primaryCode": "8.5.3.3",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Recht",
+      "chapters": [
+        {
+          "fach": "Recht",
+          "chapterKey": "ui-wq-recht-at",
+          "chapterNumber": "1",
+          "chapterTitle": "BGB Allgemeiner Teil",
+          "entries": [
+            {
+              "id": "LZ-RE-51",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 0.5,
+              "detailGroupKey": "tr-wq-r22",
+              "primaryCode": "3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-01",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 1,
+              "detailGroupKey": "tr-wq-r01",
+              "primaryCode": "3.1.1.1#1",
+              "crossReferences": [
+                "3.1.1.1#2",
+                "3.1.1.1#3"
+              ]
+            },
+            {
+              "id": "LZ-RE-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "tr-wq-r01",
+              "primaryCode": "3.1.1.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-04",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 3.4,
+              "detailGroupKey": "tr-wq-r01",
+              "primaryCode": "3.1.1.2#1",
+              "crossReferences": [
+                "3.1.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-RE-07",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 3.8,
+              "detailGroupKey": "tr-wq-r01",
+              "primaryCode": "3.1.1.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-52",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 4.2,
+              "detailGroupKey": "tr-wq-r01",
+              "primaryCode": "3.1.1.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-02",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 4.6,
+              "detailGroupKey": "tr-wq-r01",
+              "primaryCode": "3.1.1.2#2",
+              "crossReferences": [
+                "3.1.1.1#1",
+                "3.1.1.2#3",
+                "3.1.1.1#2"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Recht",
+          "chapterKey": "ui-wq-recht-schuld",
+          "chapterNumber": "2",
+          "chapterTitle": "BGB Schuldrecht",
+          "entries": [
+            {
+              "id": "LZ-RE-05",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 1,
+              "sortKey": 5,
+              "detailGroupKey": "tr-wq-r02",
+              "primaryCode": "3.1.2.1#1",
+              "crossReferences": [
+                "3.1.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-RE-06",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 2,
+              "sortKey": 6,
+              "detailGroupKey": "tr-wq-r02",
+              "primaryCode": "3.1.2.1#1",
+              "crossReferences": [
+                "3.1.1.2#1",
+                "3.1.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-RE-08",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 3,
+              "sortKey": 8,
+              "detailGroupKey": "tr-wq-r02",
+              "primaryCode": "3.1.2.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-53",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 4,
+              "sortKey": 8.25,
+              "detailGroupKey": "tr-wq-r02",
+              "primaryCode": "3.1.2.1#1",
+              "crossReferences": [
+                "3.1.2.5#1",
+                "3.1.2.5#3"
+              ]
+            },
+            {
+              "id": "LZ-RE-54",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 5,
+              "sortKey": 8.5,
+              "detailGroupKey": "tr-wq-r02",
+              "primaryCode": "3.1.2.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-55",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 6,
+              "sortKey": 8.75,
+              "detailGroupKey": "tr-wq-r02",
+              "primaryCode": "3.1.2.1#1",
+              "crossReferences": [
+                "3.1.3.2"
+              ]
+            },
+            {
+              "id": "LZ-RE-09",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 7,
+              "sortKey": 9,
+              "detailGroupKey": "tr-wq-r02",
+              "primaryCode": "3.1.2.1#3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-10",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 8,
+              "sortKey": 10,
+              "detailGroupKey": "tr-wq-r03",
+              "primaryCode": "3.1.2.2",
+              "crossReferences": [
+                "3.1.2.5#6"
+              ]
+            },
+            {
+              "id": "LZ-RE-11",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 9,
+              "sortKey": 11,
+              "detailGroupKey": "tr-wq-r04",
+              "primaryCode": "3.1.2.3",
+              "crossReferences": [
+                "3.1.3.1",
+                "8.5.3.1"
+              ]
+            },
+            {
+              "id": "LZ-RE-12",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 10,
+              "sortKey": 12,
+              "detailGroupKey": "tr-wq-r04",
+              "primaryCode": "3.1.2.3",
+              "crossReferences": [
+                "3.1.2.5#2",
+                "8.5.3.1"
+              ]
+            },
+            {
+              "id": "LZ-RE-13",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 11,
+              "sortKey": 13,
+              "detailGroupKey": "tr-wq-r04",
+              "primaryCode": "3.1.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-14",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 12,
+              "sortKey": 14,
+              "detailGroupKey": "tr-wq-r04",
+              "primaryCode": "3.1.2.3",
+              "crossReferences": [
+                "3.1.2.5#5",
+                "8.5.3.1"
+              ]
+            },
+            {
+              "id": "LZ-RE-15",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 13,
+              "sortKey": 15,
+              "detailGroupKey": "tr-wq-r04",
+              "primaryCode": "3.1.2.3",
+              "crossReferences": [
+                "8.5.3.1"
+              ]
+            },
+            {
+              "id": "LZ-RE-16",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 14,
+              "sortKey": 16,
+              "detailGroupKey": "tr-wq-r04",
+              "primaryCode": "3.1.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-17",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 15,
+              "sortKey": 17,
+              "detailGroupKey": "tr-wq-r04",
+              "primaryCode": "3.1.2.3",
+              "crossReferences": [
+                "8.5.3.1"
+              ]
+            },
+            {
+              "id": "LZ-RE-18",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 16,
+              "sortKey": 18,
+              "detailGroupKey": "tr-wq-r05",
+              "primaryCode": "3.1.2.4#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-19",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 17,
+              "sortKey": 19,
+              "detailGroupKey": "tr-wq-r05",
+              "primaryCode": "3.1.2.4#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-20",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 18,
+              "sortKey": 20,
+              "detailGroupKey": "tr-wq-r05",
+              "primaryCode": "3.1.2.4#3",
+              "crossReferences": [
+                "3.1.5.1#1"
+              ]
+            },
+            {
+              "id": "LZ-RE-21",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 19,
+              "sortKey": 21,
+              "detailGroupKey": "tr-wq-r05",
+              "primaryCode": "3.1.2.4#4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-22",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 20,
+              "sortKey": 22,
+              "detailGroupKey": "tr-wq-r05",
+              "primaryCode": "3.1.2.4#4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-23",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 21,
+              "sortKey": 23,
+              "detailGroupKey": "tr-wq-r05",
+              "primaryCode": "3.1.2.4#5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-25",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 22,
+              "sortKey": 25,
+              "detailGroupKey": "tr-wq-r07",
+              "primaryCode": "3.1.2.5#2",
+              "crossReferences": [
+                "3.1.2.5#1"
+              ]
+            },
+            {
+              "id": "LZ-RE-27",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 23,
+              "sortKey": 27,
+              "detailGroupKey": "tr-wq-r07",
+              "primaryCode": "3.1.2.5#3",
+              "crossReferences": [
+                "3.1.2.5#4",
+                "3.1.2.5#5",
+                "3.1.2.5#1"
+              ]
+            },
+            {
+              "id": "LZ-RE-26",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 24,
+              "sortKey": 27.5,
+              "detailGroupKey": "tr-wq-r07",
+              "primaryCode": "3.1.2.5#4",
+              "crossReferences": [
+                "3.1.2.5#1"
+              ]
+            },
+            {
+              "id": "LZ-RE-28",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 25,
+              "sortKey": 28,
+              "detailGroupKey": "tr-wq-r07",
+              "primaryCode": "3.1.2.5#6",
+              "crossReferences": [
+                "3.1.2.5#4",
+                "3.1.2.2"
+              ]
+            },
+            {
+              "id": "LZ-RE-24",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 26,
+              "sortKey": 28.5,
+              "detailGroupKey": "tr-wq-r06",
+              "primaryCode": "3.1.2.5#7",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Recht",
+          "chapterKey": "ui-wq-recht-sachen",
+          "chapterNumber": "3",
+          "chapterTitle": "BGB Sachenrecht",
+          "entries": [
+            {
+              "id": "LZ-RE-29",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 1,
+              "sortKey": 29,
+              "detailGroupKey": "tr-wq-r08",
+              "primaryCode": "3.1.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-30",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 2,
+              "sortKey": 30,
+              "detailGroupKey": "tr-wq-r08",
+              "primaryCode": "3.1.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-31",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 3,
+              "sortKey": 31,
+              "detailGroupKey": "tr-wq-r09",
+              "primaryCode": "3.1.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-32",
+              "ordinalInFach": 37,
+              "ordinalInChapter": 4,
+              "sortKey": 32,
+              "detailGroupKey": "tr-wq-r09",
+              "primaryCode": "3.1.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-33",
+              "ordinalInFach": 38,
+              "ordinalInChapter": 5,
+              "sortKey": 33,
+              "detailGroupKey": "tr-wq-r09",
+              "primaryCode": "3.1.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-34",
+              "ordinalInFach": 39,
+              "ordinalInChapter": 6,
+              "sortKey": 34,
+              "detailGroupKey": "tr-wq-r09",
+              "primaryCode": "3.1.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-35",
+              "ordinalInFach": 40,
+              "ordinalInChapter": 7,
+              "sortKey": 35,
+              "detailGroupKey": "tr-wq-r10",
+              "primaryCode": "3.1.3.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-36",
+              "ordinalInFach": 41,
+              "ordinalInChapter": 8,
+              "sortKey": 36,
+              "detailGroupKey": "tr-wq-r10",
+              "primaryCode": "3.1.3.3",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Recht",
+          "chapterKey": "ui-wq-recht-handel",
+          "chapterNumber": "4",
+          "chapterTitle": "Handelsrecht",
+          "entries": [
+            {
+              "id": "LZ-RE-38",
+              "ordinalInFach": 42,
+              "ordinalInChapter": 1,
+              "sortKey": 38,
+              "detailGroupKey": "tr-wq-r14",
+              "primaryCode": "3.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-40",
+              "ordinalInFach": 43,
+              "ordinalInChapter": 2,
+              "sortKey": 40,
+              "detailGroupKey": "tr-wq-r15",
+              "primaryCode": "3.1.4",
+              "crossReferences": [
+                "3.1.2.3"
+              ]
+            },
+            {
+              "id": "LZ-RE-56",
+              "ordinalInFach": 44,
+              "ordinalInChapter": 3,
+              "sortKey": 40.25,
+              "detailGroupKey": "tr-wq-r15",
+              "primaryCode": "3.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-37",
+              "ordinalInFach": 45,
+              "ordinalInChapter": 4,
+              "sortKey": 40.5,
+              "detailGroupKey": "tr-wq-r11",
+              "primaryCode": "3.1.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-39",
+              "ordinalInFach": 46,
+              "ordinalInChapter": 5,
+              "sortKey": 40.75,
+              "detailGroupKey": "tr-wq-r12",
+              "primaryCode": "3.1.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-41",
+              "ordinalInFach": 47,
+              "ordinalInChapter": 6,
+              "sortKey": 41,
+              "detailGroupKey": "tr-wq-r13",
+              "primaryCode": "3.1.4.3",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Recht",
+          "chapterKey": "ui-wq-recht-arbeit",
+          "chapterNumber": "5",
+          "chapterTitle": "Arbeitsrecht",
+          "entries": [
+            {
+              "id": "LZ-RE-57",
+              "ordinalInFach": 48,
+              "ordinalInChapter": 1,
+              "sortKey": 41.5,
+              "detailGroupKey": "tr-wq-r19",
+              "primaryCode": "3.1.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-42",
+              "ordinalInFach": 49,
+              "ordinalInChapter": 2,
+              "sortKey": 42,
+              "detailGroupKey": "tr-wq-r16",
+              "primaryCode": "3.1.5.1#1",
+              "crossReferences": [
+                "3.1.5.1#4",
+                "3.1.2.4#3"
+              ]
+            },
+            {
+              "id": "LZ-RE-43",
+              "ordinalInFach": 50,
+              "ordinalInChapter": 3,
+              "sortKey": 43,
+              "detailGroupKey": "tr-wq-r16",
+              "primaryCode": "3.1.5.1#2",
+              "crossReferences": [
+                "3.1.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-RE-44",
+              "ordinalInFach": 51,
+              "ordinalInChapter": 4,
+              "sortKey": 44,
+              "detailGroupKey": "tr-wq-r16",
+              "primaryCode": "3.1.5.1#2",
+              "crossReferences": [
+                "3.1.5.3#6"
+              ]
+            },
+            {
+              "id": "LZ-RE-45",
+              "ordinalInFach": 52,
+              "ordinalInChapter": 5,
+              "sortKey": 45,
+              "detailGroupKey": "tr-wq-r16",
+              "primaryCode": "3.1.5.1#3",
+              "crossReferences": [
+                "3.1.5.1#4"
+              ]
+            },
+            {
+              "id": "LZ-RE-46",
+              "ordinalInFach": 53,
+              "ordinalInChapter": 6,
+              "sortKey": 46,
+              "detailGroupKey": "tr-wq-r17",
+              "primaryCode": "3.1.5.2#3",
+              "crossReferences": [
+                "3.1.5.2#1",
+                "3.1.5.2#2"
+              ]
+            },
+            {
+              "id": "LZ-RE-47",
+              "ordinalInFach": 54,
+              "ordinalInChapter": 7,
+              "sortKey": 47,
+              "detailGroupKey": "tr-wq-r18",
+              "primaryCode": "3.1.5.3#1",
+              "crossReferences": [
+                "3.1.5.3#2",
+                "3.1.5.3#3",
+                "3.1.5.3#4",
+                "3.1.5.3#5",
+                "3.1.5.3#6"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Recht",
+          "chapterKey": "ui-wq-recht-wettbewerb",
+          "chapterNumber": "6",
+          "chapterTitle": "Wettbewerbsrecht",
+          "entries": [
+            {
+              "id": "LZ-RE-48",
+              "ordinalInFach": 55,
+              "ordinalInChapter": 1,
+              "sortKey": 48,
+              "detailGroupKey": "tr-wq-r20",
+              "primaryCode": "3.1.6",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-RE-49",
+              "ordinalInFach": 56,
+              "ordinalInChapter": 2,
+              "sortKey": 49,
+              "detailGroupKey": "tr-wq-r20",
+              "primaryCode": "3.1.6",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Recht",
+          "chapterKey": "ui-wq-recht-gewerbe",
+          "chapterNumber": "7",
+          "chapterTitle": "Gewerberecht",
+          "entries": [
+            {
+              "id": "LZ-RE-50",
+              "ordinalInFach": 57,
+              "ordinalInChapter": 1,
+              "sortKey": 50,
+              "detailGroupKey": "tr-wq-r21",
+              "primaryCode": "3.1.7",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "VWL",
+      "chapters": [
+        {
+          "fach": "VWL",
+          "chapterKey": "ui-wq-0001",
+          "chapterNumber": "1",
+          "chapterTitle": "Volkswirtschaftliche Grundlagen",
+          "entries": [
+            {
+              "id": "LZ-VWL-43",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 0.333333333,
+              "detailGroupKey": "dg-wq-0056",
+              "primaryCode": "1.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-44",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 0.666666667,
+              "detailGroupKey": "dg-wq-0056",
+              "primaryCode": "1.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-01",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 1,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1",
+              "crossReferences": [
+                "1.1.1.1#1"
+              ]
+            },
+            {
+              "id": "LZ-VWL-02",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 2,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-03",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 3,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-04",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 4,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-05",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 5,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-06",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 6,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-45",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 6.5,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-07",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 7,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-08",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 8,
+              "detailGroupKey": "dg-wq-0057",
+              "primaryCode": "1.1.1.1#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-09",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 9,
+              "detailGroupKey": "dg-wq-0058",
+              "primaryCode": "1.1.1.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-10",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 13,
+              "sortKey": 10,
+              "detailGroupKey": "dg-wq-0058",
+              "primaryCode": "1.1.1.2#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-11",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 14,
+              "sortKey": 11,
+              "detailGroupKey": "dg-wq-0056",
+              "primaryCode": "1.1.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-46",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 15,
+              "sortKey": 11.5,
+              "detailGroupKey": "dg-wq-0059",
+              "primaryCode": "1.1.2",
+              "crossReferences": [
+                "1.1.2.1"
+              ]
+            },
+            {
+              "id": "LZ-VWL-12",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 16,
+              "sortKey": 12,
+              "detailGroupKey": "dg-wq-0059",
+              "primaryCode": "1.1.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-13",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 17,
+              "sortKey": 13,
+              "detailGroupKey": "dg-wq-0059",
+              "primaryCode": "1.1.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-14",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 18,
+              "sortKey": 14,
+              "detailGroupKey": "dg-wq-0059",
+              "primaryCode": "1.1.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-15",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 19,
+              "sortKey": 15,
+              "detailGroupKey": "dg-wq-0059",
+              "primaryCode": "1.1.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-17",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 20,
+              "sortKey": 17,
+              "detailGroupKey": "dg-wq-0059",
+              "primaryCode": "1.1.2.2",
+              "crossReferences": [
+                "1.1.2.2#2",
+                "1.1.2.2#3"
+              ]
+            },
+            {
+              "id": "LZ-VWL-16",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 21,
+              "sortKey": 17.5,
+              "detailGroupKey": "dg-wq-0059",
+              "primaryCode": "1.1.2.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-18",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 22,
+              "sortKey": 18,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1",
+              "crossReferences": [
+                "1.1.3.1#1"
+              ]
+            },
+            {
+              "id": "LZ-VWL-19",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 23,
+              "sortKey": 19,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1",
+              "crossReferences": [
+                "1.1.3.1#1"
+              ]
+            },
+            {
+              "id": "LZ-VWL-20",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 24,
+              "sortKey": 20,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-21",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 25,
+              "sortKey": 21,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-22",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 26,
+              "sortKey": 22,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#1",
+              "crossReferences": [
+                "1.1.3.2#5"
+              ]
+            },
+            {
+              "id": "LZ-VWL-23",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 27,
+              "sortKey": 23,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-24",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 28,
+              "sortKey": 24,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#1",
+              "crossReferences": [
+                "1.1.3.2#3"
+              ]
+            },
+            {
+              "id": "LZ-VWL-25",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 29,
+              "sortKey": 25,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-47",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 30,
+              "sortKey": 25.5,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-26",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 31,
+              "sortKey": 26,
+              "detailGroupKey": "dg-wq-0060",
+              "primaryCode": "1.1.3.1#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-27",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 32,
+              "sortKey": 27,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-28",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 33,
+              "sortKey": 28,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-29",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 34,
+              "sortKey": 29,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-30",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 35,
+              "sortKey": 30,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-31",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 36,
+              "sortKey": 31,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-32",
+              "ordinalInFach": 37,
+              "ordinalInChapter": 37,
+              "sortKey": 32,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-33",
+              "ordinalInFach": 38,
+              "ordinalInChapter": 38,
+              "sortKey": 33,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-34",
+              "ordinalInFach": 39,
+              "ordinalInChapter": 39,
+              "sortKey": 34,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-35",
+              "ordinalInFach": 40,
+              "ordinalInChapter": 40,
+              "sortKey": 35,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#6",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-36",
+              "ordinalInFach": 41,
+              "ordinalInChapter": 41,
+              "sortKey": 36,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#7",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-37",
+              "ordinalInFach": 42,
+              "ordinalInChapter": 42,
+              "sortKey": 37,
+              "detailGroupKey": "dg-wq-0061",
+              "primaryCode": "1.1.3.2#7",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-48",
+              "ordinalInFach": 43,
+              "ordinalInChapter": 43,
+              "sortKey": 37.5,
+              "detailGroupKey": "dg-wq-0062",
+              "primaryCode": "1.1.4",
+              "crossReferences": [
+                "1.1.4.1",
+                "1.1.4.2#1"
+              ]
+            },
+            {
+              "id": "LZ-VWL-38",
+              "ordinalInFach": 44,
+              "ordinalInChapter": 44,
+              "sortKey": 38,
+              "detailGroupKey": "dg-wq-0062",
+              "primaryCode": "1.1.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-39",
+              "ordinalInFach": 45,
+              "ordinalInChapter": 45,
+              "sortKey": 39,
+              "detailGroupKey": "dg-wq-0063",
+              "primaryCode": "1.1.4.2#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-40",
+              "ordinalInFach": 46,
+              "ordinalInChapter": 46,
+              "sortKey": 40,
+              "detailGroupKey": "dg-wq-0063",
+              "primaryCode": "1.1.4.2#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-41",
+              "ordinalInFach": 47,
+              "ordinalInChapter": 47,
+              "sortKey": 41,
+              "detailGroupKey": "dg-wq-0063",
+              "primaryCode": "1.1.4.2#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-VWL-42",
+              "ordinalInFach": 48,
+              "ordinalInChapter": 48,
+              "sortKey": 42,
+              "detailGroupKey": "dg-wq-0063",
+              "primaryCode": "1.1.4.2#2",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "BWL",
+      "chapters": [
+        {
+          "fach": "BWL",
+          "chapterKey": "ui-wq-0002",
+          "chapterNumber": "1",
+          "chapterTitle": "Betriebliche Funktionen und deren Zusammenwirken",
+          "entries": [
+            {
+              "id": "LZ-BWL-34",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-wq-0044",
+              "primaryCode": "1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "dg-wq-0045",
+              "primaryCode": "1.2.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "dg-wq-0045",
+              "primaryCode": "1.2.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-04",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 4,
+              "detailGroupKey": "dg-wq-0045",
+              "primaryCode": "1.2.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-35",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 4.333333333,
+              "detailGroupKey": "dg-wq-0045",
+              "primaryCode": "1.2.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-36",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 4.666666667,
+              "detailGroupKey": "dg-wq-0045",
+              "primaryCode": "1.2.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-05",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 5,
+              "detailGroupKey": "dg-wq-0046",
+              "primaryCode": "1.2.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-37",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 5.5,
+              "detailGroupKey": "dg-wq-0046",
+              "primaryCode": "1.2.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-06",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 6,
+              "detailGroupKey": "dg-wq-0047",
+              "primaryCode": "1.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-07",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 7,
+              "detailGroupKey": "dg-wq-0047",
+              "primaryCode": "1.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-08",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 8,
+              "detailGroupKey": "dg-wq-0047",
+              "primaryCode": "1.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-09",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 9,
+              "detailGroupKey": "dg-wq-0047",
+              "primaryCode": "1.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-10",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 13,
+              "sortKey": 10,
+              "detailGroupKey": "dg-wq-0047",
+              "primaryCode": "1.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-11",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 14,
+              "sortKey": 11,
+              "detailGroupKey": "dg-wq-0047",
+              "primaryCode": "1.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-38",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 15,
+              "sortKey": 11.5,
+              "detailGroupKey": "dg-wq-0047",
+              "primaryCode": "1.2.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-12",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 16,
+              "sortKey": 12,
+              "detailGroupKey": "dg-wq-0048",
+              "primaryCode": "1.2.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-13",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 17,
+              "sortKey": 13,
+              "detailGroupKey": "dg-wq-0048",
+              "primaryCode": "1.2.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-14",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 18,
+              "sortKey": 14,
+              "detailGroupKey": "dg-wq-0049",
+              "primaryCode": "1.2.1.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-15",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 19,
+              "sortKey": 15,
+              "detailGroupKey": "dg-wq-0049",
+              "primaryCode": "1.2.1.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-39",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 20,
+              "sortKey": 15.5,
+              "detailGroupKey": "dg-wq-0049",
+              "primaryCode": "1.2.1.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-16",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 21,
+              "sortKey": 16,
+              "detailGroupKey": "dg-wq-0051",
+              "primaryCode": "1.2.1.6",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-17",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 22,
+              "sortKey": 17,
+              "detailGroupKey": "dg-wq-0052",
+              "primaryCode": "1.2.1.7",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-01",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 23,
+              "sortKey": 17.5,
+              "detailGroupKey": "dg-wq-0044",
+              "primaryCode": "1.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-18",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 24,
+              "sortKey": 18,
+              "detailGroupKey": "dg-wq-0044",
+              "primaryCode": "1.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-19",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 25,
+              "sortKey": 19,
+              "detailGroupKey": "dg-wq-0044",
+              "primaryCode": "1.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-20",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 26,
+              "sortKey": 20,
+              "detailGroupKey": "dg-wq-0044",
+              "primaryCode": "1.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-21",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 27,
+              "sortKey": 21,
+              "detailGroupKey": "dg-wq-0044",
+              "primaryCode": "1.2.2",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "BWL",
+          "chapterKey": "ui-wq-0003",
+          "chapterNumber": "2",
+          "chapterTitle": "Existenzgründung und Unternehmensrechtsformen",
+          "entries": [
+            {
+              "id": "LZ-BWL-22",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 1,
+              "sortKey": 22,
+              "detailGroupKey": "dg-wq-0053",
+              "primaryCode": "1.3.1",
+              "crossReferences": [
+                "6.2.2.1#1"
+              ]
+            },
+            {
+              "id": "LZ-BWL-23",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 2,
+              "sortKey": 23,
+              "detailGroupKey": "dg-wq-0053",
+              "primaryCode": "1.3.2",
+              "crossReferences": [
+                "1.3.1"
+              ]
+            },
+            {
+              "id": "LZ-BWL-24",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 3,
+              "sortKey": 24,
+              "detailGroupKey": "dg-wq-0053",
+              "primaryCode": "1.3.2",
+              "crossReferences": [
+                "6.2.2.1#1"
+              ]
+            },
+            {
+              "id": "LZ-BWL-40",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 4,
+              "sortKey": 24.5,
+              "detailGroupKey": "dg-wq-0053",
+              "primaryCode": "1.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BWL-25",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 5,
+              "sortKey": 25,
+              "detailGroupKey": "dg-wq-0050",
+              "primaryCode": "1.3.3",
+              "crossReferences": [
+                "1.3.3.1",
+                "1.3.3.2"
+              ]
+            },
+            {
+              "id": "LZ-BWL-26",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 6,
+              "sortKey": 26,
+              "detailGroupKey": "dg-wq-0050",
+              "primaryCode": "1.3.3.1",
+              "crossReferences": [
+                "1.3.3.2"
+              ]
+            },
+            {
+              "id": "LZ-BWL-27",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 7,
+              "sortKey": 27,
+              "detailGroupKey": "dg-wq-0050",
+              "primaryCode": "1.3.3.1",
+              "crossReferences": [
+                "1.3.3.2"
+              ]
+            },
+            {
+              "id": "LZ-BWL-28",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 8,
+              "sortKey": 28,
+              "detailGroupKey": "dg-wq-0050",
+              "primaryCode": "1.3.3.1",
+              "crossReferences": [
+                "1.3.3.2"
+              ]
+            },
+            {
+              "id": "LZ-BWL-29",
+              "ordinalInFach": 36,
+              "ordinalInChapter": 9,
+              "sortKey": 29,
+              "detailGroupKey": "dg-wq-0050",
+              "primaryCode": "1.3.3.1",
+              "crossReferences": [
+                "1.3.3.2"
+              ]
+            },
+            {
+              "id": "LZ-BWL-30",
+              "ordinalInFach": 37,
+              "ordinalInChapter": 10,
+              "sortKey": 30,
+              "detailGroupKey": "dg-wq-0050",
+              "primaryCode": "1.3.3.2",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "BWL",
+          "chapterKey": "ui-wq-0004",
+          "chapterNumber": "3",
+          "chapterTitle": "Unternehmenszusammenschlüsse",
+          "entries": [
+            {
+              "id": "LZ-BWL-31",
+              "ordinalInFach": 38,
+              "ordinalInChapter": 1,
+              "sortKey": 31,
+              "detailGroupKey": "dg-wq-0055",
+              "primaryCode": "1.4",
+              "crossReferences": [
+                "1.4.1.1",
+                "1.4.1.2",
+                "1.4.2.1"
+              ]
+            },
+            {
+              "id": "LZ-BWL-32",
+              "ordinalInFach": 39,
+              "ordinalInChapter": 2,
+              "sortKey": 32,
+              "detailGroupKey": "dg-wq-0055",
+              "primaryCode": "1.4.1",
+              "crossReferences": [
+                "1.4.1.1",
+                "1.4.1.2"
+              ]
+            },
+            {
+              "id": "LZ-BWL-33",
+              "ordinalInFach": 40,
+              "ordinalInChapter": 3,
+              "sortKey": 33,
+              "detailGroupKey": "dg-wq-0054",
+              "primaryCode": "1.4.2",
+              "crossReferences": [
+                "1.4.2.1",
+                "1.4.2.2"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Logistik",
+      "chapters": [
+        {
+          "fach": "Logistik",
+          "chapterKey": "ui-hq-0022",
+          "chapterNumber": "1",
+          "chapterTitle": "Einkauf und Beschaffung",
+          "entries": [
+            {
+              "id": "LZ-LO-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-hq-0091",
+              "primaryCode": "7.1.1",
+              "crossReferences": [
+                "7.1.1.1",
+                "7.1.1.2"
+              ]
+            },
+            {
+              "id": "LZ-LO-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "dg-hq-0091",
+              "primaryCode": "7.1.1",
+              "crossReferences": [
+                "7.1.1.1"
+              ]
+            },
+            {
+              "id": "LZ-LO-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "dg-hq-0094",
+              "primaryCode": "7.1.2.1",
+              "crossReferences": [
+                "7.5.1.1",
+                "7.1.2.1#1",
+                "7.1.2.1#2",
+                "7.1.2.1#3"
+              ]
+            },
+            {
+              "id": "LZ-LO-04",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 4,
+              "detailGroupKey": "dg-hq-0097",
+              "primaryCode": "7.1.2.2",
+              "crossReferences": [
+                "7.4.1",
+                "6.4.1.2",
+                "7.4.2"
+              ]
+            },
+            {
+              "id": "LZ-LO-31",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 4.5,
+              "detailGroupKey": "dg-hq-0097",
+              "primaryCode": "7.1.2.2",
+              "crossReferences": [
+                "7.4.1"
+              ]
+            },
+            {
+              "id": "LZ-LO-05",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 5,
+              "detailGroupKey": "dg-hq-0095",
+              "primaryCode": "7.1.2.3",
+              "crossReferences": [
+                "7.2.1.1#1"
+              ]
+            },
+            {
+              "id": "LZ-LO-06",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 6,
+              "detailGroupKey": "dg-hq-0092",
+              "primaryCode": "7.1.2.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-07",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 7,
+              "detailGroupKey": "dg-hq-0092",
+              "primaryCode": "7.1.2.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-08",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 8,
+              "detailGroupKey": "dg-hq-0097",
+              "primaryCode": "7.1.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-09",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 9,
+              "detailGroupKey": "dg-hq-0097",
+              "primaryCode": "7.1.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-10",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 10,
+              "detailGroupKey": "dg-hq-0097",
+              "primaryCode": "7.1.3.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-11",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 11,
+              "detailGroupKey": "dg-hq-0097",
+              "primaryCode": "7.1.3.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-12",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 13,
+              "sortKey": 12,
+              "detailGroupKey": "dg-hq-0112",
+              "primaryCode": "7.1.3.5",
+              "crossReferences": [
+                "7.5.1.2"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Logistik",
+          "chapterKey": "ui-hq-0023",
+          "chapterNumber": "2",
+          "chapterTitle": "Materialwirtschaft und Lagerhaltung",
+          "entries": [
+            {
+              "id": "LZ-LO-13",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 1,
+              "sortKey": 13,
+              "detailGroupKey": "dg-hq-0098",
+              "primaryCode": "7.2.1.1",
+              "crossReferences": [
+                "7.2.1.1#2",
+                "7.2.1.1#3",
+                "7.2.1.1#4"
+              ]
+            },
+            {
+              "id": "LZ-LO-14",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 2,
+              "sortKey": 14,
+              "detailGroupKey": "dg-hq-0098",
+              "primaryCode": "7.2.1.2",
+              "crossReferences": [
+                "7.2.1.2#1",
+                "7.2.1.2#2",
+                "7.2.1.2#3"
+              ]
+            },
+            {
+              "id": "LZ-LO-15",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 3,
+              "sortKey": 15,
+              "detailGroupKey": "dg-hq-0099",
+              "primaryCode": "7.2.2.1",
+              "crossReferences": [
+                "7.2.1.1#4",
+                "7.2.2.1#1",
+                "7.2.2.1#2",
+                "7.2.2.1#3",
+                "7.2.2.1#4"
+              ]
+            },
+            {
+              "id": "LZ-LO-32",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 4,
+              "sortKey": 15.333333333,
+              "detailGroupKey": "dg-hq-0099",
+              "primaryCode": "7.2.2.1",
+              "crossReferences": [
+                "7.2.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-LO-33",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 5,
+              "sortKey": 15.666666667,
+              "detailGroupKey": "dg-hq-0099",
+              "primaryCode": "7.2.2.1#4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-16",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 6,
+              "sortKey": 16,
+              "detailGroupKey": "dg-hq-0100",
+              "primaryCode": "7.2.2.2",
+              "crossReferences": [
+                "7.2.2.2#1",
+                "7.2.2.2#2"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Logistik",
+          "chapterKey": "ui-hq-0024",
+          "chapterNumber": "3",
+          "chapterTitle": "Wertschöpfungskette",
+          "entries": [
+            {
+              "id": "LZ-LO-17",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 1,
+              "sortKey": 17,
+              "detailGroupKey": "dg-hq-0103",
+              "primaryCode": "7.3.1",
+              "crossReferences": [
+                "7.3.1.1",
+                "7.3.1.2",
+                "7.3.1.3"
+              ]
+            },
+            {
+              "id": "LZ-LO-18",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 2,
+              "sortKey": 18,
+              "detailGroupKey": "dg-hq-0104",
+              "primaryCode": "7.3.2.1",
+              "crossReferences": [
+                "7.3.2.1#1",
+                "7.3.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-LO-19",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 3,
+              "sortKey": 19,
+              "detailGroupKey": "dg-hq-0093",
+              "primaryCode": "7.3.2.2",
+              "crossReferences": [
+                "7.3.2.2#1",
+                "7.3.2.2#2"
+              ]
+            },
+            {
+              "id": "LZ-LO-34",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 4,
+              "sortKey": 19.5,
+              "detailGroupKey": "dg-hq-0093",
+              "primaryCode": "7.3.2.2",
+              "crossReferences": [
+                "7.3.2.2#1",
+                "7.3.2.2#2"
+              ]
+            },
+            {
+              "id": "LZ-LO-20",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 5,
+              "sortKey": 20,
+              "detailGroupKey": "dg-hq-0105",
+              "primaryCode": "7.3.3",
+              "crossReferences": [
+                "7.3.3#1",
+                "7.3.3#2",
+                "7.3.3#3"
+              ]
+            },
+            {
+              "id": "LZ-LO-21",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 6,
+              "sortKey": 21,
+              "detailGroupKey": "dg-hq-0113",
+              "primaryCode": "7.3.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-22",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 7,
+              "sortKey": 22,
+              "detailGroupKey": "dg-hq-0106",
+              "primaryCode": "7.3.5",
+              "crossReferences": [
+                "7.3.3#3"
+              ]
+            },
+            {
+              "id": "LZ-LO-35",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 8,
+              "sortKey": 22.5,
+              "detailGroupKey": "dg-hq-0106",
+              "primaryCode": "7.3.5",
+              "crossReferences": [
+                "7.3.2.2"
+              ]
+            },
+            {
+              "id": "LZ-LO-23",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 9,
+              "sortKey": 23,
+              "detailGroupKey": "dg-hq-0102",
+              "primaryCode": "7.3.6",
+              "crossReferences": [
+                "7.5.4",
+                "7.3.6.1",
+                "7.3.6.2",
+                "7.3.6.3",
+                "7.3.6.4"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Logistik",
+          "chapterKey": "ui-hq-0025",
+          "chapterNumber": "4",
+          "chapterTitle": "Aspekte der Rationalisierung",
+          "entries": [
+            {
+              "id": "LZ-LO-24",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 1,
+              "sortKey": 24,
+              "detailGroupKey": "dg-hq-0108",
+              "primaryCode": "7.4.1",
+              "crossReferences": [
+                "7.4.2"
+              ]
+            },
+            {
+              "id": "LZ-LO-25",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 2,
+              "sortKey": 25,
+              "detailGroupKey": "dg-hq-0109",
+              "primaryCode": "7.4.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-LO-26",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 3,
+              "sortKey": 26,
+              "detailGroupKey": "dg-hq-0109",
+              "primaryCode": "7.4.3",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Logistik",
+          "chapterKey": "ui-hq-0026",
+          "chapterNumber": "5",
+          "chapterTitle": "Spezielle Rechtsaspekte",
+          "entries": [
+            {
+              "id": "LZ-LO-27",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 1,
+              "sortKey": 27,
+              "detailGroupKey": "dg-hq-0110",
+              "primaryCode": "7.5.2",
+              "crossReferences": [
+                "7.5.1.1",
+                "7.5.1.2",
+                "7.1.2.1#3"
+              ]
+            },
+            {
+              "id": "LZ-LO-28",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 2,
+              "sortKey": 28,
+              "detailGroupKey": "dg-hq-0111",
+              "primaryCode": "7.5.3",
+              "crossReferences": [
+                "7.4.2",
+                "8.4.1"
+              ]
+            },
+            {
+              "id": "LZ-LO-29",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 3,
+              "sortKey": 29,
+              "detailGroupKey": "dg-hq-0111",
+              "primaryCode": "7.5.3",
+              "crossReferences": [
+                "7.4.2",
+                "8.4.1"
+              ]
+            },
+            {
+              "id": "LZ-LO-30",
+              "ordinalInFach": 35,
+              "ordinalInChapter": 4,
+              "sortKey": 30,
+              "detailGroupKey": "dg-hq-0107",
+              "primaryCode": "7.5.4",
+              "crossReferences": [
+                "7.3.6",
+                "7.3.6.2",
+                "7.3.6.4"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Unternehmensführung",
+      "chapters": [
+        {
+          "fach": "Unternehmensführung",
+          "chapterKey": "ui-wq-0010",
+          "chapterNumber": "1",
+          "chapterTitle": "Betriebsorganisation",
+          "entries": [
+            {
+              "id": "LZ-UF-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-wq-0065",
+              "primaryCode": "4.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-24",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 1.5,
+              "detailGroupKey": "dg-wq-0065",
+              "primaryCode": "4.1.1",
+              "crossReferences": [
+                "4.1.2.1",
+                "4.2.1"
+              ]
+            },
+            {
+              "id": "LZ-UF-02",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 2,
+              "detailGroupKey": "dg-wq-0078",
+              "primaryCode": "4.1.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-03",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 3,
+              "detailGroupKey": "dg-wq-0078",
+              "primaryCode": "4.1.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-04",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 4,
+              "detailGroupKey": "dg-wq-0078",
+              "primaryCode": "4.1.2.3",
+              "crossReferences": [
+                "1.1.3.2#6"
+              ]
+            },
+            {
+              "id": "LZ-UF-26",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 4.333333333,
+              "detailGroupKey": "dg-wq-0078",
+              "primaryCode": "4.1.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-25",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 4.666666667,
+              "detailGroupKey": "dg-wq-0067",
+              "primaryCode": "4.1.3",
+              "crossReferences": [
+                "4.1.3.1",
+                "4.1.3.3"
+              ]
+            },
+            {
+              "id": "LZ-UF-05",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 5,
+              "detailGroupKey": "dg-wq-0067",
+              "primaryCode": "4.1.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-06",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 6,
+              "detailGroupKey": "dg-wq-0067",
+              "primaryCode": "4.1.3.2",
+              "crossReferences": [
+                "4.1.4.2#2"
+              ]
+            },
+            {
+              "id": "LZ-UF-07",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 7,
+              "detailGroupKey": "dg-wq-0067",
+              "primaryCode": "4.1.3.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-08",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 8,
+              "detailGroupKey": "dg-wq-0068",
+              "primaryCode": "4.1.4",
+              "crossReferences": [
+                "4.1.4.1",
+                "4.1.4.2#1",
+                "4.1.4.2#2",
+                "4.1.4.2#3"
+              ]
+            },
+            {
+              "id": "LZ-UF-09",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 9,
+              "detailGroupKey": "dg-wq-0069",
+              "primaryCode": "4.1.5.1",
+              "crossReferences": [
+                "5.4.4.6#3"
+              ]
+            },
+            {
+              "id": "LZ-UF-10",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 13,
+              "sortKey": 10,
+              "detailGroupKey": "dg-wq-0069",
+              "primaryCode": "4.1.5.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-11",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 14,
+              "sortKey": 11,
+              "detailGroupKey": "dg-wq-0069",
+              "primaryCode": "4.1.5.3",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Unternehmensführung",
+          "chapterKey": "ui-wq-0011",
+          "chapterNumber": "2",
+          "chapterTitle": "Personalführung",
+          "entries": [
+            {
+              "id": "LZ-UF-12",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 1,
+              "sortKey": 12,
+              "detailGroupKey": "dg-wq-0079",
+              "primaryCode": "4.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-14",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 2,
+              "sortKey": 14,
+              "detailGroupKey": "dg-wq-0079",
+              "primaryCode": "4.2.2",
+              "crossReferences": [
+                "4.2.2.2",
+                "4.2.2.3"
+              ]
+            },
+            {
+              "id": "LZ-UF-28",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 3,
+              "sortKey": 14.25,
+              "detailGroupKey": "dg-wq-0079",
+              "primaryCode": "4.2.2",
+              "crossReferences": [
+                "4.2.2.2",
+                "4.2.2.3"
+              ]
+            },
+            {
+              "id": "LZ-UF-13",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 4,
+              "sortKey": 14.5,
+              "detailGroupKey": "dg-wq-0079",
+              "primaryCode": "4.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-27",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 5,
+              "sortKey": 14.75,
+              "detailGroupKey": "dg-wq-0079",
+              "primaryCode": "4.2.2.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-15",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 6,
+              "sortKey": 15,
+              "detailGroupKey": "dg-wq-0066",
+              "primaryCode": "4.2.3",
+              "crossReferences": [
+                "9.1.4.2"
+              ]
+            },
+            {
+              "id": "LZ-UF-16",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 7,
+              "sortKey": 16,
+              "detailGroupKey": "dg-wq-0071",
+              "primaryCode": "4.2.4",
+              "crossReferences": [
+                "4.2.4.1",
+                "4.2.4.2",
+                "5.4.4.4",
+                "9.3.1",
+                "9.3.2",
+                "9.3.3"
+              ]
+            },
+            {
+              "id": "LZ-UF-29",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 8,
+              "sortKey": 16.5,
+              "detailGroupKey": "dg-wq-0071",
+              "primaryCode": "4.2.4.2",
+              "crossReferences": [
+                "5.4.4.1#1",
+                "5.4.4.6#3"
+              ]
+            },
+            {
+              "id": "LZ-UF-17",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 9,
+              "sortKey": 17,
+              "detailGroupKey": "dg-wq-0072",
+              "primaryCode": "4.2.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-18",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 10,
+              "sortKey": 18,
+              "detailGroupKey": "dg-wq-0073",
+              "primaryCode": "4.2.6",
+              "crossReferences": [
+                "4.2.5.2"
+              ]
+            },
+            {
+              "id": "LZ-UF-19",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 11,
+              "sortKey": 19,
+              "detailGroupKey": "dg-wq-0074",
+              "primaryCode": "4.2.7",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-30",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 12,
+              "sortKey": 19.5,
+              "detailGroupKey": "dg-wq-0074",
+              "primaryCode": "4.2.7",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-20",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 13,
+              "sortKey": 20,
+              "detailGroupKey": "dg-wq-0075",
+              "primaryCode": "4.2.8",
+              "crossReferences": [
+                "4.2.8.1",
+                "4.2.8.2"
+              ]
+            }
+          ]
+        },
+        {
+          "fach": "Unternehmensführung",
+          "chapterKey": "ui-wq-0012",
+          "chapterNumber": "3",
+          "chapterTitle": "Personalentwicklung",
+          "entries": [
+            {
+              "id": "LZ-UF-21",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 1,
+              "sortKey": 21,
+              "detailGroupKey": "dg-wq-0070",
+              "primaryCode": "4.3.1",
+              "crossReferences": [
+                "4.3.1.1",
+                "4.3.1.2",
+                "4.3.1.3"
+              ]
+            },
+            {
+              "id": "LZ-UF-22",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 2,
+              "sortKey": 22,
+              "detailGroupKey": "dg-wq-0076",
+              "primaryCode": "4.3.2",
+              "crossReferences": [
+                "4.2.5.2"
+              ]
+            },
+            {
+              "id": "LZ-UF-31",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 3,
+              "sortKey": 31,
+              "detailGroupKey": "dg-wq-0076",
+              "primaryCode": "4.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-UF-23",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 4,
+              "sortKey": 32,
+              "detailGroupKey": "dg-wq-0077",
+              "primaryCode": "4.3.3",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Investition und Finanzierung",
+      "chapters": [
+        {
+          "fach": "Investition und Finanzierung",
+          "chapterKey": "ui-hq-0017",
+          "chapterNumber": "1",
+          "chapterTitle": "Investitionsplanung und -rechnung",
+          "entries": [
+            {
+              "id": "LZ-IF-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-hq-0145",
+              "primaryCode": "6.1.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "dg-hq-0145",
+              "primaryCode": "6.1.1.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-03",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 3,
+              "detailGroupKey": "dg-hq-0145",
+              "primaryCode": "6.1.1.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-05",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 5,
+              "detailGroupKey": "dg-hq-0146",
+              "primaryCode": "6.1.2.1",
+              "crossReferences": [
+                "6.1.2.3"
+              ]
+            },
+            {
+              "id": "LZ-IF-06",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 6,
+              "detailGroupKey": "dg-hq-0146",
+              "primaryCode": "6.1.2.2#1",
+              "crossReferences": [
+                "6.4.1.2"
+              ]
+            },
+            {
+              "id": "LZ-IF-07",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 7,
+              "detailGroupKey": "dg-hq-0146",
+              "primaryCode": "6.1.2.2#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-08",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 8,
+              "detailGroupKey": "dg-hq-0146",
+              "primaryCode": "6.1.2.2#3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-09",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 9,
+              "detailGroupKey": "dg-hq-0146",
+              "primaryCode": "6.1.2.2#4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-10",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 10,
+              "detailGroupKey": "dg-hq-0147",
+              "primaryCode": "6.1.2.3",
+              "crossReferences": [
+                "6.1.2.3#1"
+              ]
+            },
+            {
+              "id": "LZ-IF-11",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 11,
+              "detailGroupKey": "dg-hq-0147",
+              "primaryCode": "6.1.2.3#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-34",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 11.5,
+              "detailGroupKey": "dg-hq-0147",
+              "primaryCode": "6.1.2.3#1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-12",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 12,
+              "detailGroupKey": "dg-hq-0147",
+              "primaryCode": "6.1.2.3#2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-13",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 13,
+              "sortKey": 13,
+              "detailGroupKey": "dg-hq-0147",
+              "primaryCode": "6.1.2.3#3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-14",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 14,
+              "sortKey": 14,
+              "detailGroupKey": "dg-hq-0148",
+              "primaryCode": "6.1.2.4",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Investition und Finanzierung",
+          "chapterKey": "ui-hq-0018",
+          "chapterNumber": "2",
+          "chapterTitle": "Finanzplanung und Ermittlung des Finanzbedarfs",
+          "entries": [
+            {
+              "id": "LZ-IF-04",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 1,
+              "sortKey": 14.5,
+              "detailGroupKey": "dg-hq-0144",
+              "primaryCode": "6.2.1",
+              "crossReferences": [
+                "6.1.1.3"
+              ]
+            },
+            {
+              "id": "LZ-IF-15",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 2,
+              "sortKey": 15,
+              "detailGroupKey": "dg-hq-0144",
+              "primaryCode": "6.2.1",
+              "crossReferences": [
+                "6.3.3.4"
+              ]
+            },
+            {
+              "id": "LZ-IF-33",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 3,
+              "sortKey": 15.5,
+              "detailGroupKey": "dg-hq-0144",
+              "primaryCode": "6.2.1",
+              "crossReferences": [
+                "6.2.2.2#1"
+              ]
+            },
+            {
+              "id": "LZ-IF-16",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 4,
+              "sortKey": 16,
+              "detailGroupKey": "dg-hq-0150",
+              "primaryCode": "6.2.2",
+              "crossReferences": [
+                "6.2.2.1#1",
+                "6.2.2.1#3",
+                "6.2.2.1#2",
+                "6.2.2.2#1"
+              ]
+            },
+            {
+              "id": "LZ-IF-23",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 5,
+              "sortKey": 16.333333333,
+              "detailGroupKey": "dg-hq-0150",
+              "primaryCode": "6.2.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-32",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 6,
+              "sortKey": 16.666666667,
+              "detailGroupKey": "dg-hq-0150",
+              "primaryCode": "6.2.2",
+              "crossReferences": [
+                "6.2.2.1#2"
+              ]
+            },
+            {
+              "id": "LZ-IF-17",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 7,
+              "sortKey": 17,
+              "detailGroupKey": "dg-hq-0158",
+              "primaryCode": "6.2.2.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-18",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 8,
+              "sortKey": 18,
+              "detailGroupKey": "dg-hq-0151",
+              "primaryCode": "6.2.2.4",
+              "crossReferences": [
+                "6.2.2.4#1",
+                "6.2.2.4#2",
+                "6.2.2.4#3"
+              ]
+            },
+            {
+              "id": "LZ-IF-19",
+              "ordinalInFach": 23,
+              "ordinalInChapter": 9,
+              "sortKey": 19,
+              "detailGroupKey": "dg-hq-0156",
+              "primaryCode": "6.2.2.5",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-20",
+              "ordinalInFach": 24,
+              "ordinalInChapter": 10,
+              "sortKey": 20,
+              "detailGroupKey": "dg-hq-0149",
+              "primaryCode": "6.2.3.2",
+              "crossReferences": [
+                "6.2.3.1"
+              ]
+            },
+            {
+              "id": "LZ-IF-21",
+              "ordinalInFach": 25,
+              "ordinalInChapter": 11,
+              "sortKey": 21,
+              "detailGroupKey": "dg-hq-0149",
+              "primaryCode": "6.2.3.3",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Investition und Finanzierung",
+          "chapterKey": "ui-hq-0019",
+          "chapterNumber": "3",
+          "chapterTitle": "Finanzierungsarten",
+          "entries": [
+            {
+              "id": "LZ-IF-22",
+              "ordinalInFach": 26,
+              "ordinalInChapter": 1,
+              "sortKey": 22,
+              "detailGroupKey": "dg-hq-0155",
+              "primaryCode": "6.3",
+              "crossReferences": [
+                "6.3.1",
+                "6.3.2"
+              ]
+            },
+            {
+              "id": "LZ-IF-26",
+              "ordinalInFach": 27,
+              "ordinalInChapter": 2,
+              "sortKey": 23,
+              "detailGroupKey": "dg-hq-0152",
+              "primaryCode": "6.3.3",
+              "crossReferences": [
+                "6.3.3.3",
+                "6.3.3.4"
+              ]
+            },
+            {
+              "id": "LZ-IF-24",
+              "ordinalInFach": 28,
+              "ordinalInChapter": 3,
+              "sortKey": 24,
+              "detailGroupKey": "dg-hq-0152",
+              "primaryCode": "6.3.3.1",
+              "crossReferences": [
+                "6.2.2.2#1"
+              ]
+            },
+            {
+              "id": "LZ-IF-25",
+              "ordinalInFach": 29,
+              "ordinalInChapter": 4,
+              "sortKey": 25,
+              "detailGroupKey": "dg-hq-0152",
+              "primaryCode": "6.3.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-27",
+              "ordinalInFach": 30,
+              "ordinalInChapter": 5,
+              "sortKey": 27,
+              "detailGroupKey": "dg-hq-0154",
+              "primaryCode": "6.3.4.1",
+              "crossReferences": [
+                "6.2.2.2#2"
+              ]
+            },
+            {
+              "id": "LZ-IF-28",
+              "ordinalInFach": 31,
+              "ordinalInChapter": 6,
+              "sortKey": 28,
+              "detailGroupKey": "dg-hq-0159",
+              "primaryCode": "6.3.4.2",
+              "crossReferences": [
+                "6.2.2.1#4",
+                "8.2.3.6"
+              ]
+            },
+            {
+              "id": "LZ-IF-29",
+              "ordinalInFach": 32,
+              "ordinalInChapter": 7,
+              "sortKey": 29,
+              "detailGroupKey": "dg-hq-0160",
+              "primaryCode": "6.3.4.3",
+              "crossReferences": [
+                "6.2.2.1#2",
+                "6.2.2.1#3"
+              ]
+            },
+            {
+              "id": "LZ-IF-30",
+              "ordinalInFach": 33,
+              "ordinalInChapter": 8,
+              "sortKey": 30,
+              "detailGroupKey": "dg-hq-0153",
+              "primaryCode": "6.3.4.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-IF-31",
+              "ordinalInFach": 34,
+              "ordinalInChapter": 9,
+              "sortKey": 31,
+              "detailGroupKey": "dg-hq-0153",
+              "primaryCode": "6.3.4.4",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fach": "Betriebliches Rechnungswesen und Controlling",
+      "chapters": [
+        {
+          "fach": "Betriebliches Rechnungswesen und Controlling",
+          "chapterKey": "ui-hq-0020",
+          "chapterNumber": "1",
+          "chapterTitle": "Kosten- und Leistungsrechnung",
+          "entries": [
+            {
+              "id": "LZ-BRC-01",
+              "ordinalInFach": 1,
+              "ordinalInChapter": 1,
+              "sortKey": 1,
+              "detailGroupKey": "dg-hq-0136",
+              "primaryCode": "6.4.1",
+              "crossReferences": [
+                "6.4.1.1",
+                "6.5.4.2"
+              ]
+            },
+            {
+              "id": "LZ-BRC-02",
+              "ordinalInFach": 2,
+              "ordinalInChapter": 2,
+              "sortKey": 2,
+              "detailGroupKey": "dg-hq-0136",
+              "primaryCode": "6.4.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-22",
+              "ordinalInFach": 3,
+              "ordinalInChapter": 3,
+              "sortKey": 2.5,
+              "detailGroupKey": "dg-hq-0136",
+              "primaryCode": "6.4.1.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-03",
+              "ordinalInFach": 4,
+              "ordinalInChapter": 4,
+              "sortKey": 3,
+              "detailGroupKey": "dg-hq-0157",
+              "primaryCode": "6.4.1.2",
+              "crossReferences": [
+                "6.1.2.2#1"
+              ]
+            },
+            {
+              "id": "LZ-BRC-04",
+              "ordinalInFach": 5,
+              "ordinalInChapter": 5,
+              "sortKey": 4,
+              "detailGroupKey": "dg-hq-0136",
+              "primaryCode": "6.4.1.3",
+              "crossReferences": [
+                "8.2.3.1"
+              ]
+            },
+            {
+              "id": "LZ-BRC-05",
+              "ordinalInFach": 6,
+              "ordinalInChapter": 6,
+              "sortKey": 5,
+              "detailGroupKey": "dg-hq-0136",
+              "primaryCode": "6.4.1.4",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-06",
+              "ordinalInFach": 7,
+              "ordinalInChapter": 7,
+              "sortKey": 6,
+              "detailGroupKey": "dg-hq-0137",
+              "primaryCode": "6.4.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-07",
+              "ordinalInFach": 8,
+              "ordinalInChapter": 8,
+              "sortKey": 7,
+              "detailGroupKey": "dg-hq-0138",
+              "primaryCode": "6.4.3.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-08",
+              "ordinalInFach": 9,
+              "ordinalInChapter": 9,
+              "sortKey": 8,
+              "detailGroupKey": "dg-hq-0138",
+              "primaryCode": "6.4.3.2",
+              "crossReferences": [
+                "6.5.4.2"
+              ]
+            },
+            {
+              "id": "LZ-BRC-21",
+              "ordinalInFach": 10,
+              "ordinalInChapter": 10,
+              "sortKey": 8.5,
+              "detailGroupKey": "dg-hq-0138",
+              "primaryCode": "6.4.3.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-09",
+              "ordinalInFach": 11,
+              "ordinalInChapter": 11,
+              "sortKey": 9,
+              "detailGroupKey": "dg-hq-0139",
+              "primaryCode": "6.4.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-10",
+              "ordinalInFach": 12,
+              "ordinalInChapter": 12,
+              "sortKey": 10,
+              "detailGroupKey": "dg-hq-0140",
+              "primaryCode": "6.4.4.2",
+              "crossReferences": []
+            }
+          ]
+        },
+        {
+          "fach": "Betriebliches Rechnungswesen und Controlling",
+          "chapterKey": "ui-hq-0021",
+          "chapterNumber": "2",
+          "chapterTitle": "Controlling",
+          "entries": [
+            {
+              "id": "LZ-BRC-11",
+              "ordinalInFach": 13,
+              "ordinalInChapter": 1,
+              "sortKey": 11,
+              "detailGroupKey": "dg-hq-0141",
+              "primaryCode": "6.5.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-12",
+              "ordinalInFach": 14,
+              "ordinalInChapter": 2,
+              "sortKey": 12,
+              "detailGroupKey": "dg-hq-0141",
+              "primaryCode": "6.5.2",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-13",
+              "ordinalInFach": 15,
+              "ordinalInChapter": 3,
+              "sortKey": 13,
+              "detailGroupKey": "dg-hq-0141",
+              "primaryCode": "6.5.3",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-14",
+              "ordinalInFach": 16,
+              "ordinalInChapter": 4,
+              "sortKey": 14,
+              "detailGroupKey": "dg-hq-0142",
+              "primaryCode": "6.5.4",
+              "crossReferences": [
+                "6.5.4.1",
+                "6.5.4.2"
+              ]
+            },
+            {
+              "id": "LZ-BRC-15",
+              "ordinalInFach": 17,
+              "ordinalInChapter": 5,
+              "sortKey": 15,
+              "detailGroupKey": "dg-hq-0142",
+              "primaryCode": "6.5.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-16",
+              "ordinalInFach": 18,
+              "ordinalInChapter": 6,
+              "sortKey": 16,
+              "detailGroupKey": "dg-hq-0142",
+              "primaryCode": "6.5.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-17",
+              "ordinalInFach": 19,
+              "ordinalInChapter": 7,
+              "sortKey": 17,
+              "detailGroupKey": "dg-hq-0142",
+              "primaryCode": "6.5.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-18",
+              "ordinalInFach": 20,
+              "ordinalInChapter": 8,
+              "sortKey": 18,
+              "detailGroupKey": "dg-hq-0142",
+              "primaryCode": "6.5.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-19",
+              "ordinalInFach": 21,
+              "ordinalInChapter": 9,
+              "sortKey": 19,
+              "detailGroupKey": "dg-hq-0142",
+              "primaryCode": "6.5.4.1",
+              "crossReferences": []
+            },
+            {
+              "id": "LZ-BRC-20",
+              "ordinalInFach": 22,
+              "ordinalInChapter": 10,
+              "sortKey": 20,
+              "detailGroupKey": "dg-hq-0143",
+              "primaryCode": "6.5.4.2",
+              "crossReferences": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totalIDs": 521,
+  "visibleChapters": 48,
+  "detailGroups": 196,
+  "referenceOnlyDetailGroups": [
+    "dg-hq-0015",
+    "dg-hq-0024",
+    "dg-wq-0064",
+    "dg-hq-0096",
+    "dg-hq-0101",
+    "dg-hq-0161"
+  ],
+  "orderRule": "Numerischer sortKey für Sheet/API; ordinalInFach für fortlaufende Sollposition. Querverweise erzeugen keinen zweiten Sequenzeintrag."
+}

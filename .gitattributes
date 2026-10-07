@@ -1,0 +1,2 @@
+# Releaseartefakte werden bytegenau gehasht. Keine Zeilenenden-Konvertierung.
+release/WIFA-GESAMT-PROD-20261007-RC1/**/*.json -text

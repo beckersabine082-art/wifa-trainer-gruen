@@ -19,15 +19,23 @@ const MIME = Object.freeze({
   '.svg': 'image/svg+xml'
 });
 
-function injectStagingRuntime(html) {
-  const marker = '<script>window.WIFA_PODCAST_STORAGE_PREFIX=' + JSON.stringify(STAGING_PODCAST_PREFIX)
-    + ';window.WIFA_STAGING_PREVIEW=true;</script>\n';
+function injectStagingRuntime(html, { diagnostic = false } = {}) {
+  const productionEnvironment = '<script>window.WIFA_RELEASE_ENVIRONMENT="PRODUCTION";</script>';
+  const stagingEnvironment = '<script>window.WIFA_RELEASE_ENVIRONMENT="STAGING";window.WIFA_STAGING_PREVIEW=true;</script>';
   const anchor = '<script src="js/api.js"></script>';
-  if (!String(html).includes(anchor)) throw new Error('Staging-Preview: API-Skriptanker fehlt');
+  if (!String(html).includes(productionEnvironment) || !String(html).includes(anchor)) {
+    throw new Error('Staging-Preview: Runtime-/API-Skriptanker fehlt');
+  }
   const directOpen = '<script>window.addEventListener("load",function(){setTimeout(function(){'
     + "window.requireAuth('lerntextePodcastView');"
     + '},0);});</script>\n';
-  return String(html).replace(anchor, marker + anchor).replace('</body>', directOpen + '</body>');
+  const diagnosticScripts = diagnostic
+    ? '<script src="tools/podcast-sync/staging-storage-diagnostic-core.js"></script>\n'
+      + '<script type="module" src="tools/podcast-sync/staging-storage-diagnostic.mjs"></script>\n'
+    : '';
+  return String(html)
+    .replace(productionEnvironment, stagingEnvironment)
+    .replace('</body>', directOpen + diagnosticScripts + '</body>');
 }
 
 function rewriteApiUrl(source, apiUrl) {
@@ -52,7 +60,11 @@ function createServer({ apiUrl = DEFAULT_STAGING_API_URL } = {}) {
   rewriteApiUrl('const API_BASE_URL = "https://example.invalid";', apiUrl);
   return http.createServer((request, response) => {
     let filePath;
-    try { filePath = safePath(new URL(request.url, 'http://127.0.0.1').pathname); }
+    let requestUrl;
+    try {
+      requestUrl = new URL(request.url, 'http://127.0.0.1');
+      filePath = safePath(requestUrl.pathname);
+    }
     catch (error) { response.writeHead(400).end(error.message); return; }
     if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
       response.writeHead(404).end('Not found');
@@ -61,7 +73,9 @@ function createServer({ apiUrl = DEFAULT_STAGING_API_URL } = {}) {
     try {
       let body = fs.readFileSync(filePath);
       const relative = path.relative(ROOT, filePath).replace(/\\/g, '/');
-      if (relative === 'index.html') body = Buffer.from(injectStagingRuntime(body.toString('utf8')));
+      if (relative === 'index.html') body = Buffer.from(injectStagingRuntime(body.toString('utf8'), {
+        diagnostic: requestUrl.searchParams.get('podcastDiagnostic') === '1'
+      }));
       if (relative === 'js/api.js') body = Buffer.from(rewriteApiUrl(body.toString('utf8'), apiUrl));
       response.writeHead(200, {
         'Cache-Control': 'no-store',

@@ -60,7 +60,7 @@
   function validateContinuousBundle(input) {
     if (!isRecord(input)) return invalid('input');
     const { manifest, manifestHash, mp3Metadata, currentEntries, expectedFach, expectedMp3Prefix,
-      expectedStoragePrefix } = input;
+      expectedStoragePrefix, expectedBundleVersion } = input;
     let paths;
     try { paths = continuousPodcastPaths(expectedFach, expectedStoragePrefix ? { prefix: expectedStoragePrefix } : undefined); }
     catch { return invalid('subject'); }
@@ -72,6 +72,7 @@
     if (versioned && (typeof manifest.bundleVersion !== 'string' || !manifest.bundleVersion.trim())) {
       return invalid('bundle-version');
     }
+    if (versioned && expectedBundleVersion && manifest.bundleVersion !== expectedBundleVersion) return invalid('bundle-version');
     if (!isSha256(manifest.bundleHash) || !isSha256(manifestHash) ||
         manifest.mp3Path !== expectedMp3Prefix + manifest.bundleHash + '.mp3') {
       return invalid('bundle-path');

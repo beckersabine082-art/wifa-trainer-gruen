@@ -3,11 +3,12 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const { buildAppsScriptSource } = require('../tools/release/build-apps-script');
 
-const source = fs.readFileSync(
+const source = buildAppsScriptSource(fs.readFileSync(
   path.join(__dirname, '../backend/apps-script/Code.gs'),
   'utf8'
-);
+), 'STAGING');
 const apiSource = fs.readFileSync(
   path.join(__dirname, '../js/api.js'),
   'utf8'

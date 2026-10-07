@@ -1,0 +1,1116 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "version": "WIFA-PODCAST-PROD-LZREV2-20261007-v1",
+  "sourceVersion": "WIFA-PODCAST-STAGING-LZREV2-20261004-v1",
+  "sourcePrefix": "podcast/staging/lerntext-rev2/",
+  "targetPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/",
+  "storageWritesPerformed": false,
+  "hashContract": {
+    "sourceIdentitySha256": "SHA-256(JSON([sourcePath,sourceGeneration,size,contentType]))",
+    "runtimeContentSha256": "Bundle SHA-256 for MP3; manifest SHA-256 for sidecar JSON",
+    "copyPrecondition": "sourceGeneration must match before server-side copy"
+  },
+  "objects": [
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-einsatzfelder-der-personalentwicklung.json",
+      "sourceGeneration": "1791128916710434",
+      "sourceIdentitySha256": "28cdb975be81da0d73be681601bbb48a4b7302acd0baecacec827f09cea9216e",
+      "contentSha256": null,
+      "size": 30670,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-einsatzfelder-der-personalentwicklung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-einsatzfelder-der-personalentwicklung.mp3",
+      "sourceGeneration": "1791128916397601",
+      "sourceIdentitySha256": "9c0d21731bfb28c9c8e93483d227fba8fc512665405b3127e6e39bee6fae1ec3",
+      "contentSha256": null,
+      "size": 1555479,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-einsatzfelder-der-personalentwicklung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.json",
+      "sourceGeneration": "1791128876547026",
+      "sourceIdentitySha256": "29c903109c9fbdfc1b683d420b794168e518885946cf04fc5c8ca917519069cc",
+      "contentSha256": null,
+      "size": 31512,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.mp3",
+      "sourceGeneration": "1791128876338533",
+      "sourceIdentitySha256": "c292c936e2628f1a3ec4a078b597473988d78a699a26106c4265ebd298958820",
+      "contentSha256": null,
+      "size": 1548582,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-stellenbeschreibung-und-anforderungsprofil.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.json",
+      "sourceGeneration": "1791128963822766",
+      "sourceIdentitySha256": "cb6e99f0b0b24d80a71b22fa1b8707b306ad7a25ed95f8dc29b3c751860f80d5",
+      "contentSha256": null,
+      "size": 40892,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.mp3",
+      "sourceGeneration": "1791128963475940",
+      "sourceIdentitySha256": "79189a69e793a45c3073a817ad8172ece91ccfc91b775b4fb1df3fc87363667d",
+      "contentSha256": null,
+      "size": 1924119,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/betriebliches-management-termin-meilenstein-ablauf-und-risikoplanung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/bwl-einzelunternehmen-und-gbr-egbr.json",
+      "sourceGeneration": "1791130264105958",
+      "sourceIdentitySha256": "d4f13a01c160700312fed7fc661097582b7a1b03b2becd40ff5cc737137f747e",
+      "contentSha256": null,
+      "size": 43680,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-einzelunternehmen-und-gbr-egbr.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/bwl-einzelunternehmen-und-gbr-egbr.mp3",
+      "sourceGeneration": "1791130263892010",
+      "sourceIdentitySha256": "6aed05f8d787a49899b4a89557a0f0bc5c232f9fb4a15b823280c8b83b2b4d86",
+      "contentSha256": null,
+      "size": 1900608,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-einzelunternehmen-und-gbr-egbr.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.json",
+      "sourceGeneration": "1791130303188587",
+      "sourceIdentitySha256": "c4d775b75756895a80b292843196b5cc49c9e142530486eece0968d3c7d2e24c",
+      "contentSha256": null,
+      "size": 64911,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.mp3",
+      "sourceGeneration": "1791130302920566",
+      "sourceIdentitySha256": "451f89cca5c9aa7314e1d6249764650d24f933953e153e4efc7e53c5a2586293",
+      "contentSha256": null,
+      "size": 2951358,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-haftung-geschaeftsfuehrung-und-vertretung-im-vergleich.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/bwl-teilbereiche-des-rechnungswesens.json",
+      "sourceGeneration": "1791130237280371",
+      "sourceIdentitySha256": "e8f8fa0192a321f92a920ceb1017f4f42ce2384f3d209a062357c4f7ca9d1c01",
+      "contentSha256": null,
+      "size": 45559,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-teilbereiche-des-rechnungswesens.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/bwl-teilbereiche-des-rechnungswesens.mp3",
+      "sourceGeneration": "1791130237064521",
+      "sourceIdentitySha256": "c20ff475e8707e8664d7aa672862705df8742ea739469899c59808089211555c",
+      "contentSha256": null,
+      "size": 2226617,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/bwl-teilbereiche-des-rechnungswesens.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-management.json",
+      "sourceGeneration": "1791131279222558",
+      "sourceIdentitySha256": "d293838def065d6df4dd148ed523f111891692778fbb46f055791466bc0bab1a",
+      "contentSha256": "f59c6bf36e8c17ba00f4adc9b90f216e2b1a94a318e87f03803d19b88f70e124",
+      "size": 753806,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-management.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-management/3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10.mp3",
+      "sourceGeneration": "1791131171821516",
+      "sourceIdentitySha256": "41c83f3c77299280b260f5e82df607b11435a248a2a65e538cbfc9341fde37d6",
+      "contentSha256": "3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10",
+      "size": 50801206,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-management/3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-rechnungswesen-und-controlling.json",
+      "sourceGeneration": "1791135506767658",
+      "sourceIdentitySha256": "650cfa85ebb1503c6d323ce3b090d8e091234ce726bbc4585023cec02580c363",
+      "contentSha256": "cbf908db785edafc9e4e62f33973301b1d96b39ab6162342b0d05ccae15a3aba",
+      "size": 644645,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-rechnungswesen-und-controlling.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/betriebliches-rechnungswesen-und-controlling/91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66.mp3",
+      "sourceGeneration": "1791135415672919",
+      "sourceIdentitySha256": "301292d4c474b44779229712a1f879859ff375acaee46f577a234447d2d1b148",
+      "contentSha256": "91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66",
+      "size": 43125908,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/betriebliches-rechnungswesen-und-controlling/91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/bwl.json",
+      "sourceGeneration": "1791134086928082",
+      "sourceIdentitySha256": "40df2d4a2de3aaffce3379c1d42e07aa14f0273bab6b275941ed8adffae1a372",
+      "contentSha256": "5aba221e9c5af4984c42b830e2f5fb5e1c679b8cfe2f4cfc51d31ebbb9eec1b5",
+      "size": 1000634,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/bwl.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/bwl/e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12.mp3",
+      "sourceGeneration": "1791133953604436",
+      "sourceIdentitySha256": "45aeeeb0f66296b98c41dd9f00a929456a7e72243185a70ad86df4f7f02cf5a4",
+      "contentSha256": "e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12",
+      "size": 72011172,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/bwl/e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/fuehrung-und-zusammenarbeit.json",
+      "sourceGeneration": "1791130911979646",
+      "sourceIdentitySha256": "e6d3feeaf58fa9e3adb0199d393b009f31b6ccc48e09f0b4d726610c3881a2f9",
+      "contentSha256": "05433c8aec6361892c2d510943ea67e4cacd8bcada2c716b455834908b8392ea",
+      "size": 1176801,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/fuehrung-und-zusammenarbeit.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/fuehrung-und-zusammenarbeit/5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c.mp3",
+      "sourceGeneration": "1791130769650065",
+      "sourceIdentitySha256": "0f8430ca5df8a7432a714d76e77df3fbd1127d1e6026fb267d3f114200b77a9f",
+      "contentSha256": "5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c",
+      "size": 78025709,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/fuehrung-und-zusammenarbeit/5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/investition-und-finanzierung.json",
+      "sourceGeneration": "1791135208677213",
+      "sourceIdentitySha256": "8966736ee7281d6c155fa2c73358c46d341be908625657de8fff589031669912",
+      "contentSha256": "4769491d9b2be54dfa88ab4a562f0973ea09f13c4d2423e7d012b7fe91d9f2f6",
+      "size": 631539,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/investition-und-finanzierung.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/investition-und-finanzierung/c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077.mp3",
+      "sourceGeneration": "1791135108414734",
+      "sourceIdentitySha256": "a3f76e4359c0a9b71a7ecfddcd0e4275f3ddd659d5161a49e8ae011421b85dce",
+      "contentSha256": "c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077",
+      "size": 43849709,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/investition-und-finanzierung/c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/logistik.json",
+      "sourceGeneration": "1791134485363311",
+      "sourceIdentitySha256": "401a4aa2fb072a2adad68af7ee19d92c9c2cddf9c803e35c962aa3d57d329051",
+      "contentSha256": "4f95e9b5e2fcffe0cfc0f56df6b4d428a602db2d5e879474ac896bc848f8f281",
+      "size": 878967,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/logistik.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/logistik/c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c.mp3",
+      "sourceGeneration": "1791134366899304",
+      "sourceIdentitySha256": "750a06c6e173f895cd6dcddfdb412433a22c332822638b4517daa1248b6d97ee",
+      "contentSha256": "c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c",
+      "size": 60603080,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/logistik/c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/marketing.json",
+      "sourceGeneration": "1791132469719715",
+      "sourceIdentitySha256": "cc5c8d5b8b6385e2c9b1f437ef9091d3b888f53ff7460449089f3f4696a93a69",
+      "contentSha256": "16ab459878f8a4c002817ec61cdaa3b9cbd1b53d2f79c03c6ae03803b2315adf",
+      "size": 553294,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/marketing.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/marketing/6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878.mp3",
+      "sourceGeneration": "1791132380119855",
+      "sourceIdentitySha256": "228f86499bc50cf95c8b3db4804bca6854097c86ea933cba5185e3b5e71fd779",
+      "contentSha256": "6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878",
+      "size": 36137735,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/marketing/6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/rechnungswesen.json",
+      "sourceGeneration": "1791131690418967",
+      "sourceIdentitySha256": "2a121b2ca689c2b3b7762a59cd0ba240df6fdaad9c766da92d902ee59893dad9",
+      "contentSha256": "08f8573708f6a92f0268142b02994cc7cdd65a1adabeec606dde7407396a557a",
+      "size": 895424,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/rechnungswesen.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/rechnungswesen/0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8.mp3",
+      "sourceGeneration": "1791131567915371",
+      "sourceIdentitySha256": "4f509be97c94269a840f36c2e3c64bf425a22a83ee7eb605b4a11bf343d49d11",
+      "contentSha256": "0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8",
+      "size": 64003596,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/rechnungswesen/0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/recht.json",
+      "sourceGeneration": "1791133331652448",
+      "sourceIdentitySha256": "f3a375c5bca9fbefb7d77e7eeccfe8807c1a590f0aee33fdbdf965712a973cac",
+      "contentSha256": "c5003c8d050080fa0ef795615ad751dc0d5baec7b251af8cb082e5843ad4ae3c",
+      "size": 1609876,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/recht.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/recht/a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97.mp3",
+      "sourceGeneration": "1791133145372723",
+      "sourceIdentitySha256": "6c14fa3cada3c692f5ebd94527ec31c57314d6a40f8f0bd73f9ad50eefc1aa3a",
+      "contentSha256": "a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97",
+      "size": 111318352,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/recht/a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/steuern.json",
+      "sourceGeneration": "1791132165989192",
+      "sourceIdentitySha256": "03cf643d4d8acb9ec506421ebb4a7c6e85be10241b6b96eb95e1bbbcce88dca2",
+      "contentSha256": "16864f1b5ba8532f6146869e763dcac98b8dcd27ff91a344f0220b81f455032f",
+      "size": 1157963,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/steuern.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/steuern/59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849.mp3",
+      "sourceGeneration": "1791132023529872",
+      "sourceIdentitySha256": "a08ebed428b7072c34f1c66d72f5fca18c30298b71e7cb098c64d47943a0788a",
+      "contentSha256": "59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849",
+      "size": 79606535,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/steuern/59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/unternehmensfuehrung.json",
+      "sourceGeneration": "1791134882606107",
+      "sourceIdentitySha256": "3a140043046a703fba6e6b72e9d93c4ef344ea2eb49a3882680fe7b17b177ccc",
+      "contentSha256": "f42cdb65fd04bcbbe0830121e8c82925a71ba7c0d299f24f2173e50ec2f70ac8",
+      "size": 897802,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/unternehmensfuehrung.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/unternehmensfuehrung/6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255.mp3",
+      "sourceGeneration": "1791134766670776",
+      "sourceIdentitySha256": "a95c76d06c1c6d82d4f5999937b378c699dbdc77ff0db828b56ab7476ea1324d",
+      "contentSha256": "6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255",
+      "size": 62143155,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/unternehmensfuehrung/6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/vertrieb.json",
+      "sourceGeneration": "1791132702718734",
+      "sourceIdentitySha256": "35c4d623509372747e511bd2bf971fa0868208181fffc8933fc1030f638848f1",
+      "contentSha256": "8c8418b38561ee44e4d333ead65c00bed2b3da7addd5f9bd7ebc4c9a3f1a4d09",
+      "size": 469135,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vertrieb.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/vertrieb/a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265.mp3",
+      "sourceGeneration": "1791132622784141",
+      "sourceIdentitySha256": "955720e9bda3d3af695bdf5a195808ae7da1bab725e2a7ab183030e01cef8224",
+      "contentSha256": "a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265",
+      "size": 33076706,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vertrieb/a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/vwl.json",
+      "sourceGeneration": "1791133640812894",
+      "sourceIdentitySha256": "60b5df17e4492e9baae4f2fc0d7488f0e7248a81800c0fa415d2ca5ecfd25d21",
+      "contentSha256": "b92b462e9e51d5485d2e48b7a53ecd75ac8a847a3548a7ccc47d17d594649850",
+      "size": 489905,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vwl.json",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/continuous/vwl/024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f.mp3",
+      "sourceGeneration": "1791133552845583",
+      "sourceIdentitySha256": "c82db7968c1db836f9e06358085b7f8b7d380370e40800e28f2c5efab65e0389",
+      "contentSha256": "024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f",
+      "size": 32483309,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/continuous/vwl/024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f.mp3",
+      "runtimeClientObject": true
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.json",
+      "sourceGeneration": "1791128797432363",
+      "sourceIdentitySha256": "a97ba16c03f9c7ac1970677ccb68ee94c21decec819c741f01f66366a508b3c9",
+      "contentSha256": null,
+      "size": 33514,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.mp3",
+      "sourceGeneration": "1791128797150923",
+      "sourceIdentitySha256": "6306f287a9ea6ffda75efdfc871b6b185c1cfa658a97d19bdc8ed42877611392",
+      "contentSha256": null,
+      "size": 1574600,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-beteiligte-und-kooperation-in-der-ausbildung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.json",
+      "sourceGeneration": "1791128837804642",
+      "sourceIdentitySha256": "c8ba61cd3acc98087116b209bd8fe911e1a6cd85fe9bb46a79fd00521e064048",
+      "contentSha256": null,
+      "size": 37221,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.mp3",
+      "sourceGeneration": "1791128837561341",
+      "sourceIdentitySha256": "bd07bc080c7135825ef3b7c22b679f3410fd23efeba52f8a77a03946582ffd33",
+      "contentSha256": null,
+      "size": 1595289,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-pruefungen-ausbildungsabschluss-und-wiederholung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.json",
+      "sourceGeneration": "1791128758223952",
+      "sourceIdentitySha256": "d2d3dbde55d0c2c00c522c2dc74931363577273b2b34f4add130b5554b679821",
+      "contentSha256": null,
+      "size": 43440,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.mp3",
+      "sourceGeneration": "1791128757909791",
+      "sourceIdentitySha256": "f5ce925f9750ca48b92d9976bc2823475c551cc18e754c5235302bf834443b98",
+      "contentSha256": null,
+      "size": 2092452,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/fuehrung-und-zusammenarbeit-rechtliche-rahmenbedingungen-der-berufsausbildung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.json",
+      "sourceGeneration": "1791130412503880",
+      "sourceIdentitySha256": "434c2d571c3d2c540fcbbeddc24af8cd8ca78669efa00906a9dfa6ccd2f57064",
+      "contentSha256": null,
+      "size": 42190,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.mp3",
+      "sourceGeneration": "1791130412285247",
+      "sourceIdentitySha256": "d1b9a87a2646e7c9fcd131401eb8c1d75c3b5cd4cea5f8f2e0a8c598e9682485",
+      "contentSha256": null,
+      "size": 2106558,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/investition-und-finanzierung-finanzierungsplanung-und-kapitalstruktur.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/marketing-porters-five-forces-und-konkurrenzanalyse.json",
+      "sourceGeneration": "1791129492911844",
+      "sourceIdentitySha256": "0f75c4010bc2fb6f47127a1a1a5b739803bf95472f9a59579cc7c55c42b0d2b2",
+      "contentSha256": null,
+      "size": 30899,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/marketing-porters-five-forces-und-konkurrenzanalyse.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/marketing-porters-five-forces-und-konkurrenzanalyse.mp3",
+      "sourceGeneration": "1791129492635691",
+      "sourceIdentitySha256": "783159671407385341dfb19eb6fcc801c8b28d37c8bd156470d6747266ef568e",
+      "contentSha256": null,
+      "size": 1461438,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/marketing-porters-five-forces-und-konkurrenzanalyse.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-aufbau-und-logik-der-bilanz.json",
+      "sourceGeneration": "1791129074572053",
+      "sourceIdentitySha256": "75648d1b5b1f60e66e2a5ba966f7e44cd05a6f952af9568a174d8755a7bf9a82",
+      "contentSha256": null,
+      "size": 37215,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-aufbau-und-logik-der-bilanz.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-aufbau-und-logik-der-bilanz.mp3",
+      "sourceGeneration": "1791129074295726",
+      "sourceIdentitySha256": "6f4d43c33b877343f46c7a00743d5f020948b05319d49ea2cd3f3ee759cdd079",
+      "contentSha256": null,
+      "size": 1745128,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-aufbau-und-logik-der-bilanz.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.json",
+      "sourceGeneration": "1791129030724626",
+      "sourceIdentitySha256": "2ae5008cca140a58a70034509b339575dafbde6f5869cdf84f1eb7d0e0369281",
+      "contentSha256": null,
+      "size": 63605,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.mp3",
+      "sourceGeneration": "1791129030329314",
+      "sourceIdentitySha256": "7a4453b895a8bbf5e2c20efc9007fbf8dfa595073972611aa440ef62cdedd5e2",
+      "contentSha256": null,
+      "size": 3046026,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/rechnungswesen-bilanzierungs-und-bewertungsgrundsaetze.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.json",
+      "sourceGeneration": "1791130080764935",
+      "sourceIdentitySha256": "a3c9c9a2b6de8f70b8bb29fd2e9e1d79fabeef75441e5baff77f6fdcd2c031ee",
+      "contentSha256": null,
+      "size": 74752,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.mp3",
+      "sourceGeneration": "1791130080489652",
+      "sourceIdentitySha256": "4b48fc2fb7badfc57e0ddba606f833abd3838476abd8ca51251ab9a6324d4324",
+      "contentSha256": null,
+      "size": 3574535,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-arbeitsschutz-arbeitszeit-urlaub-und-besonderer-schutz.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-besondere-kaufkonstellationen.json",
+      "sourceGeneration": "1791129858754087",
+      "sourceIdentitySha256": "76155c6184807d5b40e0fc37bd964f2b28a103a06b55906cff7ca5a37acbaa34",
+      "contentSha256": null,
+      "size": 67824,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-besondere-kaufkonstellationen.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-besondere-kaufkonstellationen.mp3",
+      "sourceGeneration": "1791129858346433",
+      "sourceIdentitySha256": "c60ba1e710cf2f275032bc3b8d591a0a899d66a8028182db2358def021090279",
+      "contentSha256": null,
+      "size": 3346956,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-besondere-kaufkonstellationen.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.json",
+      "sourceGeneration": "1791130018647136",
+      "sourceIdentitySha256": "ffed5e80185311c6716d41d4c16c6a0315123c3443dd4691b7810068195a6a8f",
+      "contentSha256": null,
+      "size": 51319,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.mp3",
+      "sourceGeneration": "1791130018421678",
+      "sourceIdentitySha256": "8baa3a0e87121ed4a97e8e5712ef59a87256e6025851914835ed154acf6e814e",
+      "contentSha256": null,
+      "size": 2518770,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-fernabsatz-und-elektronischer-geschaeftsverkehr.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-form-nichtigkeit-und-anfechtung.json",
+      "sourceGeneration": "1791129625024501",
+      "sourceIdentitySha256": "1c402c701ce569c30d500b8b100224892ccb9a17fb81555b73c36faa1febd1aa",
+      "contentSha256": null,
+      "size": 40298,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-form-nichtigkeit-und-anfechtung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-form-nichtigkeit-und-anfechtung.mp3",
+      "sourceGeneration": "1791129624689296",
+      "sourceIdentitySha256": "2f75e13c1ed627a6899d96353d1650950af3ac6a23cdedd0e39f73f269af4bd4",
+      "contentSha256": null,
+      "size": 2034773,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-form-nichtigkeit-und-anfechtung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.json",
+      "sourceGeneration": "1791129814080216",
+      "sourceIdentitySha256": "5c742256e029fd88de9785b5db5f5a2297c6032bb5894b07ff6e8f90ef1fd603",
+      "contentSha256": null,
+      "size": 58793,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.mp3",
+      "sourceGeneration": "1791129813749620",
+      "sourceIdentitySha256": "a604697eed6c768489cdaa8e40c97da9ea2796343ea0efbe364ca1b5e41d141b",
+      "contentSha256": null,
+      "size": 2695253,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistung-kenntnis-verjaehrung-und-verbraucherschutz.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.json",
+      "sourceGeneration": "1791129777408788",
+      "sourceIdentitySha256": "c74209d13ae47ea59acfe5b35e02d001451a96b0858d4dbd216e2119f6b9b8e6",
+      "contentSha256": null,
+      "size": 49550,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.mp3",
+      "sourceGeneration": "1791129777036429",
+      "sourceIdentitySha256": "130c05924a11343bbc1e2de968241de18e43e4647c33e163db6fa60a42109d51",
+      "contentSha256": null,
+      "size": 2225676,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-gewaehrleistungsrechte-und-vorrang-der-nacherfuellung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-mietvertrag-und-pachtvertrag.json",
+      "sourceGeneration": "1791129910550268",
+      "sourceIdentitySha256": "96cee4bfb574231e46e21f8ce69a3af430cc2953736284fd4c4f9a4f523e6800",
+      "contentSha256": null,
+      "size": 52945,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-mietvertrag-und-pachtvertrag.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-mietvertrag-und-pachtvertrag.mp3",
+      "sourceGeneration": "1791129910311774",
+      "sourceIdentitySha256": "7c76a5e800a9edaaa389b989b57553cba879338e587c80e95ab33a1e5743f3a0",
+      "contentSha256": null,
+      "size": 2482408,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-mietvertrag-und-pachtvertrag.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.json",
+      "sourceGeneration": "1791129724440037",
+      "sourceIdentitySha256": "4f56891279e3f8db4c218d56f06aed9aabae8fc9d1062fcad1e499cfe9457264",
+      "contentSha256": null,
+      "size": 40432,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.mp3",
+      "sourceGeneration": "1791129724126142",
+      "sourceIdentitySha256": "7860ad9bb85c115968079584546d209bd1cc42da992d698c1c8248ed4dd3e146",
+      "contentSha256": null,
+      "size": 1844184,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-sachmangel-rechtsmangel-und-mangelzeitpunkt.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.json",
+      "sourceGeneration": "1791129679214117",
+      "sourceIdentitySha256": "bc8ff37201b512cdf11df0df6d292a842afd1bf2a2a69826669c8d5ef1132d36",
+      "contentSha256": null,
+      "size": 51503,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.mp3",
+      "sourceGeneration": "1791129678912641",
+      "sourceIdentitySha256": "da27f0c903efc7a485cbef2c9947d219a78a7612197406a272c569b826975d51",
+      "contentSha256": null,
+      "size": 2365170,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-schuldverhaeltnisse-glaeubiger-und-schuldner.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.json",
+      "sourceGeneration": "1791129963747760",
+      "sourceIdentitySha256": "44e1bd8c86c35a3524273d7ada26ac53314ba6c6b06fa132833bd1d56a9a6388",
+      "contentSha256": null,
+      "size": 51945,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.mp3",
+      "sourceGeneration": "1791129963497169",
+      "sourceIdentitySha256": "16990a7586edcd30398e15d87b6e8ba9dc276b8090e08fada22ec459c8c278fa",
+      "contentSha256": null,
+      "size": 2553252,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/recht-unmoeglichkeit-ruecktritt-und-schadensersatz.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.json",
+      "sourceGeneration": "1791129455862577",
+      "sourceIdentitySha256": "035fb63b6ee477ab9baeca6654c30874f39f940524512296976f4f273bd1c824",
+      "contentSha256": null,
+      "size": 46016,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.mp3",
+      "sourceGeneration": "1791129455571883",
+      "sourceIdentitySha256": "35eb8f437f1f3e99074cf3989783e473da0f57501657e5072ce63f201bc74895",
+      "contentSha256": null,
+      "size": 2124426,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-aufbau-der-ao-und-merkmale-eines-steuerverwaltungsakts.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.json",
+      "sourceGeneration": "1791129172510165",
+      "sourceIdentitySha256": "31d66d372f0f02bdb23e398e7fa505a90d2ffeaafeccb5bf3db3be950a71cfc7",
+      "contentSha256": null,
+      "size": 38668,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.mp3",
+      "sourceGeneration": "1791129172247096",
+      "sourceIdentitySha256": "2f20e5c44eb53d3d374880af596d908a92a5c65d142704a5adad0e0432f6f9be",
+      "contentSha256": null,
+      "size": 1816285,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-gewerbebetrieb-mitunternehmerschaft-und-sonderverguetungen.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.json",
+      "sourceGeneration": "1791129267838842",
+      "sourceIdentitySha256": "d466d06edeb40acf07127ee7738f51a7d053d06bd7f9ecaff550c2ceda317294",
+      "contentSha256": null,
+      "size": 40323,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.mp3",
+      "sourceGeneration": "1791129267551121",
+      "sourceIdentitySha256": "93d891f25d55865baba38ed8e433d35f5a94fa1e7c717732e2a53f628ec930c9",
+      "contentSha256": null,
+      "size": 2063299,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-kapitalertragsteuer-und-besteuerung-von-dividenden.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.json",
+      "sourceGeneration": "1791129218836027",
+      "sourceIdentitySha256": "49cdbf589a79dfab9707f0e3c01dba32e2f3c4f5ba9609b23ca0b41c05be37f9",
+      "contentSha256": null,
+      "size": 37581,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.mp3",
+      "sourceGeneration": "1791129218553431",
+      "sourceIdentitySha256": "2937691bee38c2d930119da222e7dd634644180100535d526dd415b2281ff2e1",
+      "contentSha256": null,
+      "size": 1957033,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-koerperschaftsteuersatz-veranlagung-und-zahlung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.json",
+      "sourceGeneration": "1791129126857970",
+      "sourceIdentitySha256": "a22500d966a68bddd88427519e2a3912c344bfbbda4ef0af01f47eb29e819df6",
+      "contentSha256": null,
+      "size": 45540,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.mp3",
+      "sourceGeneration": "1791129126525972",
+      "sourceIdentitySha256": "71e018357a9148c82bf99834bb24ae1bf21227c16206c985e54ba6471397d20a",
+      "contentSha256": null,
+      "size": 2317836,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-sieben-einkunftsarten-und-ermittlung-der-einkuenfte.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.json",
+      "sourceGeneration": "1791129404971429",
+      "sourceIdentitySha256": "c1edbf7df15a849adef1cfb4fb94e74078f4ed581ac2e6b4733755e1f15206f8",
+      "contentSha256": null,
+      "size": 39470,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.mp3",
+      "sourceGeneration": "1791129404759823",
+      "sourceIdentitySha256": "aa811da992b7fc282a89177790798d23f36f037e94ebc0fcb59d01491fdc4186",
+      "contentSha256": null,
+      "size": 1810643,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerliche-buchfuehrungspflichten-nach-140-und-141-ao.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerschuldner-und-reverse-charge-verfahren.json",
+      "sourceGeneration": "1791129359188874",
+      "sourceIdentitySha256": "b1cbde8b90ed04ae46e6c833b77ebc1157be4b77f1c29ef7f70e8fa2df06513a",
+      "contentSha256": null,
+      "size": 40533,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerschuldner-und-reverse-charge-verfahren.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-steuerschuldner-und-reverse-charge-verfahren.mp3",
+      "sourceGeneration": "1791129358949807",
+      "sourceIdentitySha256": "72c7b66aac533917621101c4d022388fd40378e763a73f4a0de216b54f4fccff",
+      "contentSha256": null,
+      "size": 1793715,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-steuerschuldner-und-reverse-charge-verfahren.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.json",
+      "sourceGeneration": "1791129317317872",
+      "sourceIdentitySha256": "be61c9923d268d42ad255de3548d0a7ed667113404aecc85ce35fcd3911628a7",
+      "contentSha256": null,
+      "size": 43268,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.mp3",
+      "sourceGeneration": "1791129317026545",
+      "sourceIdentitySha256": "1af4b75f26dd2d4f4f64f7a0bd0eae58e5cda52bf3501daca5069aa9126adc46",
+      "contentSha256": null,
+      "size": 2024429,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/steuern-umsatzsteuerbefreiungen-und-option-zur-steuerpflicht.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.json",
+      "sourceGeneration": "1791130362906998",
+      "sourceIdentitySha256": "64b8a83bfeed0d66315b120dcab029975f73c133157902d4cd3fe800b5590893",
+      "contentSha256": null,
+      "size": 57562,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.mp3",
+      "sourceGeneration": "1791130362658784",
+      "sourceIdentitySha256": "e40a443099fd7376e11b1561c5caacfed5338421143d5b3421077a2807b471b3",
+      "contentSha256": null,
+      "size": 2715002,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/unternehmensfuehrung-ablauforganisation-und-prozessgestaltung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.json",
+      "sourceGeneration": "1791129575036083",
+      "sourceIdentitySha256": "b3df0a271b3b3caf863b07ea1a61ec6acbd706bab69e5bbd18b497b8d3e8c173",
+      "contentSha256": null,
+      "size": 36457,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.mp3",
+      "sourceGeneration": "1791129574738853",
+      "sourceIdentitySha256": "602ce18cd1dc7e6ca105ea1e05ed5980b6cdfd12c224e67d179211b2f8211645",
+      "contentSha256": null,
+      "size": 1600932,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenanmeldung-schutzgebiet-und-schutzdauer.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.json",
+      "sourceGeneration": "1791129535219942",
+      "sourceIdentitySha256": "c1e5565680abc7f0b3fa571a7bdd30cdce3e79c13727679d2943349dee142fd1",
+      "contentSha256": null,
+      "size": 36950,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.mp3",
+      "sourceGeneration": "1791129534916408",
+      "sourceIdentitySha256": "3e9649ba0e7b417f6e1e906277c6d9501b7e4d0e9922c97f3ec9313e98937812",
+      "contentSha256": null,
+      "size": 1703750,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vertrieb-markenschutz-schutzfaehige-zeichen-und-entstehung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-bip-bne-und-inlands-inlaenderkonzept.json",
+      "sourceGeneration": "1791130176682276",
+      "sourceIdentitySha256": "afeb11f9d883d38e38740342a0539454dc1c1084f915e2e3eabd30fc42bdd636",
+      "contentSha256": null,
+      "size": 19803,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-bip-bne-und-inlands-inlaenderkonzept.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-bip-bne-und-inlands-inlaenderkonzept.mp3",
+      "sourceGeneration": "1791130176482854",
+      "sourceIdentitySha256": "c7f199a5a20711f260a520091f104b75037bb876683f379f0d314b7a84b2b48d",
+      "contentSha256": null,
+      "size": 981830,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-bip-bne-und-inlands-inlaenderkonzept.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-entstehungs-verwendungs-und-verteilungsrechnung.json",
+      "sourceGeneration": "1791130160344246",
+      "sourceIdentitySha256": "cfdfe82b1cdf6b3c8882ec1fe75dde5e74bb5a01c161cd028213cc42e8ff1362",
+      "contentSha256": null,
+      "size": 20401,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-entstehungs-verwendungs-und-verteilungsrechnung.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-entstehungs-verwendungs-und-verteilungsrechnung.mp3",
+      "sourceGeneration": "1791130160159380",
+      "sourceIdentitySha256": "cdc1f1ea914283507e89528e53074a7e735babe6c20f49175f93d1d532211d74",
+      "contentSha256": null,
+      "size": 1131668,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-entstehungs-verwendungs-und-verteilungsrechnung.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.json",
+      "sourceGeneration": "1791130205826441",
+      "sourceIdentitySha256": "b517e9e5df0452bd8de42cb558813be3c98dc391bb3bf2a5c9ca172c60afe7c3",
+      "contentSha256": null,
+      "size": 23231,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.mp3",
+      "sourceGeneration": "1791130205646639",
+      "sourceIdentitySha256": "aa553fdbadd9a09218f65b2c4d87b641746fb13b46d685c729a34cd33da2b8a7",
+      "contentSha256": null,
+      "size": 1021640,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-europaeische-wirtschafts-und-waehrungsunion-und-konvergenzkriterien.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-funktionen-des-wettbewerbs.json",
+      "sourceGeneration": "1791130141849272",
+      "sourceIdentitySha256": "7832d28ff1214baf9bb98059134c8f80cc1ce32f4c1039fd90f5a67619e9a3b1",
+      "contentSha256": null,
+      "size": 13429,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-funktionen-des-wettbewerbs.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-funktionen-des-wettbewerbs.mp3",
+      "sourceGeneration": "1791130141649895",
+      "sourceIdentitySha256": "9609b79a905569b4527046bc3b17991e7d598d3d9fd919a2be3d736477a3ffe4",
+      "contentSha256": null,
+      "size": 732308,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-funktionen-des-wettbewerbs.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.json",
+      "sourceGeneration": "1791130188133650",
+      "sourceIdentitySha256": "8ace87c9cd53658017a9fdf21dd9689809abf981c137177054a00c47ad88673d",
+      "contentSha256": null,
+      "size": 11587,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.mp3",
+      "sourceGeneration": "1791130187959557",
+      "sourceIdentitySha256": "3394876b87cc277c5886dc2f9fc331ea14580a4194bde8e8e69e987134fe0870",
+      "contentSha256": null,
+      "size": 560213,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-hoher-beschaeftigungsstand-und-arbeitslosenquote.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-preisbildung-bei-monopol-und-oligopol.json",
+      "sourceGeneration": "1791130128176163",
+      "sourceIdentitySha256": "edd8f19aa5a1e4a192f1f4e6cfa1b968dd1af73c88459c27810cfcf9240d3311",
+      "contentSha256": null,
+      "size": 21746,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preisbildung-bei-monopol-und-oligopol.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-preisbildung-bei-monopol-und-oligopol.mp3",
+      "sourceGeneration": "1791130127986348",
+      "sourceIdentitySha256": "4536762696998d081c746cbeb39b13aca901e63a9345d6ae4870a466a8e1204b",
+      "contentSha256": null,
+      "size": 999070,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preisbildung-bei-monopol-und-oligopol.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.json",
+      "sourceGeneration": "1791130111757851",
+      "sourceIdentitySha256": "b4b3c6827b68bd855059d539b71504c0714328c769531649fe7a2dee5ad4d384",
+      "contentSha256": null,
+      "size": 22141,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.mp3",
+      "sourceGeneration": "1791130111571639",
+      "sourceIdentitySha256": "078383c07befe9f35777388f509256888413c1e136fa8b9b25afe9041277e31f",
+      "contentSha256": null,
+      "size": 982770,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-preiselastizitaet-und-kreuzpreiselastizitaet.mp3",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-verschiebung-von-angebots-und-nachfragekurven.json",
+      "sourceGeneration": "1791130096069430",
+      "sourceIdentitySha256": "8ce843771bf77569c1ebef17385072c832c04433569692b5126f8f7f5efc196d",
+      "contentSha256": null,
+      "size": 19126,
+      "contentType": "application/json",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-verschiebung-von-angebots-und-nachfragekurven.json",
+      "runtimeClientObject": false
+    },
+    {
+      "sourcePath": "podcast/staging/lerntext-rev2/vwl-verschiebung-von-angebots-und-nachfragekurven.mp3",
+      "sourceGeneration": "1791130095893922",
+      "sourceIdentitySha256": "3b3a1dee4e6058761c579db220ccbdf0a8d6218e0f2161e351e0b3a8c5ded034",
+      "contentSha256": null,
+      "size": 818199,
+      "contentType": "audio/mpeg",
+      "targetPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/vwl-verschiebung-von-angebots-und-nachfragekurven.mp3",
+      "runtimeClientObject": false
+    }
+  ]
+}

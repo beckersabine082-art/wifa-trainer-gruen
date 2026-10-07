@@ -1,0 +1,40 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+
+const ENVIRONMENT_TOKEN = '__WIFA_DEPLOYMENT_ENVIRONMENT__';
+const ALLOWED_ENVIRONMENTS = Object.freeze(['STAGING', 'PRODUCTION']);
+
+function buildAppsScriptSource(source, environment) {
+  const selected = String(environment || '').trim().toUpperCase();
+  if (!ALLOWED_ENVIRONMENTS.includes(selected)) {
+    throw new Error('Apps-Script-Umgebung muss STAGING oder PRODUCTION sein.');
+  }
+  const text = String(source);
+  const occurrences = text.split(ENVIRONMENT_TOKEN).length - 1;
+  if (occurrences !== 1) {
+    throw new Error(`Apps-Script-Umgebungstoken muss exakt einmal vorkommen; ist ${occurrences}.`);
+  }
+  return text.replace(ENVIRONMENT_TOKEN, selected);
+}
+
+function cliValue(argv, name) {
+  const index = argv.indexOf(name);
+  return index >= 0 ? argv[index + 1] : undefined;
+}
+
+if (require.main === module) {
+  const argv = process.argv.slice(2);
+  const environment = cliValue(argv, '--environment');
+  const input = path.resolve(cliValue(argv, '--input') || 'backend/apps-script/Code.gs');
+  const output = cliValue(argv, '--output');
+  if (!output) throw new Error('--output ist erforderlich; Buildartefakte werden nie in die Quelle geschrieben.');
+  const target = path.resolve(output);
+  const built = buildAppsScriptSource(fs.readFileSync(input, 'utf8'), environment);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, built, 'utf8');
+  process.stdout.write(JSON.stringify({ environment: String(environment).toUpperCase(), input, output: target }) + '\n');
+}
+
+module.exports = { ALLOWED_ENVIRONMENTS, ENVIRONMENT_TOKEN, buildAppsScriptSource };

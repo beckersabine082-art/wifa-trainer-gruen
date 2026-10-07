@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "auditRevision": "FINAL-RELEASE-AUDIT-20261007-2",
+  "state": "BLOCKED_NO_GO_AUTHENTICATED_STORAGE_GATE",
+  "writeEnabled": false,
+  "auditedAt": "2026-10-07T13:32:25.6199388+02:00",
+  "source": {
+    "branch": "codex/rahmenplan-gesamtrollout-rev2",
+    "headBeforeReleaseBlockerFixes": "aeb97c30d3b8f15f3f26613d1135ec5719a6f73f",
+    "releaseCommitRecordedByGit": true,
+    "baseBranch": "main",
+    "baseCommit": "88fa86e3ec137f2a28a8c286b1cf4ed7db6ed6a2",
+    "originMain": "88fa86e3ec137f2a28a8c286b1cf4ed7db6ed6a2",
+    "frameworkRevision": "WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE"
+  },
+  "environments": {
+    "staging": {
+      "spreadsheetId": "1cJ8Wa92r-_LRmMOf3h3kTqfHV8Qz3ZjERuCP1Un25r8",
+      "appsScriptProjectId": "11HsinuaxDAFzfL388GCzkrqYtGzffjSLrzfflvwiDqkwcRwFavpZJeKv",
+      "appsScriptVersion": 120,
+      "deploymentId": "AKfycbwGFmFLFMfsRgOmLF-uwTH6xc8E_AaorV5AoiQLmXWzd4FZUdu92YT7SE8YVs2wLZ32_Q",
+      "apiUrl": "https://script.google.com/macros/s/AKfycbwGFmFLFMfsRgOmLF-uwTH6xc8E_AaorV5AoiQLmXWzd4FZUdu92YT7SE8YVs2wLZ32_Q/exec",
+      "podcastVersion": "WIFA-PODCAST-STAGING-LZREV2-20261004-v1",
+      "podcastPrefix": "podcast/staging/lerntext-rev2/"
+    },
+    "production": {
+      "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+      "appsScriptProjectId": "11HsinuaxDAFzfL388GCzkrqYtGzffjSLrzfflvwiDqkwcRwFavpZJeKv",
+      "appsScriptVersion": 114,
+      "deploymentId": "AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA",
+      "apiUrl": "https://script.google.com/macros/s/AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA/exec",
+      "plannedPodcastVersion": "WIFA-PODCAST-PROD-LZREV2-20261007-v1",
+      "plannedPodcastPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/"
+    }
+  },
+  "verifiedCurrentState": {
+    "staging": {
+      "trainerPrimaryIds": 2686,
+      "trainerVisibleTopics": 48,
+      "trainerDetailGroups": 196,
+      "trainerCoverageNodes": 577,
+      "trainerFrameworkReferences": 2770,
+      "trainerCrossReferences": 84,
+      "quizActive": 2932,
+      "flashcardsActive": 2699,
+      "flashcardOverrides": 25,
+      "flashcardNewOnly": 13,
+      "learningTexts": 521,
+      "learningTextSubjects": 13,
+      "learningTextChapters": 48,
+      "podcastBundles": 13,
+      "podcastSegments": 521,
+      "podcastReused": 479,
+      "podcastRegenerated": 42
+    },
+    "production": {
+      "trainerBaseIds": 2686,
+      "trainerMetadataAlreadyPresent": true,
+      "quizActive": 2879,
+      "flashcardsActive": 2686,
+      "flashcardOverlayTablePresent": false,
+      "learningTexts": 521,
+      "productionSheetModifiedTime": "2026-10-04T13:30:22.965Z"
+    }
+  },
+  "artifactInputs": [
+    {
+      "name": "trainerFrameworkManifest",
+      "path": "migration/gesamtrollout-rev2/Migrationsmanifest_Gesamtrollout.json",
+      "sha256": "313d916808c73c15a8db7334879755b2dc9044b681d372dbd6c49e225cfbdc10",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "trainerContentPackage",
+      "packageGroup": "trainer",
+      "executionSource": true,
+      "revision": "WIFA-TR-INHALT-9-20260929-REV1-FINAL",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/packages/trainer/Inhaltsaenderungen_neun-IDs.json",
+      "sha256": "9d88979638c150d34bd498999837e407dd5cbb6eeaef27989415ef34404d2f9e",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "quizPackage",
+      "packageGroup": "quiz",
+      "executionSource": true,
+      "revision": "WIFA-QUIZ-INHALT-20260929-FINAL1",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/packages/quiz/Quiz_Inhaltsergaenzungen_final.json",
+      "sha256": "b413e1f40f7f7610eccceb1fb0be38b4394689b8dbf1049b615604040d0371dd",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "flashcardPackage",
+      "packageGroup": "karteikarten",
+      "executionSource": true,
+      "revision": "WIFA-KK-INHALTE-20260930-FINAL-1",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/packages/karteikarten/Karteikarten_Inhaltsergaenzungen_final.json",
+      "sha256": "52ba0bc59aae32798ff968985d07a6544d5c5e784b0b4f9f5d74a5cf64fa9537",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "learningTextPackage",
+      "packageGroup": "lerntexte",
+      "executionSource": true,
+      "revision": "WIFA-LZ-GESAMT-20261004-FINAL",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/packages/lerntexte/Lerntexte_Gesamtumsetzung_final.json",
+      "sha256": "576d054af41fe5155f378d47aa6bfbba4daf2956faab74c754d72c9c568f59dd",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "learningTextOrderManifest",
+      "packageGroup": "lerntexte",
+      "executionSource": true,
+      "revision": "WIFA-LZ-GESAMT-20261004-FINAL",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/packages/lerntexte/Lerntexte_Reihenfolge_Manifest.json",
+      "sha256": "562d13e64d2cfaf22980cba8cd8a24c0484321a0a36c29334e889098f4edd172",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "podcastMigrationResult",
+      "path": "outputs/podcast-staging-migration-2026-10-04/migration-result.json",
+      "sha256": "cd1e34bff1089f8439d1e3432919663d3645ca1d91d14c9ac7eeb404472b114e",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "podcastStorageInventory",
+      "path": "outputs/podcast-staging-migration-2026-10-04/storage-paths.json",
+      "sha256": "d93561a81d05b689d49dd25ca0107e31f895c80b2c9d612ddfabd7852ac9c991",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "productionPodcastPromotionManifest",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST.json",
+      "sha256": "57e1cdab1b93e72cf47e25df88b559b5c9b07560fbd63a86dc455529153f4bcc",
+      "onReleaseBranch": true
+    },
+    {
+      "name": "productionDryRun",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/dry-run/PRODUCTION_DRY_RUN_20261007.json",
+      "sha256": "6933ca21697448227a8fc243c880cd144c8136a5cd1f3d1fae756154e3a22a5b",
+      "onReleaseBranch": true,
+      "mode": "READ_ONLY"
+    },
+    {
+      "name": "productionLiveEvidence",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/dry-run/PRODUCTION_LIVE_EVIDENCE_20261007.json",
+      "sha256": "d52547eff00e1142242bc69b499ec7a8ba66bbfb7318079b705432e668459190",
+      "onReleaseBranch": true,
+      "mode": "READ_ONLY"
+    }
+  ],
+  "operations": {
+    "trainerMetadata": {
+      "mode": "VERIFY_NOOP",
+      "identity": ["UIThemenKey", "DetailKey", "TrainerID", "TrainerID+PunktKey+Bezugsart", "PunktKey"],
+      "expected": {
+        "topics": 48,
+        "detailGroups": 196,
+        "primaryAssignments": 2686,
+        "frameworkReferences": 2770,
+        "coverageNodes": 577
+      },
+      "currentProductionEqualsStaging": true,
+      "plannedWrites": 0,
+      "postReleaseLedgerRows": 0
+    },
+    "trainerContent": {
+      "mode": "COMPARE_ALL_THEN_PATCH",
+      "ids": ["VWL-0127", "IF-0091", "BR-0076", "UF-0058", "BM-0260", "BM-0154", "IF-0152", "M-0021", "V-0077"],
+      "allowedColumns": ["C", "E", "F", "M", "N"],
+      "changedCells": 32,
+      "productionExpectedOldConflictsAtAudit": 0
+    },
+    "quiz": {
+      "mode": "COMPARE_ALL_THEN_INSERT_OR_PATCH",
+      "baselineActive": 2879,
+      "projectedActive": 2932,
+      "createRows": 53,
+      "createCells": 742,
+      "updateRows": 14,
+      "updateCells": 84,
+      "createIds": ["QZ26-WQ1-01-01", "QZ26-WQ1-02-01", "QZ26-WQ1-02-02", "QZ26-WQ1-03-01", "QZ26-WQ1-04-01", "QZ26-WQ1-04-02", "QZ26-WQ1-04-03", "QZ26-WQ1-05-01", "QZ26-WQ2-01-01", "QZ26-WQ2-02-01", "QZ26-WQ4-01-01", "QZ26-WQ4-02-01", "QZ26-WQ4-03-01", "QZ26-WQ4-04-01", "QZ26-WQ4-05-01", "QZ26-WQ4-06-01", "QZ26-WQ4-06-02", "QZ26-WQ4-08-01", "QZ26-Q-R-01-01", "QZ26-Q-R-02-01", "QZ26-Q-R-03-01", "QZ26-Q-R-04-01", "QZ26-Q-R-05-01", "QZ26-Q-R-06-01", "QZ26-Q-R-07-01", "QZ26-Q-R-08-01", "QZ26-Q-ST-01-01", "QZ26-Q-ST-02-01", "QZ26-HQ59-001", "QZ26-HQ59-002", "QZ26-HQ59-003", "QZ26-HQ59-004", "QZ26-HQ59-005", "QZ26-HQ678-001", "QZ26-HQ678-002", "QZ26-HQ678-003", "QZ26-HQ678-004", "QZ26-HQ678-005", "QZ26-HQ678-006", "QZ26-HQ678-007", "QZ26-HQ678-008", "QZ26-HQ678-009", "QZ26-HQ678-010", "QZ26-HQ678-011", "QZ26-HQ678-012", "QZ26-HQ678-013", "QZ26-HQ678-014", "QZ26-HQ678-015", "QZ26-HQ678-016", "QZ26-HQ678-017", "QZ26-HQ678-018", "QZ26-HQ678-019", "QZ26-HQ678-020"],
+      "updateIds": ["BR-0068", "BR-0104", "BR-0070", "BR-0071", "BR-0074", "BR-0077", "BR-0075", "BR-0073", "BR-0079", "BR-0078", "BR-0081", "BR-0082", "BR-0083", "BR-0085"],
+      "productionExpectedOldConflictsAtAudit": 0
+    },
+    "flashcards": {
+      "mode": "CREATE_OVERLAY_TABLE_ONLY",
+      "table": "Karteikarten_Ergaenzungen",
+      "columns": ["KartenID", "Fach", "Typ", "Thema", "Vorderseite", "Rueckseite", "Aktiv", "Revision"],
+      "rows": 38,
+      "newOnly": 13,
+      "overrides": 25,
+      "projectedActive": 2699,
+      "createIds": ["BWL-0127", "BR-0123", "UF-0236", "UF-0237", "UF-0238", "R-0689", "R-0690", "R-0691", "R-0692", "R-0693", "R-0694", "L-0321", "L-0322"],
+      "overrideIds": ["BR-0078", "BR-0080", "BR-0082", "UF-0198", "UF-0138", "BWL-0083", "BR-0015", "BR-0068", "BR-0087", "BR-0089", "BR-0097", "UF-0060", "VWL-0154", "R-0175", "R-0176", "R-0182", "R-0359", "ST-0214", "PF-0153", "PF-0072", "PF-0170", "L-0240", "L-0264", "V-0038", "L-0177"],
+      "baseColumnsAToOAllowed": false
+    },
+    "learningTexts": {
+      "mode": "COMPARE_521_THEN_PATCH_ONLY",
+      "identity": "ID",
+      "guardRows": 521,
+      "physicalWriteRows": 260,
+      "physicalWriteCells": 454,
+      "contentOrTitleIds": 43,
+      "contentIds": ["LZ-FZ-23", "LZ-FZ-26", "LZ-FZ-30", "LZ-BM-16", "LZ-BM-18", "LZ-BM-32", "LZ-RW-04", "LZ-RW-09", "LZ-ST-08", "LZ-ST-09", "LZ-ST-16", "LZ-ST-20", "LZ-ST-24", "LZ-ST-26", "LZ-ST-06", "LZ-ST-36", "LZ-MKT-14", "LZ-VT-23", "LZ-VT-24", "LZ-RE-07", "LZ-RE-05", "LZ-RE-13", "LZ-RE-14", "LZ-RE-15", "LZ-RE-17", "LZ-RE-18", "LZ-RE-27", "LZ-RE-24", "LZ-RE-47", "LZ-VWL-05", "LZ-VWL-06", "LZ-VWL-07", "LZ-VWL-09", "LZ-VWL-13", "LZ-VWL-14", "LZ-VWL-21", "LZ-VWL-40", "LZ-BWL-13", "LZ-BWL-26", "LZ-BWL-30", "LZ-LO-12", "LZ-UF-08", "LZ-IF-16"],
+      "finalIds": 521,
+      "finalSubjects": 13,
+      "finalChapters": 48,
+      "productionVsStagingDifferentRowsAtAudit": 260
+    },
+    "podcast": {
+      "mode": "COPY_IMMUTABLY_THEN_VERIFY",
+      "sourcePrefix": "podcast/staging/lerntext-rev2/",
+      "targetPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/",
+      "sourceObjects": 110,
+      "runtimeObjects": 26,
+      "bundles": 13,
+      "sidecars": 13,
+      "segments": 521,
+      "bundleBytes": 767186172,
+      "audibleIntraBundleBoundaries": 508,
+      "orderedAdjacenciesIncludingSubjectBoundaries": 520,
+      "overwriteExistingProductionObjects": false
+    }
+  },
+  "resolvedConditions": [
+    {
+      "id": "B1_RELEASE_INPUTS_NOT_VERSIONED",
+      "status": "RESOLVED",
+      "evidence": "Versioned packages plus SHA/revision release gate."
+    },
+    {
+      "id": "B2_BACKEND_POINTS_TO_STAGING",
+      "status": "RESOLVED",
+      "evidence": "Explicit build-time STAGING/PRODUCTION routing; invalid builds fail closed."
+    },
+    {
+      "id": "B3_PRODUCTION_PODCAST_CONFIG_MISSING",
+      "status": "RESOLVED",
+      "evidence": "Immutable production runtime config and exact 110-object promotion manifest."
+    },
+    {
+      "id": "B5_FRESH_PRODUCTION_SNAPSHOT_OPEN",
+      "status": "RESOLVED",
+      "evidence": "Atomic preflight implementation and race-abort tests; backup intentionally created only immediately before an authorized first write."
+    }
+  ],
+  "blockingConditions": [
+    {
+      "id": "B4_AUTHENTICATED_STORAGE_RECHECK_OPEN",
+      "status": "OPEN",
+      "description": "The read-only diagnostic exists, but the audit environment has no access to the user's signed-in normal-browser Firebase session. A real 13/13 sidecar, 13/13 bundle and 13/13 loadedmetadata PASS remains mandatory."
+    }
+  ],
+  "dryRun": {
+    "report": "release/WIFA-GESAMT-PROD-20261007-RC1/dry-run/PRODUCTION_DRY_RUN_20261007.json",
+    "liveEvidence": "release/WIFA-GESAMT-PROD-20261007-RC1/dry-run/PRODUCTION_LIVE_EVIDENCE_20261007.json",
+    "unknownConflicts": 0,
+    "productionWritesPerformed": 0,
+    "expectedOldChecks": {
+      "trainerIds": 9,
+      "quizCreatesAbsent": 53,
+      "quizUpdates": 14,
+      "learningTextRows": 521
+    },
+    "plannedWrites": {
+      "trainerMetadata": 0,
+      "trainerCells": 32,
+      "quizCreateRows": 53,
+      "quizUpdateCells": 84,
+      "flashcardOverlayRows": 38,
+      "learningTextCells": 454,
+      "podcastObjects": 110,
+      "userData": 0
+    }
+  },
+  "globalConflictPolicy": {
+    "identity": "stable ID/key only; never row number",
+    "compare": "all expected old values before first write",
+    "mixedState": "abort and run recovery audit",
+    "alreadyFinal": "idempotent no-op",
+    "unexpectedExistingCreateId": "abort",
+    "postWrite": "read back every affected record and recompute all balances"
+  },
+  "approval": {
+    "currentDecision": "NO-GO",
+    "dataConflictsFound": 0,
+    "releaseBlockers": 1,
+    "productionExecutionAuthorized": false,
+    "requiredNextApproval": "First obtain the authenticated 13/13/13 PASS. Then rerun the final gate and request a separate explicit production execution approval."
+  }
+}

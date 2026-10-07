@@ -299,6 +299,8 @@ function createBlock2Context() {
     .forEach(element => { element.ownerDocument = document; });
   reloadButton.textContent = '↻ Kapitel erneut laden';
   const eventWindow = new EventWindow();
+  eventWindow.WIFA_PODCAST_STORAGE_PREFIX = 'podcast/';
+  eventWindow.WIFA_PODCAST_BUNDLE_VERSION = 'TEST-LEGACY-v1';
   const expectedHash = createHash('sha256').update('abc def ghi', 'utf8').digest('hex');
   const digestBytes = Uint8Array.from(expectedHash.match(/../g), byte => parseInt(byte, 16));
   const manifest = {
@@ -452,6 +454,7 @@ function configureContinuousRechtBundle(fixture, entries, fach = 'Recht', slug =
 
 function configureVersionedStagingBundle(fixture, entries, fach = 'Recht', slug = 'recht') {
   fixture.eventWindow.WIFA_PODCAST_STORAGE_PREFIX = 'podcast/staging/lerntext-rev2/';
+  fixture.eventWindow.WIFA_PODCAST_BUNDLE_VERSION = 'WIFA-PODCAST-STAGING-TEST-v2';
   const bundle = configureContinuousRechtBundle(fixture, entries, fach, slug);
   bundle.manifest.schemaVersion = 2;
   bundle.manifest.bundleVersion = 'WIFA-PODCAST-STAGING-TEST-v2';

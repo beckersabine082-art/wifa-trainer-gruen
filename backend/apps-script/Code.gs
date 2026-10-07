@@ -23,9 +23,24 @@ const OPENAI_API_KEY = PropertiesService
   .getScriptProperties()
   .getProperty('OPENAI_API_KEY');
 
+// Wird pro unveränderlicher Apps-Script-Version durch tools/release/build-apps-script.js gesetzt.
+// Der Token bleibt in der Quelle absichtlich ungültig, damit ein Direktdeployment fail-closed ist.
+const WIFA_DEPLOYMENT_ENVIRONMENT = '__WIFA_DEPLOYMENT_ENVIRONMENT__';
+const WIFA_SPREADSHEET_IDS = Object.freeze({
+  STAGING: '1cJ8Wa92r-_LRmMOf3h3kTqfHV8Qz3ZjERuCP1Un25r8',
+  PRODUCTION: '1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y'
+});
+
+function getSpreadsheetIdForEnvironment_(environment) {
+  const selected = String(environment || '').trim();
+  if (!Object.prototype.hasOwnProperty.call(WIFA_SPREADSHEET_IDS, selected)) {
+    throw new Error('Ungültige oder fehlende Deployment-Umgebung; Zugriff verweigert.');
+  }
+  return WIFA_SPREADSHEET_IDS[selected];
+}
+
 function getSpreadsheet_() {
-  // Staging-only: Produktion Version 114 behält ihren unveränderten, gebundenen Datenzugriff.
-  return SpreadsheetApp.openById('1cJ8Wa92r-_LRmMOf3h3kTqfHV8Qz3ZjERuCP1Un25r8');
+  return SpreadsheetApp.openById(getSpreadsheetIdForEnvironment_(WIFA_DEPLOYMENT_ENVIRONMENT));
 }
 
 function getSheetByNameSafe_(name) {
