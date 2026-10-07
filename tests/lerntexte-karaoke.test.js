@@ -582,7 +582,12 @@ test('Continuous-Fach: zweites Fach läuft über zwei Grenzen mit lokalem Karaok
     fixture.audio.dispatchEvent({ type: 'timeupdate' });
     assert.equal(fixture.context.window.__audioState().index, index);
     assert.equal(select.value, ['podcast/steuern-erste-einheit.mp3', 'podcast/steuern-zweite-einheit.mp3', 'podcast/steuern-dritte-einheit.mp3'][index]);
-    assert.equal(fixture.context.navigator.mediaSession.metadata.title, entries[index].titel);
+    assert.equal(
+      fixture.context.navigator.mediaSession.metadata.title,
+      fixture.context.lerntexteSichtbarerTitel(
+        fixture.context.lerntexteSichtbareNummerierung(entries)[index]
+      )
+    );
     assert.equal(fixture.context.navigator.mediaSession.metadata.artist, 'Steuern');
   }
   assert.equal(fixture.root.querySelector('.podcast-word-active').textContent, 'def');
@@ -3985,6 +3990,42 @@ test('Staging-Bundle: Dropdown macht Kapitel auswählbar und rückt stabile Lern
     ['Kapitel 1 – BGB Allgemeiner Teil', 'Kapitel 2 – BGB Schuldrecht']);
   assert.ok(select.childNodes.filter(option => option.classList.contains('lerntexte-lerneinheit-option'))
     .every(option => /^\s*↳/.test(option.textContent)));
+});
+
+test('Staging-Bundle: Dropdown, Textüberschrift und aktueller Podcasttitel nutzen dieselbe neue Lerntextnummer', async () => {
+  const fixture = createBlock2Context();
+  const sourceEntries = continuousRechtEntries(3).map((entry, index) => ({ ...entry,
+    id: `LZ-RE-${index + 1}`,
+    chapterKey: 'ui-wq-recht-at',
+    hauptkapitelNr: '1',
+    hauptkapitel: 'BGB Allgemeiner Teil',
+    unterkapitelNr: ['1.4', '1.1', '1.3'][index],
+    reihenfolgeFach: [2, 1, 3][index],
+    reihenfolgeKapitel: [4, 1, 3][index]
+  }));
+  const entries = fixture.context.window.lerntexteSichtbareNummerierung(sourceEntries);
+  configureVersionedStagingBundle(fixture, entries);
+  fixture.context.window.__renderEntries(entries, 'Recht');
+
+  const optionLabels = fixture.document.getElementById('lerntexteKapitelSelect').childNodes
+    .filter(option => option.classList.contains('lerntexte-lerneinheit-option'))
+    .map(option => option.textContent.trim());
+  assert.deepEqual(optionLabels, [
+    '↳ 1.1 Recht Einheit 2',
+    '↳ 1.2 Recht Einheit 1',
+    '↳ 1.3 Recht Einheit 3'
+  ]);
+  assert.deepEqual(fixture.root.querySelectorAll('.lerntexte-einheit-titel').map(node => node.textContent), [
+    '1.1 Recht Einheit 2',
+    '1.2 Recht Einheit 1',
+    '1.3 Recht Einheit 3'
+  ]);
+
+  await fixture.context.window.lerntexteAudioAbspielen();
+  assert.equal(fixture.document.getElementById('lerntexteAudioChapterLabel').textContent, '1.1 Recht Einheit 2');
+  fixture.audio.currentTime = 3.25;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+  assert.equal(fixture.document.getElementById('lerntexteAudioChapterLabel').textContent, '1.2 Recht Einheit 1');
 });
 
 test('Staging-Bundle: alle 48 sichtbaren Kapitel sind eigenständige auswählbare Optionen', () => {

@@ -570,7 +570,7 @@ async function lerntextePilotAudioStartenValidiert(eintrag, manifest, mp3Metadat
       await audioElement.play();
       lerntexteAudioSessionPruefen(sessionId);
       if (lerntexteAudioFehler) return false;
-      lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (eintrag.titel || 'Lerneinheit'));
+      lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (lerntexteSichtbarerTitel(eintrag) || 'Lerneinheit'));
       return true;
     } catch (error) {
       if (!lerntexteAudioSessionIstAktuell(sessionId)) return false;
@@ -703,7 +703,7 @@ function lerntextePilotKaraokeEinrichten(audio, manifest, textRoot, usageTicket 
     lerntexteAudioPausiert = false;
     lerntexteAudioLaedt = false;
     const item = lerntexteAudioPlaylist[lerntexteAudioPlaylistIndex];
-    lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && item.titel || 'Lerneinheit'));
+    lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && lerntexteSichtbarerTitel(item.eintrag) || 'Lerneinheit'));
     lerntexteAudioSteuerungAktualisieren();
     lerntexteAudioMediaSessionAktualisieren();
     lerntexteAudioNaechstesKapitelVorbereiten(sessionId);
@@ -848,7 +848,7 @@ function lerntexteContinuousKapitelAktivieren(index) {
   lerntextePilotEntry = item.eintrag;
   lerntextePilotCurrentHash = chapter.lerntextHash;
   const label = lerntexteElement('lerntexteAudioChapterLabel');
-  if (label) label.textContent = item.titel || 'Lerneinheit';
+  if (label) label.textContent = lerntexteSichtbarerTitel(item.eintrag) || 'Lerneinheit';
   lerntexteAudioKapitelsteuerungAktualisieren();
   return true;
 }
@@ -892,7 +892,7 @@ function lerntexteContinuousSynchronisieren(time, options) {
   lerntexteContinuousProgressAktualisieren(lerntextePilotAudio);
   if (previousIndex !== nextIndex) {
     const item = lerntexteAudioPlaylist[nextIndex];
-    lerntextePilotStatus('Audio läuft: ' + (nextIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && item.titel || 'Lerneinheit'));
+    lerntextePilotStatus('Audio läuft: ' + (nextIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && lerntexteSichtbarerTitel(item.eintrag) || 'Lerneinheit'));
     lerntexteAudioMediaSessionAktualisieren();
   }
   lerntexteContinuousState.lastTime = currentTime;
@@ -1044,7 +1044,7 @@ function lerntexteContinuousKaraokeEinrichten(audio, usageTicket, sessionId, ini
       lerntexteContinuousState.rangeEnded = false;
     }
     const item = lerntexteAudioPlaylist[lerntexteAudioPlaylistIndex];
-    lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && item.titel || 'Lerneinheit'));
+    lerntextePilotStatus('Audio läuft: ' + (lerntexteAudioPlaylistIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (item && lerntexteSichtbarerTitel(item.eintrag) || 'Lerneinheit'));
     lerntexteAudioSteuerungAktualisieren();
     lerntexteAudioMediaSessionAktualisieren();
   };
@@ -2027,12 +2027,7 @@ async function lerntexteFachWaehlen(fach) {
       throw new Error(result.error || "Lerntexte konnten nicht geladen werden.");
     }
 
-    lerntexteDaten = (result.data || [])
-      .slice()
-      .sort(function (a, b) {
-        return (Number(a.reihenfolgeFach) || 0) - (Number(b.reihenfolgeFach) || 0)
-          || (Number(a.reihenfolgeKapitel) || 0) - (Number(b.reihenfolgeKapitel) || 0);
-      });
+    lerntexteDaten = lerntexteSichtbareNummerierung(result.data || []);
 
     if (!lerntexteDaten.length) {
       lerntexteElement("lerntexteStatus").textContent = "Für dieses Fach sind noch keine Lerntexte hinterlegt.";
@@ -2068,6 +2063,40 @@ function lerntexteKapitelSchluessel(eintrag) {
 function lerntexteKapitelGruppenSchluessel(eintrag) {
   return String(eintrag && eintrag.chapterKey ||
     (String(eintrag && eintrag.hauptkapitelNr || '') + '\u0000' + String(eintrag && eintrag.hauptkapitel || '')));
+}
+
+function lerntexteSichtbareNummerierung(eintraege) {
+  const liste = Array.isArray(eintraege) ? eintraege.slice() : [];
+  const fachReihenfolge = new Map();
+  liste.forEach(function (eintrag) {
+    const fach = String(eintrag && eintrag.fach || '');
+    if (!fachReihenfolge.has(fach)) fachReihenfolge.set(fach, fachReihenfolge.size);
+  });
+  liste.sort(function (a, b) {
+    const fachA = String(a && a.fach || '');
+    const fachB = String(b && b.fach || '');
+    return (fachReihenfolge.get(fachA) || 0) - (fachReihenfolge.get(fachB) || 0)
+      || (Number(a && a.reihenfolgeFach) || 0) - (Number(b && b.reihenfolgeFach) || 0)
+      || (Number(a && a.reihenfolgeKapitel) || 0) - (Number(b && b.reihenfolgeKapitel) || 0);
+  });
+
+  const positionJeKapitel = new Map();
+  return liste.map(function (eintrag) {
+    const fach = String(eintrag && eintrag.fach || '');
+    const kapitelSchluessel = fach + '\u0000' + lerntexteKapitelGruppenSchluessel(eintrag);
+    const position = (positionJeKapitel.get(kapitelSchluessel) || 0) + 1;
+    positionJeKapitel.set(kapitelSchluessel, position);
+    const kapitelNr = String(eintrag && eintrag.hauptkapitelNr || '').trim();
+    return Object.assign({}, eintrag, {
+      sichtbareLerntextNr: kapitelNr ? kapitelNr + '.' + position : String(position)
+    });
+  });
+}
+
+function lerntexteSichtbarerTitel(eintrag) {
+  const nummer = String(eintrag && eintrag.sichtbareLerntextNr || '').trim();
+  const titel = String(eintrag && eintrag.titel || '').trim();
+  return (nummer ? nummer + ' ' : '') + titel;
 }
 
 function lerntexteKapitelAuswahlWert(chapterKey) {
@@ -2113,7 +2142,7 @@ function lerntexteBaueKapitelDropdown() {
     if (!stableIds) {
       const option = document.createElement("option");
       option.value = key;
-      option.textContent = "Kapitel " + eintrag.hauptkapitelNr + " – " + (eintrag.titel || eintrag.hauptkapitel);
+      option.textContent = lerntexteSichtbarerTitel(eintrag) || (eintrag.titel || eintrag.hauptkapitel);
       select.appendChild(option);
       return;
     }
@@ -2129,7 +2158,7 @@ function lerntexteBaueKapitelDropdown() {
     }
     const option = document.createElement("option");
     option.value = key;
-    option.textContent = '\u00a0\u00a0\u00a0↳ ' + (eintrag.titel || eintrag.hauptkapitel);
+    option.textContent = '\u00a0\u00a0\u00a0↳ ' + (lerntexteSichtbarerTitel(eintrag) || eintrag.hauptkapitel);
     option.className = 'lerntexte-lerneinheit-option';
     option.dataset.chapterKey = groupKey;
     select.appendChild(option);
@@ -2300,20 +2329,6 @@ function lerntexteFormatiereText(text) {
     .join("");
 }
 
-// Google Sheets interpretiert Werte wie "1.1" oder "5.10" teils als Datum
-function lerntexteNormalisiereUnterkapitelNr(wert) {
-  const text = String(wert === null || wert === undefined ? "" : wert).trim();
-
-  if (/^\d+\.\d+$/.test(text)) return text;
-
-  const datum = new Date(wert);
-  if (!isNaN(datum.getTime())) {
-    return datum.getDate() + "." + (datum.getMonth() + 1);
-  }
-
-  return text;
-}
-
 function lerntexteAnzeigen(usageTicket = window.WifaUsage?.captureTicket()) {
   lerntexteAudioSessionInvalidieren();
   return lerntexteInhaltRendern(usageTicket);
@@ -2347,8 +2362,7 @@ function lerntexteInhaltRendern(usageTicket, options) {
 
     const titel = document.createElement("h4");
     titel.className = "lerntexte-einheit-titel";
-    const unterkapitelNr = eintrag.unterkapitelNr ? lerntexteNormalisiereUnterkapitelNr(eintrag.unterkapitelNr) : "";
-    titel.textContent = (unterkapitelNr ? unterkapitelNr + " " : "") + (eintrag.titel || "");
+    titel.textContent = lerntexteSichtbarerTitel(eintrag);
 
     const text = document.createElement("div");
     text.className = "lerntexte-text";
@@ -2504,7 +2518,7 @@ async function lerntexteContinuousStarten(targetIndex, options) {
     if (lerntexteContinuousState) lerntexteContinuousState.ignoreCompletion = false;
     const activeIndex = lerntexteContinuousState ? lerntexteContinuousState.chapterIndex : targetIndex;
     const activeItem = lerntexteAudioPlaylist[activeIndex] || item;
-    lerntextePilotStatus('Audio läuft: ' + (activeIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + activeItem.titel);
+    lerntextePilotStatus('Audio läuft: ' + (activeIndex + 1) + ' von ' + lerntexteAudioPlaylist.length + ' – ' + (lerntexteSichtbarerTitel(activeItem.eintrag) || activeItem.titel));
     lerntexteAudioMediaSessionAktualisieren();
     return { started: true, fallback: false };
   } catch (error) {
@@ -2620,7 +2634,9 @@ async function lerntexteAudioKapitelLaden(targetIndex, options) {
 
   const total = lerntexteAudioPlaylist.length;
   const currentItem = lerntexteAudioPlaylist[lerntexteAudioPlaylistIndex];
-  const title = currentItem && currentItem.titel ? currentItem.titel : "Lerneinheit";
+  const title = currentItem && currentItem.eintrag
+    ? (lerntexteSichtbarerTitel(currentItem.eintrag) || currentItem.titel || "Lerneinheit")
+    : "Lerneinheit";
   const statusText = "Podcast wird geladen: " + (lerntexteAudioPlaylistIndex + 1) + " von " + total + " – " + title;
 
   if (lerntexteElement("lerntexteAudioStatus")) {
@@ -3025,6 +3041,8 @@ if (typeof window !== 'undefined') {
   window.lerntexteAudioFirebasePfad = lerntexteAudioFirebasePfad;
   window.lerntexteAudioTextFuerEintrag = lerntexteAudioTextFuerEintrag;
   window.lerntexteAudioPlaylistErstellen = lerntexteAudioPlaylistErstellen;
+  window.lerntexteSichtbareNummerierung = lerntexteSichtbareNummerierung;
+  window.lerntexteSichtbarerTitel = lerntexteSichtbarerTitel;
   window.lerntexteIstPilotEinheit = lerntexteIstPilotEinheit;
   window.lerntextePilotHash = lerntextePilotHash;
   window.lerntextePilotTextFuerEintrag = lerntextePilotTextFuerEintrag;
@@ -3057,6 +3075,8 @@ if (typeof module !== 'undefined' && module.exports) {
     resyncPilotHighlight,
     lerntextePilotFortschrittLaden,
     lerntextePilotFortschrittSpeichern,
+    lerntexteSichtbareNummerierung,
+    lerntexteSichtbarerTitel,
     lerntextePodcastAbspielen,
     lerntextePodcastPausieren,
     lerntextePodcastStoppen,
