@@ -1,6 +1,10 @@
 'use strict';
 
-const { validatePromotionManifest } = require('./podcast-promotion');
+const {
+  PRODUCTION_PODCAST_VERSION_V2,
+  validatePromotionManifest,
+  validateV2RuntimePromotionManifest
+} = require('./podcast-promotion');
 
 const PROTECTED_SHEETS = Object.freeze(['NutzerFortschritt', 'PodcastFortschritt', 'Nutzerkonten', 'Analytics']);
 
@@ -24,7 +28,9 @@ function buildDryRunSummary({ manifest, trainerPackage, quizPackage, flashcardPa
   const quizUpdates = quizChanges.filter(item => String(item.action).toLowerCase() === 'update');
   const flashcardChanges = flashcardPackage.changes || [];
   const textChanges = (learningTextPackage.records || []).filter(item => Array.isArray(item.writes) && item.writes.length);
-  const podcast = validatePromotionManifest(podcastPromotion);
+  const podcast = podcastPromotion?.version === PRODUCTION_PODCAST_VERSION_V2
+    ? validateV2RuntimePromotionManifest(podcastPromotion)
+    : validatePromotionManifest(podcastPromotion);
   const counts = {
     trainerContentIds: trainerRecords.length,
     trainerContentCells: trainerRecords.reduce((sum, item) => sum + (item.writeColumns || []).length, 0),

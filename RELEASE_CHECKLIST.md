@@ -2,7 +2,7 @@
 
 Release: `WIFA-GESAMT-PROD-20261007-RC1`
 
-Audit: `FINAL-RELEASE-AUDIT-20261007-3`
+Audit: `FINAL-RELEASE-AUDIT-20261007-4`
 
 Status: **GO**
 
@@ -22,16 +22,17 @@ Status: **GO**
 - [x] keine gemeinsam wirksame Script Property
 - [x] Staging kann Produktionssheet nicht öffnen
 - [x] Produktion kann Stagingsheet nicht öffnen
-- [x] Produktion weiterhin Version 114 und bekannte Deployment-ID
-- [x] kein produktives Deployment durchgeführt
+- [x] bisherige Version 114 und bekannte Deployment-ID vor dem Cutover gesichert
+- [x] bestehende produktive Deployment-ID auf Version 121 aktualisiert und per Recht-Katalog abgenommen
 
 ## Podcast
 
 - [x] immutable Produktionsversion
-  `WIFA-PODCAST-PROD-LZREV2-20261007-v1`
+  `WIFA-PODCAST-PROD-LZREV2-20261007-v2`
 - [x] neuer Produktionspräfix; kein Überschreiben alter Pfade
-- [x] 110 Quell-/Zielobjekte mit Generation, Größe und Content-Type
-- [x] 26 Runtimeobjekte explizit markiert
+- [x] 13 v2-Sidecars und 13 byteidentische v2-MP3-Bundles create-only kopiert und zurückgelesen
+- [x] 521 IDs, 48 Kapitel, unveränderte MP3-Hashes und 0 Staging-Referenzen
+- [x] abgebrochene v1 unverändert und unreferenziert belassen
 - [x] Produktionsclient referenziert nur die neue Version
 - [x] fehlendes neues Bundle fail-closed
 - [x] read-only Diagnosemodus nur bei explizitem lokalen Queryparameter
@@ -72,27 +73,28 @@ Status: **GO**
 ## Unmittelbar vor einem später freigegebenen Write
 
 - [x] B4-PASS dokumentiert
-- [ ] separate ausdrückliche Produktionsfreigabe
-- [ ] Change Window aktiv
-- [ ] aktueller `main`-Commit ermittelt
-- [ ] erster vollständiger Altwertvergleich konfliktfrei
-- [ ] frische vollständige Produktions-Sheetkopie erstellt und rückgelesen
-- [ ] bisheriger Produktivstand als Git-Referenz gesichert
-- [ ] Apps Script Version 114 / Deployment-ID dokumentiert
-- [ ] altes Podcastinventar samt Hashes eingefroren
-- [ ] Release-Run-Report geschrieben
-- [ ] zweiter Altwertvergleich und Fingerprint unverändert
+- [x] separate ausdrückliche Produktionsfreigabe
+- [x] Change Window aktiv
+- [x] aktueller `main`-Commit ermittelt
+- [x] erster vollständiger Altwertvergleich konfliktfrei
+- [x] frische vollständige Produktions-Sheetkopie erstellt und rückgelesen
+- [x] bisheriger Produktivstand als Git-Referenz gesichert
+- [x] Apps Script Version 114 / Deployment-ID dokumentiert
+- [x] altes Podcastinventar samt Hashes eingefroren
+- [x] Release-Run-Report geschrieben
+- [x] zweiter Altwertvergleich und Fingerprint unverändert
 
 ## Spätere Ausführung
 
-- [ ] 110 Produktions-Podcastobjekte create-only kopiert/rückgelesen
-- [ ] 32 Trainerzellen gepatcht
-- [ ] 53 Quizzeilen angelegt und 84 Quizfelder gepatcht
-- [ ] Karteikarten-Overlay mit 38 Zeilen angelegt
-- [ ] 454 Lerntextzellen in 260 Zeilen gepatcht
-- [ ] keine Trainer-Metadaten dupliziert
-- [ ] keine Nutzerleistung verändert
-- [ ] Backend und Frontend separat abgenommen
+- [x] Podcast-v2-Runtimeobjekte create-only kopiert/rückgelesen
+- [x] 32 Trainerzellen gepatcht
+- [x] 53 Quizzeilen angelegt und 84 Quizfelder gepatcht
+- [x] Karteikarten-Overlay mit 38 Zeilen angelegt
+- [x] 454 Lerntextzellen in 260 Zeilen gepatcht
+- [x] keine Trainer-Metadaten dupliziert
+- [x] keine Nutzerleistung verändert
+- [x] Backend Version 121 separat abgenommen
+- [ ] Frontend abgenommen
 - [ ] kompletter Produktions-Smoke-Test
 
 ## Entscheidung
@@ -101,4 +103,4 @@ Status: **GO**
 - Offener Blocker: **keiner**
 - Offene Datenkonflikte: **0**
 - Technischer Audit: **GO**
-- Produktionsausführung autorisiert: **nein**
+- Produktionsausführung autorisiert: **ja; Datenmigration abgeschlossen, Client-Cutover ausstehend**

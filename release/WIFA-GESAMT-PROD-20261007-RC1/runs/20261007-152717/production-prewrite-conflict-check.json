@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "mode": "READ_ONLY_PREWRITE_CONFLICT_CHECK",
+  "xlsx": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\production-current-prewrite.xlsx",
+  "xlsxSha256": "bcf8a0c1fe3d1edc958834000d47bda4293a8a025d6e1202104a218dc846d1fe",
+  "status": "PASS",
+  "conflictCount": 0,
+  "conflicts": [],
+  "checks": {
+    "trainerOldStates": {
+      "expected": 9,
+      "passed": 9
+    },
+    "quizCreateIdsAbsent": {
+      "expected": 53,
+      "passed": 53
+    },
+    "quizUpdateOldStates": {
+      "expected": 14,
+      "passed": 14
+    },
+    "learningTextOldStates": {
+      "expected": 521,
+      "passed": 521
+    },
+    "flashcardOverlayAbsent": true
+  },
+  "protectedSheets": {
+    "NutzerFortschritt": {
+      "rows": 31,
+      "sha256": "3c356ee94230c79c019409592e179249d059e018fc621fcf83dfefbea0fe0a7c"
+    },
+    "PodcastFortschritt": {
+      "rows": 102,
+      "sha256": "c1f1041a1de57938d199c0c63deefc81a854df10cb2ce78d89949808e3d661ea"
+    },
+    "Lernstand": {
+      "rows": 56,
+      "sha256": "e46eeb85db3987c8a37559986915ec9a82e7ab3b3b55e685de56a7eeb0c37795"
+    }
+  },
+  "trainerMetadata": {
+    "Trainer_Themen": {
+      "rows": 49,
+      "sha256": "35971bd45c73fe53ccd976a8a93e7b892043dd13d2bac80ae826b7e71783da21"
+    },
+    "Trainer_Detailgruppen": {
+      "rows": 197,
+      "sha256": "d93182166e211b28a855e88507045e72d146f8fd91b86f6c15ce33219d2bf34e"
+    },
+    "Trainer_Zuordnung": {
+      "rows": 2687,
+      "sha256": "823d7e245a6ae481cb629c4f02b3f0c0cc533369bf9a8e2396b99a76df8737a9"
+    },
+    "Trainer_Rahmenplanbezug": {
+      "rows": 2771,
+      "sha256": "2b6c53bdce58b61aa01aea4c2f82f639a0bd196a0d40e58042cd3fff18f61fa0"
+    },
+    "Rahmenplan_Abdeckung": {
+      "rows": 578,
+      "sha256": "4269a078717122f6eedda9dae471ec4f09f15c106545adee104c5f4cb730376e"
+    },
+    "Trainer_Migrationen": {
+      "rows": 38,
+      "sha256": "054c8da4b45e46deee475b4fa99788d96e9b77f04ee346a02daf15c94cc4a4e9"
+    }
+  },
+  "writeScope": {
+    "allowedSheets": [
+      "Betriebliches Management",
+      "Investition und Finanzierung",
+      "Karteikarten_Ergaenzungen",
+      "Lerntexte",
+      "Marketing",
+      "Quizfragen",
+      "Rechnungswesen",
+      "Unternehmensführung",
+      "VWL",
+      "Vertrieb"
+    ],
+    "protectedSheets": [
+      "NutzerFortschritt",
+      "PodcastFortschritt",
+      "Lernstand"
+    ],
+    "userDataWrites": 0,
+    "trainerMetadataWrites": 0
+  },
+  "requestPlan": {
+    "trainer": {
+      "requests": 32,
+      "chunks": [
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\trainer-01.json",
+          "requests": 32,
+          "sha256": "885ba3f6f56731283c5fe6da4e98dd4dcce441892573c57ffae4171f8a272d74"
+        }
+      ]
+    },
+    "quiz-updates": {
+      "requests": 84,
+      "chunks": [
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\quiz-updates-01.json",
+          "requests": 84,
+          "sha256": "a2c1d365fb218ce4a70607bd74543566291d710de2dabc942c2084b75bd7c198"
+        }
+      ]
+    },
+    "quiz-creates": {
+      "requests": 1,
+      "chunks": [
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\quiz-creates-01.json",
+          "requests": 1,
+          "sha256": "2767e9fe7a38b5e6b19636fcbded84a636f477593192bcb682742858879da632"
+        }
+      ]
+    },
+    "cards": {
+      "requests": 2,
+      "chunks": [
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\cards-01.json",
+          "requests": 2,
+          "sha256": "1291c08654adc895bddc48b0923e20dff87738f21d2ee44369a719f1f3f4a730"
+        }
+      ]
+    },
+    "learning": {
+      "requests": 454,
+      "chunks": [
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-01.json",
+          "requests": 60,
+          "sha256": "e77b7df158ee5b7b6c828dedf14d4a1c76b0baabc589e4ddceff132c141263a5"
+        },
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-02.json",
+          "requests": 60,
+          "sha256": "b9321280391722b509037344f35fbd9ccbb9e036e771254992afc2408498a07b"
+        },
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-03.json",
+          "requests": 60,
+          "sha256": "8d257ab1aa9d95696f36e55c745f78e10a195d1d2b92778f6b770a780a704af4"
+        },
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-04.json",
+          "requests": 60,
+          "sha256": "bc21dc3cc9d844f5e95c6bd9c103cb2cb0385e417d728c28c758d3a1cb9e2286"
+        },
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-05.json",
+          "requests": 60,
+          "sha256": "fb381f7efe490a72b8528a8861aeb56f3ef4f53e51d8a19a6c6d0e7d4f188559"
+        },
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-06.json",
+          "requests": 60,
+          "sha256": "b2414223706649dc85cc6058768b846a268a403f4c2f0e3e9f81fba1bae0db7a"
+        },
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-07.json",
+          "requests": 60,
+          "sha256": "87510230f458e25f7684d8e0025a43833facc917e9cb5ecdc6548ba769bc3b81"
+        },
+        {
+          "path": "release\\WIFA-GESAMT-PROD-20261007-RC1\\runs\\20261007-152717\\sheet-requests\\learning-08.json",
+          "requests": 34,
+          "sha256": "d5d0089606e9083aa02d713f7ad407741978afc7cdfe3e4ff76fde7da4dec1dc"
+        }
+      ]
+    }
+  },
+  "plannedWrites": {
+    "trainerCells": 32,
+    "quizUpdateCells": 84,
+    "quizCreateRows": 53,
+    "quizCreateCells": 742,
+    "cardOverlayRows": 38,
+    "learningCells": 454
+  }
+}

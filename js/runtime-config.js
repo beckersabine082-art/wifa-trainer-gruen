@@ -25,8 +25,8 @@
     }),
     PRODUCTION: Object.freeze({
       environment: 'PRODUCTION',
-      podcastVersion: 'WIFA-PODCAST-PROD-LZREV2-20261007-v1',
-      podcastPrefix: 'podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/'
+      podcastVersion: 'WIFA-PODCAST-PROD-LZREV2-20261007-v2',
+      podcastPrefix: 'podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/'
     })
   });
 

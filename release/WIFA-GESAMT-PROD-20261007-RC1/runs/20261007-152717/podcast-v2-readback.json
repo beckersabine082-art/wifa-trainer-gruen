@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 1,
+  "version": "WIFA-PODCAST-PROD-LZREV2-20261007-v2",
+  "prefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/",
+  "result": "GO_FOR_ROLLOUT_CONTINUATION",
+  "clientSwitched": false,
+  "sheetWritesPerformed": false,
+  "readback": {
+    "status": "PASS",
+    "targetInventory": {
+      "count": 26,
+      "aggregateSha256": "0b5cfa717819c0fb0babf505e692feae73e29f47067fdffc824c321a8bc221e8",
+      "rows": [
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-management.json",
+          "generation": "1791388118448807",
+          "size": 753843,
+          "contentType": "application/json",
+          "md5Hash": "f29M5Z3EVDTcZBHK+fq1jw==",
+          "crc32c": "YY8rfg=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-management/3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10.mp3",
+          "generation": "1791388117050639",
+          "size": 50801206,
+          "contentType": "audio/mpeg",
+          "md5Hash": "OVo91i52i4MpJKi7HxId3g==",
+          "crc32c": "+fKDZQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-rechnungswesen-und-controlling.json",
+          "generation": "1791388118693098",
+          "size": 644682,
+          "contentType": "application/json",
+          "md5Hash": "kSRved2zQpPZFD6S2d3paw==",
+          "crc32c": "Ks7GmQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-rechnungswesen-und-controlling/91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66.mp3",
+          "generation": "1791388117165139",
+          "size": 43125908,
+          "contentType": "audio/mpeg",
+          "md5Hash": "WnHeLc7ym7bOKeXVfalUvQ==",
+          "crc32c": "hibYRQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/bwl.json",
+          "generation": "1791388118992659",
+          "size": 1000671,
+          "contentType": "application/json",
+          "md5Hash": "eY9zF2cQHmA0D52cKe4g7Q==",
+          "crc32c": "WelC7g=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/bwl/e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12.mp3",
+          "generation": "1791388117271140",
+          "size": 72011172,
+          "contentType": "audio/mpeg",
+          "md5Hash": "PQNEmL6sZoyhcTBzzYTurg==",
+          "crc32c": "cUQQjQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/fuehrung-und-zusammenarbeit.json",
+          "generation": "1791388119307285",
+          "size": 1176838,
+          "contentType": "application/json",
+          "md5Hash": "I6e0f49yHAE5jTaZX+5vOg==",
+          "crc32c": "nL6e6A=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/fuehrung-und-zusammenarbeit/5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c.mp3",
+          "generation": "1791388117353087",
+          "size": 78025709,
+          "contentType": "audio/mpeg",
+          "md5Hash": "2epCRLEI6vsNdEGjIbONDw==",
+          "crc32c": "KEf5wA=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/investition-und-finanzierung.json",
+          "generation": "1791388119535156",
+          "size": 631576,
+          "contentType": "application/json",
+          "md5Hash": "tAct8OGEaL8DALrtfxrnzw==",
+          "crc32c": "Cu7rMg=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/investition-und-finanzierung/c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077.mp3",
+          "generation": "1791388117423926",
+          "size": 43849709,
+          "contentType": "audio/mpeg",
+          "md5Hash": "iZsyH9VbREAtysPYuwMiTA==",
+          "crc32c": "v38eNQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/logistik.json",
+          "generation": "1791388119823282",
+          "size": 879004,
+          "contentType": "application/json",
+          "md5Hash": "iqoIhRrwRuKy12lMjCShmA==",
+          "crc32c": "semAJw=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/logistik/c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c.mp3",
+          "generation": "1791388117523555",
+          "size": 60603080,
+          "contentType": "audio/mpeg",
+          "md5Hash": "8wgKlbjNrtNNiqoTv8reeA==",
+          "crc32c": "Ps5ofw=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/marketing.json",
+          "generation": "1791388120041439",
+          "size": 553331,
+          "contentType": "application/json",
+          "md5Hash": "dgC0AAYR7KZoY3PV+tG/Pg==",
+          "crc32c": "nHhxkg=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/marketing/6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878.mp3",
+          "generation": "1791388117603362",
+          "size": 36137735,
+          "contentType": "audio/mpeg",
+          "md5Hash": "H9urXTTXP35hBbObgy4diQ==",
+          "crc32c": "j1GzSA=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/rechnungswesen.json",
+          "generation": "1791388120322645",
+          "size": 895461,
+          "contentType": "application/json",
+          "md5Hash": "RfAM2/dD8RzOqC3TsnJsHA==",
+          "crc32c": "sFQKyQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/rechnungswesen/0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8.mp3",
+          "generation": "1791388117680758",
+          "size": 64003596,
+          "contentType": "audio/mpeg",
+          "md5Hash": "ZjiorMm14x0m2/pjw/dt1A==",
+          "crc32c": "dsfdsw=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/recht.json",
+          "generation": "1791388120678684",
+          "size": 1609913,
+          "contentType": "application/json",
+          "md5Hash": "J4h/Saa6eVYxZfdZYkdnNQ==",
+          "crc32c": "LhfBLQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/recht/a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97.mp3",
+          "generation": "1791388117776977",
+          "size": 111318352,
+          "contentType": "audio/mpeg",
+          "md5Hash": "78D+6SVi8jH4TKYdBSxksg==",
+          "crc32c": "K/1+bg=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/steuern.json",
+          "generation": "1791388120972406",
+          "size": 1158000,
+          "contentType": "application/json",
+          "md5Hash": "5m0l5XsZL5HHLPxZRZaNrQ==",
+          "crc32c": "m4IJXQ=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/steuern/59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849.mp3",
+          "generation": "1791388117854184",
+          "size": 79606535,
+          "contentType": "audio/mpeg",
+          "md5Hash": "uqQRcHfGYpc9f/O4d3w4Tg==",
+          "crc32c": "bsvWNA=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/unternehmensfuehrung.json",
+          "generation": "1791388121250178",
+          "size": 897839,
+          "contentType": "application/json",
+          "md5Hash": "WNQtv4Kf/jaajRCk0yviGg==",
+          "crc32c": "k5MuGA=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/unternehmensfuehrung/6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255.mp3",
+          "generation": "1791388117948528",
+          "size": 62143155,
+          "contentType": "audio/mpeg",
+          "md5Hash": "pm5s/g1E9KKjBXKe/uT4VQ==",
+          "crc32c": "/alc2Q=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vertrieb.json",
+          "generation": "1791388121464566",
+          "size": 469172,
+          "contentType": "application/json",
+          "md5Hash": "0xTKlQDSCP1BsleRf7AqBw==",
+          "crc32c": "++K/Mg=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vertrieb/a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265.mp3",
+          "generation": "1791388118035112",
+          "size": 33076706,
+          "contentType": "audio/mpeg",
+          "md5Hash": "hrTICr4oRuq96q6Ed2imYg==",
+          "crc32c": "vroyUA=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vwl.json",
+          "generation": "1791388121698191",
+          "size": 489942,
+          "contentType": "application/json",
+          "md5Hash": "DLxZJBsHlbDfyWQG/k0H5g==",
+          "crc32c": "h32AMw=="
+        },
+        {
+          "path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vwl/024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f.mp3",
+          "generation": "1791388118121640",
+          "size": 32483309,
+          "contentType": "audio/mpeg",
+          "md5Hash": "bPmbFkTD/oybzn9UC3M9/A==",
+          "crc32c": "aM0RLA=="
+        }
+      ]
+    },
+    "sidecars": [
+      {
+        "fach": "Betriebliches Management",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-management.json",
+        "sidecarHash": "8b49872174aeb01699abd8a4529f33b3f8e466d5fec07912b0428c5dadebac62",
+        "sidecarGeneration": "1791388118448807",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-management/3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10.mp3",
+        "mp3Hash": "3a05b2e80357d92bbef6862c4bb38635e8f0295d577fb9a4a05a969ef72d7b10",
+        "mp3Generation": "1791388117050639",
+        "ids": 49,
+        "chapters": 4,
+        "duration": 4233.334421768707,
+        "result": "PASS"
+      },
+      {
+        "fach": "Betriebliches Rechnungswesen und Controlling",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-rechnungswesen-und-controlling.json",
+        "sidecarHash": "591600b35748b0e462c1f5306183fcefa5503f28ba0b5d9145301c215c7c7304",
+        "sidecarGeneration": "1791388118693098",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/betriebliches-rechnungswesen-und-controlling/91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66.mp3",
+        "mp3Hash": "91d82dfe0ca1985e2e08d5688c685706881b18d1bb1ff4ee5f397bd212ef3a66",
+        "mp3Generation": "1791388117165139",
+        "ids": 22,
+        "chapters": 2,
+        "duration": 3593.7291609977324,
+        "result": "PASS"
+      },
+      {
+        "fach": "BWL",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/bwl.json",
+        "sidecarHash": "f3b0890d96277e4176d1a38cc9b89faab799cef59edc13c1d3265d69bdf29780",
+        "sidecarGeneration": "1791388118992659",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/bwl/e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12.mp3",
+        "mp3Hash": "e0b6d9ef1d6f284099b8aef26afc9b5debf00754266f6f04f90f16ff62c5bb12",
+        "mp3Generation": "1791388117271140",
+        "ids": 40,
+        "chapters": 3,
+        "duration": 6000.831201814059,
+        "result": "PASS"
+      },
+      {
+        "fach": "Führung und Zusammenarbeit",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/fuehrung-und-zusammenarbeit.json",
+        "sidecarHash": "3436d4243c710cc7fd63c3301d1389a9a1ea56a20db1342dfde4928dc43bc877",
+        "sidecarGeneration": "1791388119307285",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/fuehrung-und-zusammenarbeit/5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c.mp3",
+        "mp3Hash": "5a1b9c855949d5546f2efc32b24e9fe18a7dec2ef9b44916958fb25d2c98255c",
+        "mp3Generation": "1791388117353087",
+        "ids": 56,
+        "chapters": 7,
+        "duration": 6502.051700680272,
+        "result": "PASS"
+      },
+      {
+        "fach": "Investition und Finanzierung",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/investition-und-finanzierung.json",
+        "sidecarHash": "ce2a4e9fedf5071433dfd05bf14e56dbd825bc74c5f135cbbb1eca499f24edf3",
+        "sidecarGeneration": "1791388119535156",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/investition-und-finanzierung/c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077.mp3",
+        "mp3Hash": "c3c98bb8e26e77b534750322851178a63ceb388eec9225042e9993fc72a59077",
+        "mp3Generation": "1791388117423926",
+        "ids": 34,
+        "chapters": 3,
+        "duration": 3654.042993197279,
+        "result": "PASS"
+      },
+      {
+        "fach": "Logistik",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/logistik.json",
+        "sidecarHash": "ab07255a3e55670ec6adb6f5dc8034bddaf990d027506047ce07f5973449c2f9",
+        "sidecarGeneration": "1791388119823282",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/logistik/c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c.mp3",
+        "mp3Hash": "c75225a47b4505e9e09b556db7a5e43c30f079ec526189807921cc2e6febff8c",
+        "mp3Generation": "1791388117523555",
+        "ids": 35,
+        "chapters": 5,
+        "duration": 5050.165986394558,
+        "result": "PASS"
+      },
+      {
+        "fach": "Marketing",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/marketing.json",
+        "sidecarHash": "a48e2042965dbaaefadeb2a80c61e281da6aaa0172c7d1a78c32ef9fc666c6a1",
+        "sidecarGeneration": "1791388120041439",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/marketing/6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878.mp3",
+        "mp3Hash": "6d886374cb064254d8550898595aa680ec9dbf11ce7239c381700396090a0878",
+        "mp3Generation": "1791388117603362",
+        "ids": 44,
+        "chapters": 2,
+        "duration": 3011.395918367347,
+        "result": "PASS"
+      },
+      {
+        "fach": "Rechnungswesen",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/rechnungswesen.json",
+        "sidecarHash": "680129787e5ca1085c911d33d60ee9e9ceb250dea90cf58fa67ef205bc85d2e2",
+        "sidecarGeneration": "1791388120322645",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/rechnungswesen/0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8.mp3",
+        "mp3Hash": "0a898de63a0498f569f3afda8db16e5c3d691958c23e19d8e8831b9182fdb2b8",
+        "mp3Generation": "1791388117680758",
+        "ids": 36,
+        "chapters": 5,
+        "duration": 5333.534013605442,
+        "result": "PASS"
+      },
+      {
+        "fach": "Recht",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/recht.json",
+        "sidecarHash": "78e0890b6f249ff49eac833a7d6c7bc7c50396ed1170126161437d3d1b5787c8",
+        "sidecarGeneration": "1791388120678684",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/recht/a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97.mp3",
+        "mp3Hash": "a838b3c8daef519e4150e3342f27ea6d97840a38eadae953666768fa3bce1d97",
+        "mp3Generation": "1791388117776977",
+        "ids": 57,
+        "chapters": 7,
+        "duration": 9276.424081632653,
+        "result": "PASS"
+      },
+      {
+        "fach": "Steuern",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/steuern.json",
+        "sidecarHash": "4ac7ce459819b5d4ffd1516eca4884ae6f7bd8774d69b092711f5d2997d81213",
+        "sidecarGeneration": "1791388120972406",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/steuern/59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849.mp3",
+        "mp3Hash": "59397d2faf523983a175d90cfa6d4e884c5a51fb77db45f7569731ef095b8849",
+        "mp3Generation": "1791388117854184",
+        "ids": 43,
+        "chapters": 3,
+        "duration": 6633.790793650794,
+        "result": "PASS"
+      },
+      {
+        "fach": "Unternehmensführung",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/unternehmensfuehrung.json",
+        "sidecarHash": "8994bc666758a524a4416041a2fca50c1f63bb06b9f2fe6303def5dd2be01948",
+        "sidecarGeneration": "1791388121250178",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/unternehmensfuehrung/6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255.mp3",
+        "mp3Hash": "6b4e5235aa9ef2fd8d996f090e6b765b1b23557fe53772e69b8bee8f5dbb9255",
+        "mp3Generation": "1791388117948528",
+        "ids": 31,
+        "chapters": 3,
+        "duration": 5178.491065759637,
+        "result": "PASS"
+      },
+      {
+        "fach": "Vertrieb",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vertrieb.json",
+        "sidecarHash": "08d35fb358c0ebb165f2c34b9bd304c3eddfc5fe0cf6550c20aad49816738c47",
+        "sidecarGeneration": "1791388121464566",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vertrieb/a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265.mp3",
+        "mp3Hash": "a65ab703f96d9cf053e4177d448553dab79940eb91d7f1fa40884e772392d265",
+        "mp3Generation": "1791388118035112",
+        "ids": 26,
+        "chapters": 3,
+        "duration": 2756.2898866213154,
+        "result": "PASS"
+      },
+      {
+        "fach": "VWL",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vwl.json",
+        "sidecarHash": "3ac76f698c4665c0917797370a21beb5825db755ed8bf34c6998c28a9a9ce7c2",
+        "sidecarGeneration": "1791388121698191",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vwl/024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f.mp3",
+        "mp3Hash": "024604ee870990564daf3de7fd79b44808d6e2d02c7fff16e354e0a8cd5bd87f",
+        "mp3Generation": "1791388118121640",
+        "ids": 48,
+        "chapters": 1,
+        "duration": 2706.8581405895693,
+        "result": "PASS"
+      }
+    ],
+    "totals": {
+      "objects": 26,
+      "sidecars": 13,
+      "bundles": 13,
+      "ids": 521,
+      "uniqueIds": 521,
+      "chapters": 48,
+      "stagingReferences": 0
+    },
+    "unchanged": {
+      "v1": {
+        "count": 110,
+        "aggregateSha256": "a18c930858e3b3a1e53cf0a0ded427752b71d1ab06bbd53fbe54dbca25f1ea23"
+      },
+      "legacy": {
+        "count": 26,
+        "aggregateSha256": "2d02ff2b1d0cc72dcb80912befd2c0fac21d90af165f0779cd3a4a37d07795f3"
+      }
+    }
+  }
+}

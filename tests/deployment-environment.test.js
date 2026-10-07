@@ -22,17 +22,23 @@ function evaluate(builtSource) {
 }
 
 test('staging build opens only the staging spreadsheet', () => {
-  const fixture = evaluate(buildAppsScriptSource(source, 'STAGING'));
+  const built = buildAppsScriptSource(source, 'STAGING');
+  const fixture = evaluate(built);
   assert.equal(fixture.context.getSpreadsheet_().getId(), STAGING_ID);
   assert.deepEqual(fixture.opened, [STAGING_ID]);
   assert.ok(!fixture.opened.includes(PRODUCTION_ID));
+  assert.match(built, new RegExp(STAGING_ID));
+  assert.doesNotMatch(built, new RegExp(PRODUCTION_ID));
 });
 
 test('production build opens only the production spreadsheet', () => {
-  const fixture = evaluate(buildAppsScriptSource(source, 'PRODUCTION'));
+  const built = buildAppsScriptSource(source, 'PRODUCTION');
+  const fixture = evaluate(built);
   assert.equal(fixture.context.getSpreadsheet_().getId(), PRODUCTION_ID);
   assert.deepEqual(fixture.opened, [PRODUCTION_ID]);
   assert.ok(!fixture.opened.includes(STAGING_ID));
+  assert.match(built, new RegExp(PRODUCTION_ID));
+  assert.doesNotMatch(built, new RegExp(STAGING_ID));
 });
 
 test('unbuilt, missing and invalid environment configurations fail closed', () => {

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "status": "PASS",
+  "productionSpreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+  "prewriteConflictCheck": {
+    "conflicts": 0,
+    "trainerOldStates": "9/9",
+    "quizCreateIdsAbsent": "53/53",
+    "quizUpdateOldStates": "14/14",
+    "learningTextOldStates": "521/521",
+    "flashcardOverlayAbsent": true
+  },
+  "writes": {
+    "trainer": { "ids": 9, "cells": 32 },
+    "quiz": { "newRows": 53, "updatedIds": 14, "updatedCells": 84 },
+    "flashcards": { "overlayRows": 38, "baseAThroughOChanges": 0 },
+    "learningTexts": { "rows": 260, "cells": 454 },
+    "trainerMetadataCells": 0,
+    "userProgressResumeAnalyticsCells": 0
+  },
+  "readback": {
+    "trainerIds": 2686,
+    "trainerVisibleTopics": 48,
+    "trainerDetailGroups": 196,
+    "quizActive": 2932,
+    "quizUniqueIds": 2932,
+    "flashcardsEffectiveActive": 2699,
+    "learningTextIds": 521,
+    "learningTextChapters": 48,
+    "protectedSheetsUnchanged": true,
+    "trainerMetadataUnchanged": true
+  },
+  "rollbackRequired": false
+}

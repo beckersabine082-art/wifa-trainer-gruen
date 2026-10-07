@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
-  "auditRevision": "FINAL-RELEASE-AUDIT-20261007-3",
-  "state": "READY_GO_AWAITING_EXPLICIT_PRODUCTION_APPROVAL",
-  "writeEnabled": false,
+  "auditRevision": "FINAL-RELEASE-AUDIT-20261007-4-PODCAST-V2",
+  "state": "AUTHORIZED_PRODUCTION_ROLLOUT_IN_PROGRESS",
+  "writeEnabled": true,
   "auditedAt": "2026-10-07T15:00:40.8432774+02:00",
   "source": {
     "branch": "codex/rahmenplan-gesamtrollout-rev2",
@@ -30,8 +30,8 @@
       "appsScriptVersion": 114,
       "deploymentId": "AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA",
       "apiUrl": "https://script.google.com/macros/s/AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA/exec",
-      "plannedPodcastVersion": "WIFA-PODCAST-PROD-LZREV2-20261007-v1",
-      "plannedPodcastPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/"
+      "plannedPodcastVersion": "WIFA-PODCAST-PROD-LZREV2-20261007-v2",
+      "plannedPodcastPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/"
     }
   },
   "verifiedCurrentState": {
@@ -130,8 +130,8 @@
     },
     {
       "name": "productionPodcastPromotionManifest",
-      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST.json",
-      "sha256": "57e1cdab1b93e72cf47e25df88b559b5c9b07560fbd63a86dc455529153f4bcc",
+      "path": "release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST_V2.json",
+      "sha256": "3f45551948fb587bc0039aed92e1c9cf6a049db2144c1d6871daff4dc34ab270",
       "onReleaseBranch": true
     },
     {
@@ -211,8 +211,8 @@
     "podcast": {
       "mode": "COPY_IMMUTABLY_THEN_VERIFY",
       "sourcePrefix": "podcast/staging/lerntext-rev2/",
-      "targetPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/",
-      "sourceObjects": 110,
+      "targetPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/",
+      "sourceObjects": 26,
       "runtimeObjects": 26,
       "bundles": 13,
       "sidecars": 13,
@@ -285,7 +285,7 @@
     "currentDecision": "GO",
     "dataConflictsFound": 0,
     "releaseBlockers": 0,
-    "productionExecutionAuthorized": false,
-    "requiredNextApproval": "Obtain a separate explicit production execution approval, establish the change window, and run the atomic preflight immediately before the first write."
+      "productionExecutionAuthorized": true,
+      "requiredNextApproval": null
   }
 }

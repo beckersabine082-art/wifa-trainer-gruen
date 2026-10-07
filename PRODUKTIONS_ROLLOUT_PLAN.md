@@ -2,9 +2,9 @@
 
 Release: `WIFA-GESAMT-PROD-20261007-RC1`
 
-Status: **technischer Audit GO, Produktionsausführung nicht freigegeben**
+Status: **Produktionsausführung freigegeben; Datenmigration verifiziert, Client-Cutover ausstehend**
 
-Produktionsausführung: **nein**
+Produktionsausführung: **ja**
 
 ## Unveränderliche Regeln
 
@@ -48,12 +48,13 @@ veralten könnte.
 
 ### 1. Podcastobjekte vorbereiten
 
-- Exakt 110 Objekte anhand
-  `release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST.json`
-  in den neuen Präfix kopieren.
+- Die maßgeblichen Runtimeobjekte anhand
+  `release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST_V2.json`
+  create-only in den geschlossenen v2-Präfix kopieren.
 - `ifGenerationMatch=0` beziehungsweise gleichwertiges Create-only-Gate verwenden.
 - Größen, Content-Types, Generationen, Identitäts- und Inhaltshashes rücklesen.
-- 13 Sidecars, 13 MP3-Bundles und alle Runtimepfade prüfen.
+- 13 Sidecars, 13 MP3-Bundles, 521 IDs, 48 Kapitel und alle Runtimepfade prüfen;
+  in den Runtimeartefakten muss `staging` 0-mal vorkommen.
 - Alte Produktionspfade niemals überschreiben.
 
 ### 2. Fachliche Sheetpatches
@@ -79,7 +80,7 @@ Rücklesewert. Neue Produktionsdaten außerhalb dieser stabilen IDs bleiben erha
 - Im gebauten Artefakt muss ausschließlich
   `1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y` vorkommen.
 - Produktionsfrontend verwendet nur
-  `WIFA-PODCAST-PROD-LZREV2-20261007-v1` und den neuen immutable Präfix.
+  `WIFA-PODCAST-PROD-LZREV2-20261007-v2` und den neuen immutable Präfix.
 - Fehlende neue Bundles sind ein Fehler; kein Legacy-Fallback.
 - Staging-Deployment und Staging-Sheet bleiben unberührt.
 

@@ -16,7 +16,7 @@ test('dry-run derives the exact patch scope only from versioned packages', () =>
     quizPackage: read('release/WIFA-GESAMT-PROD-20261007-RC1/packages/quiz/Quiz_Inhaltsergaenzungen_final.json'),
     flashcardPackage: read('release/WIFA-GESAMT-PROD-20261007-RC1/packages/karteikarten/Karteikarten_Inhaltsergaenzungen_final.json'),
     learningTextPackage: read('release/WIFA-GESAMT-PROD-20261007-RC1/packages/lerntexte/Lerntexte_Gesamtumsetzung_final.json'),
-    podcastPromotion: read('release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST.json'),
+    podcastPromotion: read('release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST_V2.json'),
     liveEvidence: { unknownConflicts: 0, trainerMetadataMatches: true }
   });
   assert.deepEqual(summary.counts, {
@@ -30,7 +30,7 @@ test('dry-run derives the exact patch scope only from versioned packages', () =>
     flashcardOverlayRows: 38,
     learningTextRows: 260,
     learningTextCells: 454,
-    podcastObjects: 110,
+    podcastObjects: 26,
     unknownConflicts: 0,
     userDataWrites: 0
   });

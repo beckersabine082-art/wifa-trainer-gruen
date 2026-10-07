@@ -1,6 +1,6 @@
 # Finaler Release-/Deployment-Audit
 
-Auditkennung: `FINAL-RELEASE-AUDIT-20261007-3`
+Auditkennung: `FINAL-RELEASE-AUDIT-20261007-4`
 
 Release: `WIFA-GESAMT-PROD-20261007-RC1`
 
@@ -9,10 +9,15 @@ Fachrevision: `WIFA-TR-GESAMT-20260927-REV2-FREIGEGEBENE-GRENZFAELLE`
 Entscheidung: **GO**
 
 Der authentifizierte read-only Podcast-Nachweis wurde am 7. Oktober 2026 im
-angemeldeten normalen Browser vollständig bestanden. Es ist keine
-Produktionsmigration erfolgt. Produktion blieb auf Apps Script Version 114, Deployment
+angemeldeten normalen Browser vollständig bestanden. Die anschließend ausdrücklich
+autorisierte Podcast- und Sheetmigration ist komponentenweise ausgeführt und
+zurückgelesen; der Client-Cutover ist zum Stand dieses Dokuments noch ausstehend.
+Der bisherige Apps-Script-Stand Version 114, Deployment
 `AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA`
-und Spreadsheet `1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y`.
+und das Produktionssheet `1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y`
+wurden vor dem ersten Write revisionssicher gesichert. Dieselbe Deployment-ID wurde
+nach bestandenem Datengate kontrolliert auf Apps-Script-Version 121 aktualisiert;
+der produktive Recht-Katalog lieferte anschließend 200 OK und 7 freigegebene Pools.
 
 ## Blockerstatus
 
@@ -20,7 +25,7 @@ und Spreadsheet `1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y`.
 |---|---|---|
 | B1 – verbindliche Pakete revisionssicher | **GELÖST** | Vier logische Pakete mit fünf Endartefakten liegen unter `release/WIFA-GESAMT-PROD-20261007-RC1/packages/`. Pfad, Revision und SHA-256 sind im Produktionsmanifest festgelegt. `release-artifacts.js` bricht bei fehlender Datei, falschem Hash, falscher Revision oder nicht versioniertem Ausführungspfad ab. |
 | B2 – Spreadsheet-Routing | **GELÖST** | `Code.gs` enthält nur den Build-Platzhalter. `build-apps-script.js` erzeugt explizit STAGING oder PRODUCTION. Fehlende/ungültige Umgebung endet fail-closed; Script Properties werden nicht verwendet. |
-| B3 – Produktionspodcast | **GELÖST** | Version `WIFA-PODCAST-PROD-LZREV2-20261007-v1`, immutable Zielpräfix und vollständiges 110-Objekt-Promotionmanifest sind vorbereitet. 26 Runtimeobjekte sind explizit markiert; keine Storagekopie wurde ausgeführt. |
+| B3 – Produktionspodcast | **GELÖST** | Version `WIFA-PODCAST-PROD-LZREV2-20261007-v2` wurde create-only im geschlossenen Produktionsnamespace bereitgestellt. 13 Sidecars und 13 byteidentische MP3-Bundles wurden zurückgelesen; 521 IDs, 48 Kapitel, unveränderte MP3-Hashes und 0 Staging-Referenzen sind nachgewiesen. Die fehlerhafte v1 bleibt unreferenziert und unverändert. |
 | B4 – authentifizierter Live-Storage-Recheck | **GELÖST** | Nutzerbestätigter Normalbrowser-Nachweis: `13/13 Sidecars | 13/13 Bundles | 13/13 loadedmetadata | 13/13 duration > 0 | PASS`. Recht zusätzlich: 48-Kapitel-Navigation, Alle Kapitel, Kapitel 1, Einzeltextziel und Nummerierung bestanden; Start `1.1 Anspruchsprüfung und Gutachtenstil`. Der Lauf war read-only. |
 | B5 – frische Rollbackbasis | **GELÖST** | `production-preflight.js` erzwingt Altwertprüfung, frische Sheetkopie, Git-Referenz, Apps-Script-114-Nachweis, Podcastinventar, Run-Report und unmittelbaren zweiten Konfliktcheck. Die Sicherung wird absichtlich erst unmittelbar vor einem freigegebenen ersten Write erzeugt. |
 
@@ -61,22 +66,27 @@ IDs wurden verwendet; Zeilennummern sind keine Identität.
 Der vollständige zellgenaue Patchplan liegt in
 `release/WIFA-GESAMT-PROD-20261007-RC1/dry-run/PRODUCTION_DRY_RUN_20261007.json`.
 
-## Notwendige tatsächliche Writes nach separater Freigabe
+## Autorisierte und verifizierte Produktionswrites
 
-| Bereich | Späterer Write |
+| Bereich | Ausgeführter Write |
 |---|---:|
 | Trainer-Metadaten | 0 |
 | Trainerinhalte | 32 Zellen in 9 bestehenden IDs |
 | Quiz | 53 neue Zeilen / 742 Zellen und 84 Zellen in 14 bestehenden IDs |
 | Karteikarten | neue Overlaytabelle mit 38 Zeilen; A:O bleibt unverändert |
 | Lerntexte | 454 Zellen in 260 bestehenden Zeilen |
-| Podcast | 110 neue immutable Objekte, davon 26 Runtimeobjekte |
+| Podcast | 110 unreferenzierte immutable v1-Objekte sowie 26 korrigierte immutable v2-Runtimeobjekte; kein Altobjekt überschrieben oder gelöscht |
 | Nutzer-/Lernstand-/Resume-/Analyticsdaten | 0 |
+
+Alle Sheetkomponenten wurden nach jedem Schritt zurückgelesen. Der finale Readback
+bestätigt 2.932 aktive Quizfragen, 2.699 wirksame Karteikarten, 521 Lerntexte in
+48 Kapiteln sowie unveränderte Trainer-Metadaten und unveränderte geschützte
+Nutzer-/Fortschrittsblätter.
 
 ## Tests
 
 - Aktuelle releasebezogene Auswahl: **431/431 bestanden**.
-- Gesamte JavaScript-/MJS-Suite: **816/827 bestanden**.
+- Gesamte JavaScript-/MJS-Suite: **804/815 bestanden**.
 - Die 11 Fehler sind dieselben auf `main`: 3 Prüfungssimulation, 3
   Quiz-Kilian-Tastatur, 1 robots, 1 Erfolgsanimation und 3 Usage-Client.
 - Zusätzliche Browser-`.cjs`-Runner benötigen ihre Browserumgebung und sind nicht
@@ -84,7 +94,7 @@ Der vollständige zellgenaue Patchplan liegt in
 
 ## Schlussentscheidung
 
-**GO.** B1 bis B5 sind gelöst. Der technische Release-Audit ist konfliktfrei.
-Dieses GO bestätigt ausschließlich die technische Rolloutbereitschaft; es ist
-keine Produktions- oder Ausführungsfreigabe. Vor jedem tatsächlichen Write bleiben
-eine separate ausdrückliche Produktionsfreigabe und der atomare Preflight Pflicht.
+**GO.** B1 bis B5 sind gelöst. Der atomare Preflight und die Datenmigration sind
+konfliktfrei abgeschlossen. Der Client-Cutover darf gemäß dem ausdrücklich
+freigegebenen Rolloutplan fortgesetzt werden; Backend, Frontend und unmittelbarer
+Produktions-Smoke-Test bleiben eigenständige Go/No-Go-Gates.

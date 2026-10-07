@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "mode": "READ_ONLY_POSTWRITE_VERIFICATION",
+  "status": "PASS",
+  "components": {
+    "trainer": {
+      "ids": 9,
+      "expectedIds": 9,
+      "cells": 32
+    },
+    "quiz": {
+      "creates": 53,
+      "updates": 14,
+      "active": 2932,
+      "uniqueKeys": 2932,
+      "uniqueIds": 2932
+    },
+    "cards": {
+      "rows": 38,
+      "new": 13,
+      "overrides": 25,
+      "projectedActive": 2699
+    },
+    "learning": {
+      "ids": 521,
+      "active": 521,
+      "chapters": 48
+    }
+  },
+  "protectedSheetsUnchanged": true,
+  "trainerMetadataUnchanged": true,
+  "errors": []
+}

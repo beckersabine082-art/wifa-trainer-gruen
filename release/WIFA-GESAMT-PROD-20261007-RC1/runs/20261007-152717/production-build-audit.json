@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "environment": "PRODUCTION",
+  "appsScriptArtifact": "apps-script-production/Code-v2.gs",
+  "appsScriptSha256": "db5aea258d3fca7373315ea9719952e54b04876ba6a11bb3423c022d5f2ff80c",
+  "appsScriptDeploymentId": "AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA",
+  "appsScriptVersion": 121,
+  "appsScriptCatalogSmoke": { "status": 200, "fach": "Recht", "visibleTopics": 7, "ids": 567 },
+  "productionSpreadsheetIdOccurrences": 1,
+  "stagingSpreadsheetIdOccurrences": 0,
+  "unresolvedBuildPlaceholders": 0,
+  "podcastDiagnosticOccurrences": 0,
+  "podcastVersion": "WIFA-PODCAST-PROD-LZREV2-20261007-v2",
+  "podcastPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/",
+  "targetedReleaseTests": { "passed": 19, "failed": 0 },
+  "sheetGateUnitTests": { "passed": 5, "failed": 0 },
+  "fullNodeSuite": {
+    "passed": 804,
+    "failed": 11,
+    "total": 815,
+    "newFailuresAgainstMain": 0
+  }
+}

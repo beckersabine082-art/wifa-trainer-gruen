@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "WIFA-GESAMT-PROD-20261007-RC1",
+  "startedAt": "2026-10-07T15:27:17+02:00",
+  "status": "PODCAST_V2_READY_CLIENT_NOT_SWITCHED",
+  "releaseSource": {
+    "branch": "codex/rahmenplan-gesamtrollout-rev2",
+    "head": "790c0a0c16973ee0d352fffb2492e6b961c49433",
+    "originMain": "88fa86e3ec137f2a28a8c286b1cf4ed7db6ed6a2",
+    "aheadOfOriginMain": 14,
+    "artifactHashesVerified": 11,
+    "artifactHashConflicts": 0
+  },
+  "productionSheet": {
+    "spreadsheetId": "1_PGsBBjPZcc48B1PvwS3XKNVrQgH6Rvarzg4zBbPa7Y",
+    "modifiedTime": "2026-10-04T13:30:22.965Z",
+    "backupId": "1Zjact1QOAURuH7-vRtqZOx3GWmpOOkd2d9Gw_Vy_qQs",
+    "backupTitle": "WiFa Prüfungs-Trainer – PROD PRE-ROLLOUT BACKUP – WIFA-GESAMT-PROD-20261007-RC1 – 2026-10-07",
+    "backupVerified": true,
+    "backupSheets": 40,
+    "firstConflictCheck": 0,
+    "secondConflictCheck": 0,
+    "expectedOldChecks": {
+      "trainerContentIds": 9,
+      "quizCreateIdsAbsent": 53,
+      "quizUpdateRows": 14,
+      "flashcardOverlayAbsent": true,
+      "flashcardBaseRows": 25,
+      "flashcardNewIdsAbsent": 13,
+      "learningTextRows": 521
+    },
+    "balances": {
+      "trainerActiveIds": 2686,
+      "trainerUniqueActiveIds": 2686,
+      "trainerVisibleTopics": 48,
+      "trainerDetailGroups": 196,
+      "trainerPrimaryAssignments": 2686,
+      "trainerFrameworkReferences": 2770,
+      "trainerCoverageNodes": 577,
+      "quizActive": 2879,
+      "learningTextsActive": 521
+    },
+    "protectedSheetsUnchangedAcrossBackup": [
+      "NutzerFortschritt",
+      "PodcastFortschritt",
+      "Lernstand"
+    ]
+  },
+  "productionGitReference": {
+    "ref": "refs/tags/wifa-production-pre-rollout-20261007-v114",
+    "commit": "88fa86e3ec137f2a28a8c286b1cf4ed7db6ed6a2",
+    "tagObject": "cc72269582abecc0f4165faf222d126ccac32717"
+  },
+  "productionAppsScript": {
+    "projectId": "11HsinuaxDAFzfL388GCzkrqYtGzffjSLrzfflvwiDqkwcRwFavpZJeKv",
+    "deploymentId": "AKfycbxTymUhl29rdmXONuWRlVkoe8xiFXqVf2bWUju1XgC44l2qoUT3LTU_PownQrNHbBKUVA",
+    "version": 114,
+    "verifiedLiveInDeploymentManager": true
+  },
+  "productionPodcast": {
+    "legacyPrefix": "podcast/continuous/",
+    "legacyVersion": "LEGACY_UNVERSIONED",
+    "legacyRuntimeObjects": 26,
+    "legacyAggregateSha256": "4f975396c9468e38194e8326319de9f7cd49274e672880de8dd547210db1f00c",
+    "targetVersion": "WIFA-PODCAST-PROD-LZREV2-20261007-v1",
+    "targetPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v1/",
+    "liveSnapshotStatus": "VERIFIED",
+    "sourcesChecked": 110,
+    "sourceBytes": 860568743,
+    "runtimeHashesVerified": 26,
+    "occupiedTargetCount": 0,
+    "copyPrecondition": "ifGenerationMatch=0",
+    "productionObjectsWritten": 110,
+    "targetAggregateSha256": "b83058abe5639b800cd1f107c810f64627b265f5a5aa2c276e0aefc7d2bd2448",
+    "legacyObjectsUnchangedAfterCopy": true,
+    "correctedTargetVersion": "WIFA-PODCAST-PROD-LZREV2-20261007-v2",
+    "correctedTargetPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/",
+    "correctedRuntimeObjectsWritten": 26,
+    "correctedSidecars": 13,
+    "correctedBundles": 13,
+    "correctedIds": 521,
+    "correctedChapters": 48,
+    "correctedStagingReferences": 0,
+    "correctedMp3HashesUnchanged": true,
+    "correctedReadbackStatus": "PASS",
+    "correctedTargetAggregateSha256": "0b5cfa717819c0fb0babf505e692feae73e29f47067fdffc824c321a8bc221e8"
+  },
+  "writesPerformed": {
+    "productionSheetCells": 0,
+    "productionSheetRows": 0,
+    "productionStorageObjects": 136,
+    "appsScriptDeployments": 0,
+    "frontendDeployments": 0
+  },
+  "releaseTests": { "passed": 431, "failed": 0 },
+  "podcastV2PromotionTests": { "passed": 6, "failed": 0 },
+  "finalSecondConflictCheck": { "conflicts": 0, "protectedSheetsUnchanged": true },
+  "resolvedStopGate": {
+    "component": "podcast",
+    "stage": "runtime-sidecar-readback-before-client-switch",
+    "reason": "Alle 13 kopierten Runtime-Sidecars enthalten weiterhin die Staging-Bundleversion WIFA-PODCAST-STAGING-LZREV2-20261004-v1 und referenzieren ihre MP3 unter podcast/staging/lerntext-rev2/. Damit würden sie die freigegebene Produktions-Runtimevalidierung für WIFA-PODCAST-PROD-LZREV2-20261007-v1 und den neuen Produktionspräfix nicht bestehen.",
+    "clientSwitched": false,
+    "productionSheetWrites": 0,
+    "appsScriptDeploymentChanged": false,
+    "frontendDeploymentChanged": false,
+    "rollbackAction": "Kein Clientrollback erforderlich. Der bestehende Legacy-Podcastnamespace blieb bytegenau unverändert; die 110 neuen immutable Zielobjekte bleiben unreferenziert, entsprechend dem komponentenspezifischen Rollbackplan."
+  },
+  "currentGate": {
+    "component": "podcast",
+    "stage": "v2-runtime-readback-before-client-switch",
+    "result": "GO_FOR_ROLLOUT_CONTINUATION",
+    "clientSwitched": false,
+    "productionSheetWrites": 0,
+    "appsScriptDeploymentChanged": false,
+    "frontendDeploymentChanged": false,
+    "manifest": "release/WIFA-GESAMT-PROD-20261007-RC1/podcast/PRODUCTION_PODCAST_PROMOTION_MANIFEST_V2.json",
+    "readback": "release/WIFA-GESAMT-PROD-20261007-RC1/runs/20261007-152717/podcast-v2-readback.json"
+  }
+}
