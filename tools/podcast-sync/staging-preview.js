@@ -7,6 +7,7 @@ const path = require('node:path');
 const { STAGING_PODCAST_PREFIX } = require('./hash-paths');
 
 const ROOT = path.resolve(__dirname, '..', '..');
+const DEFAULT_STAGING_API_URL = 'https://script.google.com/macros/s/AKfycbwGFmFLFMfsRgOmLF-uwTH6xc8E_AaorV5AoiQLmXWzd4FZUdu92YT7SE8YVs2wLZ32_Q/exec';
 const MIME = Object.freeze({
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
@@ -47,7 +48,7 @@ function safePath(urlPath) {
   return candidate;
 }
 
-function createServer({ apiUrl } = {}) {
+function createServer({ apiUrl = DEFAULT_STAGING_API_URL } = {}) {
   rewriteApiUrl('const API_BASE_URL = "https://example.invalid";', apiUrl);
   return http.createServer((request, response) => {
     let filePath;
@@ -80,7 +81,7 @@ function cliValue(argv, name) {
 
 if (require.main === module) {
   const argv = process.argv.slice(2);
-  const apiUrl = cliValue(argv, '--api-url') || process.env.PODCAST_LERNTEXTE_API_URL;
+  const apiUrl = cliValue(argv, '--api-url') || process.env.PODCAST_LERNTEXTE_API_URL || DEFAULT_STAGING_API_URL;
   const port = Number(cliValue(argv, '--port') || process.env.PORT || 4181);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Ungültiger Port');
   createServer({ apiUrl }).listen(port, '127.0.0.1', () => {
@@ -88,4 +89,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { createServer, injectStagingRuntime, rewriteApiUrl, safePath };
+module.exports = { DEFAULT_STAGING_API_URL, createServer, injectStagingRuntime, rewriteApiUrl, safePath };
