@@ -12,6 +12,7 @@
     .brand { margin: 0 0 8px; color: #245c3a; font-size: clamp(30px, 8vw, 44px); letter-spacing: -.03em; }
     h1 { margin: 0 0 22px; color: #2d1f46; font-size: clamp(22px, 5vw, 30px); }
     .status { margin: 0 0 20px; padding: 14px; border-radius: 14px; background: #fff0f0; color: #8f2828; line-height: 1.5; }
+    .status.info { background: #f2f0fb; color: #4a3970; }
     .status.success { background: #e8f7ed; color: #245c3a; }
     form[hidden], .status[hidden], a[hidden] { display: none; }
     label { display: block; margin: 14px 0 6px; font-weight: 700; }
@@ -25,12 +26,13 @@
   <main class="card" aria-labelledby="actionTitle">
     <p class="brand">WiFa Trainer</p>
     <h1 id="actionTitle">Kontoaktion</h1>
-    <p id="actionStatus" class="status" role="status" aria-live="polite">Die Aktion wird geprüft …</p>
+    <p id="actionStatus" class="status info" role="status" aria-live="polite">Die Aktion wird geprüft …</p>
     <form id="resetPasswordForm" hidden>
       <label for="newPassword">Neues Passwort</label>
-      <input id="newPassword" type="password" minlength="6" autocomplete="new-password" required>
+      <input id="newPassword" type="password" minlength="12" autocomplete="new-password" required>
+      <p class="hint">Mindestens 12 Zeichen.</p>
       <label for="confirmPassword">Passwort bestätigen</label>
-      <input id="confirmPassword" type="password" minlength="6" autocomplete="new-password" required>
+      <input id="confirmPassword" type="password" minlength="12" autocomplete="new-password" required>
       <button type="submit">Passwort speichern</button>
     </form>
     <a id="homeLink" href="https://wifa-trainer.de/" hidden>Zurück zum WiFa Trainer</a>
@@ -39,7 +41,7 @@
   <script type="module">
     import { auth } from './js/firebase-config.js';
     import { applyActionCode, verifyPasswordResetCode, confirmPasswordReset } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
-    import { initAuthAction } from './js/auth-action.js';
+    import { initAuthAction } from './js/auth-action.js?v=auth2';
     initAuthAction({ auth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset });
   </script>
 </body>

@@ -20,6 +20,18 @@ export function getActionErrorMessage(error) {
   return messages[code] || 'Die Aktion konnte nicht ausgeführt werden. Bitte versuche es erneut.';
 }
 
+function getSafeDiagnosticCode(error) {
+  const code = error && typeof error.code === 'string' ? error.code : '';
+  return /^[a-z0-9._/-]{1,100}$/i.test(code) ? code : 'non-firebase-error';
+}
+
+function logActionDiagnostic(stage, error) {
+  console.warn('[WiFa Auth Action]', {
+    stage,
+    code: getSafeDiagnosticCode(error)
+  });
+}
+
 export function initAuthAction({ auth, applyActionCode, verifyPasswordResetCode, confirmPasswordReset }) {
   const params = parseActionParams(window.location.search);
   const status = document.querySelector('#actionStatus');
@@ -53,7 +65,11 @@ export function initAuthAction({ auth, applyActionCode, verifyPasswordResetCode,
     title.textContent = 'E-Mail-Adresse bestätigen';
     applyActionCode(auth, params.oobCode)
       .then(() => { setStatus('Deine E-Mail-Adresse wurde erfolgreich bestätigt.', 'success'); showHome(); })
-      .catch(error => { setStatus(getActionErrorMessage(error)); showHome(); });
+      .catch(error => {
+        logActionDiagnostic('email-verification', error);
+        setStatus(getActionErrorMessage(error));
+        showHome();
+      });
     return;
   }
 
@@ -61,22 +77,35 @@ export function initAuthAction({ auth, applyActionCode, verifyPasswordResetCode,
     title.textContent = 'E-Mail-Adresse wiederherstellen';
     applyActionCode(auth, params.oobCode)
       .then(() => { setStatus('Deine frühere E-Mail-Adresse wurde erfolgreich wiederhergestellt.', 'success'); showHome(); })
-      .catch(error => { setStatus(getActionErrorMessage(error)); showHome(); });
+      .catch(error => {
+        logActionDiagnostic('email-recovery', error);
+        setStatus(getActionErrorMessage(error));
+        showHome();
+      });
     return;
   }
 
   if (params.mode === 'resetPassword') {
     title.textContent = 'Neues Passwort festlegen';
     verifyPasswordResetCode(auth, params.oobCode)
-      .then(() => { resetForm.hidden = false; showLogin(); })
-      .catch(error => { setStatus(getActionErrorMessage(error)); showHome(); });
+      .then(() => {
+        resetForm.hidden = false;
+        setStatus('Der Link ist gültig. Lege jetzt dein neues Passwort fest.', 'info');
+        showHome();
+      })
+      .catch(error => {
+        logActionDiagnostic('password-reset-link-verification', error);
+        setStatus(getActionErrorMessage(error));
+        showHome();
+      });
     resetForm.addEventListener('submit', async event => {
       event.preventDefault();
       const password = document.querySelector('#newPassword').value;
       const confirmation = document.querySelector('#confirmPassword').value;
-      if (password.length < 6) { setStatus('Das Passwort muss mindestens 6 Zeichen lang sein.'); return; }
+      if (password.length < 12) { setStatus('Das Passwort muss mindestens 12 Zeichen lang sein.'); return; }
       if (password !== confirmation) { setStatus('Die Passwörter stimmen nicht überein.'); return; }
       resetForm.querySelector('button').disabled = true;
+      setStatus('Das neue Passwort wird gespeichert …', 'info');
       try {
         await confirmPasswordReset(auth, params.oobCode, password);
         resetForm.hidden = true;
@@ -84,7 +113,9 @@ export function initAuthAction({ auth, applyActionCode, verifyPasswordResetCode,
         showLogin();
       } catch (error) {
         resetForm.querySelector('button').disabled = false;
+        logActionDiagnostic('password-reset-confirmation', error);
         setStatus(getActionErrorMessage(error));
+        showHome();
       }
     });
     return;

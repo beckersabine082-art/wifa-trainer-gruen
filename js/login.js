@@ -23,6 +23,7 @@ import {
 function $(id) { return document.getElementById(id); }
 
 let currentUserVerified = false;
+let authStateRevision = 0;
 
 function getDesiredView() {
 	return typeof window.desiredView === 'string' && document.getElementById(window.desiredView)
@@ -42,8 +43,21 @@ async function getDisplayName(user) {
 		const profileDisplayName = profile.exists() ? profile.data().displayName : '';
 		return typeof profileDisplayName === 'string' ? profileDisplayName.trim() : '';
 	} catch (e) {
+		logAuthDiagnostic('profile-read', e);
 		return '';
 	}
+}
+
+function getSafeDiagnosticCode(error) {
+	const code = error && typeof error.code === 'string' ? error.code : '';
+	return /^[a-z0-9._/-]{1,100}$/i.test(code) ? code : 'non-firebase-error';
+}
+
+function logAuthDiagnostic(stage, error) {
+	console.warn('[WiFa Auth]', {
+		stage,
+		code: getSafeDiagnosticCode(error)
+	});
 }
 
 function translateError(code) {
@@ -51,12 +65,45 @@ function translateError(code) {
 		'auth/email-already-in-use': 'Diese E-Mail-Adresse wird bereits verwendet.',
 		'auth/invalid-email': 'Bitte gib eine gültige E-Mail-Adresse ein.',
 		'auth/weak-password': 'Das Passwort ist zu kurz oder zu unsicher.',
+		'auth/password-does-not-meet-requirements': 'Das Passwort erfüllt die erforderlichen Bedingungen nicht.',
+		'auth/invalid-credential': 'E-Mail-Adresse oder Passwort stimmen nicht.',
 		'auth/user-not-found': 'E-Mail oder Passwort falsch.',
 		'auth/wrong-password': 'E-Mail oder Passwort falsch.',
+		'auth/user-disabled': 'Dieses Konto kann derzeit nicht verwendet werden. Bitte wende dich an den Support.',
 		'auth/too-many-requests': 'Zu viele Anmeldeversuche. Bitte später erneut versuchen.',
-		'auth/network-request-failed': 'Netzwerkfehler. Bitte Verbindung prüfen.'
+		'auth/network-request-failed': 'Netzwerkfehler. Bitte Verbindung prüfen.',
+		'auth/web-storage-unsupported': 'Der Browserspeicher ist nicht verfügbar. Bitte prüfe die Browser-Einstellungen oder verwende ein normales Browserfenster.',
+		'auth/operation-not-supported-in-this-environment': 'Die Anmeldung wird in dieser Browser-Umgebung nicht unterstützt.',
+		'auth/operation-not-allowed': 'Die Anmeldung mit E-Mail und Passwort ist derzeit nicht verfügbar.',
+		'auth/app-not-authorized': 'Die Anmeldung ist für diese Website derzeit nicht verfügbar.',
+		'auth/invalid-api-key': 'Der Anmeldedienst ist derzeit nicht verfügbar.',
+		'auth/internal-error': 'Der Anmeldedienst hat einen internen Fehler gemeldet. Bitte versuche es erneut.',
+		'auth/no-current-user': 'Die Anmeldung konnte nicht bestätigt werden. Bitte versuche es erneut.'
 	};
-	return map[code] || 'Ein Fehler ist aufgetreten. Bitte erneut versuchen.';
+	return map[code] || 'Die Anmeldung konnte nicht abgeschlossen werden. Bitte versuche es erneut.';
+}
+
+function getPasswordResetRequestPresentation(error) {
+	const code = getSafeDiagnosticCode(error);
+	if (code === 'auth/user-not-found') {
+		return {
+			message: 'Wenn die Adresse existiert, wurde eine E-Mail zum Zurücksetzen versendet.',
+			error: false
+		};
+	}
+	const resetMessages = {
+		'auth/invalid-email': 'Bitte gib eine gültige E-Mail-Adresse ein.',
+		'auth/too-many-requests': 'Zu viele Anfragen. Bitte warte etwas und versuche es später erneut.',
+		'auth/network-request-failed': 'Netzwerkfehler. Die Reset-E-Mail konnte nicht angefordert werden. Bitte prüfe deine Verbindung.',
+		'auth/unauthorized-continue-uri': 'Der Passwort-Reset ist derzeit nicht verfügbar. Bitte versuche es später erneut.',
+		'auth/invalid-continue-uri': 'Der Passwort-Reset ist derzeit nicht verfügbar. Bitte versuche es später erneut.',
+		'auth/missing-continue-uri': 'Der Passwort-Reset ist derzeit nicht verfügbar. Bitte versuche es später erneut.',
+		'auth/operation-not-allowed': 'Der Passwort-Reset ist derzeit nicht verfügbar. Bitte versuche es später erneut.'
+	};
+	return {
+		message: resetMessages[code] || 'Die Reset-E-Mail konnte nicht angefordert werden. Bitte versuche es erneut.',
+		error: true
+	};
 }
 
 function setBusy(flag) {
@@ -117,7 +164,7 @@ async function ensureUserProfile(user) {
 			});
 		}
 	} catch (e) {
-		console.warn('Profile creation failed', e);
+		logAuthDiagnostic('profile-ensure', e);
 	}
 }
 
@@ -224,7 +271,6 @@ function updateProfileArea(user, displayName = '') {
 function showAuthenticatedAccount(user, displayName = '') {
 	updateAuthTitle(user);
 	updateProfileArea(user, displayName);
-	showStatus('');
 	const authLoginForm = $('authLoginForm');
 	const authRegisterForm = $('authRegisterForm');
 	const tabs = document.querySelector('#authView .auth-tabs');
@@ -234,6 +280,7 @@ function showAuthenticatedAccount(user, displayName = '') {
 }
 
 async function openAuthArea() {
+	showStatus('');
 	const user = auth.currentUser;
 	if (user && user.emailVerified === true) {
 		showAuthenticatedAccount(user, user.displayName ? user.displayName.trim() : '');
@@ -348,24 +395,61 @@ function bindAuthUI() {
 		if (!email || !password) { showStatus('Bitte E-Mail und Passwort eingeben.', true); return; }
 		setBusy(true); showStatus('Anmeldung...');
 		try {
-			await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
-			await signInWithEmailAndPassword(auth, email, password);
-			const user = auth.currentUser;
-			if (!user) throw new Error('auth/no-current-user');
+			try {
+				await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+			} catch (error) {
+				logAuthDiagnostic('persistence', error);
+				showStatus(translateError(error && error.code), true);
+				return;
+			}
+
+			let credential;
+			try {
+				credential = await signInWithEmailAndPassword(auth, email, password);
+			} catch (error) {
+				logAuthDiagnostic('sign-in', error);
+				showStatus(translateError(error && error.code), true);
+				return;
+			}
+
+			const user = credential && credential.user ? credential.user : auth.currentUser;
+			if (!user) {
+				const error = { code: 'auth/no-current-user' };
+				logAuthDiagnostic('sign-in-result', error);
+				showStatus(translateError(error.code), true);
+				return;
+			}
 			currentUserVerified = !!user.emailVerified;
 			if (!currentUserVerified) {
 				showStatus('E-Mail-Adresse noch nicht bestätigt. Bitte prüfen Sie Ihr Postfach.', true);
-			} else {
-				window.aktuellerNutzer = user.uid;
-				await ensureUserProfile(user);
-				showStatus('Erfolgreich angemeldet.');
-				const target = getDesiredView() || 'startView';
-				clearDesiredView();
+				return;
+			}
+
+			window.aktuellerNutzer = user.uid;
+			showStatus('Erfolgreich angemeldet.');
+			const target = getDesiredView() || 'startView';
+			clearDesiredView();
+			try {
 				zeigeBereich(target);
-				if (target === 'trainerView') window.trainerEinstiegNachAuth?.();
+			} catch (error) {
+				logAuthDiagnostic('post-auth-navigation', error);
+				try {
+					showAuthenticatedAccount(user, user.displayName ? user.displayName.trim() : '');
+					zeigeBereich('authView');
+				} catch (recoveryError) {
+					logAuthDiagnostic('post-auth-recovery', recoveryError);
+				}
+				showStatus('Die Anmeldung war erfolgreich, aber der gewünschte Bereich konnte nicht geöffnet werden. Bitte lade die Seite neu.', true);
+				return;
+			}
+			if (target === 'trainerView') {
+				Promise.resolve().then(() => window.trainerEinstiegNachAuth?.()).catch(error => {
+					logAuthDiagnostic('trainer-entry', error);
+				});
 			}
 		} catch (e) {
-			showStatus(translateError(e.code), true);
+			logAuthDiagnostic('login-unexpected', e);
+			showStatus('Die Anmeldung konnte nicht abgeschlossen werden. Bitte versuche es erneut.', true);
 		} finally { setBusy(false); }
 	});
 
@@ -398,6 +482,7 @@ function bindAuthUI() {
 			if (regPrivacy) regPrivacy.checked = false;
 			showStatus('Registrierung erfolgreich. Bitte bestätigen Sie die E-Mail, bevor Sie sich anmelden.');
 		} catch (e) {
+			logAuthDiagnostic('registration', e);
 			showStatus(translateError(e.code), true);
 		} finally { setBusy(false); }
 	});
@@ -482,7 +567,9 @@ function bindAuthUI() {
 			await sendPasswordResetEmail(auth, email, { url: getReturnUrl() });
 			showStatus('Wenn die Adresse existiert, wurde eine E-Mail zum Zurücksetzen versendet.');
 		} catch (e) {
-			showStatus('Wenn die Adresse existiert, wurde eine E-Mail zum Zurücksetzen versendet.');
+			logAuthDiagnostic('password-reset-request', e);
+			const presentation = getPasswordResetRequestPresentation(e);
+			showStatus(presentation.message, presentation.error);
 		} finally { setBusy(false); }
 	});
 
@@ -493,7 +580,10 @@ function bindAuthUI() {
 		try {
 			await sendEmailVerification(user, { url: getReturnUrl() });
 			showStatus('Bestätigungs-E-Mail erneut gesendet.');
-		} catch (e) { showStatus('Fehler beim Senden der E-Mail.', true); }
+		} catch (e) {
+			logAuthDiagnostic('verification-email-resend', e);
+			showStatus('Fehler beim Senden der E-Mail.', true);
+		}
 		finally { setBusy(false); }
 	});
 
@@ -504,7 +594,7 @@ function bindAuthUI() {
 		try {
 			await user.reload();
 			if (user.emailVerified) {
-				try { await user.getIdToken(true); } catch(e) { console.warn('Token refresh failed', e); }
+				try { await user.getIdToken(true); } catch(e) { logAuthDiagnostic('verification-token-refresh', e); }
 				currentUserVerified = true;
 				window.aktuellerNutzer = user.uid;
 				showStatus('E-Mail bestätigt. Zugriff freigeschaltet.');
@@ -520,6 +610,7 @@ function bindAuthUI() {
 				showStatus('E-Mail noch nicht bestätigt.', true);
 			}
 		} catch (e) {
+			logAuthDiagnostic('verification-status-check', e);
 			showStatus('Fehler beim Prüfen des Bestätigungsstatus.', true);
 		} finally { setBusy(false); }
 	});
@@ -532,7 +623,10 @@ function bindAuthUI() {
 			clearDesiredView();
 			setLoggedOutAuthState();
 			zeigeBereich('startView');
-		} catch (e) { showStatus('Fehler beim Abmelden.', true); }
+		} catch (e) {
+			logAuthDiagnostic('sign-out', e);
+			showStatus('Fehler beim Abmelden.', true);
+		}
 		finally { setBusy(false); }
 	});
 
@@ -549,7 +643,9 @@ function bindAuthUI() {
 				await sendPasswordResetEmail(auth, user.email, { url: getReturnUrl() });
 				showStatus('Wir haben dir eine E-Mail zum Ändern deines Passworts gesendet.');
 			} catch (e) {
-				showStatus(translateError(e.code), true);
+				logAuthDiagnostic('account-password-reset-request', e);
+				const presentation = getPasswordResetRequestPresentation(e);
+				showStatus(presentation.message, presentation.error);
 			} finally {
 				setBusy(false);
 			}
@@ -641,6 +737,7 @@ function bindAuthUI() {
 				updateNavForAuth(user);
 				showStatus('Anzeigename gespeichert.');
 			} catch (e) {
+				logAuthDiagnostic('profile-update', e);
 				showStatus('Anzeigename konnte nicht gespeichert werden. Bitte erneut versuchen.', true);
 			} finally {
 				setBusy(false);
@@ -673,17 +770,27 @@ function bindAuthUI() {
 	}
 }
 
+function isCurrentAuthState(user, revision) {
+	return revision === authStateRevision
+		&& !!(user && auth.currentUser && auth.currentUser.uid === user.uid);
+}
+
 onAuthStateChanged(auth, async (user) => {
+	const revision = ++authStateRevision;
 	if (user && user.uid) {
+		if (!isCurrentAuthState(user, revision)) return;
 		currentUserVerified = !!user.emailVerified;
 		if (currentUserVerified) {
-			try { await user.getIdToken(true); } catch (e) { console.warn('Token refresh on auth state failed', e); }
+			try { await user.getIdToken(true); } catch (e) { logAuthDiagnostic('auth-state-token-refresh', e); }
+			if (!isCurrentAuthState(user, revision)) return;
 			window.aktuellerNutzer = user.uid;
 			await ensureUserProfile(user);
+			if (!isCurrentAuthState(user, revision)) return;
 		} else {
 			window.aktuellerNutzer = null;
 		}
 		const displayName = await getDisplayName(user);
+		if (!isCurrentAuthState(user, revision)) return;
 		updateGreetingForStart(user, displayName);
 		updateNavForAuth(user);
 		if (currentUserVerified) {
@@ -710,12 +817,33 @@ onAuthStateChanged(auth, async (user) => {
 		}
 		const target = getDesiredView();
 		if (currentUserVerified && target) {
-			zeigeBereich(target);
-			if (target === 'trainerView') window.trainerEinstiegNachAuth?.();
-			clearDesiredView();
+			try {
+				zeigeBereich(target);
+				if (target === 'trainerView') {
+					Promise.resolve().then(() => window.trainerEinstiegNachAuth?.()).catch(error => {
+						logAuthDiagnostic('trainer-entry', error);
+					});
+				}
+			} catch (error) {
+				logAuthDiagnostic('auth-state-navigation', error);
+				try {
+					showAuthenticatedAccount(user, displayName);
+					zeigeBereich('authView');
+				} catch (recoveryError) {
+					logAuthDiagnostic('auth-state-recovery', recoveryError);
+				}
+				showStatus('Die Anmeldung war erfolgreich, aber der gewünschte Bereich konnte nicht geöffnet werden. Bitte lade die Seite neu.', true);
+			} finally {
+				clearDesiredView();
+			}
 		}
 		if (currentUserVerified && typeof window.stelleLaufendePruefungWiederHer === 'function') {
-			await window.stelleLaufendePruefungWiederHer();
+			try {
+				await window.stelleLaufendePruefungWiederHer();
+			} catch (error) {
+				logAuthDiagnostic('post-auth-session-restore', error);
+			}
+			if (!isCurrentAuthState(user, revision)) return;
 		}
 	} else {
 		window.aktuellerNutzer = null;
@@ -729,5 +857,15 @@ onAuthStateChanged(auth, async (user) => {
 window.requireAuth = requireAuth;
 window.openAuthArea = openAuthArea;
 
-document.addEventListener('DOMContentLoaded', bindAuthUI, { once: true });
+document.addEventListener('DOMContentLoaded', async () => {
+	bindAuthUI();
+	if (window.location && window.location.hash === '#auth') {
+		try {
+			await openAuthArea();
+		} catch (error) {
+			logAuthDiagnostic('auth-link-navigation', error);
+			showStatus('Der Anmeldebereich konnte nicht automatisch geöffnet werden. Bitte verwende die Schaltfläche „Anmelden“.', true);
+		}
+	}
+}, { once: true });
 
