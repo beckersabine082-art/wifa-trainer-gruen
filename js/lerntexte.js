@@ -2375,6 +2375,11 @@ function lerntexteInhaltRendern(usageTicket, options) {
       && typeof window !== 'undefined'
       && typeof window.lerntexteDomTokenisieren === 'function') {
       window.lerntexteDomTokenisieren(text);
+      if (typeof window.erklaereSteuerAbkuerzungenInLerneinheit === 'function') {
+        window.erklaereSteuerAbkuerzungenInLerneinheit(titel, text, eintrag.fach);
+      } else if (typeof window.erklaereSteuerAbkuerzungen === 'function') {
+        window.erklaereSteuerAbkuerzungen(text, eintrag.fach);
+      }
       lerntextePilotTextRoots[String(eintrag.fach) + "\u0000" + String(eintrag.titel)] = text;
     }
 

@@ -12,6 +12,10 @@ function lerntexteDomTokenisieren(root) {
     return isElement(node, 'SPAN') && node.getAttribute('data-word-index') !== null;
   }
 
+  function isPodcastIgnored(node) {
+    return isElement(node) && node.getAttribute('data-podcast-ignore') !== null;
+  }
+
   function tokenizeTextNode(textNode) {
     const matches = Array.from(textNode.data.matchAll(wordPattern));
     if (matches.length === 0) return;
@@ -53,7 +57,13 @@ function lerntexteDomTokenisieren(root) {
       return;
     }
 
-    if (!isElement(node) || node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || isGeneratedWordSpan(node)) {
+    if (
+      !isElement(node)
+      || node.tagName === 'SCRIPT'
+      || node.tagName === 'STYLE'
+      || isGeneratedWordSpan(node)
+      || isPodcastIgnored(node)
+    ) {
       return;
     }
 

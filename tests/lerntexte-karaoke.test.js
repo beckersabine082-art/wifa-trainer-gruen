@@ -69,6 +69,18 @@ class MockElement {
     return node;
   }
 
+  insertBefore(node, referenceNode) {
+    node.parentNode = this;
+    if (!referenceNode) {
+      this.childNodes.push(node);
+      return node;
+    }
+    const index = this.childNodes.indexOf(referenceNode);
+    if (index === -1) throw new Error('reference child not found');
+    this.childNodes.splice(index, 0, node);
+    return node;
+  }
+
   replaceChild(replacement, oldNode) {
     const index = this.childNodes.indexOf(oldNode);
     if (index === -1) throw new Error('old child not found');
@@ -217,6 +229,7 @@ class EventWindow {
 function createBlock2Context() {
   const sourceFiles = [
     '../js/podcast-dom-tokenize.js',
+    '../js/steuer-abkuerzungen.js',
     '../js/podcast-time-to-word.js',
     '../js/podcast-visibility-sync.js',
     '../js/podcast-continuous.js',
@@ -3083,9 +3096,12 @@ test('Pilot Integration: Browser-WebCrypto liefert für abc den bekannten SHA-25
 test('Pilot Integration: Helper-Scripts vor lerntexte.js geladen', () => {
   const order = readBrowserScriptOrder();
   const indexLerntexte = order.indexOf('js/lerntexte.js');
+  const indexSteuerAbkuerzungen = order.indexOf('js/steuer-abkuerzungen.js');
   assert.notStrictEqual(indexLerntexte, -1, 'lerntexte.js vorhanden');
+  assert.notStrictEqual(indexSteuerAbkuerzungen, -1, 'Steuern-Abkürzungshelper vorhanden');
   assert.ok(indexLerntexte > order.indexOf('js/podcast-hash-validate.js'), 'hash-helper vor lerntexte.js');
   assert.ok(indexLerntexte > order.indexOf('js/podcast-dom-tokenize.js'), 'tokenizer-helper vor lerntexte.js');
+  assert.ok(indexLerntexte > indexSteuerAbkuerzungen, 'Steuern-Abkürzungshelper vor lerntexte.js');
   assert.ok(indexLerntexte > order.indexOf('js/podcast-time-to-word.js'), 'time-to-word-helper vor lerntexte.js');
   assert.ok(indexLerntexte > order.indexOf('js/podcast-visibility-sync.js'), 'visibility-helper vor lerntexte.js');
   assert.ok(indexLerntexte > order.indexOf('js/podcast-continuous.js'), 'continuous-helper vor lerntexte.js');
@@ -3959,6 +3975,79 @@ test('Recht-Bundle: zwei logische Grenzen behalten dieselbe Quelle und benötige
   assert.strictEqual(thirdRoot.querySelector('[data-word-index="0"]').classList.contains('podcast-word-spoken'), true);
   assert.strictEqual(thirdRoot.querySelector('[data-word-index="0"]').classList.contains('podcast-word-active'), true);
   assert.strictEqual(fixture.document.getElementById('lerntexteAudioProgressMeta').textContent, '0:00 / 0:03');
+});
+
+test('Steuern-Darstellung: sichtbare Erläuterungen entstehen ohne Mutation der Lerntexte oder Wortindizes', () => {
+  const fixture = createBlock2Context();
+  const entries = [
+    Object.assign(block2ChapterEntry('ESt im Überblick', '1', 'Steuern'), {
+      lerntext: 'ESt und EStG. ESt bleibt eine Steuerart.'
+    }),
+    Object.assign(block2ChapterEntry('Steuern Einheit 2', '2', 'Steuern'), {
+      lerntext: 'AO gilt. AO bleibt unverändert.'
+    })
+  ];
+  const originaldaten = JSON.stringify(entries);
+  const originalHashes = entries.map(entry => createHash('sha256').update(entry.lerntext, 'utf8').digest('hex'));
+
+  fixture.context.window.__renderEntries(entries, 'Steuern');
+
+  const texte = fixture.root.querySelectorAll('.lerntexte-text');
+  const titel = fixture.root.querySelectorAll('.lerntexte-einheit-titel');
+  assert.equal(titel[0].textContent, 'ESt (Einkommensteuer) im Überblick');
+  assert.equal(titel[0].querySelectorAll('[data-word-index]').length, 0, 'Überschriften gehören nicht zum Audio-Wortindex');
+  assert.equal(
+    texte[0].textContent,
+    'ESt und EStG (Einkommensteuergesetz). ESt bleibt eine Steuerart.'
+  );
+  assert.equal(texte[1].textContent, 'AO (Abgabenordnung) gilt. AO bleibt unverändert.');
+  assert.deepEqual(texte.map(text => text.querySelectorAll('.lerntexte-abkuerzung-erklaerung').length), [1, 1]);
+  assert.deepEqual(
+    texte[0].querySelectorAll('[data-word-index]').map(word => word.textContent),
+    ['ESt', 'und', 'EStG', 'ESt', 'bleibt', 'eine', 'Steuerart']
+  );
+  assert.equal(JSON.stringify(entries), originaldaten);
+  assert.deepEqual(
+    entries.map(entry => createHash('sha256').update(entry.lerntext, 'utf8').digest('hex')),
+    originalHashes
+  );
+});
+
+test('Steuern-Bundle: kontinuierliche Wiedergabe, Wortmarkierung und Kapitelwechsel bleiben erhalten', async () => {
+  const fixture = createBlock2Context();
+  const entries = Array.from({ length: 3 }, (_, index) => Object.assign(
+    block2ChapterEntry('Steuern Einheit ' + String(index + 1), String(index + 1), 'Steuern'),
+    { lerntext: 'AO EStG AO' }
+  ));
+  configureContinuousRechtBundle(fixture, entries, 'Steuern', 'steuern');
+  fixture.context.window.__renderEntries(entries, 'Steuern');
+
+  await fixture.context.window.lerntexteAudioAbspielen();
+
+  assert.equal(fixture.audio.src, 'https://example.test/steuern-bundle.mp3');
+  assert.equal(fixture.audio.srcAssignments, 1);
+  assert.equal(fixture.audio.loadCalls, 1);
+  assert.equal(fixture.audio.playCalls, 1);
+
+  fixture.audio.currentTime = 3.25;
+  fixture.audio.dispatchEvent({ type: 'timeupdate' });
+
+  const zweiterText = fixture.root.querySelectorAll('.lerntexte-text')[1];
+  const erstesWort = zweiterText.querySelector('[data-word-index="0"]');
+  assert.equal(fixture.context.window.__audioState().index, 1);
+  assert.equal(fixture.document.getElementById('lerntexteAudioChapterLabel').textContent, entries[1].titel);
+  assert.equal(erstesWort.textContent, 'AO');
+  assert.equal(erstesWort.classList.contains('podcast-word-spoken'), true);
+  assert.equal(erstesWort.classList.contains('podcast-word-active'), true);
+  assert.equal(zweiterText.querySelectorAll('[data-word-index]').length, 3);
+  assert.equal(zweiterText.querySelectorAll('.lerntexte-abkuerzung-erklaerung').length, 2);
+  assert.equal(
+    zweiterText.querySelector('.lerntexte-abkuerzung-erklaerung').classList.contains('podcast-word-active'),
+    false
+  );
+  assert.equal(fixture.audio.srcAssignments, 1, 'Kapitelwechsel dürfen die kontinuierliche Quelle nicht ändern');
+  assert.equal(fixture.audio.loadCalls, 1, 'Kapitelwechsel dürfen das Audio nicht erneut laden');
+  assert.equal(fixture.audio.playCalls, 1, 'Kapitelwechsel dürfen die Wiedergabe nicht erneut starten');
 });
 
 test('Recht-Bundle: Dropdown bietet 57 eindeutige MP3-Pfade auch bei wiederholten Hauptkapitelnummern', () => {
