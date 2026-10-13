@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "rolloutId": "WIFA-PODCAST-PROD-20261013-RS2026",
+  "result": "PUBLISHED_AND_VERIFIED",
+  "projectId": "wifa-trainer-gruen",
+  "bucket": "wifa-trainer-gruen.firebasestorage.app",
+  "sourcePrefix": "podcast/staging/lerntext-rev2/",
+  "targetPrefix": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/",
+  "productionWrites": 8,
+  "deploymentPerformed": false,
+  "storageReadback": {
+    "status": "PASS",
+    "subjects": [
+      {
+        "fach": "Steuern",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/steuern.json",
+        "sidecarGeneration": "1791876346701193",
+        "sidecarHash": "8e7a19de4b1350f33311b3f3e84bde2261f21aa18edb78c9a84d85e495c7050b",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/steuern/02b92c64f230e5fedc3417517ea8dc749419bc12315ebfdae18b579b5749d615.mp3",
+        "mp3Generation": "1791876269889297",
+        "mp3Hash": "02b92c64f230e5fedc3417517ea8dc749419bc12315ebfdae18b579b5749d615",
+        "bytes": 79103103,
+        "stagingBytes": 79103103,
+        "sampleCount": 145350004,
+        "decodedSamples": 145350004,
+        "chapters": 43,
+        "chapterGroups": 3,
+        "wordMarks": 12791,
+        "playback": {
+          "start": "PASS",
+          "continuousBoundaries": 42,
+          "chapterGroups": 3,
+          "wordMarks": 12791,
+          "finalSample": 145350004
+        },
+        "authenticatedDownload": "PASS",
+        "downloadTokenPresent": true,
+        "result": "PASS"
+      },
+      {
+        "fach": "Recht",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/recht.json",
+        "sidecarGeneration": "1791876347326204",
+        "sidecarHash": "94f11bc9d719deef29714fb078c581e3cdfaecb9a7ddde0c7bbb84b823f416b8",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/recht/6e50bc6f908f8d474260df17dd53781c5f8e72738a1b38eb374f2c2f0fb4111b.mp3",
+        "mp3Generation": "1791876269990301",
+        "mp3Hash": "6e50bc6f908f8d474260df17dd53781c5f8e72738a1b38eb374f2c2f0fb4111b",
+        "bytes": 109024697,
+        "stagingBytes": 109024697,
+        "sampleCount": 200330879,
+        "decodedSamples": 200330879,
+        "chapters": 57,
+        "chapterGroups": 7,
+        "wordMarks": 17592,
+        "playback": {
+          "start": "PASS",
+          "continuousBoundaries": 56,
+          "chapterGroups": 7,
+          "wordMarks": 17592,
+          "finalSample": 200330879
+        },
+        "authenticatedDownload": "PASS",
+        "downloadTokenPresent": true,
+        "result": "PASS"
+      },
+      {
+        "fach": "Vertrieb",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vertrieb.json",
+        "sidecarGeneration": "1791876347633474",
+        "sidecarHash": "eca68e6ebdd8dcaab3074f8c577dd9c61cfa03d786b88391b6cf676b84bbf6cb",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/vertrieb/91e7faa71845ff4a4de2392ac68598a9b8d4271398cd170766eee62a2bdac1eb.mp3",
+        "mp3Generation": "1791876270088574",
+        "mp3Hash": "91e7faa71845ff4a4de2392ac68598a9b8d4271398cd170766eee62a2bdac1eb",
+        "bytes": 32550078,
+        "stagingBytes": 32550078,
+        "sampleCount": 59808768,
+        "decodedSamples": 59808768,
+        "chapters": 26,
+        "chapterGroups": 3,
+        "wordMarks": 4976,
+        "playback": {
+          "start": "PASS",
+          "continuousBoundaries": 25,
+          "chapterGroups": 3,
+          "wordMarks": 4976,
+          "finalSample": 59808768
+        },
+        "authenticatedDownload": "PASS",
+        "downloadTokenPresent": true,
+        "result": "PASS"
+      },
+      {
+        "fach": "Logistik",
+        "sidecarPath": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/logistik.json",
+        "sidecarGeneration": "1791876348200729",
+        "sidecarHash": "ed89807e0bf36963d49f6929e58b27fb02af9b7f5d50caf991672c63f3693bc0",
+        "mp3Path": "podcast/production/lerntext-rev2/WIFA-PODCAST-PROD-LZREV2-20261007-v2/continuous/logistik/62f03891038882a0a2a4673a6e900f0dbb40fbd53ee7e5438e8d2eff460663d3.mp3",
+        "mp3Generation": "1791876270185281",
+        "mp3Hash": "62f03891038882a0a2a4673a6e900f0dbb40fbd53ee7e5438e8d2eff460663d3",
+        "bytes": 60472364,
+        "stagingBytes": 60472364,
+        "sampleCount": 111115776,
+        "decodedSamples": 111115776,
+        "chapters": 35,
+        "chapterGroups": 5,
+        "wordMarks": 9660,
+        "playback": {
+          "start": "PASS",
+          "continuousBoundaries": 34,
+          "chapterGroups": 5,
+          "wordMarks": 9660,
+          "finalSample": 111115776
+        },
+        "authenticatedDownload": "PASS",
+        "downloadTokenPresent": true,
+        "result": "PASS"
+      }
+    ],
+    "totals": {
+      "subjects": 4,
+      "transferredArtifacts": 8,
+      "mp3Bytes": 281150242,
+      "sampleCount": 516605427,
+      "wordMarks": 45019
+    },
+    "changeAudit": {
+      "addedBundles": 4,
+      "changedSidecars": 4,
+      "unchangedObjects": 22
+    },
+    "beforeSnapshot": {
+      "count": 26,
+      "aggregateSha256": "0b5cfa717819c0fb0babf505e692feae73e29f47067fdffc824c321a8bc221e8"
+    },
+    "afterSnapshot": {
+      "count": 30,
+      "aggregateSha256": "8059af801d8c53da27cbbb2e39c471b55bf7679b5877b9161a2443cb3916da04"
+    }
+  }
+}
