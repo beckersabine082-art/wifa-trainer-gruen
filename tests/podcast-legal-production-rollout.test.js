@@ -12,6 +12,7 @@ const {
   assertOnlyApprovedSnapshotChanges,
   assertRecoverableSnapshot,
   assertFreshPreparation,
+  assertProductionCatalogMatchesBundles,
   executeWrites,
   validateCompletedManifest,
   copyBundles,
@@ -145,9 +146,10 @@ test('Produktions-Sidecars werden erst nach Kopie und Verifikation aller MP3s um
     subjects: [{ fach: 'Steuern' }],
     copy: async () => order.push('copy-all'),
     verify: async () => order.push('verify-all'),
+    productionPreflight: async () => order.push('production-api-preflight'),
     switchRuntime: async () => order.push('switch-sidecars')
   });
-  assert.deepEqual(order, ['copy-all', 'verify-all', 'switch-sidecars']);
+  assert.deepEqual(order, ['copy-all', 'verify-all', 'production-api-preflight', 'switch-sidecars']);
 
   order.length = 0;
   await assert.rejects(() => executeWrites({
@@ -155,9 +157,108 @@ test('Produktions-Sidecars werden erst nach Kopie und Verifikation aller MP3s um
     subjects: [{ fach: 'Steuern' }],
     copy: async () => order.push('copy-all'),
     verify: async () => { order.push('verify-all'); throw new Error('MP3-Readback fehlgeschlagen'); },
+    productionPreflight: async () => order.push('production-api-preflight'),
     switchRuntime: async () => order.push('switch-sidecars')
   }), /Readback/);
   assert.deepEqual(order, ['copy-all', 'verify-all']);
+
+  order.length = 0;
+  await assert.rejects(() => executeWrites({
+    bucket: {},
+    subjects: [{ fach: 'Steuern' }],
+    copy: async () => order.push('copy-all'),
+    verify: async () => order.push('verify-all'),
+    productionPreflight: async () => {
+      order.push('production-api-preflight');
+      throw new Error('LZ-ST-08: Produktionshash weicht ab');
+    },
+    switchRuntime: async () => order.push('switch-sidecars')
+  }), /LZ-ST-08/);
+  assert.deepEqual(order, ['copy-all', 'verify-all', 'production-api-preflight']);
+});
+
+test('Produktions-Preflight blockiert Bundle-Aktivierung und dokumentiert jede abweichende ID', () => {
+  const productionCatalog = [{
+    id: 'LZ-RE-13',
+    fach: 'Recht',
+    titel: 'Sachmangel',
+    hauptkapitel: 'Vertragsrecht',
+    hauptkapitelNr: '1',
+    unterkapitelNr: '1.5',
+    lerntext: 'Produktiver Text'
+  }];
+  const bundleChapters = [{
+    index: 0,
+    lerntextId: 'LZ-RE-13',
+    titel: 'Sachmangel',
+    hauptkapitel: 'Vertragsrecht',
+    hauptkapitelNr: '1',
+    unterkapitelNr: '1.5',
+    lerntextHash: require('node:crypto').createHash('sha256').update('Bundle-Text').digest('hex'),
+    legacyMp3Path: 'podcast/recht-sachmangel.mp3',
+    legacyJsonPath: 'podcast/recht-sachmangel.json'
+  }];
+
+  assert.throws(() => assertProductionCatalogMatchesBundles({
+    subjects: [{ fach: 'Recht', targetSidecarJson: { fach: 'Recht', chapters: bundleChapters } }],
+    catalogBySubject: new Map([['Recht', productionCatalog]])
+  }), error => {
+    assert.match(error.message, /Preflight.*blockiert|blockiert.*Preflight/i);
+    assert.match(error.message, /Recht\/LZ-RE-13/);
+    assert.match(error.message, /lerntextHash/);
+    assert.equal(error.details.mismatches[0].productionHash,
+      require('node:crypto').createHash('sha256').update('Produktiver Text').digest('hex'));
+    assert.equal(error.details.mismatches[0].bundleHash, bundleChapters[0].lerntextHash);
+    return true;
+  });
+});
+
+test('Produktions-Preflight akzeptiert nur die vollständig identische API-Kapitelidentität', () => {
+  const lerntext = 'Identischer Text';
+  const hash = require('node:crypto').createHash('sha256').update(lerntext).digest('hex');
+  const catalog = [{
+    id: 'LZ-RE-13',
+    fach: 'Recht',
+    titel: 'Sachmangel',
+    hauptkapitel: 'Vertragsrecht',
+    hauptkapitelNr: '1',
+    unterkapitelNr: '1.5',
+    lerntext
+  }];
+  const subjects = [{
+    fach: 'Recht',
+    targetSidecarJson: {
+      fach: 'Recht',
+      chapters: [{
+        index: 0,
+        lerntextId: 'LZ-RE-13',
+        titel: 'Sachmangel',
+        hauptkapitel: 'Vertragsrecht',
+        hauptkapitelNr: '1',
+        unterkapitelNr: '1.5',
+        lerntextHash: hash,
+        legacyMp3Path: 'podcast/recht-sachmangel.mp3',
+        legacyJsonPath: 'podcast/recht-sachmangel.json'
+      }]
+    }
+  }];
+
+  assert.deepEqual(assertProductionCatalogMatchesBundles({
+    subjects,
+    catalogBySubject: new Map([['Recht', catalog]])
+  }), {
+    status: 'PASS',
+    subjects: 1,
+    entries: 1,
+    mismatches: []
+  });
+
+  const wrongSubjectCatalog = structuredClone(catalog);
+  wrongSubjectCatalog[0].fach = 'Steuern';
+  assert.throws(() => assertProductionCatalogMatchesBundles({
+    subjects,
+    catalogBySubject: new Map([['Recht', wrongSubjectCatalog]])
+  }), /Recht\/LZ-RE-13 \[fach,/);
 });
 
 test('Neue Vorbereitung verlangt vier abwesende Ziel-MP3s und vier noch offene Sidecars', () => {

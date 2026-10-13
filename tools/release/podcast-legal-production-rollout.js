@@ -7,6 +7,8 @@ const path = require('node:path');
 
 const { createAdminClient } = require('../podcast-sync/sync-all');
 const { runFfmpeg } = require('../podcast-sync/continuous-bundle');
+const { podcastPaths, sha256Lerntext } = require('../podcast-sync/hash-paths');
+const { PRODUCTION_DEPLOYMENT_ID } = require('./production-preflight');
 const {
   PRODUCTION_PODCAST_PREFIX_V2: PRODUCTION_PREFIX,
   PRODUCTION_PODCAST_VERSION_V2: PRODUCTION_VERSION,
@@ -19,6 +21,12 @@ const EXPECTED_BUCKET = 'wifa-trainer-gruen.firebasestorage.app';
 const STAGING_VERSION = 'WIFA-PODCAST-STAGING-LZREV2-20261012-v2';
 const ROLLOUT_ID = 'WIFA-PODCAST-PROD-20261013-RS2026';
 const APPROVED_SUBJECTS = Object.freeze(['Steuern', 'Recht', 'Vertrieb', 'Logistik']);
+const PRODUCTION_LERNTEXTE_API_URL =
+  'https://script.google.com/macros/s/' + PRODUCTION_DEPLOYMENT_ID + '/exec';
+const PRODUCTION_CHAPTER_IDENTITY_FIELDS = Object.freeze([
+  'index', 'lerntextId', 'titel', 'hauptkapitel', 'hauptkapitelNr',
+  'unterkapitelNr', 'lerntextHash', 'legacyMp3Path', 'legacyJsonPath'
+]);
 const DEFAULT_APPROVAL = path.resolve(
   'outputs/pruefungsrechtsstand-2026-10-12/podcast-staging-publish-result.json'
 );
@@ -51,6 +59,114 @@ function exactSubjectMap(items, label) {
   }
   if (APPROVED_SUBJECTS.some(fach => !index.has(fach))) throw new Error(label + ': freigegebenes Fach fehlt');
   return index;
+}
+
+function productionChapterIdentity(entry, index) {
+  const fach = text(entry?.fach);
+  const titel = text(entry?.titel);
+  const paths = podcastPaths(fach, titel);
+  return {
+    index,
+    lerntextId: text(entry?.id),
+    titel,
+    hauptkapitel: text(entry?.hauptkapitel),
+    hauptkapitelNr: text(entry?.hauptkapitelNr),
+    unterkapitelNr: text(entry?.unterkapitelNr),
+    lerntextHash: sha256Lerntext(String(entry?.lerntext ?? '')),
+    legacyMp3Path: paths.mp3Path,
+    legacyJsonPath: paths.jsonPath
+  };
+}
+
+function assertProductionCatalogMatchesBundles({ subjects, catalogBySubject } = {}) {
+  if (!Array.isArray(subjects) || !subjects.length || !(catalogBySubject instanceof Map)) {
+    throw new Error('Produktions-Preflight benötigt Bundles und Produktions-API-Daten');
+  }
+  const seenSubjects = new Set();
+  const mismatches = [];
+  let entries = 0;
+
+  for (const subject of subjects) {
+    const fach = text(subject?.fach);
+    const sidecar = subject?.targetSidecarJson;
+    const catalog = catalogBySubject.get(fach);
+    if (!fach || seenSubjects.has(fach) || sidecar?.fach !== fach ||
+        !Array.isArray(sidecar?.chapters) || !Array.isArray(catalog)) {
+      throw new Error('Produktions-Preflight enthält ein ungültiges oder doppeltes Fach: ' + (fach || '<leer>'));
+    }
+    seenSubjects.add(fach);
+    entries += catalog.length;
+    const current = catalog.map(productionChapterIdentity);
+    const count = Math.max(current.length, sidecar.chapters.length);
+    for (let index = 0; index < count; index += 1) {
+      const production = current[index];
+      const bundle = sidecar.chapters[index];
+      if (!production || !bundle) {
+        mismatches.push({
+          fach,
+          index,
+          id: production?.lerntextId || bundle?.lerntextId || '<fehlt>',
+          fields: ['chapter-count'],
+          productionHash: production?.lerntextHash || null,
+          bundleHash: bundle?.lerntextHash || null
+        });
+        continue;
+      }
+      const fields = PRODUCTION_CHAPTER_IDENTITY_FIELDS.filter(field => production[field] !== bundle[field]);
+      if (text(catalog[index]?.fach) !== fach) fields.unshift('fach');
+      if (fields.length) {
+        mismatches.push({
+          fach,
+          index,
+          id: production.lerntextId || bundle.lerntextId || '<fehlt>',
+          fields,
+          productionHash: production.lerntextHash,
+          bundleHash: bundle.lerntextHash
+        });
+      }
+    }
+  }
+
+  const report = { status: mismatches.length ? 'BLOCKED' : 'PASS', subjects: seenSubjects.size, entries, mismatches };
+  if (mismatches.length) {
+    const affected = mismatches.map(item => {
+      const hashes = item.fields.includes('lerntextHash')
+        ? ` Produktion=${item.productionHash || '<fehlt>'} Bundle=${item.bundleHash || '<fehlt>'}`
+        : '';
+      return `${item.fach}/${item.id} [${item.fields.join(',')}]${hashes}`;
+    }).join('; ');
+    const error = new Error('Podcast-Produktions-Preflight blockiert Sidecar-Aktivierung: ' + affected);
+    error.details = report;
+    throw error;
+  }
+  return report;
+}
+
+async function loadProductionCatalog(fach, {
+  apiUrl = PRODUCTION_LERNTEXTE_API_URL,
+  fetchImpl = globalThis.fetch
+} = {}) {
+  if (typeof fetchImpl !== 'function') throw new Error('Produktions-Preflight: fetch fehlt');
+  const url = new URL(apiUrl);
+  url.searchParams.set('action', 'getLerntexte');
+  url.searchParams.set('fach', fach);
+  url.searchParams.set('_', String(Date.now()));
+  const response = await fetchImpl(url.toString(), { method: 'GET', cache: 'no-store' });
+  if (!response.ok) throw new Error(fach + ': Produktions-API HTTP ' + response.status);
+  const payload = await response.json();
+  if (!payload || payload.success === false || !Array.isArray(payload.data)) {
+    throw new Error(fach + ': Produktions-API-Antwort ist ungültig');
+  }
+  return payload.data;
+}
+
+async function verifyProductionCatalogAgainstBundles(subjects, options = {}) {
+  const catalogBySubject = new Map();
+  for (const subject of subjects) {
+    const fach = text(subject?.fach);
+    catalogBySubject.set(fach, await loadProductionCatalog(fach, options));
+  }
+  return assertProductionCatalogMatchesBundles({ subjects, catalogBySubject });
 }
 
 function buildApprovedTargets(approval) {
@@ -548,9 +664,12 @@ async function switchSidecars(bucket, subjects) {
 }
 
 async function executeWrites({ bucket, subjects, copy = copyBundles,
-  verify = verifyPreparedSourcesAndTargets, switchRuntime = switchSidecars } = {}) {
+  verify = verifyPreparedSourcesAndTargets,
+  productionPreflight = verifyProductionCatalogAgainstBundles,
+  switchRuntime = switchSidecars } = {}) {
   await copy(bucket, subjects);
   await verify(bucket, subjects);
+  await productionPreflight(subjects);
   await switchRuntime(bucket, subjects);
 }
 
@@ -757,13 +876,16 @@ module.exports = {
   assertRecoverableSnapshot,
   assertAuthorizedContext,
   auditPlaybackStructure,
+  assertProductionCatalogMatchesBundles,
   createLivePlan,
   copyBundles,
   executeWrites,
+  loadProductionCatalog,
   switchSidecars,
   validateCompletedManifest,
   prepare,
   publish,
   verify,
+  verifyProductionCatalogAgainstBundles,
   verifyProduction
 };
